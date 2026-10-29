@@ -1,0 +1,19 @@
+# macOS metadata
+.DS_Store
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+.claude/
+secrets/
+
+# Python environments and generated files
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# Downloaded learning materials and installer bundles
+REFERENCES/

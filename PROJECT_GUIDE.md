@@ -2,6 +2,16 @@
 
 Sources reviewed 2026-10-28. Summary of the local assignment PDF and official documentation, without prescribing architecture or a technology stack.
 
+## Recruiter clarification, 2026-10-30 (Australia/Sydney)
+
+Source: [Luke's reply](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d), recorded in `Questions.Md`.
+
+- Booking timing, returning-carrier OTP policy, and TMS rate semantics are intentionally ambiguous. Luke asks us to choose and document assumptions, rather than wait for definitive answers. `ARCHITECTURE.md` records the current assumptions; they are not recruiter-confirmed technical facts.
+- Present the walkthrough to the brokerage's business team, suitable for a business review.
+- Creative additions are optional and should provide client value while following the rubric and guide.
+- Fly.io is acceptable; any cloud environment works.
+- Use web calls and send OTP through an email integration to the candidate's personal email. No real carrier SMS recipient or dedicated phone number is needed for this demo. This destination is demo data, not proof of a real carrier's contact ownership. No specific test MCs were supplied.
+
 ## Assignment
 
 Source: `FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf` in this folder.
@@ -49,3 +59,4 @@ Deliverables: prospect summary email, IT/business build description, repository 
 - `RATE` is posted price; `MAX_BUY` is internal pricing, present only for enabled tokens. Sample posted rates exceed sample `MAX_BUY` values. `LOAD_GET` also returns booked/past-pickup loads.
 - Booking state is token-scoped; repeated attempts can return `ALREADY_BOOKED`. Exact rate-validation rules are not fully documented.
 - Source discrepancy: PDF describes tentative reservation before senior-rep confirmation; handbook describes `LOAD_BOOK` as committing a booking.
+- Luke delegated the booking and rate ambiguities to the candidate on 2026-10-30. The proposed local hold and provisional `MAX_BUY` mapping are documented assumptions, not newly confirmed TMS capabilities or observed behavior.

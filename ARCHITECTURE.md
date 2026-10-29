@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Version** | 1.1 · 2026-10-30 |
-| **Status** | Proposed. Luke delegated questions 1-3 to documented candidate assumptions; these are not confirmed TMS behavior. See decisions D-8 to D-10 and [`Questions.Md`](Questions.Md). |
+| **Version** | 1.2 · 2026-10-30 |
+| **Status** | Proposed. Luke delegated questions 1-3 to documented candidate assumptions; these are not confirmed TMS behavior. See decisions D-8 to D-13 and [`Questions.Md`](Questions.Md). |
 | **Scope** | Proof of concept for HappyRobot Logistics' inbound carrier desk (see [`FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf`](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md)). |
 | **Supersedes** | [`Archive/Claude_ProposedArchitecture.md`](Archive/Claude_ProposedArchitecture.md), [`Archive/Codex_ProposedArchitecture.md`](Archive/Codex_ProposedArchitecture.md) |
 
@@ -134,10 +134,10 @@ These are the rules the system guarantees. Each is enforced in the service (not 
 | ID | Invariant |
 |---|---|
 | **INV-1** | No rate above `max_rate` is ever offered or agreed. |
-| **INV-2** | `max_rate` (provisionally mapped from TMS `MAX_BUY`, D-10) never appears in anything the voice agent can see, and is never the boundary of an accept/reject decision (§6.5). |
+| **INV-2** | `max_rate` (provisionally mapped from TMS `MAX_BUY`, D-10, or the fallback ceiling rule, D-11) never appears in anything the voice agent can see, and is never the boundary of an accept/reject decision (§6.5). |
 | **INV-3** | No load details are returned until the service's own record shows FMCSA eligibility **and** a verified code for that call. A model-supplied "verified" is ignored. |
 | **INV-4** | At most 3 counter rounds per call, counted across every load discussed on that call. |
-| **INV-5** | The expected code never reaches the voice workflow. For this demo it is sent only to the candidate's configured personal email, recorded as demo data in the carrier registry. The caller cannot replace that destination. |
+| **INV-5** | The expected code never reaches the voice workflow. It is sent only to the destination on file for that carrier, or in the demo to the configured demo inbox (D-12), never to an address or number the caller provides. |
 | **INV-6** | A load has at most one active hold. |
 | **INV-7** | A booking request is never blindly resent. An ambiguous result is recorded as **unknown** until an authoritative response proves the outcome. |
 | **INV-8** | Every endpoint requires authentication, including health checks. No public API docs. |
@@ -149,7 +149,7 @@ These are the rules the system guarantees. Each is enforced in the service (not 
 
 | Requirement (PDF) | Where it is met | How it is verified |
 |---|---|---|
-| FMCSA authority check (p.2) | §6.3 `verify_carrier` | Unit + live check with known MCs |
+| FMCSA authority check (p.2) | §6.3 `verify_carrier` | Unit + live check with the recorded test MCs (§6.3) |
 | OTP after authority, before matching; no bypass (p.4-5) | §6.3, INV-3, INV-5 | Adversarial suite: social engineering |
 | Load match by lane and equipment (p.2) | §6.4 `search_loads` | Conversation tests |
 | Never exceed or disclose `max_rate` (p.4) | §6.5, INV-1, INV-2 | Property tests + adversarial probing suite |
@@ -186,7 +186,7 @@ One Python 3.12 / FastAPI program, a modular monolith, with an async TCP client 
 | `POST /carriers/verify` | Agent | Authenticated call | Normalizes the MC number, checks FMCSA, records the result. |
 | `POST /otp/send` | Agent | FMCSA eligible | Issues a code to the contact on file (§6.3). Max 2 sends per call. |
 | `POST /otp/verify` | Agent | Code issued | Checks the spoken code. Max 3 attempts, then locked for the call. |
-| `POST /loads/search` | Agent | Code verified | `LOAD_QUERY` by lane and equipment; drops held, booked and past-pickup loads; returns up to 3 with our opening offer. |
+| `POST /loads/search` | Agent | Code verified | `LOAD_QUERY` by lane and equipment; drops held, booked and past-pickup loads; returns up to 3 with our opening offer. Records the request when nothing matches (§6.4). |
 | `POST /negotiate` | Agent | Code verified | Applies the negotiation policy (§6.5) to the carrier's rate. |
 | `POST /holds` | Agent | Agreed rate on this load | Places the hold (§6.6). |
 | `GET /holds` | Ops app | Ops authentication | Rep queue. |
@@ -211,26 +211,38 @@ When the TMS is down, the agent says so and offers a callback. It never pitches 
 
 ### 6.3 Verification and the one-time code
 
-1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if FMCSA reports the carrier as allowed to operate. FMCSA errors return `fmcsa_unavailable`; the call cannot continue unverified.
-2. **Code issue.** The service generates a 6-digit code, stores only a keyed hash with a 5-minute expiry in Twin, and triggers a separate, authenticated **Notification workflow** in HappyRobot that delivers it through an email integration to the candidate's configured personal email. The voice workflow receives only `sent`, the email channel, and a masked destination.
+1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if FMCSA reports the carrier as allowed to operate. FMCSA errors return `fmcsa_unavailable`; the call cannot continue unverified. Luke supplied no test MC numbers, so we pick public FMCSA records and list them in `docs/test-carriers.md`: one authorized carrier, one whose authority is revoked or inactive, and one MC that does not exist.
+2. **Code issue.** The service generates a 6-digit code, stores only a keyed hash with a 5-minute expiry in Twin, and triggers a separate, authenticated **Notification workflow** in HappyRobot that delivers it through an email integration (point 4 says where). The voice workflow receives only `sent`, the email channel, and a masked destination.
 3. **Code check.** The code the carrier reads aloud *does* pass through the voice system, that is unavoidable, but it is compared against the stored hash in the service, in constant time, with an attempt limit.
-4. **Where the code goes.** Luke explicitly allowed the candidate's personal email for the demo. Seed an eligible demo carrier's recipient in Twin `carriers` and label it as demo data. The MC must still pass the real authority check; no specific test MCs were supplied. The email proves possession of the demo inbox, not a real carrier's identity. Production contact enrollment remains outside this POC assumption. Missing configured recipients stop matching and enter the mocked human-review path, with no live transfer.
+4. **Where the code goes (D-12).** The service first looks for the carrier's trusted contact in Twin `carriers`. Luke allowed the candidate's personal email for the demo, so the service also has a **demo inbox setting**: when it is set, any FMCSA-eligible carrier with no contact on file gets its code there.
+   - The setting is configuration, never caller input, and is left unset in production.
+   - Any real, active MC therefore works in the demo, and the inbox can be pointed at a reviewer's address so they can complete a call themselves.
+   - The email proves access to the demo inbox, not a real carrier's identity. Enrolling real carrier contacts is outside this POC.
+   - With the setting unset and no contact on file, the call ends as `no_trusted_contact` and is flagged for human follow-up, with no live transfer.
 5. **Returning carriers.** Require a fresh code on every call before matching. This is candidate assumption D-9, chosen under Luke's instruction to document assumptions; he did not confirm which OTP scope is intended.
 
 ### 6.4 Load search
 
 Matches origin and destination (city or state, case-insensitive) and equipment type (with aliases such as *van* → *dry van*, *reefer* → *refrigerated*). Results are ranked by pickup time; at most three are offered, one at a time, by the agent. Each carries the carrier-facing load fields from the PDF and our **opening offer**, never `max_rate`, and never the posted rate where the posted rate is above what we can pay.
 
+**Turned-away demand (D-13).** When nothing matches, the service records what the carrier asked for (lane, equipment, pickup date) in Twin `unmet_demand`. The operations app totals it by lane and week, so the team can see which capacity it turned away and source loads against it. It costs one table and one dashboard panel, and turns a lost call into a sales lead.
+
 ### 6.5 Negotiation policy
 
 The broker pays the carrier, so the carrier pushes up and we concede toward a ceiling we never reveal.
 
-**Rate assumption (D-10):** provisionally map `MAX_BUY` from `LOAD_GET` to the PDF's `max_rate`. Luke did not confirm this mapping or the accepted rate format and bounds. Verify presence, parsing, units and acceptance behavior during controlled integration tests and record the evidence. Missing or unusable ceiling data blocks offers and booking; never substitute the posted rate or invent a limit. A TMS rejection cannot justify exceeding or disclosing the internal ceiling.
+**Rate assumption (D-10):** provisionally map `MAX_BUY` from `LOAD_GET` to the PDF's `max_rate`. Luke did not confirm this mapping or the accepted rate format and bounds. Verify presence, parsing, units and acceptance behavior during controlled integration tests and record the evidence. Missing or unusable ceiling data on a load blocks offers and booking for that load; the agent never substitutes the posted rate or makes up a limit during a call. A TMS rejection cannot justify exceeding or disclosing the internal ceiling.
+
+**If our token returns no `MAX_BUY` at all (D-11).** The handbook says `MAX_BUY` appears only for enabled tokens. If T-2 shows it is missing on every load, blocking would stop every negotiation and the demo with it, so the ceiling source changes in this order:
+
+1. Ask HappyRobot the same day to enable `MAX_BUY` for our token.
+2. Otherwise, use a **ceiling rule** the brokerage would own: a configured share of the posted rate per equipment type. The service applies it, stores the resulting ceiling with each negotiation in Twin, and labels it as an assumption in the dashboard and the write-up. It is visible business policy set before any call, not a number made up on one, and INV-1, INV-2 and the rest of this section apply to it unchanged.
 
 - **Opening offer:** the lower of the posted rate and a fixed share of `max_rate` (initially 90 %).
 - **Working cap:** a fixed share of `max_rate` (initially 97 %), rounded down to $25. It is the highest number we will ever say **and** the highest carrier ask we accept. `max_rate` itself never decides anything on the call, so probing for it finds the cap, not the ceiling.
 - **Rounds:** each carrier counter moves our offer a set part of the way from opening to cap (initially 35 %, 65 %, 100 %). An ask at or below our current offer or the round's target is accepted at the carrier's number. After round 3 we make a final offer; anything else ends the call politely as `negotiation_failed`, with no transfer.
 - **Counting:** rounds are per call, across loads (INV-4).
+- **"It's posted higher."** The handbook samples show posted rates above `MAX_BUY`, so our opening offer will usually sit below the number the carrier sees on load boards, and this will be the most common push-back. The prompt gives the agent a stock answer that neither confirms nor explains any internal number (along the lines of "that's the board figure; here's what I can do on this load today"). The service treats the cited figure like any other counter, so it uses a round and is bound by the cap.
 
 All shares are configuration. They are a starting point, not a claim: predictable counters can still leak information, so the adversarial suite (§9) probes for it, repeated asks, binary search, "what's your best number", and the parameters are tuned on the results before we say the requirement is met.
 
@@ -271,11 +283,12 @@ stateDiagram-v2
 | Table | One row per | Key fields |
 |---|---|---|
 | `carriers` | Known carrier | MC, DOT, legal name, trusted contact, how the contact was verified |
-| `calls` | Call | call ID, MC, eligibility, code verified, counter rounds used, selected load, agreed rate, **outcome**, notes, sentiment, duration |
+| `calls` | Call | call ID, started at, MC, eligibility, code verified, first offer at, counter rounds used, selected load, agreed rate, ceiling source (D-10 or D-11), **outcome**, notes, sentiment, duration |
 | `call_events` | Tool call | call ID, action, request fingerprint, result, latency, error |
 | `otp_challenges` | Code issued | call ID, code hash, expiry, attempts, delivery status |
 | `negotiation_rounds` | Carrier counter | call ID, load ID, round, carrier ask, our response |
 | `holds` | Hold | load ID, call ID, MC, rate, state (§6.6), rep, booking reference, evidence |
+| `unmet_demand` | Search with no match | call ID, MC, origin, destination, equipment, pickup date, searched at |
 
 **Call outcomes:** `booked`, `pending_rep`, `negotiation_failed`, `no_match`, `carrier_ineligible`, `code_failed`, `no_trusted_contact`, `tms_unavailable`, `caller_ended`.
 
@@ -285,10 +298,11 @@ stateDiagram-v2
 
 Built from the Apps Next.js template. It reads Twin through the server-side gateway behind the app's own sign-in, and calls the service with the ops key for actions, so rules are enforced in one place.
 
-- **Overview:** northstar and guardrail KPIs (§9), outcome funnel, agreed rate versus posted rate.
+- **Overview:** the business KPIs first (§9), in the brokerage's terms: calls answered, time to first offer, agreed rate against ceiling, dispatcher time saved. Then the northstar, guardrails and outcome funnel.
 - **Rep queue:** holds awaiting confirmation; confirm, release, or reconcile.
-- **Call log:** each call's summary, outcome, rounds and notes, linked to its events.
-- **Health:** TMS and FMCSA error rates, unknown bookings needing review.
+- **Call log:** each call's summary, outcome, rounds and notes, linked to its events. This is the audit trail the brokerage said it lacks.
+- **Turned-away demand:** lanes and equipment carriers asked for when nothing matched, by week (D-13).
+- **System health:** TMS and FMCSA error rates, unknown bookings needing review.
 
 ---
 
@@ -297,7 +311,7 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 - **Authentication everywhere.** Three bearer keys, voice workflow, operations app, notification workflow, compared in constant time. A key only opens its own endpoints. `/health` needs a key too; Fly's health check sends it. FastAPI's `/docs`, `/redoc` and `/openapi.json` are switched off.
 - **Least information to the model.** The agent never receives `max_rate`, the expected code, full contact details, or raw TMS frames.
 - **Secrets** live in Fly secrets and HappyRobot's credential store, never in the repository. `.env.example` lists names only.
-- **Social engineering.** No path skips verification: the gate is in the service, not the prompt. The adversarial suite (§9) covers urgency, claimed authority, "my dispatcher already verified me", alternative contact numbers, and prompt injection.
+- **Social engineering.** No path skips verification: the gate is in the service, not the prompt. The code's destination comes from Twin or the demo inbox setting, never from the conversation. The adversarial suite (§9) covers urgency, claimed authority, "my dispatcher already verified me", alternative contact numbers, and prompt injection.
 - **Logs.** Codes, contact details and the ceiling are kept out of service logs. Whether HappyRobot run logs of the notification workflow show the code must be checked (T-3).
 
 ---
@@ -314,9 +328,20 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 
 **Northstar KPI, booked loads per verified call.** Confirmed bookings divided by calls that passed the code check. It captures what the brokerage wants: more loads moved without a dispatcher.
 
+**Business KPIs.** The walkthrough is a business review, so each KPI answers one of the problems the brokerage described (PDF p.1), and they lead the dashboard:
+
+| Customer problem | KPI | Definition |
+|---|---|---|
+| Missed calls and long hold times | Calls answered; after-hours share; time to first offer | Every web call answered by the agent; share of calls outside configured Chicago business hours; time from call start to the first load pitched. |
+| Inconsistent negotiation, margin leakage | Agreed rate as % of ceiling | Average and spread across calls. A low, tight spread means every carrier gets the same discipline. |
+| Manual FMCSA verification | Automatic verification rate; ineligible carriers stopped | Share of calls whose authority the service checked; calls ended because the carrier was not authorized. |
+| No audit trail | Complete-record rate | Share of calls with MC, offers, counters, outcome and notes all recorded in Twin. |
+| Dispatcher burnout | Dispatcher time saved | Calls handled without a dispatcher × minutes per manual call. The brokerage supplies the minutes; the dashboard shows the assumed value. |
+| Missed revenue | Turned-away demand | Lanes and equipment carriers asked for when nothing matched (D-13). |
+
 **Guardrails, must stay at 0:** rate above ceiling, ceiling disclosed, verification bypassed, more than 3 counter rounds.
 
-**Supporting:** margin kept below the ceiling, average handle time, rounds to agreement, FMCSA and code pass rates, TMS error rate, unknown bookings.
+**Engineering health:** average handle time, rounds to agreement, FMCSA and code pass rates, TMS error rate, unknown bookings.
 
 **HappyRobot Northstars (behavioural grading):** never discusses the ceiling; no load detail before verification; at most three counters, then a professional close; concise and carrier-friendly.
 
@@ -325,7 +350,7 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 | Unit and property | Negotiation never exceeds the cap or ceiling across random inputs; round limits; code expiry, attempts and locking; MC normalization; TMS frame parsing | `service/tests/` |
 | Integration | Service against a **fake TMS** that injects every documented fault: timeouts, missing `END`, malformed and oversized frames, slow close, `ALREADY_BOOKED` | `service/tests/` |
 | Contract | `DEBUG_ECHO`, `LOAD_QUERY`, `LOAD_GET` against the real TMS | Manual, recorded |
-| Conversation: standard | Happy path; no match; ineligible carrier; lane change; carrier accepts first offer | HappyRobot test suites |
+| Conversation: standard | Happy path; no match (demand recorded); ineligible carrier; lane change; carrier accepts first offer; carrier cites the higher posted rate | HappyRobot test suites |
 | Conversation: edge | TMS down mid-call; code expired; wrong code three times; load taken during the call | HappyRobot test suites |
 | Conversation: adversarial | Code bypass by urgency, authority or "already verified"; "send it to this number instead"; ceiling extraction by direct question, binary search and anchoring; prompt injection | HappyRobot adversarial tests |
 
@@ -356,7 +381,7 @@ The operations app lives in HappyRobot's managed Apps repository and is linked f
 
 | Phase | Outcome |
 |---|---|
-| **0. Day-one checks** | A browser web call that talks; `DEBUG_ECHO`, `LOAD_QUERY` and `LOAD_GET` through our token (does the detail record return `MAX_BUY`? what does it show for a booked load?); one write and read to Twin from outside HappyRobot; a test email to the candidate's personal inbox through the notification workflow. |
+| **0. Day-one checks** | A browser web call that talks; `DEBUG_ECHO`, `LOAD_QUERY` and `LOAD_GET` through our token (does the detail record return `MAX_BUY`? if not, request enablement the same day, D-11; what does it show for a booked load?); one write and read to Twin from outside HappyRobot; a test email to the candidate's personal inbox through the notification workflow. |
 | **1. TMS adapter** | Adapter plus fake TMS and fault-injection tests. |
 | **2. Service** | Endpoints, policy core, Twin adapter, authentication; deployed to Fly.io. |
 | **3. Conversation** | Voice workflow wired to the service; live end-to-end call. |
@@ -380,12 +405,15 @@ The operations app lives in HappyRobot's managed Apps repository and is linked f
 | D-7 | One service instance for the POC | Simplest way to guarantee the concurrency invariants until Twin's capabilities are confirmed. |
 | D-8 | Candidate assumption: hold locally, then book after simulated senior-rep approval | Luke left booking timing intentionally ambiguous. This matches the tentative-agreement flow while acknowledging that a Twin hold is not a TMS reservation. |
 | D-9 | Candidate assumption: OTP on every call, including returning carriers | Luke left scope intentionally ambiguous. Use the stricter p.4 interpretation and avoid a returning-carrier bypass. |
-| D-10 | Candidate assumption: `LOAD_GET.MAX_BUY` supplies `max_rate`, subject to validation | Luke did not confirm rate semantics. Test and record the mapping, format and acceptance behavior; block negotiation if the ceiling is unavailable. |
+| D-10 | Candidate assumption: `LOAD_GET.MAX_BUY` supplies `max_rate`, subject to validation | Luke did not confirm rate semantics. Test and record the mapping, format and acceptance behavior; block negotiation on a load whose ceiling is unavailable. |
+| D-11 | If our token has no `MAX_BUY`: request enablement, else a configured ceiling rule from the posted rate | Blocking every load would stop the demo. A rule set in advance by the business is policy, not an invented limit, and keeps every rate invariant intact (§6.5). |
+| D-12 | Demo inbox setting: codes for carriers with no contact on file go to one configured inbox; unset in production | Luke allowed the candidate's personal email and supplied no test MCs, so any active MC must work in the demo, and a reviewer can be given the inbox. |
+| D-13 | Record turned-away demand when no load matches | Luke asked for additions with client value. This turns lost calls into a sourcing signal for revenue, at the cost of one table and one panel. |
 
 **Open technical checks** (Luke's answers and delegated ambiguities are recorded separately in [`Questions.Md`](Questions.Md))
 
 | ID | Question | Owner | Design impact |
 |---|---|---|---|
 | T-1 | Can Twin enforce uniqueness or conditional updates from outside? | Day-one check | Whether more than one instance is possible. |
-| T-2 | Does `LOAD_GET` return `MAX_BUY`, what rate format/bounds does booking accept, and can booking ownership be proven? | Controlled integration tests | Validate D-10; determine how unknown bookings can be reconciled. No booking tests have been run. |
+| T-2 | Does `LOAD_GET` return `MAX_BUY`, what rate format/bounds does booking accept, and can booking ownership be proven? | Controlled integration tests | Validate D-10, or switch to D-11 if `MAX_BUY` is absent; determine how unknown bookings can be reconciled. No booking tests have been run. |
 | T-3 | Do notification-workflow run logs expose the expected code? | Day-one check | Whether delivery needs masking or a different path. |

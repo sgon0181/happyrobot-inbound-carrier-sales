@@ -47,3 +47,15 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
    **Reference:** [FMCSA API fields](https://mobile.fmcsa.dot.gov/QCDevsite/docs/apiElements), `telephone`.
 
    **A:** Use a web-call trigger and deliver OTP through an email integration to my personal email, rather than SMS or a real carrier number. No specific test MC numbers were supplied. Document the email destination as demo data.
+
+8. **Q:** Is `STATUS:PENDING` expected for my candidate token after `LOAD_BOOK`? What supported action moves an acknowledged request to `BOOKED`? If the sandbox intentionally stops at `PENDING`, what outcome should the demo demonstrate? If needed, could this be routed to the TMS owner?
+
+   **Status:** Sent to Luke by email; awaiting Luke's reply.
+
+   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed.
+
+   **Reference:** Owner's follow-up email to Luke; PDF pp. 1-3, first-layer scope and process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
+
+   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, an acknowledged tentative booking request and mocked senior-rep handoff. Final confirmation remains the senior rep's responsibility. Treating `PENDING` as the tentative stage is our documented interpretation, not a behavior confirmed by Luke. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. Booking timing remains a candidate design decision to consolidate in the architecture.
+
+   **Review before final submission:** Check for Luke's reply, record his answer here, and assess any impact on the implementation, architecture and demo wording. If no reply is available, keep this question open and explicitly review and disclose the remaining assumption. This clarification does not block the build and must not be marked answered without a response.

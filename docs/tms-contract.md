@@ -79,6 +79,14 @@ All four loads remained `PENDING` roughly 40 minutes later. The separate replay 
 
 An early harness classified the first pending receipt as unknown before `PENDING` support was added. Correcting that local classification was neither another send nor a server transition. Preserve three distinct outcomes: `ACK_PENDING` for a valid pending receipt, `UNKNOWN` for ambiguous transport/framing, and `CONFIRMED` for authoritative final evidence. Pending and unknown do not count in confirmed-booking KPIs.
 
+### Active-MC attempt on a real call
+
+On 2026-10-31 a real browser call through Codex's lab sent one `LOAD_BOOK` for LD01077 with MC 138328, which FMCSA showed as active, at rate 3225 with no counter rounds. Fresh `OPEN`, pickup and ceiling checks passed just before the send. The attempt ended `UNKNOWN` with no receipt or reference. A lab defect discarded the error type and raw reply, so the failing step is unknown: the 0.306 seconds it took does not show whether the network or the save failed.
+
+Later reads returned `PENDING` at roughly 54, 320 and 1,408 seconds, never with a reference. One read-only reconcile kept the booking `UNKNOWN`. Nothing was resent. The planned control, LD01069 with MC 872144, was not sent, because the first unknown outcome stops the campaign. Replaying the six earlier replies through the lab's parser found no framing failures, so that does not explain this result.
+
+All together: **seven write sends, five load IDs, zero observed `BOOKED` responses**. This does not establish a cause. The read makes a carrier-specific cause less likely, but the reply is gone and reads show no ownership. No further standalone booking test is planned ([architecture D-20](../ARCHITECTURE.md#12-decisions-and-open-questions)).
+
 ### Sanitized evidence and reproduction limits
 
 [`tms/fixtures/booking-replies.json`](tms/fixtures/booking-replies.json) freezes the six replies with original booking references replaced by synthetic identifiers. Its [README](tms/fixtures/README.md) explains transformations and offline use. It includes no credentials and is available in a fresh clone. These fixtures preserve observed framing; they do not reproduce the real experiment or prove final confirmation.
@@ -98,6 +106,7 @@ All statuses below are historical 2026-10-31 snapshots, not current availability
 | Purpose | IDs | Required handling |
 |---|---|---|
 | Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
 | Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
 The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
@@ -105,8 +114,8 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 ## Still unproven
 
 - **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The handbook's own sample books `AGREED_RATE:2200` on a load with `MAX_BUY` 1950, which hints the server may not enforce the ceiling. A sample is not proof.
-- **Cause of `PENDING`:** every booking test used one token and MC 872144, which FMCSA shows as inactive, so a token-specific or carrier-specific cause is not ruled out. A single active-MC booking on an allocated load is the planned comparison. Later calls add observations; only a controlled comparison or an authoritative answer would establish the cause.
-- **Other integrations:** Twin atomicity/latency (T-1), notification trigger and log exposure (T-3), trusted call/operation identity (T-4), FMCSA access (T-5) and automatic OTP delivery. None is established by the SQLite lab; see [platform checks](platform-checks.md).
+- **Cause of `PENDING`:** every acknowledged booking used one token and MC 872144, which FMCSA shows as inactive. The one active-MC attempt lost its reply while the load read `PENDING`, which makes a carrier-specific cause less likely without ruling it out, and a token-specific cause is still open. Later calls add observations; only an authoritative answer would establish the cause.
+- **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.
 - **Pricing bands:** running `pricing-v1` offline over the 50 saved open loads with 200 random secrets sent none to pricing review. A median of 2 loads (at most 5) got a working cap at or below `RATE`, and a median of 1 (at most 3) had round targets collapse after $25 rounding. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.

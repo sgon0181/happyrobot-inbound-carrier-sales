@@ -29,8 +29,18 @@ The tests run offline. They use a local fake TMS over real TCP, and importing th
 
 - **Live `LOAD_BOOK` is off by default.** It needs `booking_enabled=True` in `TmsSettings`, and each send spends a load permanently.
 - **`max_rate` stays inside the service.** It is excluded from `repr`, and `agent_view` is the only booking data the voice agent gets.
-- **`InMemoryBookingStore` says nothing about Twin.** It shows what the `BookingStore` interface needs: an atomic claim and a conditional update, which T-1 must prove on Twin.
+- **`InMemoryBookingStore` says nothing about Twin.** It shows what the `BookingStore` interface needs: an atomic claim and a conditional update. T-1 proved both on Twin probe rows, and the real schema must still show them.
+
+## Known gaps
+
+Codex's live test exposed these, and they are fixed before phase 2 ([architecture section 11](../ARCHITECTURE.md#11-delivery-plan)):
+
+- **Lost evidence:** on a timeout or reset, `TmsClient.book` keeps only the error type and discards any reply bytes already received.
+- **False unknown:** a connection that never opens is `UNKNOWN`, which blocks the load for good. It should be `FAILED`, because nothing was sent.
+- **Lost receipt:** if saving the receipt fails, the booking stays `SUBMITTING` and the receipt is gone.
+- **Overclaiming:** `agent_view` says `request_accepted` on `UNKNOWN`. It should use the neutral status from D-18.
+- **Confirm on `UNKNOWN`:** `confirm` still accepts these bookings, pending the owner's decision on D-18.
 
 ## Not built yet
 
-Endpoints, authentication, the Twin, FMCSA and notification adapters, Docker and deployment.
+Endpoints, authentication, the Twin, FMCSA and email adapters, Docker and deployment.

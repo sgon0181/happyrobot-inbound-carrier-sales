@@ -1,12 +1,12 @@
 # FMCSA test-carrier ledger
 
-Status 2026-10-31 (Australia/Sydney): five public records were checked through a HappyRobot native HTTP node, as a QCMobile docket lookup. These are saved observations, so recheck them near the demo because public records can change. Luke supplied no test MCs.
+Status 2026-10-31 (Australia/Sydney): five public records were checked through a HappyRobot native HTTP node, as a QCMobile docket lookup. MC 138328 was also checked directly from a Fly.io `iad` machine, with the same result, and was used on the live test call. These are saved observations, so recheck them near the demo because public records can change. Luke supplied no test MCs.
 
 | Case | MC / DOT | Carrier | Checked (UTC) | Observed fields | Expected result |
 |---|---|---|---|---|---|
-| Authorized | 138328 / 53467 | Werner Enterprises Inc | 03:29 | `allowedToOperate` Y, common A, contract A, `statusCode` A, `oosDate` null | Pass |
+| Authorized, used on the live test call | 138328 / 53467 | Werner Enterprises Inc | 03:29 | `allowedToOperate` Y, common A, contract A, `statusCode` A, `oosDate` null | Pass |
 | Inactive | 134652 / 117201 | Mall Trucking and Freight Corp | 03:29 | `allowedToOperate` Y, common N, contract I, `statusCode` I | Reject |
-| Inactive, used in every TMS booking test | 872144 / 2514144 | Ouza Transportation Inc | 03:25 | `allowedToOperate` Y, common N, contract I, `statusCode` I | Reject |
+| Inactive, used in the six historical TMS booking sends | 872144 / 2514144 | Ouza Transportation Inc | 03:25 | `allowedToOperate` Y, common N, contract I, `statusCode` I | Reject |
 | Nonexistent | 99999999 | None | 03:30 | Empty `content` array | Reject as not found |
 | API control only | 1515 / 44110 | Greyhound Lines Inc | 03:26 | `allowedToOperate` Y, common A, contract A, `statusCode` A, `oosDate` null | Passes the rule, but is a passenger carrier. Do not use in the demo. |
 | Out of service | Not selected | | Not checked | | Needed before claiming this case |

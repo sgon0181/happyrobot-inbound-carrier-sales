@@ -4,7 +4,7 @@ Internal reference for authorized contributors, including Claude Code and Codex.
 
 Start with [agent onboarding](../agent-onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../../PROJECT_GUIDE.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../../Questions.Md) identify token-specific differences. Keep assumptions explicit.
 
-**Current tracked implementation:** a read-only diagnostic, seven offline reader checks and sanitized reply fixtures. The production adapter, policy service, OTP gates, booking state and UI remain planned; the ignored SQLite/fake-TMS lab is historical prototype evidence.
+**Current tracked implementation:** a read-only diagnostic, seven offline reader checks and sanitized reply fixtures. [`service/`](../../service/README.md) holds the phase 1 adapter, booking and pricing core and a fake TMS, with live `LOAD_BOOK` off by default. Endpoints, OTP gates and UI remain planned; the ignored SQLite/fake-TMS lab is historical prototype evidence.
 
 ## 1. Setup and safe inspection
 

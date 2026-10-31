@@ -109,6 +109,6 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 - **Other integrations:** Twin atomicity/latency (T-1), notification trigger and log exposure (T-3), trusted call/operation identity (T-4), FMCSA access (T-5) and automatic OTP delivery. None is established by the SQLite lab; see [platform checks](platform-checks.md).
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.
-- **Pricing bands:** with a 6% gap and $25 rounding, 7 of the 50 open loads would get a working cap at or below `RATE`; with a 2% gap, none would. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.
+- **Pricing bands:** running `pricing-v1` offline over the 50 saved open loads with 200 random secrets sent none to pricing review. A median of 2 loads (at most 5) got a working cap at or below `RATE`, and a median of 1 (at most 3) had round targets collapse after $25 rounding. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.
 
 [Questions.Md, Q8](../Questions.Md) retains the unanswered owner clarification. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.

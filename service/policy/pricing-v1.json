@@ -1,0 +1,8 @@
+{
+  "version": "pricing-v1",
+  "rounding_step": 25,
+  "ceiling_gap_bps": [200, 600],
+  "opening_discount_bps": 500,
+  "opening_spread_bps": [800, 1500],
+  "round_target_bps": [3500, 6500, 10000]
+}

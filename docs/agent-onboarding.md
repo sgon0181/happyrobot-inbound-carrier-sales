@@ -16,12 +16,12 @@ Keep requirements, observed behavior, candidate decisions and simulations distin
 
 | Area | What a new agent can rely on |
 |---|---|
-| In Git | Read-only TMS reader, seven offline reader checks, shared guides, blank environment template, sanitized booking replies, historical test inventory, [platform checks](platform-checks.md) and the [test-carrier ledger](test-carriers.md). |
+| In Git | Phase 1 of the service in [`service/`](../service/README.md), with offline tests and live booking off by default. Read-only TMS reader, seven offline reader checks, shared guides, blank environment template, sanitized booking replies, historical test inventory, [platform checks](platform-checks.md) and the [test-carrier ledger](test-carriers.md). |
 | HappyRobot | Inspected workflow versions below exist externally. No workflow export, prompt snapshot or test definitions are tracked under `happyrobot/` yet. |
 | Ignored local work | Read/booking studies and a booking-policy lab live under `secrets/`. The lab records 37 passing tests, but uses SQLite/fake TMS. The tracked contract carries its useful findings and limits; a clone does not need those folders to understand them. An isolated end-to-end harness with 60 offline tests sits in a Codex worktree, outside this repository; [platform checks](platform-checks.md) carry its findings. |
 | Who does what | Claude Code maintains `main`. Codex maintains its isolated harness worktree and reviews Claude's commits. Both start from this file. |
 | Still unproven | A complete live voice flow, automatic OTP delivery, Twin coordination and clean call ending. See [platform checks](platform-checks.md). |
-| Planned implementation | `service/`, `ops-app/`, notification workflow integration, Twin coordination, Docker/Fly/Makefile artifacts and production QA results are not tracked implementations yet. Architecture commands such as `make deploy` are future targets. |
+| Planned implementation | Service endpoints and authentication, `ops-app/`, notification and FMCSA adapters, Twin coordination, Docker/Fly/Makefile artifacts and production QA results are not tracked implementations yet. Architecture commands such as `make deploy` are future targets. |
 
 Verified external snapshot: workspace [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez), organization ID `01a17a99-0856-7f88-b09f-4b787e20413c`, slug `fdesantiagogonzalezalvarez`. The workspace currently uses legacy workflow versions, not workflow branches.
 
@@ -64,9 +64,9 @@ Real responses through a HappyRobot native HTTP node confirmed the fields in [`t
 
 ## Safe first build slice
 
-Run `python3 scripts/test_query_loads.py` offline. Read [`tms/fixtures/README.md`](tms/fixtures/README.md) for the six sanitized reply examples. `python3 scripts/query_loads.py --help` is offline; actual queries need credentials and print developer-only internal pricing. Never rerun historical booking harnesses to inspect evidence.
+Run `python3 scripts/test_query_loads.py` and `python3 -m unittest discover -s service/tests -t .` offline. Read [`tms/fixtures/README.md`](tms/fixtures/README.md) for the six sanitized reply examples. `python3 scripts/query_loads.py --help` is offline; actual queries need credentials and print developer-only internal pricing. Never rerun historical booking harnesses to inspect evidence.
 
-Start with typed read-only TMS parsing, explicit `OPEN` filtering, booking-state/domain rules and durable-storage interfaces. Preserve `ACK_PENDING`, `UNKNOWN` and `CONFIRMED`, one-shot submission and blocked pending inventory. Keep live writes disabled until the authorized integration path is ready. No new booking probe is needed to begin this slice.
+Phase 1 already covers typed TMS parsing, explicit `OPEN` filtering, booking-state/domain rules and the durable-storage interface. Preserve `ACK_PENDING`, `UNKNOWN` and `CONFIRMED`, one-shot submission and blocked pending inventory. Keep live writes disabled until the authorized integration path is ready. No new booking probe is needed to begin this slice.
 
 T-1 Twin coordination, T-2 money/finalization/ownership, T-3 notification trigger and log exposure, T-4 trusted call/operation identity, T-5 FMCSA access and T-6 session ending retain explicit checks/fallbacks in the architecture. A simulator's confirmation is not a real TMS command. Fresh-session Claude can use `/context` to verify `CLAUDE.md` and its `@AGENTS.md` import loaded; the deeper guides are linked for task-specific reading.
 

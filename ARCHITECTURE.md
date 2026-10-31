@@ -266,7 +266,7 @@ The broker pays the carrier, so the carrier pushes up and we concede toward a co
 
 - **Pricing policy (D-4).** A versioned policy file in the service, owned by the brokerage, turns each load's posted `RATE` and validated ceiling into three numbers, all rounded down to increments of 25 whole native units (a demo policy amount, not proof of dollar/cents scale):
   - **Working cap:** the ceiling minus a load-specific gap drawn from a configured band (initially 2-6 % of the ceiling). It is the highest number we say and the highest ask we accept.
-  - **Opening offer:** the posted rate minus the configured opening discount, when that leaves room below the cap; otherwise a load-specific spread below the cap, drawn from a second band (initially 8-15 %).
+  - **Opening offer:** the posted rate minus the configured opening discount (initially 5 %), when that leaves room below the cap; otherwise a load-specific spread below the cap, drawn from a second band (initially 8-15 %).
   - **Round targets:** set fractions of the way from opening to cap, one per round (initially 35 %, 65 %, 100 %).
 
   Both draws use a keyed seed: an HMAC of the load ID and policy version under a server secret. The same load gives the same numbers on every call, so calling back gains nothing, and knowing the policy without the secret does not reveal the gap. Every number is validated below the ceiling before use. If the ceiling is missing or invalid, or the cap does not sit above the opening offer, the load goes to `pricing_review_required`; nothing is improvised during the call. The secret lives in Fly secrets, and the policy version is stored on every call.
@@ -424,13 +424,13 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 | Conversation: edge | TMS down mid-call; code expired; wrong code three times; code read aloud with a leading zero; load taken during the call; booking outcome unknown; pricing review required | HappyRobot test suites |
 | Conversation: adversarial | Code bypass, booking requested before agreement, call-ID substitution, cross-call replay, resends resetting limits; ceiling extraction by direct question, binary search, anchoring and repeated calls; prompt injection | HappyRobot adversarial tests |
 
-Planned production/conversation results will be recorded in `docs/qa-results.md` and summarized in Apps; neither exists yet. Current tracked validation is the seven offline reader checks. The ignored lab records 37 historical SQLite/fake-TMS tests; its proof limits and sanitized receipts are in the contract evidence. The isolated harness is summarized in [platform checks](docs/platform-checks.md). A passing tool-selection grade does not prove an integration works, so confirm each call reached the service. HappyRobot cancels a full-workflow scenario at 1m30s, so a complete call may need testing in segments (T-6).
+Planned production/conversation results will be recorded in `docs/qa-results.md` and summarized in Apps; neither exists yet. Current tracked validation is the seven offline reader checks and the offline phase 1 tests in [`service/`](service/README.md). The ignored lab records 37 historical SQLite/fake-TMS tests; its proof limits and sanitized receipts are in the contract evidence. The isolated harness is summarized in [platform checks](docs/platform-checks.md). A passing tool-selection grade does not prove an integration works, so confirm each call reached the service. HappyRobot cancels a full-workflow scenario at 1m30s, so a complete call may need testing in segments (T-6).
 
 ---
 
 ## 10. Deployment and repository
 
-This is the target layout and deployment plan, not a list of existing artifacts. Current state and safe commands are in [onboarding](docs/agent-onboarding.md). `service/`, `happyrobot/`, `ops-app/`, Docker/Fly/Makefile artifacts and production QA results are not tracked yet. `.env.example` now supplies blank names only.
+This is the target layout and deployment plan, not a list of existing artifacts. Current state and safe commands are in [onboarding](docs/agent-onboarding.md). `service/` holds phase 1 only. `happyrobot/`, `ops-app/`, Docker/Fly/Makefile artifacts and production QA results are not tracked yet. `.env.example` now supplies blank names only.
 
 - **Image:** one Docker image for the service (Python 3.12 slim, non-root).
 - **Deploy:** after one-time setup (`fly launch` and `fly secrets set`), `make deploy` runs `fly deploy`: one Fly.io machine, HTTPS by default. Luke confirmed Fly.io is acceptable and any cloud environment works. Another host would need its own deployment configuration; the service remains Dockerized.

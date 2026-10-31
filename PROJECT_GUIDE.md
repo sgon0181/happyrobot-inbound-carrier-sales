@@ -2,6 +2,8 @@
 
 Sources reviewed 2026-10-28. Summary of the local assignment PDF and official documentation, without prescribing architecture or a technology stack.
 
+For TMS implementation, start with [`docs/tms/README.md`](docs/tms/README.md): command usage, codes, parsing, visibility rules and known differences between handbook examples and this candidate token. Read [`docs/tms-contract.md`](docs/tms-contract.md) for measured evidence. These are shared context for both coding agents; the runtime voice agent receives only approved tool results.
+
 ## Recruiter clarification, 2026-10-30 (Australia/Sydney)
 
 Source: [Luke's reply](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d), recorded in `Questions.Md`.
@@ -60,3 +62,4 @@ Deliverables: prospect summary email, IT/business build description, repository 
 - Booking state is token-scoped; repeated attempts can return `ALREADY_BOOKED`. Exact rate-validation rules are not fully documented.
 - Source discrepancy: PDF describes tentative reservation before senior-rep confirmation; handbook describes `LOAD_BOOK` as committing a booking.
 - Luke delegated the booking and rate ambiguities to the candidate on 2026-10-30. The proposed local hold and provisional `MAX_BUY` mapping are documented assumptions, not newly confirmed TMS capabilities or observed behavior.
+- Newer owner-recorded evidence in [`Questions.Md`, Q8](Questions.Md) reports booking acknowledgements with `STATUS:PENDING`, rather than the handbook's `BOOKED`. Final confirmation behavior is unresolved. See the TMS reference before implementing the booking sequence; the architecture has not yet consolidated this evidence.

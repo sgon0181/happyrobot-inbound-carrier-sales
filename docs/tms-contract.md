@@ -1,6 +1,6 @@
 # TMS Contract Evidence
 
-What we have observed about the legacy TMS, what those observations do not prove, and which loads are set aside for testing. It adds to the [TMS handbook](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/) and does not replace it.
+What we have observed about the legacy TMS, what those observations do not prove, and which loads are set aside for testing. Start with the [shared TMS operating reference](tms/README.md) for command usage. This evidence adds to the [TMS handbook](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/) and does not replace it.
 
 There are two kinds of evidence here, and they are not interchangeable:
 
@@ -55,12 +55,16 @@ The remaining fields are mapped when the TMS adapter is built.
 
 ## Still unproven
 
-- **Booking rates (T-2):** accepted money units, precision and bounds, and whether the server enforces `MAX_BUY`. Reads cannot settle this.
-- **Booking ownership (T-2):** no booked record was retrieved, so we do not know what one exposes.
+- **Booking rates (T-2):** accepted money units, precision and bounds, and whether the server enforces `MAX_BUY`. Reads cannot settle this. The newer owner-recorded Q8 evidence below does not establish the complete validation contract.
+- **Booking ownership and final status (T-2):** no confirmed booked record was retrieved in the read-only study. Q8 records newer `PENDING` acknowledgements; no authoritative transition to `BOOKED` or final-confirmation operation has been established.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.
 - **Pricing bands:** with a 6% gap and $25 rounding, 7 of the 50 open loads would get a working cap at or below `RATE`; with a 2% gap, none would. Check this against the pricing policy before the demo.
 
 ## Booking test inventory
 
-No loads have been assigned and no bookings have been made. Loads used for booking tests will be listed here, separately from those kept for the demo.
+The 2026-10-30 study above sent no bookings. Since that study, the owner recorded four disposable live booking tests in [`Questions.Md`, Q8](../Questions.Md): requests within fresh `MAX_BUY` values received booking references and `STATUS:PENDING`, and remained pending roughly 40 minutes later. This is owner-recorded evidence, not a replayable test record in this file. The disposable load IDs, exact requests and replies have not yet been recorded here; do not assume any particular load is still unused.
+
+The handbook shows `BOOKED` and documents no confirmation operation. Q8 asks Luke what final confirmation requires; no answer is recorded. An acknowledgement with `PENDING` must remain pending in the UI and must not count as a confirmed booking. The current first-layer interpretation and its unresolved booking-timing decision are recorded in Q8; `ARCHITECTURE.md` still needs to consolidate this newer evidence.
+
+Before further live booking tests, record the disposable load IDs here, separately from inventory kept for the demo. Do not use a load merely because it appears in a handbook example or an earlier read-only lookup.

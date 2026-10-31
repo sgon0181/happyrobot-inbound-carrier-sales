@@ -2,14 +2,14 @@
 
 | | |
 |---|---|
-| **Version** | 2.3 · 2026-10-31 |
-| **Status** | Build design, not an implementation report. Incorporates bounded live booking evidence and distinguishes acknowledged pending, confirmed and unknown. D-8 to D-10 remain candidate assumptions; T-1 to T-4 still need integration validation or their fallback. The `PENDING` question to Luke (Q8) does not block the build. See [`docs/agent-onboarding.md`](docs/agent-onboarding.md) for current state. |
+| **Version** | 2.4 · 2026-10-31 |
+| **Status** | Build design, not an implementation report. Incorporates bounded live booking evidence and distinguishes acknowledged pending, confirmed and unknown. D-8 to D-10 remain candidate assumptions; T-1 to T-6 still need integration validation or their fallback. Twin is not provisioned yet, which blocks T-1 ([platform checks](docs/platform-checks.md)). The `PENDING` question to Luke (Q8) does not block the build. See [`docs/agent-onboarding.md`](docs/agent-onboarding.md) for current state. |
 | **Scope** | Proof of concept for HappyRobot Logistics' inbound carrier desk (see [`FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf`](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md)). |
 | **Supersedes** | [`Archive/Claude_ProposedArchitecture.md`](Archive/Claude_ProposedArchitecture.md), [`Archive/Codex_ProposedArchitecture.md`](Archive/Codex_ProposedArchitecture.md) |
 
 **Clarification source:** Luke's reply on 2026-10-30 (Australia/Sydney), linked in `Questions.Md`. Fly.io and personal-email OTP are confirmed acceptable. The walkthrough is for the brokerage's business team; creative additions are optional and should provide client value. The archived proposals remain historical records.
 
-**Design evidence:** [`Research.Md`](Research.Md) records industry input, Perplexity research, source checks and the decisions they informed. The four components remain unchanged; [sanitized TMS evidence](docs/tms-contract.md#booking-experiments-2026-10-31) updates booking recovery and amount handling below. Unless explicitly identified as observed evidence, the components, endpoints, guarantees and tests in this document are planned requirements, not verified deployed behavior.
+**Design evidence:** [`Research.Md`](Research.Md) records industry input, Perplexity research, source checks and the decisions they informed. The four components remain unchanged; [sanitized TMS evidence](docs/tms-contract.md#booking-experiments-2026-10-31) updates booking recovery and amount handling below, and [platform checks](docs/platform-checks.md) record what the isolated end-to-end harness found. Unless explicitly identified as observed evidence, the components, endpoints, guarantees and tests in this document are planned requirements, not verified deployed behavior.
 
 ---
 
@@ -75,7 +75,7 @@ flowchart TB
 
 Read top to bottom: people → what they touch → the service that decides → what it depends on. **Blue** is HappyRobot, **green** is the service we build and run, **grey** is the customer's and government systems.
 
-**Trust boundaries.** Every arrow into the service is authenticated, and each caller has its own key: the voice workflow (agent key) and the operations app (ops key). Agent requests must also bind to a trusted runtime call identity, not a model-supplied `call_id` alone (T-4). The service uses a third key to trigger the notification workflow. The web-call trigger and the app sit behind HappyRobot sign-in. Our TMS and FMCSA integrations run through the service.
+**Trust boundaries.** Every arrow into the service is authenticated, and each caller has its own key: the voice workflow (agent key) and the operations app (ops key). Agent requests must also bind to a trusted runtime call identity, not a model-supplied `call_id` alone (T-4). The service uses a third key to trigger the notification workflow. The web-call trigger and the app sit behind HappyRobot sign-in. Our TMS and FMCSA integrations run through the service, with the FMCSA route subject to T-5.
 
 ---
 
@@ -193,8 +193,8 @@ These are requirements for the implementation. The planned service must enforce 
 
 - **Trigger:** web call with HappyRobot's enhanced security (sign-in) left on.
 - **Agent:** short, direct turns for drivers on the road. The prompt walks a fixed order, identify → verify → code → match → negotiate → reserve → handoff, and refuses to skip steps or discuss the ceiling. The prompt is the *first* line of defence; the service is the one that holds.
-- **Tools:** one webhook tool per agent-facing endpoint. The workflow runtime, not the model, supplies `call_id` and operation IDs (T-4). The Tool Call Result node exposes only fields the agent may say out loud.
-- **Handoff:** once the service accepts the booking request, the agent repeats the agreed rate, says a senior rep will confirm it, and says plainly it is **not booked yet**. It says the same for `ACK_PENDING` and `UNKNOWN`, so the carrier never hears a stronger claim than we can prove. Transfers don't work on web calls, so it then announces a mocked transfer and ends; the booking appears in the operations app's rep queue.
+- **Tools:** one webhook tool per agent-facing endpoint. The workflow runtime, not the model, supplies `call_id` and operation IDs (T-4). The Tool Call Result node exposes only fields the agent may say out loud, and each must be exposed explicitly: a successful HTTP reply with no exposed fields leaves the model with nothing.
+- **Handoff:** once the service accepts the booking request, the agent repeats the agreed rate, says a senior rep will confirm it, and says plainly it is **not booked yet**. It says the same for `ACK_PENDING` and `UNKNOWN`, so the carrier never hears a stronger claim than we can prove. Transfers don't work on web calls, so it then announces a mocked transfer and ends the call (T-6); the booking appears in the operations app's rep queue.
 - **After the call:** the workflow closes the call with the service, which sets the outcome, then stores the transcript and an AI summary, notes and sentiment (§6.7).
 - **Source control:** the workflow is built in the HappyRobot workspace through the HappyRobot MCP (installed locally, not part of the repo). Its export or sanitized snapshot, prompts and test definitions must be committed under the planned `happyrobot/` path when built. That path does not exist yet; the current external workflow snapshot and identifiers are in [onboarding](docs/agent-onboarding.md#current-state).
 
@@ -238,8 +238,8 @@ When the TMS is down, the agent says so and offers a callback. It never pitches 
 
 ### 6.3 Verification and the one-time code
 
-1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if FMCSA shows the carrier allowed to operate, with active common or contract carrier authority (broker-only authority does not qualify), and not out of service. FMCSA errors return `fmcsa_unavailable`; the call cannot continue unverified. Luke supplied no test MC numbers. The [test-carrier ledger](docs/test-carriers.md) is currently unpopulated: select and verify an authorized carrier, an inactive/revoked carrier and a nonexistent MC before claiming live FMCSA coverage. The handbook-example MC used in TMS probes was not FMCSA-vetted.
-2. **Code issue.** The service generates a 6-digit code, stores only a keyed hash with a 5-minute expiry in Twin, and triggers a separate, authenticated **Notification workflow** in HappyRobot that delivers it through an email integration (point 4 says where). The voice workflow receives only `sent`, the email channel, and a masked destination.
+1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if FMCSA shows the carrier allowed to operate, with active common or contract carrier authority (broker-only authority does not qualify), and not out of service. In observed responses that means `allowedToOperate` is `Y`, `commonAuthorityStatus` or `contractAuthorityStatus` is `A`, `statusCode` is `A` and `oosDate` is null. `allowedToOperate` alone is not enough, because inactive carriers still showed `Y`. Missing or unknown values fail closed, and an empty result means not found. FMCSA errors, including HTTP 403, return `fmcsa_unavailable` and never mean inactive authority; the call cannot continue unverified. Where the lookup runs depends on T-5. Luke supplied no test MC numbers, so the [test-carrier ledger](docs/test-carriers.md) records the public records checked so far. Authority does not prove who owns an MC or whether the carrier suits the freight.
+2. **Code issue.** The service generates a 6-digit code, stores only a keyed hash with a 5-minute expiry in Twin, and triggers a separate, authenticated **Notification workflow** in HappyRobot that delivers it through an email integration (point 4 says where). The voice workflow receives only `sent`, the email channel, and a masked destination. An uncertain send still counts against the limit and is never retried silently.
 3. **Code check.** The code the carrier reads aloud *does* pass through the voice system, that is unavoidable, but it is compared against the stored hash in the service, in constant time, with an attempt limit.
 4. **Where the code goes (D-12).** The service first looks for the carrier's trusted contact in Twin `carriers`. Luke allowed the candidate's personal email for the demo, so the service also has a **demo inbox setting**: when it is set, any FMCSA-eligible carrier with no contact on file gets its code there.
    - The setting is configuration, never caller input, and is left unset in production.
@@ -285,7 +285,7 @@ The cap also has a cost. A carrier whose last ask falls between the cap and the 
 
 **The AI's work ends at a tentative booking; the senior rep owns final confirmation** (PDF pp.1-3). Once a rate is agreed, the service sends `LOAD_BOOK` once, while the carrier is still on the call, persists the actual reply, and hands off. A failure therefore surfaces while the agent can still offer something else. This timing is candidate policy D-8: record it as ours in the write-up, not as something Luke mandated.
 
-**What the TMS actually does.** The handbook shows `STATUS:BOOKED`, but live requests returned a reference with `STATUS:PENDING` and stayed there, and no documented action moves them on ([evidence](docs/tms-contract.md#booking-experiments-2026-10-31)). We treat that reply as the tentative stage. This is our interpretation, not confirmed behaviour: we do not know whether `PENDING` reserves the load against other tokens, whether it expires, or what completes it (T-2, [Q8](Questions.Md)).
+**What the TMS actually does.** The handbook shows `STATUS:BOOKED`, but live requests returned a reference with `STATUS:PENDING` and stayed there, and no documented action moves them on ([evidence](docs/tms-contract.md#booking-experiments-2026-10-31)). We treat that reply as the tentative stage. This is our interpretation, not confirmed behaviour: we do not know whether `PENDING` reserves the load against other tokens, whether it expires, or what completes it (T-2, [Q8](Questions.Md)). Every live booking so far used MC 872144, which FMCSA shows as inactive, so `PENDING` may be carrier-specific. If an active MC returns `BOOKED` directly, the booking reaches `CONFIRMED` before the rep acts: the state model handles that, but D-8's reasoning would need revisiting.
 
 ```mermaid
 stateDiagram-v2
@@ -419,12 +419,12 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 |---|---|---|
 | Unit and property | Every price stays at or below the cap and below the validated ceiling; the same load and policy version give the same numbers; without the secret, the policy does not reveal the gap; exact money parsing; missing pricing; round limits; code expiry, single use, resends, leading-zero codes and MC changes; TMS frame parsing, including a cut-off line that merely ends in `END`; booking reply classification from the sanitized fixtures | `service/tests/` |
 | Integration | Fake TMS faults; simultaneous booking requests; restart after send; a stale `OPEN` read after an unknown attempt; `PENDING` loads filtered from search; a rep decline keeping the load blocked; duplicate operation IDs; concurrent OTP replay and budget updates; a dropped call closed by timeout; a ceiling that falls before booking | `service/tests/` |
-| Contract | Bounded read study and six historical booking sends recorded in `docs/tms-contract.md`; four pending acknowledgements, one explicit fractional rejection and one duplicate error. Preserve sanitized fixtures; no repeat write needed for the first build slice | Recorded evidence; finalization, money scale and full bounds unresolved |
+| Contract | Bounded read study and six historical booking sends recorded in `docs/tms-contract.md`; four pending acknowledgements, one explicit fractional rejection and one duplicate error. Preserve sanitized fixtures; no repeat write needed for the first build slice. One active-MC booking on an allocated load is planned for T-2 | Recorded evidence; finalization, money scale and full bounds unresolved |
 | Conversation: standard | Happy path; no match (demand recorded); ineligible carrier; broker-only MC; lane change; carrier accepts first offer; carrier cites the posted rate | HappyRobot test suites |
 | Conversation: edge | TMS down mid-call; code expired; wrong code three times; code read aloud with a leading zero; load taken during the call; booking outcome unknown; pricing review required | HappyRobot test suites |
 | Conversation: adversarial | Code bypass, booking requested before agreement, call-ID substitution, cross-call replay, resends resetting limits; ceiling extraction by direct question, binary search, anchoring and repeated calls; prompt injection | HappyRobot adversarial tests |
 
-Planned production/conversation results will be recorded in `docs/qa-results.md` and summarized in Apps; neither exists yet. Current tracked validation is the seven offline reader checks. The ignored lab records 37 historical SQLite/fake-TMS tests; its proof limits and sanitized receipts are in the contract evidence.
+Planned production/conversation results will be recorded in `docs/qa-results.md` and summarized in Apps; neither exists yet. Current tracked validation is the seven offline reader checks. The ignored lab records 37 historical SQLite/fake-TMS tests; its proof limits and sanitized receipts are in the contract evidence. The isolated harness is summarized in [platform checks](docs/platform-checks.md). A passing tool-selection grade does not prove an integration works, so confirm each call reached the service. HappyRobot cancels a full-workflow scenario at 1m30s, so a complete call may need testing in segments (T-6).
 
 ---
 
@@ -440,7 +440,7 @@ This is the target layout and deployment plan, not a list of existing artifacts.
 service/          FastAPI app: api/, core/, adapters/ (tms, fmcsa, twin, notify), tests/
 happyrobot/       workflow export, prompts, test-suite definitions
 ops-app/          operations app source, mirrored from HappyRobot Apps
-docs/             onboarding, build description, TMS reference and contract, test carriers, QA results, prospect email, demo script
+docs/             onboarding, build description, TMS reference and contract, platform checks, test carriers, QA results, prospect email, demo script
 scripts/          read-only TMS query tool
 Dockerfile · docker-compose.yml · fly.toml · Makefile · .env.example
 ```
@@ -455,9 +455,9 @@ The operations app will be developed in HappyRobot Apps and mirrored under `ops-
 
 | Phase | Outcome |
 |---|---|
-| **0. Platform checks** | Run alongside phase 1: a browser web call; trusted call and operation IDs (T-4); external Twin access, atomic coordination and latency (T-1); a demo email and notification-log check (T-3). |
+| **0. Platform checks** | Run alongside phase 1: provision Twin, then external access, atomic coordination and latency (T-1); a browser web call with trusted call and operation IDs (T-4); the automatic notification trigger and log exposure (T-3); FMCSA access from Fly.io (T-5); how a session ends (T-6). |
 | **1. TMS adapter and core** | Strict parser, read adapter, `LOAD_BOOK` path with reply classification from the sanitized fixtures, fake TMS and fault-injection tests, booking and pricing core. Live writes stay disabled. Unresolved finalization is isolated, not a reason to block this work. |
-| **2. Service** | Endpoints, Twin adapter, authentication; deployed to Fly.io. The Twin adapter follows T-1 and the voice-facing tools follow T-4, each answered or its fallback chosen. T-2 does not block this phase. |
+| **2. Service** | Endpoints, Twin adapter, authentication; deployed to Fly.io. The Twin adapter follows T-1, the voice-facing tools follow T-4 and the FMCSA adapter follows T-5, each answered or its fallback chosen. T-2 does not block this phase. |
 | **3. Conversation** | Voice workflow wired to the service; live end-to-end call. |
 | **4. Operations** | Twin call records and the operations app with the rep queue. |
 | **5. Quality and delivery** | Test suites, Northstars, QA results, build description, prospect email, walkthrough video. |
@@ -490,7 +490,9 @@ The operations app will be developed in HappyRobot Apps and mirrored under `ops-
 
 | ID | Question | Design impact | Fallback |
 |---|---|---|---|
-| T-1 | Can external Twin access enforce uniqueness and atomic conditional updates, fast enough for live calls? | Durable budgets, one-time codes and booking claims, even with one instance. | A small Postgres used only for coordination, justified under PDF p.4; Twin stays the system of record. |
-| T-2 | Whole-value acceptance and pending receipts observed. What are currency/scale, full bounds, pending lifecycle and authoritative ownership recovery? Asked in Q8. | Exact amounts (D-10), truthful tentative outcomes and final reconciliation. | Use canonical whole native values with explicit currency assumption; pending/unknown stay blocked for review. Do not invent finalization or resend. |
-| T-3 | Do notification-workflow run logs expose the expected code? | Who can see live codes. | Restrict run-log access to operators and document it; if that isn't possible, the service sends the email itself. |
+| T-1 | **Blocked: Twin is not provisioned.** Once it is, can external access enforce uniqueness and atomic conditional updates, fast enough for live calls? | Durable budgets, one-time codes and booking claims, even with one instance. | A small Postgres used only for coordination, justified under PDF p.4; Twin stays the system of record. This covers missing atomicity only. Twin itself must exist, because the PDF requires it. |
+| T-2 | Whole-value acceptance and pending receipts observed. What are currency/scale, full bounds, pending lifecycle and authoritative ownership recovery? Asked in Q8. One active-MC booking on an allocated load is the planned comparison. | Exact amounts (D-10), truthful tentative outcomes and final reconciliation. | Use canonical whole native values with explicit currency assumption; pending/unknown stay blocked for review. Do not invent finalization or resend. |
+| T-3 | Can the service trigger the notification workflow automatically, and do its run logs expose the expected code? The email action works, but the normal trigger returned HTTP 502 twice. | Code delivery and who can see live codes. | Restrict run-log access to operators and document it; if that or the trigger fails, the service sends the email itself. |
 | T-4 | Can tools pass a trusted call identity and stable operation IDs outside model-generated arguments? | Call isolation and retry handling. | The first tool call returns an unguessable per-call token, required on every later call; retries are deduplicated by request fingerprint. |
+| T-5 | Can the service reach FMCSA directly from Fly.io? Local direct requests returned HTTP 403, while HappyRobot's native HTTP node worked. | Where the authority lookup runs. | A native HTTP node does the lookup and passes the raw result to the service through runtime-mapped fields, never model-generated arguments. The service still applies the eligibility rule. |
+| T-6 | How does a workflow end a session cleanly, and can a full call be tested within HappyRobot's 1m30s scenario limit? Two runs reached the right refusal, then stayed open until cancelled. | Call closing and how conversation tests are built. | Test the flow in segments, and let the post-call step and the 30-minute timeout close calls (§6.7). |

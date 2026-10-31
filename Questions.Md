@@ -54,7 +54,7 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **Status:** Sent to Luke by email; awaiting Luke's reply.
 
-   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed.
+   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. All used MC 872144, which FMCSA showed as inactive on 2026-10-31. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed.
 
    **Reference:** Owner's follow-up email to Luke; PDF pp. 1-3, first-layer scope and process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
 

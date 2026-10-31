@@ -1,13 +1,19 @@
 # FMCSA test-carrier ledger
 
-Status 2026-10-31 (Australia/Sydney): **no live FMCSA test MC has been verified in this repository**. Luke supplied no test MCs. Do not treat handbook-example MC `872144`, which was used in TMS probes, as evidence of active carrier authority or OTP ownership.
+Status 2026-10-31 (Australia/Sydney): five public records were checked through a HappyRobot native HTTP node, as a QCMobile docket lookup. These are saved observations, so recheck them near the demo because public records can change. Luke supplied no test MCs.
 
-| Required case | MC / DOT | Last checked | Evidence and expected result |
-|---|---|---|---|
-| Authorized common/contract carrier, allowed to operate, not out of service | Not selected | Not checked | Pending live verification and sanitized fixture. |
-| Inactive/revoked authority or out of service | Not selected | Not checked | Pending live verification and sanitized fixture. |
-| Nonexistent MC | Not selected | Not checked | Pending authoritative not-found response; a timeout is not nonexistence. |
+| Case | MC / DOT | Carrier | Checked (UTC) | Observed fields | Expected result |
+|---|---|---|---|---|---|
+| Authorized | 138328 / 53467 | Werner Enterprises Inc | 03:29 | `allowedToOperate` Y, common A, contract A, `statusCode` A, `oosDate` null | Pass |
+| Inactive | 134652 / 117201 | Mall Trucking and Freight Corp | 03:29 | `allowedToOperate` Y, common N, contract I, `statusCode` I | Reject |
+| Inactive, used in every TMS booking test | 872144 / 2514144 | Ouza Transportation Inc | 03:25 | `allowedToOperate` Y, common N, contract I, `statusCode` I | Reject |
+| Nonexistent | 99999999 | None | 03:30 | Empty `content` array | Reject as not found |
+| API control only | 1515 / 44110 | Greyhound Lines Inc | 03:26 | `allowedToOperate` Y, common A, contract A, `statusCode` A, `oosDate` null | Passes the rule, but is a passenger carrier. Do not use in the demo. |
+| Out of service | Not selected | | Not checked | | Needed before claiming this case |
+| Broker-only authority | Not selected | | Not checked | | Needed for the conversation test |
 
-Before using a case, record timestamp/timezone, source endpoint without `webKey`, exact relevant authority/operating fields, and the eligibility decision. Retain only the minimum sanitized response fields needed for the test; exclude contacts and credentials. Recheck status near the demo because public records can change. Broker-only authority does not satisfy the architecture's carrier-eligibility policy.
+Inactive carriers still show `allowedToOperate` Y, so that field alone proves nothing. A timeout or HTTP 403 is `fmcsa_unavailable`, not a not-found or inactive result. Passing this check does not prove who owns an MC or whether the carrier suits the freight, and it says nothing about OTP ownership.
 
-See [onboarding](agent-onboarding.md#fmcsa-integration-starting-point) for documented request/auth shape and unresolved field mapping, and [architecture §6.3](../ARCHITECTURE.md#63-verification-and-the-one-time-code) for the proposed gate. This ledger is an implementation checklist, not a claim that those tests passed.
+When adding a case, record the timestamp and timezone, the source endpoint without `webKey`, the relevant fields and the eligibility decision. Keep only the minimum sanitized fields, with no contacts or credentials.
+
+See [onboarding](agent-onboarding.md#fmcsa-integration-starting-point) for the request shape and [architecture section 6.3](../ARCHITECTURE.md#63-verification-and-the-one-time-code) for the eligibility rule.

@@ -55,7 +55,7 @@ The remaining fields are mapped when the TMS adapter is built.
 
 ## Booking experiments: 2026-10-31
 
-The initial controlled study sent five `LOAD_BOOK` requests across four disposable loads: four complete reference-bearing `PENDING` acknowledgements and one explicit `INVALID_RATE` rejection. A separate, deliberately authorized exact replay added one `ALREADY_BOOKED` response. Combined: **six write sends, four load IDs, zero observed `BOOKED` responses**. Count sends, not the journal's multiple intent/result/classification entries. This was one token and one handbook-example MC, without an FMCSA/OTP call flow; it is not an end-to-end verification test.
+The initial controlled study sent five `LOAD_BOOK` requests across four disposable loads: four complete reference-bearing `PENDING` acknowledgements and one explicit `INVALID_RATE` rejection. A separate, deliberately authorized exact replay added one `ALREADY_BOOKED` response. Combined: **six write sends, four load IDs, zero observed `BOOKED` responses**. Count sends, not the journal's multiple intent/result/classification entries. This was one token and one handbook-example MC, which FMCSA showed as inactive on 2026-10-31, without an FMCSA/OTP call flow; it is not an end-to-end verification test.
 
 | Historical case | Load | `AGREED_RATE` text | Observed immediate result |
 |---|---|---|---|
@@ -97,16 +97,16 @@ All statuses below are historical 2026-10-31 snapshots, not current availability
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers, expiry/release cleanup and further booking sends until authoritatively resolved. |
+| Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
 The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
 
 ## Still unproven
 
-- **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement.
-- **Cause of `PENDING`:** every booking test used one token and one MC, so a token-specific or carrier-specific cause is not ruled out. Later calls add observations; only a controlled comparison or an authoritative answer would establish the cause.
-- **Other integrations:** Twin atomicity/latency (T-1), notification-log exposure (T-3), trusted call/operation identity (T-4), FMCSA fixtures and OTP delivery. None is established by the SQLite lab.
+- **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The handbook's own sample books `AGREED_RATE:2200` on a load with `MAX_BUY` 1950, which hints the server may not enforce the ceiling. A sample is not proof.
+- **Cause of `PENDING`:** every booking test used one token and MC 872144, which FMCSA shows as inactive, so a token-specific or carrier-specific cause is not ruled out. A single active-MC booking on an allocated load is the planned comparison. Later calls add observations; only a controlled comparison or an authoritative answer would establish the cause.
+- **Other integrations:** Twin atomicity/latency (T-1), notification trigger and log exposure (T-3), trusted call/operation identity (T-4), FMCSA access (T-5) and automatic OTP delivery. None is established by the SQLite lab; see [platform checks](platform-checks.md).
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.
 - **Pricing bands:** with a 6% gap and $25 rounding, 7 of the 50 open loads would get a working cap at or below `RATE`; with a 2% gap, none would. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.

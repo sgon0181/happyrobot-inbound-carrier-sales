@@ -1,14 +1,27 @@
 # Platform Checks
 
-Sanitized results from Codex's isolated end-to-end harness, 2026-10-31 (Australia/Sydney). The harness lives in a separate Codex worktree, outside this repository, so this file is the tracked record. It is not the production application, and it sent zero `LOAD_BOOK` requests.
+Sanitized results from Codex's isolated end-to-end harness, 2026-10-31 (Australia/Sydney). The harness lives in a separate Codex worktree, outside this repository, so this file is the tracked record. It is not the production application, and it sent zero `LOAD_BOOK` requests. Codex is now running a full end-to-end test against architecture v2.4, so these results will be superseded by its findings.
 
 | Check | Status | What happened | Next step |
 |---|---|---|---|
-| **T-1:** Twin coordination | Blocked | `SELECT 1` from a lab workflow returned `twin instance not available: record not found` in both staging and production. No tables exist. Uniqueness, atomic updates and latency are untested. | Provision Twin, then run T-1. Its Postgres fallback does not replace Twin. |
+| **T-1:** Twin coordination | Open | `SELECT 1` from a lab workflow first returned `twin instance not available: record not found` in both staging and production. After the owner provisioned Twin, Codex reports that a real Production SQL query succeeds. External API access, uniqueness, atomic updates and latency are untested. | Run T-1 in the end-to-end test. Its Postgres fallback does not replace Twin. |
 | **T-3:** code delivery and log exposure | Open | A native HappyRobot email action returned HTTP 202 and the message reached the candidate's Gmail inbox. The normal MCP workflow trigger returned Cloudflare HTTP 502 twice, so automatic delivery is unproven. Whether run details expose the code was not reported. | Test the trigger the service will really use, then check run details. |
 | **T-4:** trusted call identity | Open | In a text session, `verify_carrier` reached the harness with the correct MC over an authenticated webhook. The harness issued its own private per-call token, which is the T-4 fallback. A trusted runtime call ID and stable operation ID are untested, and no real web voice call ran from MC collection through handoff. | Test with a real browser web call. |
-| **T-5:** FMCSA access | Open | Direct requests from the local machine returned HTTP 403. A HappyRobot native HTTP node reached FMCSA for five MCs. Access from Fly.io is untested. | Test a direct request from Fly.io. A 403 is not inactive authority or a bad key. |
+| **T-5:** FMCSA access | Open | Direct requests from the local machine returned HTTP 403. A HappyRobot native HTTP node reached FMCSA for five MCs. Access from Fly.io is untested, although a lab app now exists with no machines. | Test a direct request from Fly.io. A 403 is not inactive authority or a bad key. |
 | **T-6:** ending a session | Open | Two full-workflow text scenarios reached the correct refusal of inactive MC 872144, then stayed open until the 1m30s scenario limit cancelled them. Both returned N/A, not a pass. An explicit end-call prompt instruction did not help, and the transcript shows no terminal tool. | Find how a workflow ends a session, then plan conversation tests around the time limit. |
+
+## Setup since the harness run
+
+| Item | State | Confirmed by |
+|---|---|---|
+| Twin | Provisioned; a real Production SQL query succeeds | Codex |
+| HappyRobot API key | Saved in Codex's isolated worktree, and authentication verified | Codex |
+| Fly CLI | Installed and authenticated | Claude Code and Codex |
+| Fly app `codex-e2e-lab-sg-20261031` | Exists with zero machines | Claude Code and Codex |
+| Chrome microphone | Permission enabled | Codex |
+| Claude Code HappyRobot MCP | Own OAuth login; live reads of the workspace and Inbound Carrier Sales passed | Claude Code |
+
+A complete live voice flow is still unproven. Automatic OTP delivery, Twin coordination and clean call ending still need implementation and testing.
 
 ## What the harness ran
 

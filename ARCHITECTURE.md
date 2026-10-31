@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Version** | 2.4 · 2026-10-31 |
-| **Status** | Build design, not an implementation report. Incorporates bounded live booking evidence and distinguishes acknowledged pending, confirmed and unknown. D-8 to D-10 remain candidate assumptions; T-1 to T-6 still need integration validation or their fallback. Twin is not provisioned yet, which blocks T-1 ([platform checks](docs/platform-checks.md)). The `PENDING` question to Luke (Q8) does not block the build. See [`docs/agent-onboarding.md`](docs/agent-onboarding.md) for current state. |
+| **Status** | Build design, not an implementation report. Incorporates bounded live booking evidence and distinguishes acknowledged pending, confirmed and unknown. D-8 to D-10 remain candidate assumptions; T-1 to T-6 still need integration validation or their fallback ([platform checks](docs/platform-checks.md)). The `PENDING` question to Luke (Q8) does not block the build. See [`docs/agent-onboarding.md`](docs/agent-onboarding.md) for current state. |
 | **Scope** | Proof of concept for HappyRobot Logistics' inbound carrier desk (see [`FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf`](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [`PROJECT_GUIDE.md`](PROJECT_GUIDE.md)). |
 | **Supersedes** | [`Archive/Claude_ProposedArchitecture.md`](Archive/Claude_ProposedArchitecture.md), [`Archive/Codex_ProposedArchitecture.md`](Archive/Codex_ProposedArchitecture.md) |
 
@@ -455,7 +455,7 @@ The operations app will be developed in HappyRobot Apps and mirrored under `ops-
 
 | Phase | Outcome |
 |---|---|
-| **0. Platform checks** | Run alongside phase 1: provision Twin, then external access, atomic coordination and latency (T-1); a browser web call with trusted call and operation IDs (T-4); the automatic notification trigger and log exposure (T-3); FMCSA access from Fly.io (T-5); how a session ends (T-6). |
+| **0. Platform checks** | Run alongside phase 1: external Twin access, atomic coordination and latency (T-1); a browser web call with trusted call and operation IDs (T-4); the automatic notification trigger and log exposure (T-3); FMCSA access from Fly.io (T-5); how a session ends (T-6). |
 | **1. TMS adapter and core** | Strict parser, read adapter, `LOAD_BOOK` path with reply classification from the sanitized fixtures, fake TMS and fault-injection tests, booking and pricing core. Live writes stay disabled. Unresolved finalization is isolated, not a reason to block this work. |
 | **2. Service** | Endpoints, Twin adapter, authentication; deployed to Fly.io. The Twin adapter follows T-1, the voice-facing tools follow T-4 and the FMCSA adapter follows T-5, each answered or its fallback chosen. T-2 does not block this phase. |
 | **3. Conversation** | Voice workflow wired to the service; live end-to-end call. |
@@ -490,7 +490,7 @@ The operations app will be developed in HappyRobot Apps and mirrored under `ops-
 
 | ID | Question | Design impact | Fallback |
 |---|---|---|---|
-| T-1 | **Blocked: Twin is not provisioned.** Once it is, can external access enforce uniqueness and atomic conditional updates, fast enough for live calls? | Durable budgets, one-time codes and booking claims, even with one instance. | A small Postgres used only for coordination, justified under PDF p.4; Twin stays the system of record. This covers missing atomicity only. Twin itself must exist, because the PDF requires it. |
+| T-1 | Twin is provisioned. Can external access enforce uniqueness and atomic conditional updates, fast enough for live calls? | Durable budgets, one-time codes and booking claims, even with one instance. | A small Postgres used only for coordination, justified under PDF p.4; Twin stays the system of record. This covers missing atomicity only; the PDF still requires Twin. |
 | T-2 | Whole-value acceptance and pending receipts observed. What are currency/scale, full bounds, pending lifecycle and authoritative ownership recovery? Asked in Q8. One active-MC booking on an allocated load is the planned comparison. | Exact amounts (D-10), truthful tentative outcomes and final reconciliation. | Use canonical whole native values with explicit currency assumption; pending/unknown stay blocked for review. Do not invent finalization or resend. |
 | T-3 | Can the service trigger the notification workflow automatically, and do its run logs expose the expected code? The email action works, but the normal trigger returned HTTP 502 twice. | Code delivery and who can see live codes. | Restrict run-log access to operators and document it; if that or the trigger fails, the service sends the email itself. |
 | T-4 | Can tools pass a trusted call identity and stable operation IDs outside model-generated arguments? | Call isolation and retry handling. | The first tool call returns an unguessable per-call token, required on every later call; retries are deduplicated by request fingerprint. |

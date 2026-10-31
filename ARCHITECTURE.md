@@ -213,8 +213,8 @@ One Python 3.12 / FastAPI program, a modular monolith, with an async TCP client 
 | What the TMS does | What the adapter does |
 |---|---|
 | Responds normally, fields padded, in any order | Parses by key, trims padding, ignores unknown fields. |
-| Times out, closes slowly, or sends a partial frame (no `END`) | Reads (`LOAD_QUERY`, `LOAD_GET`): up to 2 retries with jittered backoff inside a ~6 s budget, then `tms_unavailable`. |
-| Sends a malformed or oversized (>4096 bytes) frame | Treated as a failed read; same retry rule. Never crashes, never guesses. |
+| Times out, closes slowly, or sends a partial frame (no whole CRLF-terminated `END` line) | Reads (`LOAD_QUERY`, `LOAD_GET`): up to 2 retries with jittered backoff inside a ~6 s budget, then `tms_unavailable`. |
+| Sends a malformed frame, a line over 4096 bytes, or a reply over a separate total size limit | Treated as a failed read; same retry rule. Never crashes, never guesses. |
 | Returns `ERR\|CODE:…` | Mapped to a typed error the policy core understands. |
 | `LOAD_BOOK` times out or returns `ALREADY_BOOKED` | **No resend.** Booking marked *unknown* (INV-7, §6.6). |
 
@@ -248,7 +248,7 @@ The broker pays the carrier, so the carrier pushes up and we concede toward a co
 
 **Rate assumption (D-10):** provisionally map `MAX_BUY` from `LOAD_GET` to the PDF's `max_rate`. Luke did not confirm this mapping or the accepted rate format and bounds. Verify parsing, units and acceptance behavior during controlled integration tests and record the evidence. A TMS rejection cannot justify exceeding or disclosing the internal ceiling.
 
-**Ceiling availability (D-11).** Live read-only `LOAD_GET` calls already return `MAX_BUY` for our token ([`Questions.Md`](Questions.Md)), so no stand-in ceiling is needed. A load whose `MAX_BUY` is missing or unusable goes to `pricing_review_required`: no offers, no booking. A percentage of posted `RATE` never substitutes for it.
+**Ceiling availability (D-11).** All 302 full records in the read-only 2026-10-30 study carry `MAX_BUY` for our token ([`docs/tms-contract.md`](docs/tms-contract.md)), so no stand-in ceiling is needed. A load whose `MAX_BUY` is missing or unusable goes to `pricing_review_required`: no offers, no booking. A percentage of posted `RATE` never substitutes for it.
 
 - **Pricing policy (D-4).** A versioned policy file in the service, owned by the brokerage, turns each load's posted `RATE` and validated ceiling into three numbers, all rounded down to $25:
   - **Working cap:** the ceiling minus a load-specific gap drawn from a configured band (initially 2-6 % of the ceiling). It is the highest number we say and the highest ask we accept.
@@ -383,7 +383,7 @@ Built from the Apps Next.js template. It reads Twin through the server-side gate
 
 | Layer | What | Where |
 |---|---|---|
-| Unit and property | Every price stays at or below the cap and below the validated ceiling; the same load and policy version give the same numbers; without the secret, the policy does not reveal the gap; exact money parsing; missing pricing; round limits; code expiry, single use, resends, leading-zero codes and MC changes; TMS frame parsing | `service/tests/` |
+| Unit and property | Every price stays at or below the cap and below the validated ceiling; the same load and policy version give the same numbers; without the secret, the policy does not reveal the gap; exact money parsing; missing pricing; round limits; code expiry, single use, resends, leading-zero codes and MC changes; TMS frame parsing, including a cut-off line that merely ends in `END` | `service/tests/` |
 | Integration | Fake TMS faults; simultaneous confirms; restart after send; unknown-booking expiry; duplicate operation IDs; concurrent OTP replay and budget updates; a dropped call closed by timeout; a ceiling that falls before booking | `service/tests/` |
 | Contract | Read-only TMS checks first (started: `MAX_BUY` observed). Booking format and ownership tests only on loads set aside in `docs/tms-contract.md`, at rates within the validated ceiling. No live above-ceiling probes | Manual, recorded; no booking tests run yet |
 | Conversation: standard | Happy path; no match (demand recorded); ineligible carrier; broker-only MC; lane change; carrier accepts first offer; carrier cites the posted rate | HappyRobot test suites |
@@ -405,6 +405,7 @@ service/          FastAPI app: api/, core/, adapters/ (tms, fmcsa, twin, notify)
 happyrobot/       workflow export, prompts, test-suite definitions
 ops-app/          operations app source, mirrored from HappyRobot Apps
 docs/             build description, TMS contract, test carriers, QA results, prospect email, demo script
+scripts/          read-only TMS query tool
 Dockerfile · docker-compose.yml · fly.toml · Makefile · .env.example
 ```
 

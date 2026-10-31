@@ -22,6 +22,8 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **A:** Luke: intentionally ambiguous; investigate and document assumptions. Rate format, bounds and the `MAX_BUY` mapping were not confirmed.
 
+   **Live read-only evidence, 2026-10-30 (Australia/Sydney):** A study of 302 full `LOAD_GET` records found `MAX_BUY` on every one with our token, always above `RATE`, unlike the handbook examples. This confirms field availability, but does not prove the mapping to the assignment's `max_rate`, currency units, or booking validation rules. No booking tests were performed. The handbook explicitly leaves the accepted booking-rate range undocumented and expects investigation from observations. The summary and its limits are in [`docs/tms-contract.md`](docs/tms-contract.md). `python3 scripts/query_loads.py --load-id LD01023` re-checks that one load; it does not reproduce the study.
+
 4. **Q:** Who is the demo actually directed to? Should I present it like I'm showing the solution to the brokerage's business and operations team, their IT team, or directly to you guys as technical reviewers? Basically, should I focus on showing the customer how it solves their problem, or walk you through how I built it?
 
    **Reference:** PDF p. 5, Deliverables items 1, 2, and 5.

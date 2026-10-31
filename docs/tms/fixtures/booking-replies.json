@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "observation_date": "2026-10-31 Australia/Sydney",
+  "purpose": "Offline examples of observed replies; never live booking instructions.",
+  "source_capture_path": "secrets/tms-architecture-lab-20261031/captured-replies.json",
+  "source_capture_sha256": "bc23a16d5b0a152aabbbe0f9cfcce5e2e62d15d1e413efb509af7da61ba468a4",
+  "sanitization": [
+    "Only minimal reply fields and noncredential case metadata retained.",
+    "All booking references replaced with synthetic FIXTURE identifiers; framing, load IDs, statuses, timestamps and error text preserved.",
+    "Requests omit AUTH, host, port, carrier identity and all credential values."
+  ],
+  "limits": [
+    "One token, one handbook-example carrier, four disposable loads.",
+    "No live BOOKED result, currency/scale proof, finalization contract or server ceiling-enforcement proof."
+  ],
+  "cases": [
+    {
+      "load_id": "LD01086",
+      "raw": "LOAD_ID:LD01086     |BOOKING_REF:FIXTURE000000001|STATUS:PENDING |TIMESTAMP:20261031010210\r\nEND\r\n",
+      "agreed_rate_text": "7900",
+      "case": "at_fresh_ceiling",
+      "expected_outcome": "ack_pending",
+      "source_path": "secrets/tms-booking-test-20261031/requests.jsonl"
+    },
+    {
+      "load_id": "LD01082",
+      "raw": "LOAD_ID:LD01082     |BOOKING_REF:FIXTURE000000002|STATUS:PENDING |TIMESTAMP:20261031010231\r\nEND\r\n",
+      "agreed_rate_text": "2142.00",
+      "case": "whole_value_with_zero_fraction",
+      "expected_outcome": "ack_pending",
+      "source_path": "secrets/tms-booking-test-20261031/requests.jsonl"
+    },
+    {
+      "load_id": "LD01081",
+      "raw": "ERR|CODE:INVALID_RATE|MSG:AGREED_RATE must be a positive integer\r\n",
+      "agreed_rate_text": "1324.50",
+      "case": "fraction_rejected",
+      "expected_outcome": "rejected",
+      "source_path": "secrets/tms-booking-test-20261031/requests.jsonl"
+    },
+    {
+      "load_id": "LD01075",
+      "raw": "LOAD_ID:LD01075     |BOOKING_REF:FIXTURE000000004|STATUS:PENDING |TIMESTAMP:20261031010245\r\nEND\r\n",
+      "agreed_rate_text": "1",
+      "case": "low_positive_whole_value",
+      "expected_outcome": "ack_pending",
+      "source_path": "secrets/tms-booking-test-20261031/requests.jsonl"
+    },
+    {
+      "load_id": "LD01081",
+      "raw": "LOAD_ID:LD01081     |BOOKING_REF:FIXTURE000000005|STATUS:PENDING |TIMESTAMP:20261031010304\r\nEND\r\n",
+      "agreed_rate_text": "1324",
+      "case": "integer_control_after_rejection",
+      "expected_outcome": "ack_pending",
+      "source_path": "secrets/tms-booking-test-20261031/requests.jsonl"
+    },
+    {
+      "load_id": "LD01086",
+      "raw": "ERR|CODE:ALREADY_BOOKED|MSG:Already booked by this token\r\n",
+      "agreed_rate_text": "7900",
+      "case": "deliberate_duplicate_probe",
+      "expected_outcome": "already_booked_not_confirmation",
+      "source_path": "secrets/tms-confirmation-probe-20261031/requests.jsonl"
+    }
+  ]
+}

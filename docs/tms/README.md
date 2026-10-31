@@ -2,13 +2,13 @@
 
 Internal reference for authorized contributors, including Claude Code and Codex. Handbook checked 2026-10-31 (Australia/Sydney). Keep it in the private project repository; it contains no credentials.
 
-Read alongside [project requirements](../../PROJECT_GUIDE.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../../Questions.Md) identify token-specific differences. Keep assumptions explicit.
+Start with [agent onboarding](../agent-onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../../PROJECT_GUIDE.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../../Questions.Md) identify token-specific differences. Keep assumptions explicit.
 
-**Current implementation:** a read-only diagnostic and offline framing checks. The architecture's production adapter, policy service, OTP gates, holds and UI are planned.
+**Current tracked implementation:** a read-only diagnostic, seven offline reader checks and sanitized reply fixtures. The production adapter, policy service, OTP gates, holds and UI remain planned; the ignored SQLite/fake-TMS lab is historical prototype evidence.
 
 ## 1. Setup and safe inspection
 
-The portal supplies `TMS_HOST`, `TMS_PORT` and `TMS_TOKEN`. The reader loads them from the root, Git-ignored `.env`. Production credentials belong in a secret store, never documentation, prompts, logs or commits. There is no tracked `.env.example` yet.
+The portal supplies `TMS_HOST`, `TMS_PORT` and `TMS_TOKEN`. The reader loads them from the root, Git-ignored `.env`. Production credentials belong in a secret store, never documentation, prompts, logs or commits. The tracked [`.env.example`](../../.env.example) lists blank names only; [onboarding](../agent-onboarding.md#access-without-committing-secrets) explains separate handbook-password and other integration access.
 
 From the repository root:
 
@@ -73,7 +73,7 @@ Normalize state and equipment to uppercase. City matching is forgiving; the stud
 
 The handbook does not publish a complete equipment enum. It says unsupported equipment yields no rows; this token instead returned `MISSING_FIELD` during the study. Validate equipment before querying and handle both outcomes. `MAX_RESULTS` defaults, server caps, pagination and sort order are not established. Recheck returned matches and sort deliberately, rather than trusting ignored filters or server order.
 
-Each result is a summary with `LOAD_ID`, origin/destination city/state/ZIP, `PICKUP_DT`, `EQTYPE`, `RATE`, `MILES` and `STATUS`, followed by `END`. The study's query summaries never contained `MAX_BUY`.
+The handbook calls this the open board, but live searches returned already `PENDING` loads. Offer only explicitly `OPEN` records after schedule and local-block checks. Each result is a summary with `LOAD_ID`, origin/destination city/state/ZIP, `PICKUP_DT`, `EQTYPE`, `RATE`, `MILES` and `STATUS`, followed by `END`. The study's query summaries never contained `MAX_BUY`.
 
 ### `LOAD_GET`: fetch full details before pricing
 
@@ -92,7 +92,7 @@ CMD:LOAD_GET|AUTH:<token>|LOAD_ID:<load_id>\r\n
 | `MAX_BUY` | Optional, token-enabled internal price; provisionally mapped to PDF `max_rate` under decision D-10. Never expose it to the runtime voice agent. |
 | `WEIGHT`, `COMMODITY`, `PIECES`, `DIMS`, `NOTES` | Cargo and instructions. `COMMODITY` and `DIMS` are free text; blank notes are valid. Validate numeric fields and units before mapping. |
 
-`LOAD_GET` can return booked or past-pickup loads, so a successful lookup does not mean availability. The handbook does not define a complete status enum. Require an available status and a usable pickup schedule before offering a load.
+`LOAD_GET` can return booked or past-pickup loads, so a successful lookup does not mean availability. The handbook does not define a complete status enum. Require explicit `STATUS:OPEN` and a usable future pickup schedule before offering a load; status alone cannot clear a local pending/unknown block.
 
 The study found whole-number `RATE` and `MAX_BUY` on all 302 full records, with `MAX_BUY` above `RATE`; handbook examples show the reverse. Neither proves booking-rate units, precision, accepted bounds or enforcement of the ceiling. If `MAX_BUY` is missing or unusable, route to pricing review; never invent a ceiling from `RATE`. Live dimensions used feet while the PDF asks for inches, so convert deliberately. Contradictory notes must be flagged for the rep, not silently rewritten; extra-charge treatment is unconfirmed.
 
@@ -104,11 +104,11 @@ Schema only, not a command to run against a sample load:
 CMD:LOAD_BOOK|AUTH:<token>|LOAD_ID:<load_id>|MC_NUM:<carrier_mc>|AGREED_RATE:<validated_exact_rate>\r\n
 ```
 
-All three payload fields are required. The handbook shows a numeric `MC_NUM` example, but does not fully document MC validation. Normalize the approved carrier's MC in the service. Validate exact, finite, positive money against the confirmed contract and fresh internal ceiling. The accepted rate range is intentionally undocumented; no test may authorize exceeding the ceiling.
+All three payload fields are required. The handbook shows a numeric `MC_NUM` example, but does not fully document MC validation. Normalize the approved carrier's MC in the service. Validate an exact, finite, positive whole native numeric value against the fresh internal ceiling, then serialize canonical integer text. The live sample accepted `.00` but rejected a nonzero fraction; do not silently round. Currency/scale, full grammar and accepted bounds remain unresolved; no test authorizes exceeding the ceiling.
 
 The documented success record contains `LOAD_ID`, `BOOKING_REF`, `STATUS:BOOKED` and `TIMESTAMP`, then `END`. The timestamp uses `YYYYMMDDhhmmss` in UTC; the booking reference is server-assigned and opaque. Booking state is token-scoped, so another token's view can differ. `ALREADY_BOOKED` is monotonic for a token/load, but does not prove the current carrier and rate own that booking.
 
-**This candidate's recorded behavior differs:** [Questions.Md, Q8](../../Questions.Md) reports four disposable booking tests acknowledged with references and `STATUS:PENDING`, still pending about 40 minutes later. No final-confirmation operation or transition to `BOOKED` has been established. Preserve the actual returned status; a reference or successful frame alone must not increment confirmed-booking KPIs.
+**Observed behavior differs:** the [booking evidence](../tms-contract.md#booking-experiments-2026-10-31) records four reference-bearing `PENDING` acknowledgements, an explicit fractional-rate rejection, and a separate duplicate probe returning `ALREADY_BOOKED` without finalizing. Four loads stayed pending roughly 40 minutes after their initial acknowledgements. Readbacks omitted booking reference/MC/agreed rate. No final-confirmation operation or live `BOOKED` transition was established. Persist the direct receipt as `ACK_PENDING`; a reference alone does not increment confirmed-booking KPIs. [Sanitized fixtures](fixtures/README.md) preserve all six observed replies.
 
 No hold, cancellation, release, confirmation or idempotency-key command is documented. Local hold/attempt IDs coordinate our service only. A timed-out write may have committed: never blindly retry `LOAD_BOOK`, including after restart. Record an unknown outcome and reconcile using authoritative carrier/rate/booking evidence; a booked status or `ALREADY_BOOKED` alone is insufficient.
 
@@ -132,8 +132,8 @@ Codes are non-exhaustive. Branch on `CODE`, keep a fallback for unfamiliar codes
 1. The service verifies FMCSA eligibility and a fresh OTP for the trusted call before returning any load details. Coding-agent access to this reference does not bypass runtime verification.
 2. Normalize lane/equipment, query, then fetch full details for candidates. Check filters, schedule, availability and local holds; offer at most three ranked candidates through an allowlisted response.
 3. The backend applies the versioned pricing policy, with no missing-ceiling fallback. At most three counter rounds total per call; failed negotiation ends without handoff. The runtime agent receives only permitted details and the approved offer.
-4. Record the agreed carrier, load and exact rate durably. **Booking timing still needs consolidation:** the architecture's D-8 holds locally until rep approval; newer Q8 interprets the observed pending acknowledgement as a tentative first-layer stage before senior confirmation. Neither establishes a TMS hold or final-confirmation command. Resolve this design difference explicitly when implementing the commit point.
-5. At the chosen authorized commit point, claim one durable attempt, re-read the load and ceiling, validate the agreement, then send `LOAD_BOOK` once. Persist the actual acknowledgement, pending/confirmed status or unknown outcome. Complete the mocked handoff and audit records without overstating confirmation.
+4. Record the agreed carrier, load and exact rate durably. **Candidate timing policy D-8:** local hold, simulated rep authorization, one submission. This is an explicit default, not Luke's mandate or a proven experiment winner. `ACK_PENDING` can represent the interpreted tentative first-layer milestone; local approval remains separate from external finality. No TMS hold/finalization command is inferred.
+5. At the chosen authorized commit point, claim one durable attempt, re-read the load and ceiling, validate the agreement, then send `LOAD_BOOK` once. Persist the actual receipt as `ACK_PENDING`, authoritative `CONFIRMED` or transport-`UNKNOWN`. Keep pending/unknown blocked from new offers, release and expiry. Operator annotations alone do not unblock them; require authoritative resolution. Complete mocked handoff/audit without overstating finality.
 
 Fault injection can accept a request then stay silent, truncate a response, corrupt framing/fields, or delay closing a complete connection. Faults have no reliable marker and may vary. A complete `DEBUG_ECHO` does not rule them out.
 
@@ -155,4 +155,4 @@ Primary handbook: [protocol](https://fde-challenge-candidate-handbook-production
 
 Local sources: [study and reproducibility limits](../tms-contract.md), [recruiter/owner clarifications including Q8](../../Questions.Md), [architecture decisions and T-1 to T-4 checks](../../ARCHITECTURE.md), [read-only reader](../../scripts/query_loads.py), [offline framing tests](../../scripts/test_query_loads.py).
 
-Still unproven: full filter/equipment/status enums, query caps/order, pickup/delivery timezone, booking units/precision/bounds and ceiling enforcement, ownership evidence, the `PENDING` to confirmed lifecycle, and a supported reset/cancellation mechanism. Record new evidence with date, token scope, sanitized request/response and limits; keep unresolved behavior explicit.
+Still unproven: full filter/equipment/status enums, query caps/order, pickup/delivery timezone, currency/scale, complete booking grammar/bounds and server ceiling enforcement, ownership evidence, the `PENDING` to confirmed lifecycle, and a supported reset/cancellation mechanism. Record new evidence with date, token scope, sanitized request/response and limits; keep unresolved behavior explicit.

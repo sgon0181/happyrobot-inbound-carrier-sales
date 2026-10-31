@@ -53,18 +53,61 @@ Without `--load-id`, the script runs a `LOAD_QUERY` for up to 3 dry-van summarie
 
 The remaining fields are mapped when the TMS adapter is built.
 
-## Still unproven
+## Booking experiments: 2026-10-31
 
-- **Booking rates (T-2):** accepted money units, precision and bounds, and whether the server enforces `MAX_BUY`. Reads cannot settle this. The newer owner-recorded Q8 evidence below does not establish the complete validation contract.
-- **Booking ownership and final status (T-2):** no confirmed booked record was retrieved in the read-only study. Q8 records newer `PENDING` acknowledgements; no authoritative transition to `BOOKED` or final-confirmation operation has been established.
-- **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
-- **Pickup times:** which timezone `PICKUP_DT` uses.
-- **Pricing bands:** with a 6% gap and $25 rounding, 7 of the 50 open loads would get a working cap at or below `RATE`; with a 2% gap, none would. Check this against the pricing policy before the demo.
+The initial controlled study sent five `LOAD_BOOK` requests across four disposable loads: four complete reference-bearing `PENDING` acknowledgements and one explicit `INVALID_RATE` rejection. A separate, deliberately authorized exact replay added one `ALREADY_BOOKED` response. Combined: **six write sends, four load IDs, zero observed `BOOKED` responses**. Count sends, not the journal's multiple intent/result/classification entries. This was one token and one handbook-example MC, without an FMCSA/OTP call flow; it is not an end-to-end verification test.
+
+| Historical case | Load | `AGREED_RATE` text | Observed immediate result |
+|---|---|---|---|
+| Equality with freshly read ceiling | LD01086 | `7900` | Reference and `PENDING` |
+| Whole value written with `.00` | LD01082 | `2142.00` | Reference and `PENDING` |
+| Actual fractional value | LD01081 | `1324.50` | `INVALID_RATE`: positive integer required |
+| Low positive whole value | LD01075 | `1` | Reference and `PENDING` |
+| Integer control after explicit rejection and fresh `OPEN` read | LD01081 | `1324` | Reference and `PENDING` |
+| Later exact replay of acknowledged pending request | LD01086 | `7900` | `ALREADY_BOOKED`; remained `PENDING` |
+
+These are past test inputs, not prices to offer or commands to replay. No above-ceiling request was sent. Canonical integer serialization of an exact positive whole native value is supported by this sample; `.00` acceptance disproves a strict digits-only input requirement. Reject unsupported fractions without rounding an agreement. Currency, scale, complete syntax, full bounds, later validation and server enforcement of `MAX_BUY` remain unproven. A positive value of `1` passing initial validation is not a confirmed one-dollar booking or a useful pricing policy.
+
+All four loads remained `PENDING` roughly 40 minutes later. The separate replay experiment left the target and untouched control pending, including a check about 74.5 seconds after its error. These windows establish what had happened by those times, not a permanent state or processing SLA.
+
+| Additional observation | Implementation consequence |
+|---|---|
+| `LOAD_QUERY` still returned all four `PENDING` loads. | Search is not an `OPEN`-only guarantee. Offer only explicitly `OPEN`, future-eligible loads after local exclusions. |
+| Full readbacks retained 19 fields, without booking reference, MC, agreed rate, currency or pending reason/expiry. | Persist the direct acknowledgement immediately. A status-only read cannot reconstruct or prove carrier/rate ownership. |
+| Exact replay returned `Already booked by this token` without finalizing. | It demonstrates token-associated state, not confirmation or a safe general retry rule. |
+| Nine supplied handbook pages, portal controls and the assignment supplied no confirmation operation. | No supported finalization action was established. Do not guess confirmation fields/commands or treat local approval as external finalization. |
+
+An early harness classified the first pending receipt as unknown before `PENDING` support was added. Correcting that local classification was neither another send nor a server transition. Preserve three distinct outcomes: `ACK_PENDING` for a valid pending receipt, `UNKNOWN` for ambiguous transport/framing, and `CONFIRMED` for authoritative final evidence. Pending and unknown do not count in confirmed-booking KPIs.
+
+### Sanitized evidence and reproduction limits
+
+[`tms/fixtures/booking-replies.json`](tms/fixtures/booking-replies.json) freezes the six replies with original booking references replaced by synthetic identifiers. Its [README](tms/fixtures/README.md) explains transformations and offline use. It includes no credentials and is available in a fresh clone. These fixtures preserve observed framing; they do not reproduce the real experiment or prove final confirmation.
+
+Original study sources remain Git-ignored: `secrets/tms-booking-test-20261031/summary.json`, `requests.jsonl` and `inventory.json`; the analogous summary/request files in `secrets/tms-confirmation-probe-20261031/` and `secrets/tms-pending-investigation-20261031/`. The lab's `secrets/tms-architecture-lab-20261031/EVIDENCE_INDEX.txt` indexes them. Local copies may be unavailable in another checkout. Do not run historical booking harnesses to review saved evidence; some stages perform real writes.
+
+### Offline booking-policy lab
+
+The separate ignored architecture lab records **37 passing behavioral tests**, five simulated lifecycle traces and the six captured replies above. It exercises pending/confirmed/unknown separation, durable write intent, duplicate actions, concurrent approvals, restart ambiguity, blocked expiry and late-result guards. These are historical recorded results, not new tests run by this documentation change or a shipped production test suite.
+
+The lab uses SQLite and fake TMS services. Its back-office finalization and enriched ownership fields are simulator fixtures, not real server capabilities. It does not validate Twin transactions/latency, FMCSA, OTP delivery, trusted call identity, the deployed voice workflow, Apps or pricing confidentiality. The old mandatory timing recommendation is superseded: timing remains explicit candidate policy in architecture D-8. No further live booking probe is required to start the read adapter and policy/storage interfaces.
 
 ## Booking test inventory
 
-The 2026-10-30 study above sent no bookings. Since that study, the owner recorded four disposable live booking tests in [`Questions.Md`, Q8](../Questions.Md): requests within fresh `MAX_BUY` values received booking references and `STATUS:PENDING`, and remained pending roughly 40 minutes later. This is owner-recorded evidence, not a replayable test record in this file. The disposable load IDs, exact requests and replies have not yet been recorded here; do not assume any particular load is still unused.
+All statuses below are historical 2026-10-31 snapshots, not current availability. These IDs are sandbox test inventory, not credentials.
 
-The handbook shows `BOOKED` and documents no confirmation operation. Q8 asks Luke what final confirmation requires; no answer is recorded. An acknowledgement with `PENDING` must remain pending in the UI and must not count as a confirmed booking. The current first-layer interpretation and its unresolved booking-timing decision are recorded in Q8; `ARCHITECTURE.md` still needs to consolidate this newer evidence.
+| Purpose | IDs | Required handling |
+|---|---|---|
+| Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers, expiry/release cleanup and further booking sends until authoritatively resolved. |
+| Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
-Before further live booking tests, record the disposable load IDs here, separately from inventory kept for the demo. Do not use a load merely because it appears in a handbook example or an earlier read-only lookup.
+No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
+
+## Still unproven
+
+- **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement.
+- **Other integrations:** Twin atomicity/latency (T-1), notification-log exposure (T-3), trusted call/operation identity (T-4), FMCSA fixtures and OTP delivery. None is established by the SQLite lab.
+- **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
+- **Pickup times:** which timezone `PICKUP_DT` uses.
+- **Pricing bands:** with a 6% gap and $25 rounding, 7 of the 50 open loads would get a working cap at or below `RATE`; with a 2% gap, none would. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.
+
+[Questions.Md, Q8](../Questions.Md) retains the unanswered owner clarification. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.

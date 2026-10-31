@@ -26,7 +26,7 @@ Carrier history and reasons for no agreement are included as a view in the opera
 
 [C.H. Robinson](https://www.chrobinson.com/en-us/carriers/carrier-support/support-book-loads/) distinguishes making an offer from booking. This supports separating agreement from commitment, but does not establish mandatory senior approval.
 
-**Decision (D-6 to D-8):** Keep a pending agreement in Twin, then book after simulated rep approval. Persist the attempt before sending it; uncertain results stay blocked for review, including after restarts. [AWS's retry guidance](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) explains why local request IDs alone cannot make external bookings safe to retry.
+**Decision (D-6 to D-8):** Keep a local agreement in Twin, then submit once after simulated rep authorization as explicit candidate policy D-8. Real receipts were `PENDING`, so separate `ACK_PENDING`, `CONFIRMED` and `UNKNOWN`; approval does not finalize the external TMS. Persist intent/receipt, and keep pending/unknown blocked across restarts. The [2026-10-31 evidence](docs/tms-contract.md#booking-experiments-2026-10-31) and offline comparison do not prove a finalization operation or superior business timing. [AWS's retry guidance](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) explains why local request IDs alone cannot make external bookings safe to retry.
 
 ### 2. Should returning carriers repeat OTP?
 
@@ -38,8 +38,8 @@ Carrier history and reasons for no agreement are included as a view in the opera
 
 The [TMS handbook](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-get/) defines `RATE` as the posted rate and exposes `MAX_BUY` only for enabled tokens. Perplexity could not access that handbook, so its claim that `RATE` was wholly undefined is not adopted.
 
-**Decision (D-4, D-10, D-11):** Keep `MAX_BUY` as the provisional `max_rate` mapping. Confirm units and [booking validation](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/) through controlled tests. Missing ceilings block negotiation; do not derive one from `RATE`. Derive offers from a versioned policy with keyed, load-specific gaps below the validated ceiling: a known percentage can reveal the ceiling by division. Ceiling headroom is not broker margin.
+**Decision (D-4, D-10, D-11):** Keep `MAX_BUY` as the provisional `max_rate` mapping. The bounded live sample supports canonical whole native numeric values; currency/scale, full [booking validation](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/) and server ceiling enforcement remain unresolved. Do not repeat write probes just to begin building the read/domain slice. Missing ceilings block negotiation; do not derive one from `RATE`. Derive offers from a versioned policy with keyed, load-specific gaps below the validated ceiling: a known percentage can reveal the ceiling by division. Ceiling headroom is not broker margin.
 
 ## Design impact
 
-The four components in [ARCHITECTURE.md](ARCHITECTURE.md) remain. The research tightens booking recovery, OTP lifecycle and pricing rules. Implementation and live contract checks are still pending.
+The four components in [ARCHITECTURE.md](ARCHITECTURE.md) remain. The research tightens booking recovery, OTP lifecycle and pricing rules. Production implementation remains pending. Bounded live read/booking evidence and historical offline lab results are now summarized in the [contract](docs/tms-contract.md), with sanitized reply fixtures available in Git. Twin, FMCSA, OTP, trusted identity and finalization remain separate integration checks.

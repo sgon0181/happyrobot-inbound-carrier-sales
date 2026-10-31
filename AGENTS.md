@@ -2,7 +2,7 @@
 
 `PROJECT_GUIDE.md` summarizes the assignment and relevant official documentation for this project. It is the starting reference for agents; source links are included for details. The local assignment PDF is the source of challenge requirements.
 
-For TMS work, read `docs/tms/README.md` before implementing or testing the integration. It is the shared operating reference for Codex and Claude Code. `docs/tms-contract.md` records observed behavior and its limits; `ARCHITECTURE.md` records design decisions. Check the reference's newer booking-status caveat before relying on the architecture's booking sequence.
+Read `docs/agent-onboarding.md` for access setup, current implementation/platform state, source precedence and safe next steps. For TMS work, read `docs/tms/README.md` before implementing or testing the integration, then `docs/tms-contract.md` for sanitized observations, fixtures and blocked/protected inventory. `ARCHITECTURE.md` records current candidate design decisions and pending/confirmed/unknown handling. These tracked references are shared by Codex and Claude Code; ignored local packets are optional evidence, not required onboarding.
 
 # Writing
 

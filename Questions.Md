@@ -10,6 +10,8 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **A:** Luke: intentionally ambiguous; choose and document an assumption. He did not specify booking timing.
 
+   **Our assumption (D-8):** Send `LOAD_BOOK` once at rate agreement, then hand off; the rep confirms afterwards. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §6.6.
+
 2. **Q:** Do I need to verify the OTP on every call, even if the carrier has called before?
 
    **Reference:** PDF p. 2, Process step 3; p. 4, Carrier identity verification (OTP).
@@ -56,6 +58,6 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **Reference:** Owner's follow-up email to Luke; PDF pp. 1-3, first-layer scope and process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
 
-   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, an acknowledged tentative booking request and mocked senior-rep handoff. Final confirmation remains the senior rep's responsibility. Treating `PENDING` as the tentative stage is our documented interpretation, not a behavior confirmed by Luke. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. Architecture D-8 now records the current candidate default: local hold, simulated rep authorizes one submission, then preserve the actual acknowledgement. This is submission approval, not a claimed external finalization mechanism; timing remains revisable candidate policy, not Luke-confirmed behavior.
+   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, an acknowledged tentative booking request and mocked senior-rep handoff. Final confirmation remains the senior rep's responsibility. Treating `PENDING` as the tentative stage is our documented interpretation, not a behavior confirmed by Luke. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. Architecture D-8 records the candidate policy: send `LOAD_BOOK` once at rate agreement, preserve the actual acknowledgement, then hand off. The rep's confirmation is recorded locally and is not a claimed external finalization mechanism; timing remains revisable candidate policy, not Luke-confirmed behavior.
 
    **Review before final submission:** Check for Luke's reply, record his answer here, and assess any impact on the implementation, architecture and demo wording. If no reply is available, keep this question open and explicitly review and disclose the remaining assumption. This clarification does not block the build and must not be marked answered without a response.

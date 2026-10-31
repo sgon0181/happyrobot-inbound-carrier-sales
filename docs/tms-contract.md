@@ -89,7 +89,7 @@ Original study sources remain Git-ignored: `secrets/tms-booking-test-20261031/su
 
 The separate ignored architecture lab records **37 passing behavioral tests**, five simulated lifecycle traces and the six captured replies above. It exercises pending/confirmed/unknown separation, durable write intent, duplicate actions, concurrent approvals, restart ambiguity, blocked expiry and late-result guards. These are historical recorded results, not new tests run by this documentation change or a shipped production test suite.
 
-The lab uses SQLite and fake TMS services. Its back-office finalization and enriched ownership fields are simulator fixtures, not real server capabilities. It does not validate Twin transactions/latency, FMCSA, OTP delivery, trusted call identity, the deployed voice workflow, Apps or pricing confidentiality. The old mandatory timing recommendation is superseded: timing remains explicit candidate policy in architecture D-8. No further live booking probe is required to start the read adapter and policy/storage interfaces.
+The lab uses SQLite and fake TMS services. Its back-office finalization and enriched ownership fields are simulator fixtures, not real server capabilities. It does not validate Twin transactions/latency, FMCSA, OTP delivery, trusted call identity, the deployed voice workflow, Apps or pricing confidentiality. Booking timing is decided separately as candidate policy D-8 in the architecture: submit at rate agreement. Only one of the 37 tests exercises that timing, so the lab is reference material, not coverage of the chosen path. No further live booking probe is required to start the read adapter and policy/storage interfaces.
 
 ## Booking test inventory
 
@@ -100,11 +100,12 @@ All statuses below are historical 2026-10-31 snapshots, not current availability
 | Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers, expiry/release cleanup and further booking sends until authoritatively resolved. |
 | Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
-No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
+The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
 
 ## Still unproven
 
 - **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement.
+- **Cause of `PENDING`:** every booking test used one token and one MC, so a token-specific or carrier-specific cause is not ruled out. Later calls add observations; only a controlled comparison or an authoritative answer would establish the cause.
 - **Other integrations:** Twin atomicity/latency (T-1), notification-log exposure (T-3), trusted call/operation identity (T-4), FMCSA fixtures and OTP delivery. None is established by the SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.

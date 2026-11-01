@@ -107,6 +107,25 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(ValueError):await BookingService(store,self.runtime.tms).confirm(b.id,'rep')
         self.assertEqual(len(self.server.book_requests),0)
 
+    async def test_caller_consent_review_blocks_rep_confirmation(self):
+        store=TwinBookingStore(self.repository)
+        b=Booking('consent-review',self.cid,'LD1','138328',1000,'agreement',state=State.ACK_PENDING,
+                  reference='SYNTHETIC_REF',review_required=True,reason='caller_confirmation_review')
+        await store.create(b,'operation','fingerprint')
+        with self.assertRaises(ValueError):await BookingService(store,self.runtime.tms).confirm(b.id,'rep')
+        self.assertEqual((await store.get(b.id)).reference,'SYNTHETIC_REF')
+        self.assertEqual(len(self.server.book_requests),0)
+
+    async def test_qa_label_cannot_erase_a_real_send_or_receipt(self):
+        for index,proof in enumerate([{'reference':'REAL_REFERENCE'}, {'write_intent_id':str(uuid.uuid4())}]):
+            self.repository.data['calls'][self.cid]={**self.runtime.new_call(self.cid),'cohort':'real'}
+            self.repository.data['bookings']['spent']={'call_id':self.cid,'cohort':'real',**proof}
+            response=await self.http.post('/ops/calls/'+self.cid+'/qa',headers=self.ops,json={})
+            self.assertEqual(response.status_code,400)
+            self.assertEqual(self.repository.data['calls'][self.cid]['cohort'],'real')
+            self.assertEqual(self.repository.data['bookings']['spent']['cohort'],'real')
+        self.assertEqual(len(self.server.book_requests),0)
+
     async def test_hidden_identity_rejects_injected_call_fields(self):
         for key in ('call_id','call_token','verified','max_rate'):
             result=await self.http.post('/carriers/verify',headers=self.agent,
@@ -123,3 +142,33 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
                                  {'role':'user','content':'Wrong code 123456. Try 9 8 7 6 5 4.'}])
         for hidden in ('123456','zero one two three four five','9 8 7 6 5 4'):self.assertNotIn(hidden,text)
         self.assertIn('Texas to New Jersey',text)
+
+    async def test_submitted_code_redaction_handles_grouped_digits(self):
+        messages=[{'role':'user','content':'Code 123 456, Massachusetts to Ohio please.'},
+                  {'role':'assistant','tool_calls':[{'function':{'name':'verify_code',
+                     'arguments':'{"code":"123456"}'}}]}]
+        text,_=redact_transcript(messages)
+        self.assertNotIn('123 456',text);self.assertIn('Massachusetts to Ohio',text)
+
+    async def test_code_split_across_messages_is_redacted(self):
+        messages=[{'role':'user','content':'123'},{'role':'user','content':'456'},
+                  {'role':'assistant','tool_calls':[{'name':'verify_code','arguments':{'code':'123456'}}]}]
+        text,_=redact_transcript(messages)
+        self.assertNotIn('123',text);self.assertNotIn('456',text)
+
+    async def test_live_booking_requires_fresh_trusted_consent(self):
+        result=await self.ready();rate=result['loads'][0]['offer']
+        await self.runtime.negotiate(self.cid,'LD1',str(rate))
+        self.repository.label='LIVE'
+        self.repository.data['calls'][self.cid]['cohort']='real'
+        self.runtime.confirmation=None
+        self.assertEqual((await self.runtime.book(self.cid,None))['status'],'confirmation_unavailable')
+        async def required(cid,load_id,rate,anchor):return {'anchor':'u1','approved':False}
+        self.runtime.confirmation=required
+        self.assertEqual((await self.runtime.book(self.cid,None))['status'],'confirmation_required')
+        self.assertEqual(len(self.server.book_requests),0)
+        async def approved(cid,load_id,rate,anchor):
+            self.assertEqual(anchor,'u1');return {'anchor':'u2','approved':True}
+        self.runtime.confirmation=approved
+        self.assertEqual((await self.runtime.book(self.cid,None))['status'],'senior_review')
+        self.assertEqual(len(self.server.book_requests),1)

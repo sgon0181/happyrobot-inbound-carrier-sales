@@ -101,6 +101,42 @@ The lab uses SQLite and fake TMS services. Its back-office finalization and enri
 
 ## Booking test inventory
 
+### Prototype voice call, 2026-11-01
+
+One new real `LOAD_BOOK` was sent through the deployed prototype service on
+the owner's voice call, run `94ad9f38-1cc8-4f87-8bb7-af945c6b9563`.
+MC `138328` passed live FMCSA and the owner entered the emailed code.
+The service selected future, explicitly OPEN load `LD01094`, opening at 1050,
+and agreed 1075 after one counter. Fresh pre-send checks passed.
+The single send returned a complete 97-byte `PENDING` receipt, reference
+`3PUHTGRJNDQ5EKMM`. The service retained `ACK_PENDING` without a resend.
+Receipt SHA-256:
+`12b164a333db0ebb71dcd5411aac27178a6580ffe6bb6a1aec934b65b0826b35`.
+[Receipt](prototype-evidence/live-receipt.txt) and
+[sanitized call evidence](prototype-evidence/live-call.json) are tracked.
+
+The conversation did not establish clear permission to book. After the agent
+asked to submit, the owner clarified the initial offer plus 25. The agent
+submitted before a clear affirmative answer. This call fails the clean-run
+consent gate. The receipt remains factual and unchanged; the local booking is
+awaiting rep review with reason `caller_confirmation_review`. Confirmation is
+blocked, and this call does not count as a successful consented handoff.
+The prototype now requires a new explicit yes after its exact load-and-total
+question, checked against platform-owned messages. This fix passed offline
+replay and regression checks; it has not had a second live booking test.
+
+Keep LD01094 blocked permanently in this campaign. No new send is permitted
+after this reference-bearing receipt without another owner instruction.
+The journal's container copy was unavailable after an automatic stop/start;
+the complete response remains saved in Twin diagnostics and the local export.
+This confirms the documented need for durable external receipt storage.
+
+This active-MC acknowledgement also returned `PENDING`. Therefore inactivity
+of MC 872144 cannot by itself explain all observed pending acknowledgements.
+It does not establish what causes finalization or prove that `PENDING` means
+a reservation. The historical seven sends plus this call total eight sends
+across six load IDs, with zero observed `BOOKED` responses.
+
 All statuses below are historical 2026-10-31 snapshots, not current availability. These IDs are sandbox test inventory, not credentials.
 
 | Purpose | IDs | Required handling |
@@ -114,7 +150,7 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 ## Still unproven
 
 - **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The handbook's own sample books `AGREED_RATE:2200` on a load with `MAX_BUY` 1950, which hints the server may not enforce the ceiling. A sample is not proof.
-- **Cause of `PENDING`:** every acknowledged booking used one token and MC 872144, which FMCSA shows as inactive. The one active-MC attempt lost its reply while the load read `PENDING`, which makes a carrier-specific cause less likely without ruling it out, and a token-specific cause is still open. Later calls add observations; only an authoritative answer would establish the cause.
+- **Cause of `PENDING`:** the historical acknowledgements used MC 872144, which FMCSA shows as inactive. The 2026-11-01 prototype call also received a complete PENDING receipt using active MC 138328. Inactive authority cannot explain every acknowledgement. All used the same candidate token; finalization and any token-specific behavior remain unresolved.
 - **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.

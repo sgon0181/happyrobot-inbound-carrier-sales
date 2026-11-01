@@ -122,6 +122,8 @@ class InMemoryBookingStore:
             return None
         if 'rep_decision' in changes and booking.rep_decision not in {RepDecision.AWAITING,changes['rep_decision']}:
             raise ValueError('The rep has already decided.')
+        if changes.get('rep_decision') is RepDecision.CONFIRMED and booking.reason=='caller_confirmation_review':
+            raise ValueError('Caller consent requires review.')
         self.bookings[booking_id] = replace(booking, **changes)
         return self.bookings[booking_id]
 
@@ -296,7 +298,10 @@ class BookingService:
 
     async def confirm(self, booking_id, rep):
         """Record the rep's confirmation. Never writes to the TMS."""
-        if (await self.store.get(booking_id)).state not in {State.ACK_PENDING, State.CONFIRMED}:
+        booking=await self.store.get(booking_id)
+        if booking.reason=='caller_confirmation_review':
+            raise ValueError('Caller consent requires manual investigation before confirmation.')
+        if booking.state not in {State.ACK_PENDING, State.CONFIRMED}:
             raise ValueError("A matching acknowledgement is required before rep confirmation.")
         return await self._decide(booking_id, RepDecision.CONFIRMED, rep)
 

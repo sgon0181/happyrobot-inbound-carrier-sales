@@ -1,0 +1,17 @@
+{
+  "purpose": "SHA-256 of sanitized prototype evidence files",
+  "files": {
+    "app-actions.json": "53808bc82b33ee4aebcb32285f0abe26ec33be71faf85c5012590816a04de4c2",
+    "app-key-form.png": "9dcdbc9adeaac9170d5c7a551c92d9e3f8fbe38ab99c5c7a25163013ede7502c",
+    "app-key-saved.png": "b8c734cf3fdcc6dd00e1523e8aa9086b0aa78c8c7bdab3906ac935bff897558f",
+    "auth-checks.json": "a41373261cec35cc95b8f41be8f293788ab9462bd30912a727c25dc5940ff979",
+    "consent-recheck.json": "51716c367ec75e29f698fadf67fc42cf4837efc9ac6efe72ce6e3ef319a5e73c",
+    "dashboard-review.png": "a21a9f3b819ce98d138e54e5ff11042b7dfe39d0582d54f88870bfb2863017e1",
+    "deployed-code.json": "9f4f3e54ffc87c45c8e16cd20b018bf3a278f8dfe80e7fd315d4a3f85681db38",
+    "deployed-flow-off.json": "d4fd595b7c60b32f74db9dd3735a8db6d2f0edf1f3ba1511de8739f90ad386c9",
+    "live-call.json": "9d5ad7626336bf095bcb6ac0cd355dc0f5a6734315a9cf534cfe8ef7f7a6f722",
+    "live-receipt.txt": "12b164a333db0ebb71dcd5411aac27178a6580ffe6bb6a1aec934b65b0826b35",
+    "twin-contention.json": "64cafa2ae12b65e2eeeb89b21689de5cf3f2324e5f7811de3276129a79f170be",
+    "twin-schema.png": "e7ff7482100d79b6932c18577b56264ec8a1de294b127946948848c817ccf54d"
+  }
+}

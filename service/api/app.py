@@ -18,19 +18,43 @@ from service.adapters.twin.client import Platform
 from service.adapters.twin.repository import TwinRepository
 from service.core.calls import Runtime
 from service.core.booking import agent_view
+from service.adapters.confirmation import NativeConfirmation
 
 
 def redact_transcript(messages):
     """Redact literal and spoken six-digit codes, including failed attempts."""
-    lines=[];tools=[]
-    words=r'(?:zero|oh|one|two|three|four|five|six|seven|eight|nine)'
+    lines=[];tools=[];submitted=[]
+    # Coalesce adjacent speaker fragments before redaction. ASR may split one
+    # six-digit attempt into two messages containing three digits each.
+    joined=[]
     for message in messages:
+        if isinstance(message.get('content'),str) and message['content'].startswith('<Thoughts>'):continue
+        if (joined and message.get('role') in ('user','assistant') and
+            joined[-1].get('role')==message.get('role') and
+            isinstance(message.get('content'),str) and isinstance(joined[-1].get('content'),str)):
+            joined[-1]['content']+=' '+message['content']
+            joined[-1]['tool_calls']=(joined[-1].get('tool_calls') or [])+(message.get('tool_calls') or [])
+        else:joined.append(dict(message))
+    for message in joined:
+        for tool in message.get('tool_calls') or []:
+            function=tool.get('function') or {};name=tool.get('name') or function.get('name')
+            if name!='verify_code':continue
+            arguments=tool.get('arguments',function.get('arguments',tool.get('args',{})))
+            if isinstance(arguments,str):
+                try:arguments=json.loads(arguments)
+                except ValueError:continue
+            code=arguments.get('code') if isinstance(arguments,dict) else None
+            if isinstance(code,(str,int)) and re.fullmatch(r'[0-9]{6}',str(code)):submitted.append(str(code))
+    words=r'(?:zero|oh|one|two|three|four|five|six|seven|eight|nine)'
+    for message in joined:
         for tool in message.get('tool_calls') or []:
             name=tool.get('name') or (tool.get('function') or {}).get('name')
             if name:tools.append(name)
         if message.get('role') not in ('user','assistant'):continue
         text=message.get('content')
         if not isinstance(text,str) or not text or text.startswith('<Thoughts>'):continue
+        for code in submitted:
+            text=re.sub(r'(?<!\d)'+r'[\s,.-]*'.join(code)+r'(?!\d)','[code redacted]',text)
         text=re.sub(r'\b[0-9]{6}\b','[code redacted]',text)
         text=re.sub(r'\b'+words+r'(?:[\s,-]+'+words+r'){5}\b','[spoken code redacted]',text,flags=re.I)
         text=re.sub(r'(?<!\d)(?:\d[ ,.-]){5}\d(?!\d)','[code redacted]',text)
@@ -43,27 +67,29 @@ def make_app(runtime,values,platform=None):
         if platform is None:return {'status':'unavailable','collected':0}
         _,state=await runtime.repository.read();collected={}
         for cid,call in list(state['calls'].items())[-40:]:
-            if not call.get('closed_at') or cid in state['call_transcripts'] or call['cohort']!='real':continue
+            if (not call.get('closed_at') or call['cohort']!='real' or
+                state['call_transcripts'].get(cid,{}).get('redaction_version')==2):continue
             try:
                 run=await asyncio.to_thread(platform.request,'/runs/'+cid)
                 if run.get('workflow_id')!=values.get('PROTOTYPE_WORKFLOW_ID'):continue
                 sessions=await asyncio.to_thread(platform.request,'/runs/'+cid+'/sessions')
                 all_messages=[];complete=True
                 for session in sessions.get('data',[]):
-                    cursor=None
+                    cursor=None;page=1
                     for _ in range(30):
-                        suffix=('?cursor='+cursor) if cursor else ''
+                        suffix=('?cursor='+cursor) if cursor else ('?page='+str(page))
                         response=await asyncio.to_thread(platform.request,'/sessions/'+session['id']+'/messages'+suffix)
                         all_messages.extend(response.get('data',[]))
                         cursor=response.get('next_cursor') or (response.get('pagination') or {}).get('next_cursor')
-                        if not cursor:break
+                        if not cursor and not (response.get('pagination') or {}).get('has_next_page'):break
+                        page+=1
                     else:complete=False
                 text,tools=redact_transcript(all_messages)
                 if text:
                     collected[cid]={'call_id':cid,'transcript':text,'tools':tools,'complete':complete,
                         'summary':'Recorded outcome: '+str(call.get('outcome')),
                         'summary_source':'DETERMINISTIC_PROTOTYPE','notes':'Live platform transcript, codes redacted.',
-                        'sentiment':'not_assessed','source':'LIVE_PLATFORM_TRANSCRIPT'}
+                        'sentiment':'not_assessed','source':'LIVE_PLATFORM_TRANSCRIPT','redaction_version':2}
             except Exception:continue
         def save(data):
             for cid,row in collected.items():data['call_transcripts'][cid]=row
@@ -187,6 +213,9 @@ def make_app(runtime,values,platform=None):
     async def mark_qa(cid:str):
         if str(uuid.UUID(cid))!=cid.lower():raise ValueError('Run ID required')
         def change(data):
+            if any(b['call_id']==cid and (b.get('write_intent_id') or b.get('reference'))
+                   for b in data['bookings'].values()):
+                raise ValueError('A spent or acknowledged call cannot be relabelled as QA.')
             call=data['calls'].setdefault(cid,runtime.new_call(cid))
             call.update(cohort='synthetic',qa_source='HYBRID_INTEGRATION_CHECK')
             for booking in data['bookings'].values():
@@ -208,7 +237,8 @@ def configured_app():
     fmcsa=FMCSAClient(SimpleNamespace(fmcsa_api_key=values['FMCSA_API_KEY'],timeout=5))
     async def authority(mc):
         record=await asyncio.to_thread(fmcsa.lookup,mc);record['source']='LIVE_FMCSA';return record
-    runtime=Runtime(repository,tms,authority,EmailNotifier(values,platform),values)
+    runtime=Runtime(repository,tms,authority,EmailNotifier(values,platform),values,
+                    confirmation=NativeConfirmation(platform,values.get('PROTOTYPE_WORKFLOW_ID')))
     return make_app(runtime,values,platform)
 
 

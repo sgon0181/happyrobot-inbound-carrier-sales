@@ -1,0 +1,8 @@
+{
+  "label": "HYBRID",
+  "source": "Live native platform reads of the completed owner call, new consent-check code",
+  "approved": false,
+  "live_tms_sends": 0,
+  "duration_ms": 2477.2,
+  "limit": "This does not prove transcript availability during an active call or a new positive live booking."
+}

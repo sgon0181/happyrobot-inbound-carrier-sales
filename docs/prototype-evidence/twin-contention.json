@@ -1,0 +1,14 @@
+{
+  "label": "LIVE",
+  "business_records": "SIMULATED",
+  "mode": "Twin canonical CAS fallback",
+  "unique_claim_contenders": 8,
+  "unique_claim_winners": 1,
+  "conditional_update_contenders": 8,
+  "conditional_update_winners": 1,
+  "projection_errors": 0,
+  "median_ms": 10322.1,
+  "p95_ms": 10756.4,
+  "live_tms_sends": 0,
+  "probe_id": "95608556a4c74f23b46a10c87dec8580"
+}

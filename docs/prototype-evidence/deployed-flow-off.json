@@ -1,0 +1,82 @@
+{
+  "label": "HYBRID",
+  "run_id": "ee915fd9-c968-45bc-a380-e1ff8ff0a6ce",
+  "authority": "LIVE_FMCSA",
+  "notification": "delivery_pending",
+  "otp_proof": "SIMULATED_QA_CODE",
+  "loads": "LIVE_TMS",
+  "selected_load": "LD01094",
+  "opening": 1050,
+  "counter": {
+    "status": "agreed",
+    "load_id": "LD01094",
+    "rate": 1075
+  },
+  "booking_status": "not_booked",
+  "live_sends": 0,
+  "checks": [
+    {
+      "path": "/health",
+      "status": "ok",
+      "http": 200,
+      "client_ms": 2652.1,
+      "service_ms": "128.3"
+    },
+    {
+      "path": "/ops/calls/ee915fd9-c968-45bc-a380-e1ff8ff0a6ce/qa",
+      "status": "ok",
+      "http": 200,
+      "client_ms": 369.8,
+      "service_ms": "150.6"
+    },
+    {
+      "path": "/carriers/verify",
+      "status": "ok",
+      "http": 200,
+      "client_ms": 606.4,
+      "service_ms": "358.0"
+    },
+    {
+      "path": "/otp/send",
+      "status": "delivery_pending",
+      "http": 200,
+      "client_ms": 2557.3,
+      "service_ms": "2340.6"
+    },
+    {
+      "path": "/otp/verify",
+      "status": "ok",
+      "http": 200,
+      "client_ms": 677.8,
+      "service_ms": "168.3"
+    },
+    {
+      "path": "/loads/search",
+      "status": "ok",
+      "http": 200,
+      "client_ms": 720.9,
+      "service_ms": "506.0"
+    },
+    {
+      "path": "/negotiate",
+      "status": "agreed",
+      "http": 200,
+      "client_ms": 2556.8,
+      "service_ms": "2337.2"
+    },
+    {
+      "path": "/bookings",
+      "status": "not_booked",
+      "http": 200,
+      "client_ms": 1057.3,
+      "service_ms": "545.3"
+    },
+    {
+      "path": "/calls/ee915fd9-c968-45bc-a380-e1ff8ff0a6ce/close",
+      "status": "closed",
+      "http": 200,
+      "client_ms": 352.9,
+      "service_ms": "134.1"
+    }
+  ]
+}

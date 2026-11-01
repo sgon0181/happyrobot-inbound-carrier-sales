@@ -1,0 +1,101 @@
+{
+  "label": "LIVE",
+  "auth_checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/carriers/verify",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/send",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/verify",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/loads/search",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/negotiate",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/bookings",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/calls/00000000-0000-0000-0000-000000000001/close",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/ops/snapshot",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/2134811d-6ed5-4914-8755-ccb2fc2a1677/confirm",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/2134811d-6ed5-4914-8755-ccb2fc2a1677/decline",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/2134811d-6ed5-4914-8755-ccb2fc2a1677/reconcile",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/collect-transcripts",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/fmcsa-probe",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/calls/00000000-0000-0000-0000-000000000001/qa",
+      "status": 401
+    },
+    {
+      "service": "Native App",
+      "path": "/api/health",
+      "status": 401
+    },
+    {
+      "service": "Native App",
+      "path": "/api/bookings/2134811d-6ed5-4914-8755-ccb2fc2a1677/confirm",
+      "status": 401
+    }
+  ],
+  "authenticated_health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_enabled": true
+  },
+  "new_live_sends": 0
+}

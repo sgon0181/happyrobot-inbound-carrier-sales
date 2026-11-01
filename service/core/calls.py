@@ -18,9 +18,10 @@ from service.adapters.twin.bookings import TwinBookingStore,PROTECTED,decode
 
 
 class Runtime:
-    def __init__(self,repository,tms,authority,notifier,values,clock=time.time):
+    def __init__(self,repository,tms,authority,notifier,values,clock=time.time,confirmation=None):
         self.repository,self.tms,self.authority,self.notifier=repository,tms,authority,notifier
         self.values,self.clock=values,clock
+        self.confirmation=confirmation
         self.policy=PricingPolicy.load();self.locks={}
         self.booking_store=TwinBookingStore(repository,live=repository.label=='LIVE')
         self.bookings=BookingService(self.booking_store,tms)
@@ -230,6 +231,29 @@ class Runtime:
         if self.repository.label=='LIVE' and self.tms.booking_enabled and call.get('cohort')!='real':
             return {'status':'booking_failed'}
         if call.get('outcome')=='negotiation_failed':return {'status':'negotiation_failed'}
+        # Price agreement is not booking consent. Live calls need a fresh, platform-owned
+        # affirmative answer to a completed question containing the exact total.
+        if self.repository.label=='LIVE' and self.tms.booking_enabled:
+            if any(b.get('cohort')=='real' and b.get('reference') for b in data['bookings'].values()):
+                return {'status':'live_campaign_complete'}
+            try:
+                if self.confirmation is None:raise ValueError('No trusted dialogue source')
+                evidence=await self.confirmation(cid,agreement['load_id'],agreement['rate'],agreement.get('confirmation_anchor'))
+            except Exception:return {'status':'confirmation_unavailable'}
+            def record(data):
+                current=data['calls'][cid]['agreement']
+                if not current or current['version']!=agreement['version']:return False
+                current['confirmation_anchor']=evidence.get('anchor')
+                current['booking_consent']=bool(evidence.get('approved'))
+                if evidence.get('approved'):
+                    current['consent_proof']={k:evidence.get(k) for k in ('question_id','answer_id')}
+                    current['consent_proof']['agreement_version']=agreement['version']
+                self.event(data,cid,'booking_consent','approved' if evidence.get('approved') else 'required')
+                return True
+            if not await self.repository.update(record):return {'status':'agreement_required'}
+            if not evidence.get('approved'):
+                return {'status':'confirmation_required','load_id':agreement['load_id'],'agreed_rate':agreement['rate'],
+                        'confirmation_prompt':f"May I book load {agreement['load_id']} at ${agreement['rate']} total?"}
         try:
             booking=await self.bookings.request(call_id=cid,operation_id=agreement['version'],load_id=agreement['load_id'],
                 mc=call['mc'],rate=agreement['rate'],agreement_version=agreement['version'],deadline=deadline)
@@ -259,7 +283,9 @@ class Runtime:
         real=[c for c in calls if c['cohort']=='real'];rb=[b for b in bookings if b.get('cohort')=='real']
         verified=sum(bool(c.get('code_passed_at')) for c in real)
         handoffs=sum(b['state'] in {'ACK_PENDING','CONFIRMED'} and bool(b.get('reference')) and
-                     data['calls'][b['call_id']].get('handoff_mocked',False) for b in rb)
+                     data['calls'][b['call_id']].get('handoff_mocked',False) and
+                     bool((data['calls'][b['call_id']].get('agreement') or {}).get('booking_consent')) and
+                     b.get('reason')!='caller_confirmation_review' for b in rb)
         queue=[]
         for b in bookings:
             queue.append({k:b.get(k) for k in ['id','call_id','load_id','mc','rate','state','reference','tms_status',

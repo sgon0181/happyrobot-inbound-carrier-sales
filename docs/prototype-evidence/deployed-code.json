@@ -1,0 +1,10 @@
+{
+  "label": "LIVE",
+  "method": "Read-only SHA-256 inside approved Fly machine",
+  "matches_local_source": true,
+  "files": {
+    "service/api/app.py": "fd3a57ce63a4f341bc6753c80c1bbfb27029e040e356331ee1c36fa3752e39cb",
+    "service/adapters/confirmation.py": "08315bd6bbff21e1ca181e176e6d014dd812d0aaba421ef27071016cbad66e37",
+    "service/core/calls.py": "685fb18063d0cb63e3ce310ff0a2de9f707e9a7d45debadb7060bec570db47f3"
+  }
+}

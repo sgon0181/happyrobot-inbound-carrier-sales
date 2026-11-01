@@ -26,12 +26,15 @@ The tests run offline. They use a local fake TMS over real TCP, and importing th
 | `core/pricing.py`, `policy/pricing-v1.json` | The versioned pricing policy (section 6.5). |
 | `core/negotiation.py` | Counter rounds. |
 | `core/loads.py` | Which loads may be offered. |
+| `core/calls.py`, `api/app.py` | Call gates, authenticated API and transcript collection. |
+| `adapters/confirmation.py` | Strict booking permission from native platform messages. |
+| `adapters/twin/` | Durable canonical CAS state and projected business tables. |
 
 ## Safety rules
 
 - **Live `LOAD_BOOK` is off by default.** It needs `booking_enabled=True` in `TmsSettings`, and each send spends a load permanently.
 - **`max_rate` stays inside the service.** It is excluded from `repr`, and `agent_view` is the only booking data the voice agent gets.
-- **`InMemoryBookingStore` says nothing about Twin.** It shows what the `BookingStore` interface needs: an atomic claim and a conditional update. T-1 proved both on Twin probe rows, and the real schema must still show them.
+- **`InMemoryBookingStore` says nothing about Twin.** Real canonical CAS contention was tested separately, with eight requests and one winner. The fallback and its limits are recorded below.
 
 ## Receipt and state handling
 
@@ -55,6 +58,16 @@ process, because their network guard deliberately blocks external connections.
 MC 138328, excludes protected inventory, caps this campaign at three durable
 send reservations, and closes further sends after its first real acknowledged
 receipt. No booking retry or namespace reset is supported.
+
+The owner call saved a complete PENDING receipt but failed caller consent.
+Price agreement alone no longer authorizes a live send. The first booking tool
+request records a native user-turn anchor and returns the exact load-and-total
+question. A subsequent request requires a fresh explicit affirmative answer,
+with complete non-interrupted dialogue fetched by the service. Missing or
+ambiguous evidence fails closed. This new gate passed offline replay and
+regression checks, but has not been tested with another real booking. The
+campaign is already closed after its saved reference. Keep that call in
+caller-consent review, excluded from the successful-handoff metric.
 
 Twin's SQL endpoint rejects data-modifying CTEs, and its runtime role cannot
 create tables. The approved last-resort implementation uses one canonical

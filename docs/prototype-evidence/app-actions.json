@@ -1,0 +1,27 @@
+{
+  "label": "HYBRID",
+  "integration": "Production signed-in App -> authenticated service -> live Twin",
+  "fixture": "SIMULATED booking, no TMS write intent",
+  "synthetic_confirm": {
+    "id": "68638f6e-2c48-4892-8f75-359fbb911034",
+    "load_id": "SYNTHETIC-APP-CONFIRM",
+    "state": "ACK_PENDING",
+    "tms_status": "PENDING",
+    "rep_decision": "confirmed",
+    "cohort": "synthetic"
+  },
+  "verified_actor_present": true,
+  "real_receipt_unchanged": true,
+  "real_confirmation_blocked": true,
+  "real_handoffs": 0,
+  "new_live_sends": 0,
+  "synthetic_decline": {
+    "state": "UNKNOWN",
+    "rep_decision": "declined",
+    "review_required": true,
+    "reason": "needs_release",
+    "claim_retained": true
+  },
+  "verified_actor_audits": 2,
+  "campaign_real_write_intents": 1
+}

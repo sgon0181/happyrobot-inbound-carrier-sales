@@ -47,6 +47,8 @@ class TwinBookingStore:
             if booking.state not in expected:return None
             if 'rep_decision' in changes and booking.rep_decision not in {RepDecision.AWAITING,changes['rep_decision']}:
                 raise ValueError('The rep has already decided.')
+            if changes.get('rep_decision') is RepDecision.CONFIRMED and booking.reason=='caller_confirmation_review':
+                raise ValueError('Caller consent requires review.')
             if self.live and changes.get('state') is State.SUBMITTING:
                 sends=[b for b in data['bookings'].values() if b.get('write_intent_id') and b.get('cohort')=='real']
                 if len(sends)>=3 or any(b['state'] in {'ACK_PENDING','CONFIRMED'} and b.get('reference') for b in sends):

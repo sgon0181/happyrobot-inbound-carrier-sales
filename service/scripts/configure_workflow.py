@@ -2,27 +2,27 @@
 import json
 from pathlib import Path
 from service.config import settings,ROOT
-from service.adapters.twin.client import Platform
+from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW='01a19476-5384-704b-9c5e-569fd96f9adf'
-VERSION='01a19476-53ae-7412-a2b8-7f33d081b2c0'
-PROMPT='63913bd5-fb43-4b97-b83f-1d239fb9e498'
-AGENT='923c677d-46a5-4f63-957d-2a31c64806dd'
-POST_CLOSE='d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3'
+VERSION='01a194ae-0d43-7970-84c7-69c591936a37'
+PROMPT='01a194ae-0d59-7710-a523-a6d129e5cae6'
+AGENT='01a194ae-0d54-7b1a-9a1d-70c79853b4f6'
+POST_CLOSE='01a194ae-0d58-78c8-ac64-178ce8a0f36e'
 HOST='https://codex-e2e-lab-sg-20261031.fly.dev'
 BASE='/versions/'+VERSION
 DEFINITIONS=[
- ('verify_carrier','4906cc32-2a91-4749-9303-a794d22a646e','735398d8-6243-480f-907b-7170373c30b2','/carriers/verify',
+ ('verify_carrier','01a194ae-0d5a-71e2-9cad-512d0e77432c','01a194ae-0d4f-7ee9-8a97-5047290f1877','/carriers/verify',
   [('mc','MC digits stated by the caller.')]),
- ('send_code','a05bbcef-ebdf-477f-9ac0-063dd99a986e','128ce5a8-dace-430b-9435-9af3a49114d3','/otp/send',[]),
- ('verify_code','af17a0af-564e-44da-8136-43fc5696fc94','988796d8-1679-4b2e-8585-47e89f740815','/otp/verify',
+ ('send_code','01a194ae-0d5b-7405-b94f-da48fa187079','01a194ae-0d50-79d7-927e-1c0107abcbbe','/otp/send',[]),
+ ('verify_code','01a194ae-0d5c-7f6c-8f30-075b184b212b','01a194ae-0d52-7e57-b8f8-830a993aaaed','/otp/verify',
   [('code','The six digits the caller actually read. Preserve leading zeros.')]),
- ('find_loads','51153eb0-2461-470e-bb2c-13b119de81c2','ff57cc60-4746-473c-aa23-7089f4df2edd','/loads/search',
+ ('find_loads','01a194ae-0d5d-74a9-bbda-fe71d41e65ca','01a194ae-0d4e-701a-98ae-2330360b6027','/loads/search',
   [('equipment','DRY_VAN, REEFER, FLATBED, STEP_DECK or POWER_ONLY.'),('origin_state','Two-letter state, or blank.'),('dest_state','Two-letter state, or blank.')]),
- ('agree_rate','57022450-d36f-4299-9d1e-c1208ace9060','a0d8d721-855c-4cab-957a-d4017d997f74','/negotiate',
+ ('agree_rate','01a194ae-0d5e-7640-a695-8a16d346fba6','01a194ae-0d53-70ae-b56c-ad794c5c96fc','/negotiate',
   [('load_id','A load from find_loads.'),('rate','Exact whole-number ask, or the current offer on acceptance.')]),
- ('request_booking','b61c7773-017b-4723-bfc0-279bf4c9b5af','ad65981e-a8f5-43ba-b274-fcd4389a4b95','/bookings',[]),
- ('finish_call','59db3288-c43d-4d27-8031-f1048f4ac668','8a3c4072-9543-4a21-bb64-f063f0eca147',None,[])]
+ ('request_booking','01a194ae-0d5f-7f4c-b723-4e9f6a527a8d','01a194ae-0d55-776c-9dbd-1ced052edc9f','/bookings',[]),
+ ('finish_call','01a194ae-0d60-74b5-bee4-01c632e9cc67','01a194ae-0d55-7de2-b5c3-c93e91d12dd6',None,[])]
 
 
 def paragraph(text):return [{'type':'paragraph','children':[{'text':text}]}]
@@ -34,6 +34,9 @@ def close_url():
 
 def main():
     values=settings();p=Platform(values)
+    response=p.request('/versions/'+VERSION);version=response.get('data',response)
+    if version.get('is_live') or version.get('is_published'):
+        raise RuntimeError('Fork the prototype to a writable version and refresh its node IDs before configuring')
     path='/workflows/'+WORKFLOW+'/variables'
     existing=p.request(path)['data']
     key='PROTOTYPE_AGENT_KEY'
@@ -46,6 +49,7 @@ def main():
     schema={'status':'SCHEMA_EXAMPLE','carrier_name':'SCHEMA_EXAMPLE','code_passed':False,
         'channel':'email','destination':'configured demo inbox','offer':1000,'round':1,'final':False,
         'rate':1000,'agreed_rate':1000,'load_id':'SCHEMA_EXAMPLE','handoff_allowed':False,'outcome':'SCHEMA_EXAMPLE',
+        'confirmation_prompt':'May I book load SCHEMA_EXAMPLE at $1000 total?',
         'loads':[{'load_id':'SCHEMA_EXAMPLE','origin_city':'SCHEMA_EXAMPLE','origin_state':'TX',
                   'destination_city':'SCHEMA_EXAMPLE','destination_state':'GA','pickup_datetime':'2099-01-01T00:00:00Z',
                   'delivery_datetime':'2099-01-02T00:00:00Z','equipment_type':'DRY_VAN','offer':1000,

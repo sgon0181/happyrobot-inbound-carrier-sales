@@ -1,0 +1,45 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION",
+  "version_id": "01a195f7-d2e8-79da-a553-ddbeed310f4d",
+  "manual_all_pass": true,
+  "cases": [
+    {
+      "case": "counter_false",
+      "scenario_run_id": "d97c2e12-990b-4551-9979-a8e82783276f",
+      "target_run_id": "bf5edb6c-df41-4c36-8e0c-31646c595529",
+      "wrapper": "completed",
+      "grade": "generating",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0
+    },
+    {
+      "case": "final_true",
+      "scenario_run_id": "8b69ea58-3feb-4d1e-b79f-0a72e92c7249",
+      "target_run_id": "c933f20b-dd89-422a-95d4-f3d729775363",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0
+    },
+    {
+      "case": "natural_permission",
+      "scenario_run_id": "466c1bf4-80c1-4c88-b9d8-7c98d9803ddc",
+      "target_run_id": "8b98f64c-0a68-4940-a3da-183879677d19",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0
+    }
+  ],
+  "checks": [
+    "Exactly one genuine negotiation in each focused trace.",
+    "Maximum/final information questions caused no extra agree_rate or booking calls.",
+    "Clear counter and price acceptance wording, natural permission routes directly to booking tool."
+  ],
+  "limits": [
+    "Every HTTP action skipped. No backend transition or live receipt proven by these mocks."
+  ]
+}

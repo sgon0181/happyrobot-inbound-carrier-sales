@@ -1,0 +1,11 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION",
+  "version_id": "01a195f3-8fbf-7706-8f4e-1068ee1a92bd",
+  "scenario_run_id": "d9826ea2-ff13-44ae-9c0e-06850ba49a9a",
+  "target_run_id": "4efc5540-ff88-4cea-bde3-ba9d8be03216",
+  "manual_pass": false,
+  "finding": "Counter wording is clear, but asking whether the current price is final incorrectly invoked agree_rate again. This is an information question, not an acceptance.",
+  "http_actions_skipped": 9,
+  "service_calls": 0,
+  "booking_sends": 0
+}

@@ -6,7 +6,7 @@ from service.config import settings, ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW = "01a19476-5384-704b-9c5e-569fd96f9adf"
-VERSION = "01a195e6-06cd-74c6-af1c-e624fa32d35c"
+VERSION = "01a195f7-d2e8-79da-a553-ddbeed310f4d"
 HOST = "https://codex-e2e-lab-sg-20261031.fly.dev"
 BASE = "/versions/" + VERSION
 HANDOFF_LINE = (
@@ -240,13 +240,16 @@ def main():
             "find_loads": "Find matching loads after verification. Present one offer, total first, then a short operational summary. Price questions are answered without negotiation or booking tools. For terminal no_match or tms_unavailable, use finish_call with the actual result, then native hangup.",
             "agree_rate": (
                 "Use only for complete price acceptance or a genuine counter amount. Rate questions "
-                "do not call this tool. On counter or ask_again state the returned offer, ask if it "
+                "never call this tool. The latest complete caller turn must explicitly accept "
+                "the price or propose a new amount. Is that your final price, Is that final, "
+                "and What is the most you can pay are information questions: answer from the "
+                "current offer without any tool. On counter or ask_again state the returned offer, ask if it "
                 "works, then wait. Say final only when final is true. On agreed confirm that total "
                 "and prepare booking permission with request_booking. Never infer acceptance."
             ),
             "request_booking": (
-                "Prepare permission after price agreement. On confirmation_required briefly confirm "
-                "the agreed total and read the exact confirmation_prompt as the final sentence, "
+                "Prepare permission after price agreement. On confirmation_required clearly say "
+                "Yes, I can do the agreed total, then read the exact confirmation_prompt as the final sentence, "
                 "then wait. A fresh natural yes, Sure or Yeah go ahead calls this tool directly. "
                 "Rate questions are conversation, not permission, refusal or a closing reason."
             ),

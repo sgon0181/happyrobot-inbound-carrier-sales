@@ -1,0 +1,11 @@
+{
+  "label": "OFFLINE_SERVICE_SUITE",
+  "command": "make test",
+  "python": "3.12",
+  "tests": 155,
+  "failed": 0,
+  "network": "External connections blocked by the test suite; fake TCP only",
+  "workflow_snapshot_version": "01a19592-7887-751f-85aa-4faba052b68c",
+  "recorded_at_sydney": "2026-11-01T16:33:25.153447+11:00",
+  "limit": "Does not replace separately recorded live integrations, voice evidence or adversarial scenario results."
+}

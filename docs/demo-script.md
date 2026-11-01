@@ -1,36 +1,40 @@
 # Five-minute business walkthrough
 
-Recording readiness: pending the clean consented call and real App review.
-Use actual completed evidence. Do not present a simulation as a real booking.
+Recording readiness: real consented booking and App approval are available.
+The final walkthrough has not been recorded. Use the completed real-call
+recording and the separate speech-check evidence, clearly identified.
+No further live booking is allocated. Do not present a simulation as a new
+booking or imply the original call spoke the corrected disclosure.
 
 | Time | Show and say |
 | --- | --- |
 | 0:00-0:30 | Explain missed calls, repeated verification and inconsistent negotiation. Show the web-call entry and describe the first leg the agent owns. |
-| 0:30-2:50 | Make the real call: active MC, new emailed code, matching lane, one counter, exact total, explicit permission, neutral senior review and spoken mocked transfer. Let the agent hang up. Never show the inbox code or credential screens in the final recording. |
-| 2:50-3:50 | Open the real call in Apps. Show load, MC, agreed rate, receipt and actual PENDING status. Review the notes. Record rep approval only for the clean call. Explain that it is a local business decision and does not change the TMS to BOOKED. |
+| 0:30-2:50 | Show the recorded real call: active MC, emailed code, matching lane, counters, exact total and explicit permission. Redact the code in audio and screen. Explain its shortened transfer disclosure, then show the separate fixed-speech check; no new booking. |
+| 2:50-3:50 | Open the real call in Apps. Show load, MC, agreed rate, receipt and actual PENDING status. Review the notes. Show the saved rep approval for LD01085. Explain that it is a local business decision and does not change the TMS to BOOKED. |
 | 3:50-4:40 | Show qa-results.md and native test results. Explain one blocked code-bypass attempt and one uncertainty/duplicate-send control. Separate live evidence from synthetic cases. |
 | 4:40-5:00 | State the measured outcome and the important assumptions. Explain that external finalization is unresolved and outline the next production work. |
 
 ## Before pressing record
 
 - Verify reviewer access, the exact repository commit and the active workflow.
-- Check Fly is outside trial limits, the service is healthy and the one-shot
-  load authorization is for fresh inventory. Existing spent loads stay blocked.
-- Verify the new SMTP email arrives after the call begins. Hide code entry and
-  inbox content in the shared recording. Redact the spoken code in the final
-  audio too, with a clear "verification code redacted" label. The underlying
-  verification remains an actual human action, not a simulated replacement.
+- Use make warm only if the dashboard needs the service. The post-card runtime
+  check passed. Both prototype booking permissions are consumed; do not place
+  another booking or reuse LD01085/LD01094.
+- Hide code entry and inbox content in the existing call recording. Redact the
+  spoken code in the final audio, with a "verification code redacted" label.
+  The underlying verification was an actual human action.
 - Keep the App open and signed in. Ensure real and synthetic cohorts are clear.
 - If any check fails, record the failure honestly and stop the booking attempt.
   A repeat take on another load needs another owner authorization.
 
-## Owner call instructions
+## Evidence to use
 
-The exact lane and disposable load will be selected immediately before the
-call. Give MC 138328. Ask for 25 more than the opening offer, then accept the
-returned rate. First clarify the total without authorizing a booking. The
-agent must wait and ask the exact permission question again. Only then say
-"Yes, please book it." Wait for the mocked transfer and agent hang-up.
+The latest real run is 112f1a4a-84f3-420f-bce4-d7f374b381d1, load LD01085,
+MC 138328, total 2950, TMS PENDING and reference EME8U26DKEX5DESS.
+Local rep confirmation is saved. Its full speech assessment is in qa-results.md.
+Use the separate no-send voice run only to demonstrate the repaired handoff.
 
 The original LD01094 call is a failed-consent example and must never be
-confirmed, resent or shown as a clean success.
+confirmed, resent or shown as a clean success. Neither spent load can be used
+for another take. A new real submission would require separate exact-load
+authorization, which is not part of this recording plan.

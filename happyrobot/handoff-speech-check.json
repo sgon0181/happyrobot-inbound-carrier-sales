@@ -1,0 +1,204 @@
+{
+  "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+  "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+  "nodes": [
+    {
+      "id": "01a1958b-1511-76d0-af04-3d5cef75f587",
+      "persistent_id": "01a1958b-1511-76d0-af04-3d5cef75f587",
+      "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+      "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a1958b-1511-76d0-af04-3d5bc69dfa39",
+      "type": "prompt",
+      "name": "Prompt",
+      "sort_index": -1,
+      "is_complete": false,
+      "configuration": {},
+      "timestamp": "2026-11-01T05:18:02.499Z",
+      "prompt_md": "You are an isolated handoff speech check. No real booking exists or will be placed by this workflow. Say the initial message and wait for the user to say go. Then call finish_handoff with no arguments. Its fixed literal message must play in full. After the tool completes, immediately call native end_conversation. Say nothing else. Do not ask for an MC, code, load or rate. Do not claim any new booking was submitted. Do not paraphrase or add a goodbye after the fixed line.",
+      "initial_message": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "This is a handoff speech check. No booking will be placed. Say go when you are ready."
+            }
+          ]
+        }
+      ],
+      "initial_message_uninterruptible": false,
+      "model": {
+        "type": "static",
+        "static": {
+          "id": "gpt-5.6-luna",
+          "name": "gpt-5.6-luna"
+        }
+      }
+    },
+    {
+      "id": "01a1958b-150a-7e83-924b-f3a3ff8da12f",
+      "persistent_id": "01a1958b-150a-7e83-924b-f3a3ff8da12f",
+      "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+      "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": null,
+      "type": "action",
+      "name": "Web Call",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "require_webcall_auth": true,
+        "open_runs_page_on_trigger": true
+      },
+      "timestamp": "2026-11-01T05:18:02.499Z",
+      "event_id": "6e32e01e-722f-4b8b-9372-500b845686d1",
+      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
+      "trigger_interval": null,
+      "multi_event_behavior": "parallel"
+    },
+    {
+      "id": "01a1958b-1511-76d0-af04-3d5bc69dfa39",
+      "persistent_id": "01a1958b-1511-76d0-af04-3d5bc69dfa39",
+      "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+      "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a1958b-150a-7e83-924b-f3a3ff8da12f",
+      "type": "action",
+      "name": "Handoff voice check",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "call": {
+          "type": "static",
+          "static": {
+            "id": "01a1958b-150a-7e83-924b-f3a3ff8da12f",
+            "name": "Web Call"
+          }
+        },
+        "agent": {
+          "name": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Handoff speech check"
+                }
+              ]
+            }
+          ],
+          "voices": [
+            {
+              "type": "static",
+              "static": {
+                "id": "m357hexpjk2s",
+                "name": "Paul"
+              }
+            }
+          ],
+          "languages": [
+            {
+              "type": "static",
+              "static": {
+                "id": "en",
+                "name": "English"
+              }
+            }
+          ],
+          "language_accents": [
+            {
+              "type": "static",
+              "static": {
+                "id": "en-us",
+                "name": "English (US)"
+              }
+            }
+          ]
+        },
+        "background": {
+          "type": "static",
+          "static": {
+            "id": "https://storage.googleapis.com/happyrobot-public/backgrounds/call-center.8k.wav",
+            "name": "Call center",
+            "description": "https://storage.googleapis.com/happyrobot-public/backgrounds/call-center.8k.wav"
+          }
+        },
+        "enable_memory": false,
+        "disable_hangup": false,
+        "max_call_duration": 60,
+        "respect_business_hours": false,
+        "max_silence_hold_duration": 20,
+        "business_hours_setting_name": "default",
+        "disable_auto_contact_context": true
+      },
+      "timestamp": "2026-11-01T05:18:02.499Z",
+      "event_id": "0192e5dc-08df-78bf-a549-f43c6bf9f087",
+      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
+      "trigger_interval": null,
+      "multi_event_behavior": "parallel"
+    },
+    {
+      "id": "01a1958f-6243-7e43-a45e-b945f5b2d89f",
+      "persistent_id": "01a1958f-6243-7e43-a45e-b945f5b2d89f",
+      "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+      "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a1958f-623c-755c-8c37-4cb4bfe7a797",
+      "type": "action",
+      "name": "Speech check no-op",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "code": "output = {'status': 'speech_check_complete', 'booking_submitted': False}",
+        "execution_profile": "standard"
+      },
+      "timestamp": "2026-11-01T05:22:44.408Z",
+      "event_id": "019dde7b-3500-7a3c-8f5e-1c2d4e6a8b9c",
+      "integration_id": "01926a91-fd58-7305-8f41-eea4e4a4cdf9",
+      "trigger_interval": null,
+      "multi_event_behavior": "group"
+    },
+    {
+      "id": "01a1958f-623c-755c-8c37-4cb4bfe7a797",
+      "persistent_id": "01a1958f-623c-755c-8c37-4cb4bfe7a797",
+      "version_id": "01a19587-81d5-7b2a-8f30-0ff9933f954a",
+      "workflow_id": "01a19587-81b9-7a6e-9d22-ce155bee099a",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a1958b-1511-76d0-af04-3d5cef75f587",
+      "type": "tool",
+      "name": "finish_handoff",
+      "sort_index": 0,
+      "is_complete": false,
+      "configuration": {
+        "tool_call_result_ack": "unack"
+      },
+      "timestamp": "2026-11-01T05:22:44.408Z",
+      "function": {
+        "message": {
+          "type": "fixed",
+          "content": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo."
+                }
+              ]
+            }
+          ],
+          "uninterruptible": true
+        },
+        "parameters": [],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "After the user says go, play the complete fixed handoff line. Then immediately use native end_conversation, without extra speech."
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 # Inbound Carrier Sales: business and IT build description
 
 Status: controlled prototype on branch prototype/e2e. The first real call
-proved the integrations but failed caller consent. Its receipt is retained
-for review. The corrected clean-call assessment is pending. This document
-must be updated with that result before submission.
+proved the integrations but failed caller consent. Its receipt remains blocked
+for review. A later real call passed strict permission, booked LD01085 at 2950
+with TMS PENDING, and received local rep approval. Its shortened spoken handoff
+was repaired and checked separately without another booking.
 
 ## Business scope
 
@@ -117,7 +118,10 @@ The owner configured Gmail SMTP for service-owned code delivery. It replaces
 the temporary native action-test route on the deployed prototype. The second
 owner call proved actual inbox receipt and code entry, then exposed a dialogue
 failure during price clarification. The revised dialogue and real consent path
-passed controlled tests; a clean human booking retest remains pending.
+passed controlled tests and a subsequent real consented booking. A dedicated
+fixed handoff tool repairs the separately observed spoken-disclosure defect.
+The original booking call and later no-send voice check are documented as
+separate evidence.
 
 The canonical Twin aggregate, demo inbox identity policy, strict consent
 matcher and deterministic post-call summary are prototype choices. Stronger

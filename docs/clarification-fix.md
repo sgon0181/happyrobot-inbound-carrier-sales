@@ -69,8 +69,11 @@ failures are separate from the successful corrected test.
 
 Tested Development v8 was promoted through an executable-equivalent v9 fork.
 Eighteen nodes and seven safe output schemas were checked before Production
-publication. A clean human retest is still required. LD01085 remains the single
-allocated disposable load until its permission is consumed by an actual send.
+publication. The later real v9 owner call passed fresh consent and sent the
+allocated LD01085 request at 2950, receiving PENDING. Its permission is now
+consumed. The shortened spoken handoff on that call was a separate defect,
+addressed with a fixed literal tool and no-send voice check. See
+[the latest audit](prototype-evidence/v9-real-call-audit.json).
 
 ## Evidence
 

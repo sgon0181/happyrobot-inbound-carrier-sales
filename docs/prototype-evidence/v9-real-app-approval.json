@@ -1,0 +1,39 @@
+{
+  "label": "LIVE_SIGNED_IN_APP_REP_APPROVAL_READBACK",
+  "read_at_sydney": "2026-11-01T16:24:27.781484+11:00",
+  "bookings": [
+    {
+      "id": "085b01b1-e5cb-4b7b-a82c-5b32a7961a3a",
+      "call_id": "112f1a4a-84f3-420f-bce4-d7f374b381d1",
+      "load_id": "LD01085",
+      "mc": "138328",
+      "rate": 2950,
+      "state": "ACK_PENDING",
+      "reference": "EME8U26DKEX5DESS",
+      "tms_status": "PENDING",
+      "rep_decision": "confirmed",
+      "review_required": false,
+      "reason": null,
+      "write_intent_id": "a31a23b9-20a1-4264-ba89-567558c0d0c1"
+    },
+    {
+      "id": "2134811d-6ed5-4914-8755-ccb2fc2a1677",
+      "call_id": "94ad9f38-1cc8-4f87-8bb7-af945c6b9563",
+      "load_id": "LD01094",
+      "mc": "138328",
+      "rate": 1075,
+      "state": "ACK_PENDING",
+      "reference": "3PUHTGRJNDQ5EKMM",
+      "tms_status": "PENDING",
+      "rep_decision": "awaiting",
+      "review_required": true,
+      "reason": "caller_confirmation_review",
+      "write_intent_id": "0140ec8c-0f0a-4297-bc11-cb083f2f04ae"
+    }
+  ],
+  "campaign_write_intents": 2,
+  "all_followup_permissions_consumed": true,
+  "verified_rep_actor_present": true,
+  "new_tms_sends_by_this_read": 0,
+  "limit": "App rep approval is local. External TMS remains PENDING. Original speech defect is assessed separately."
+}

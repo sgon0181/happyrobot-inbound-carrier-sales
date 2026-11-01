@@ -3,6 +3,7 @@ import json
 import re
 import unittest
 from service.config import ROOT
+from service.scripts.configure_workflow import HANDOFF_LINE
 
 
 class WorkflowContractTests(unittest.TestCase):
@@ -28,7 +29,7 @@ class WorkflowContractTests(unittest.TestCase):
             self.assertFalse(names & {'run_id','call_id','verified','confirmed','max_rate','api_key'})
             if node['name']=='request_booking':self.assertFalse(names)
 
-    def test_closing_speech_is_tied_to_the_closing_tool_argument(self):
+    def test_general_close_has_ai_guidance_without_own_variable_reference(self):
         snapshot=json.loads((ROOT/'happyrobot/prototype-workflow.json').read_text())
         finish=next(n for n in snapshot['nodes'] if n['name']=='finish_call')
         parameter=next(p for p in finish['function']['parameters'] if p['name']=='closing_message')
@@ -37,3 +38,13 @@ class WorkflowContractTests(unittest.TestCase):
         description=json.dumps(message['description'])
         self.assertIn('closing_message',description)
         self.assertNotIn('group_id',description)
+
+    def test_handoff_speech_is_a_fixed_literal_without_agent_arguments(self):
+        snapshot=json.loads((ROOT/'happyrobot/prototype-workflow.json').read_text())
+        tool=next(n for n in snapshot['nodes'] if n['name']=='finish_handoff')
+        self.assertEqual(tool['function']['parameters'],[])
+        message=tool['function']['message']
+        self.assertEqual(message['type'],'fixed')
+        self.assertTrue(message['uninterruptible'])
+        self.assertEqual(message['content'],[{'type':'paragraph','children':[{'text':HANDOFF_LINE}]}])
+        self.assertNotIn('group_id',json.dumps(message))

@@ -70,9 +70,11 @@ ambiguous evidence fails closed. This new gate passed offline replay and
 regression checks. A native simulated conversation also proved that the live
 platform exposes same-session messages while active: clarification failed and
 a later explicit yes passed. All business tools were mocked in that test.
-Another real human booking has not yet tested the correction. One exact-load
-follow-up permission is armed for LD01085. Keep the original call in caller-consent review,
-excluded from the successful-handoff metric.
+The subsequent real owner call proved the corrected consent path and produced
+LD01085's PENDING receipt at 2950. Its follow-up permission is consumed. Exactly
+two real write intents exist, with no permission for another send. Keep the
+original call in caller-consent review, excluded from the successful-handoff
+metric. Full handoff speech was repaired and checked separately without a send.
 
 The owner configured Gmail SMTP privately through
 `python -m service.scripts.set_email_credential`. The deployed transport accepted

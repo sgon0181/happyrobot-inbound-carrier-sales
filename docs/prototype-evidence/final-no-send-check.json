@@ -1,0 +1,37 @@
+{
+  "label": "FINAL_READ_ONLY_NO_SEND_CHECK",
+  "checked_at_sydney": "2026-11-01T16:32:15.473295+11:00",
+  "campaign_write_intents": 2,
+  "all_followup_permissions_consumed": true,
+  "bookings": [
+    {
+      "load_id": "LD01085",
+      "reference": "EME8U26DKEX5DESS",
+      "rep_decision": "confirmed",
+      "state": "ACK_PENDING",
+      "receipt_sha256": "17f2a4563d82ef3e3d3cb132482c8efb953cb3563990013e5834d0e776fe11e5"
+    },
+    {
+      "load_id": "LD01094",
+      "reference": "3PUHTGRJNDQ5EKMM",
+      "rep_decision": "awaiting",
+      "state": "ACK_PENDING",
+      "receipt_sha256": "12b164a333db0ebb71dcd5411aac27178a6580ffe6bb6a1aec934b65b0826b35"
+    }
+  ],
+  "new_tms_sends": 0,
+  "fly": {
+    "app": "codex-e2e-lab-sg-20261031",
+    "machine_id": "84eee5dbdd0008",
+    "machine_count": 1,
+    "state": "stopped",
+    "memory_mb": 256,
+    "min_machines_running": 0,
+    "autostop": true,
+    "autostart": true
+  },
+  "limits": [
+    "This checks stored receipts and local rep decisions, not a new external TMS status or finalization operation.",
+    "Stopped Machine can autostart on new requests. Fly has no hard spending cap."
+  ]
+}

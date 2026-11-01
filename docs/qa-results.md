@@ -6,24 +6,31 @@ See the [full report](../PROTOTYPE_REPORT.md) for deviations and resources.
 
 ## Result
 
-The real integration chain worked through a reference-bearing PENDING receipt,
-spoken mocked transfer, agent hang-up, Twin record and visible Apps dashboard.
-The conversation FAILED caller consent: a price clarification was treated as
-permission to submit. The owner reported being interrupted. Text evidence
-supports the consent failure but does not measure audio overlap.
+The third real owner call passed authority, fresh Gmail code entry, matching,
+three genuine counter turns and strict booking permission. One send for LD01085
+at 2950 returned ACK_PENDING/PENDING, reference EME8U26DKEX5DESS. The signed-in
+App saved a local rep confirmation, while TMS stayed PENDING. Exactly two live
+write intents exist across this prototype campaign, with no unused permission.
 
-The real booking remains ACK_PENDING, reference `3PUHTGRJNDQ5EKMM`, awaiting
-review. Confirm is blocked. No further live booking was sent. The clean-run
-gate is not passed, and the corrected voice behavior needs a separately
-controlled human retest. The owner authorized continuing toward that result,
-and one exact-load permission is allocated to LD01085. No additional send is
-claimed until that controlled call completes.
+That call failed the full spoken review/simulation disclosure. Its actual
+closing speech was shorter than the tool argument. The repair uses a literal,
+uninterruptible finish_handoff message with no variable or message argument.
+Two no-send native text checks verified rendered handoff/outage behavior.
+The owner completed the isolated speech-only call and reported the full line
+and automatic hangup. Native voice evidence is recorded separately below.
+These later checks do not retroactively turn the original call into a flawless
+single-run demonstration.
+
+The first LD01094 receipt remains in caller-consent review, with Confirm blocked.
+The second owner call sent nothing and exposed a dialogue failure. Historical
+failures, setup failures, inconclusive wrappers and failed grades are retained.
+Main and the original workflow were not changed. No further booking is needed.
 
 ## Checks completed
 
 | Check | Result | Evidence level |
 | --- | --- | --- |
-| Python 3.12 service suite | 154 passed, 0 failed; local fake TCP only, external network blocked | SIMULATED |
+| Python 3.12 service suite | 155 passed, 0 failed; local fake TCP only, external network blocked | SIMULATED |
 | Receipt faults and durability behavior | Pre-send failure, partial/late receipt, save failure, duplicate suppression, restart/reconcile and cleanup checks passed in the suite | SIMULATED |
 | Pricing and negotiation policy | Exact money, ceiling controls, round limits, repeat actions and stale selected agreement checks passed | SIMULATED |
 | API policy gates | Authority/code gates, call-bound consumed code, resend/failure budgets, hidden identity injection and role separation passed | SIMULATED |
@@ -41,24 +48,41 @@ claimed until that controlled call completes.
 | Booking-off API flow | Real FMCSA, email submission, TMS search and negotiation; synthetic QA code proof; FAILED/live_booking_disabled, no write intent | HYBRID |
 | Owner email/code | New email received and code successfully entered during actual voice call | LIVE |
 | Gmail SMTP replacement | Owner supplied app password privately; deployed sender accepted a new code email on a synthetic call; the second real owner call then proved receipt and entry | LIVE transport and human entry |
-| Owner booking send | Exactly one send for LD01094 at 1075, complete 97-byte PENDING receipt and stored reference | LIVE |
-| Owner conversation consent | FAILED: price clarification preceded submission without clear booking permission | LIVE |
-| Neutral wording and mocked transfer | Spoken senior review and simulated transfer present in transcript | LIVE |
+| First owner booking send | Exactly one send for LD01094 at 1075, complete 97-byte PENDING receipt and stored reference | LIVE |
+| First owner conversation consent | FAILED: price clarification preceded submission without clear booking permission | LIVE |
+| First call neutral wording and mocked transfer | Spoken senior review and simulated transfer present in transcript | LIVE |
 | Agent ending | _hangup tool followed by agent_hung_up event; run/session completed | LIVE |
 | Transcript handling | Both numbered pages collected, 51 messages; adjacent code fragments coalesced and failed attempts redacted in stored projection | LIVE evidence / SIMULATED regression |
 | Native Production App | Signed-in dashboard visibly shows real receipt, review reason, call notes and separate synthetic cohort | LIVE |
 | App Confirm | Clicked only SYNTHETIC-APP-CONFIRM; rep decision persisted as confirmed, TMS state remained ACK_PENDING/PENDING | HYBRID |
 | App Decline | Clicked only synthetic UNKNOWN probe; rep decision declined, state UNKNOWN, claim retained and needs_release review | HYBRID |
-| Real record after App tests | Same reference and ACK_PENDING, awaiting rep, consent review retained, no success KPI | LIVE |
+| First real record after synthetic App tests | Same reference and ACK_PENDING, awaiting rep, consent review retained, no success KPI | LIVE |
 | Deployed authentication | 16 service routes and 2 App routes reject missing credentials with 401 | LIVE |
 | Continuation deployment | Six runtime file hashes match local source; authenticated health 200, SMTP configured, original single intent/reference unchanged, no follow-up permission | LIVE read-only |
 | Fly after card setup | 373.91 continuous observed seconds, VM uptime 67.02 to 440.93 seconds, same boot and instance, every state check started | LIVE infrastructure, no business calls |
 | Native App forged session | Native builder reported 401/redirect checks; scoped source review verified platform token validation | SIMULATED / static review |
 | Mirrored App build | Clean Node 22 container npm install, production build and typecheck passed | SIMULATED build |
 | Independent review | Read-only core and App reviewers found no remaining blocker in the final scoped changes | Static review |
-| Native evaluation resources | Five enabled Northstar criteria and eight conversation scenarios with all eight external actions skipped using mocks | LIVE platform / simulated business |
+| Native evaluation resources | Five enabled criteria; historical scenarios mock all eight then-existing HTTP actions; new v10 checks mock all nine | LIVE platform / simulated business |
+| Latest real booking permission | Fresh exact load/2950 question and explicit yes, same session and agreement proof; earlier ambiguous answer rejected | LIVE |
+| Latest real send and receipt | LD01085 at 2950, 97 complete bytes; Twin and private journal exports match exactly | LIVE |
+| Latest real rep approval | Signed-in App Confirm saved confirmed for LD01085 only; TMS stays ACK_PENDING/PENDING; original unsafe record still blocked | LIVE |
+| Latest real spoken handoff | FAILED full disclosure: actual speech was shortened; the full sentence existed only in a tool argument | LIVE failure |
+| Fixed handoff and outage | Two native targets completed with correct rendered messages, tool choice and native end; all nine HTTP actions skipped | SIMULATED conversation |
+| Isolated owner speech check | Owner reports full fixed review/simulation line and automatic hangup; five-node workflow has no HTTP, booking or email action | LIVE voice, no business integrations |
 
 ## Evidence
+
+- [Fixed handoff text checks](prototype-evidence/v10-fixed-handoff-text.json)
+- [Separate owner voice check](prototype-evidence/fixed-handoff-owner-voice.json)
+- [v10-to-v11 promotion parity](prototype-evidence/workflow-v10-v11-parity.json)
+- [Final no-send and stopped-host check](prototype-evidence/final-no-send-check.json)
+- [Latest real-call audit](prototype-evidence/v9-real-call-audit.json)
+- [Latest exact receipt](prototype-evidence/v9-live-receipt.txt), SHA-256
+  17f2a4563d82ef3e3d3cb132482c8efb953cb3563990013e5834d0e776fe11e5
+- [Latest receipt metadata](prototype-evidence/v9-live-receipt.json), awaiting at export
+- [Later real rep-approval readback](prototype-evidence/v9-real-app-approval.json)
+- [Rep-approved dashboard](prototype-evidence/v9-real-rep-approved.png)
 
 - [Real call record](prototype-evidence/live-call.json)
 - [Exact receipt](prototype-evidence/live-receipt.txt), SHA-256
@@ -68,7 +92,8 @@ claimed until that controlled call completes.
 - [SMTP sender acceptance](prototype-evidence/smtp-check.json)
 - [Twenty native conversation attempts](prototype-evidence/native-conversation-qa.json)
 - [Eight reusable fully mocked definitions](../happyrobot/qa-scenarios.json)
-- [Five native criteria](../happyrobot/northstars.json)
+- [Historical v9 criteria](../happyrobot/northstars.json)
+- [Current v11 criteria](../happyrobot/northstars-v11.json)
 - [Tested-to-Production workflow parity](prototype-evidence/workflow-v6-v7-parity.json)
 - [Current v8-to-v9 parity](prototype-evidence/workflow-v8-v9-parity.json)
 - [Synthetic App action result](prototype-evidence/app-actions.json)
@@ -86,10 +111,6 @@ claimed until that controlled call completes.
 
 ## What has not been proved
 
-- Corrected permission handling during a new human voice booking. Active-session
-  transcript reads and matcher boundaries are proved by native simulation,
-  but human speech, interruptions and the complete corrected live path remain
-  pending. The strict matcher may require another explicit question.
 - Cause of PENDING, external BOOKED finalization, cancellation, expiry, full
   rate-format bounds, money scale or cross-token ownership.
 - The temporary action-test notifier remains in code as an inactive fallback.
@@ -102,8 +123,6 @@ claimed until that controlled call completes.
   neutral uncertainty handoff and consent readiness. These include failed
   iterations, not a full passing suite. Broker-only, load taken mid-call,
   voice leading-zero codes and live fault behavior remain uncovered.
-- Real rep approval on this call. It is deliberately blocked for consent
-  review; synthetic action success does not satisfy that real clean-run item.
 - AI sentiment/summary. The prototype labels its deterministic summary and
   reports sentiment as not_assessed.
 - Native multi-table transactional Twin storage. The real contention result
@@ -138,5 +157,38 @@ a claim that the twenty historical attempts all ran on v7 or passed.
 The second owner call passed authority and the new SMTP code, then ended
 prematurely during a rate question. It sent no booking. Three subsequent native
 regressions and the real-endpoint synthetic permission test passed; one earlier
-hybrid setup failure is preserved separately. Production v9 matches tested v8.
-A clean human booking is still pending. See [the focused record](clarification-fix.md).
+hybrid setup failure is preserved separately. At that checkpoint, Production
+v9 matched tested v8. The third owner call subsequently passed real consent and booking, with a separate spoken-disclosure defect. See the latest audit above and [the focused history](clarification-fix.md).
+
+## Fixed handoff checks
+
+Development v10 uses finish_handoff only for senior_review. The full text is
+literal, uninterruptible and identical in the separate speech-only workflow.
+finish_call remains for refusals, outages, test-only outcomes and clear goodbyes.
+The booking, consent and pricing implementation did not change for this fix.
+
+| Focused v10 case | Manual rendered-message result | Automated status and limit |
+| --- | --- | --- |
+| Senior review | Complete exact line, finish_handoff once, no finish_call, native end, no extra speech | Target and wrapper completed; handoff grade passed, overall grade failed the explicit-permission criterion because the static fixture bypasses confirmation_required. Presentation-only proof. |
+| TMS outage | Actual outage explanation and goodbye, finish_call once, no finish_handoff, native end | Native target completed and grader passed; outer wrapper inconclusive with scenario_backstop_elapsed. No repeat. |
+
+All nine HTTP actions were read back as skip_execution_with_mock_output before
+each run. Zero business HTTP calls or booking sends executed. Automated grades,
+wrapper status and manual transcript assessments are distinct evidence.
+The owner speech-check workflow cannot reach the service or TMS and does not
+enter the brokerage's call KPIs. No new MC or booking experiment was performed.
+
+The separate real voice check passed on run
+015a290e-1f34-4ef6-b4cb-504b1f331617, session
+fa14e28c-1d3d-4026-a826-36d6ae55f7f6. Native voice-node transcript and session
+messages record the exact complete fixed line, a noninterrupted speech record,
+a brief native Goodbye, and agent_hung_up. The owner independently reported
+hearing the full line and hangup. The auditing agent did not independently
+listen to the audio recording. This is voice presentation proof, not another
+TMS integration or booking call.
+
+Production is now v11, 01a19592-7887-751f-85aa-4faba052b68c, slug mhem72kctfhe.
+All 20 executable nodes and topology match tested Development v10. All eight
+tools expose exactly the approved 16-field schema; there are nine HTTP actions.
+No booking, consent, price policy or service runtime change was needed for this
+speech-only fix. Original v9 business-call evidence remains version-labelled.

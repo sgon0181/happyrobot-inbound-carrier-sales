@@ -1,0 +1,29 @@
+{
+  "label": "LIVE_OWNER_BOOKING_RECEIPT",
+  "exported_at_sydney": "2026-11-01T15:57:44.990098+11:00",
+  "run_id": "112f1a4a-84f3-420f-bce4-d7f374b381d1",
+  "booking_id": "085b01b1-e5cb-4b7b-a82c-5b32a7961a3a",
+  "write_intent_id": "a31a23b9-20a1-4264-ba89-567558c0d0c1",
+  "load_id": "LD01085",
+  "mc": "138328",
+  "agreed_rate": 2950,
+  "state": "ACK_PENDING",
+  "tms_status": "PENDING",
+  "reference": "EME8U26DKEX5DESS",
+  "response_bytes": 97,
+  "response_sha256": "17f2a4563d82ef3e3d3cb132482c8efb953cb3563990013e5834d0e776fe11e5",
+  "phase": "reading",
+  "send_started": true,
+  "write_drained": true,
+  "review_required": false,
+  "booking_consent": true,
+  "consent_proof": {
+    "answer_id": "2483386d-9ed4-47f2-9691-5254524c37a0",
+    "session_id": "e4daa9a5-049f-4ef3-826a-b21bde64d301",
+    "question_id": "01a19575-c98e-78a7-8403-3a4fc0e0fb8b",
+    "agreement_version": "2b1c09ef26164aadaa13f582786e8a71"
+  },
+  "rep_decision_at_export": "awaiting",
+  "limit": "TMS PENDING acknowledgement. No external BOOKED/finalization claim.",
+  "journal_export_matches_twin": true
+}

@@ -1,2 +1,3 @@
 # Preserve exact protocol bytes, including required CRLF line endings.
 docs/prototype-evidence/live-receipt.txt -text whitespace=cr-at-eol
+docs/prototype-evidence/v9-live-receipt.txt -text whitespace=cr-at-eol

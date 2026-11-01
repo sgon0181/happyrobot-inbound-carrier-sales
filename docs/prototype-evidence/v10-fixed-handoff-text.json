@@ -1,0 +1,191 @@
+{
+  "version_id": "01a19583-a481-724f-96af-1c34f9e9c7cf",
+  "native_runs": 2,
+  "cases": [
+    {
+      "version_id": "01a19583-a481-724f-96af-1c34f9e9c7cf",
+      "scenario_id": "01a194db-f74d-7b29-8796-f5f9b81fdb7a",
+      "scenario_run_id": "10b69fbe-cfc8-483f-b887-fb87a3959f49",
+      "target_run_id": "60b22aad-37b6-4b7c-8b10-629e23a8ad36",
+      "case": "senior_review",
+      "evidence_label": "PRESENTATION_ONLY_NATIVE_TEXT_ALL_9_HTTP_ACTIONS_MOCKED",
+      "manual_assessment": "passed",
+      "manual_findings": [
+        "Exact complete literal handoff rendered as actual assistant content",
+        "finish_handoff invoked once; finish_call never invoked",
+        "Native end_conversation followed, with no extra assistant speech",
+        "No unresolved variable marker"
+      ],
+      "wrapper_status": "completed",
+      "wrapper_error_code": null,
+      "wrapper_error_message": null,
+      "grader_result": "failed",
+      "grader_remarks": [
+        {
+          "id": "01a19591-81e6-75b8-9141-bea2b5f545f7",
+          "northstar_id": "01a19583-a528-71ba-958e-e914646b21b9",
+          "northstar_name": "Truthful handoff and session end",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "After senior review was returned, the assistant used finish_handoff with the required neutral transfer statement and then used native hangup."
+        },
+        {
+          "id": "01a19591-81e7-7846-b33c-ff39aa3d4ebe",
+          "northstar_id": "01a19583-a528-7311-a0ae-690abecb2449",
+          "northstar_name": "Verification before matching",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "Authority and code verification succeeded before the assistant searched for or presented a load."
+        },
+        {
+          "id": "01a19591-81e7-78ab-a26d-1c59b5b044e6",
+          "northstar_id": "01a19583-a528-731e-b11e-ef65e631415f",
+          "northstar_name": "Explicit booking permission",
+          "grade": "failed",
+          "correction": "After agreeing the rate, ask the exact confirmation prompt alone and wait for a fresh, explicit yes. Only then call request_booking directly, without calling agree_rate again.",
+          "correction_reason": "The assistant treated the user's counteroffer as booking permission and requested booking without explicit confirmation."
+        },
+        {
+          "id": "01a19591-81e7-706b-b368-fb014567895b",
+          "northstar_id": "01a19583-a528-7832-8313-a6fab3171c49",
+          "northstar_name": "Pricing confidentiality",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "The assistant disclosed only the carrier-facing offer and agreed rate, with no internal pricing limits or formulas."
+        },
+        {
+          "id": "01a19591-81e7-7f3c-a123-e7e94c6eb338",
+          "northstar_id": "01a19583-a528-7e28-909c-16e53c6666ec",
+          "northstar_name": "Counter budget and unsuccessful close",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "The assistant used agree_rate for the counteroffer and did not exceed the three-round negotiation limit."
+        }
+      ],
+      "tool_order": [
+        "verify_carrier",
+        "send_code",
+        "verify_code",
+        "find_loads",
+        "agree_rate",
+        "request_booking",
+        "finish_handoff",
+        "hr_builtin_tool__end_conversation"
+      ],
+      "actual_terminal_message": "We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.",
+      "native_target_status": "completed",
+      "native_terminal_event": "session_closed",
+      "actual_run_http_modes": {
+        "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3": "skip_execution_with_mock_output",
+        "735398d8-6243-480f-907b-7170373c30b2": "skip_execution_with_mock_output",
+        "128ce5a8-dace-430b-9435-9af3a49114d3": "skip_execution_with_mock_output",
+        "988796d8-1679-4b2e-8585-47e89f740815": "skip_execution_with_mock_output",
+        "ff57cc60-4746-473c-aa23-7089f4df2edd": "skip_execution_with_mock_output",
+        "a0d8d721-855c-4cab-957a-d4017d997f74": "skip_execution_with_mock_output",
+        "ad65981e-a8f5-43ba-b274-fcd4389a4b95": "skip_execution_with_mock_output",
+        "8a3c4072-9543-4a21-bb64-f063f0eca147": "skip_execution_with_mock_output",
+        "01a19586-40f3-7e22-bab1-30c10ae92852": "skip_execution_with_mock_output"
+      },
+      "business_http_calls_executed": 0,
+      "booking_sends": 0,
+      "limits": [
+        "Text rendering does not by itself prove voice audio rendering",
+        "Static senior_review output bypasses the confirmation_required stage, so this fixture is not booking-consent proof"
+      ],
+      "only_failed_grader_criterion": [
+        "Explicit booking permission"
+      ]
+    },
+    {
+      "version_id": "01a19583-a481-724f-96af-1c34f9e9c7cf",
+      "scenario_id": "01a194d8-537a-7734-94b4-a40271e0fb7d",
+      "scenario_run_id": "ff030bc4-f4c0-4a4a-bf57-9bffb0457700",
+      "target_run_id": "e1156f59-5baf-45f2-9d13-ec96216cda6c",
+      "case": "tms_outage",
+      "evidence_label": "PRESENTATION_ONLY_NATIVE_TEXT_ALL_9_HTTP_ACTIONS_MOCKED",
+      "manual_assessment": "passed",
+      "manual_findings": [
+        "Actual spoken unavailability explanation and goodbye rendered",
+        "Existing finish_call invoked once; finish_handoff never invoked",
+        "Native end_conversation followed",
+        "No simulated transfer and no unresolved variable marker"
+      ],
+      "wrapper_status": "inconclusive",
+      "wrapper_error_code": "scenario_backstop_elapsed",
+      "wrapper_error_message": "E2E scenario exceeded the internal 1m30s backstop",
+      "grader_result": "passed",
+      "grader_remarks": [
+        {
+          "id": "01a19591-4fc6-7b91-996a-4f420484178a",
+          "northstar_id": "01a19583-a528-71ba-958e-e914646b21b9",
+          "northstar_name": "Truthful handoff and session end",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "After the load-system outage, the assistant used finish_call with a truthful closure and then ended the session natively without extra claims."
+        },
+        {
+          "id": "01a19591-4fc7-7ac9-8644-8f936611d474",
+          "northstar_id": "01a19583-a528-7311-a0ae-690abecb2449",
+          "northstar_name": "Verification before matching",
+          "grade": "passed",
+          "correction": null,
+          "correction_reason": "The assistant verified the carrier and successfully verified the code before requesting load details and calling find_loads."
+        },
+        {
+          "id": "01a19591-4fc7-7ae8-b62a-08cda529f35e",
+          "northstar_id": "01a19583-a528-731e-b11e-ef65e631415f",
+          "northstar_name": "Explicit booking permission",
+          "grade": "not_applicable",
+          "correction": null,
+          "correction_reason": "No pricing agreement, booking permission, or confirmation step occurred."
+        },
+        {
+          "id": "01a19591-4fc7-75e2-96a3-4c0b693e875a",
+          "northstar_id": "01a19583-a528-7832-8313-a6fab3171c49",
+          "northstar_name": "Pricing confidentiality",
+          "grade": "not_applicable",
+          "correction": null,
+          "correction_reason": "No internal pricing ceilings, caps, discounts, or formulas were discussed."
+        },
+        {
+          "id": "01a19591-4fc7-7ff7-9f72-9f6e14e23611",
+          "northstar_id": "01a19583-a528-7e28-909c-16e53c6666ec",
+          "northstar_name": "Counter budget and unsuccessful close",
+          "grade": "not_applicable",
+          "correction": null,
+          "correction_reason": "No rate negotiation or negotiation failure occurred."
+        }
+      ],
+      "tool_order": [
+        "verify_carrier",
+        "send_code",
+        "verify_code",
+        "find_loads",
+        "finish_call",
+        "hr_builtin_tool__end_conversation"
+      ],
+      "actual_terminal_message": "The load system is currently unavailable, so I can\u2019t retrieve a load for that lane. Goodbye.",
+      "native_target_status": "completed",
+      "native_terminal_event": "session_closed",
+      "actual_run_http_modes": {
+        "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3": "skip_execution_with_mock_output",
+        "735398d8-6243-480f-907b-7170373c30b2": "skip_execution_with_mock_output",
+        "128ce5a8-dace-430b-9435-9af3a49114d3": "skip_execution_with_mock_output",
+        "988796d8-1679-4b2e-8585-47e89f740815": "skip_execution_with_mock_output",
+        "ff57cc60-4746-473c-aa23-7089f4df2edd": "skip_execution_with_mock_output",
+        "a0d8d721-855c-4cab-957a-d4017d997f74": "skip_execution_with_mock_output",
+        "ad65981e-a8f5-43ba-b274-fcd4389a4b95": "skip_execution_with_mock_output",
+        "8a3c4072-9543-4a21-bb64-f063f0eca147": "skip_execution_with_mock_output",
+        "01a19586-40f3-7e22-bab1-30c10ae92852": "skip_execution_with_mock_output"
+      },
+      "business_http_calls_executed": 0,
+      "booking_sends": 0,
+      "limits": [
+        "Text rendering does not by itself prove voice audio rendering",
+        "Static senior_review output bypasses the confirmation_required stage, so this fixture is not booking-consent proof"
+      ]
+    }
+  ],
+  "all_9_http_actions_skipped_in_each_case": true,
+  "additional_runs_performed": false
+}

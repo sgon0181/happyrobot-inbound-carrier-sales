@@ -1,7 +1,6 @@
 # Prospect summary email, draft only
 
-Do not send this draft until the clean-call result and review links below are
-final. Sending is not authorized by the current isolated-build instruction.
+Do not send this draft until the review links and video below are final. Sending is not authorized by the current isolated-build instruction.
 
 Subject: Inbound carrier sales prototype and demonstration
 
@@ -24,10 +23,13 @@ Review package:
 - Private repository and submitted commit: pending owner-approved publication.
 - Workflow: https://platform.happyrobot.ai/deployments/yhcdrf4kne4j
 - Dashboard: https://codex-lab-carrier-sales-v24.happyrobot.dev/
-- Walkthrough video: pending clean-call recording.
+- Walkthrough video: pending final recording and review.
 
-The first live test exposed a booking-consent defect. It is preserved as failed
-evidence; a clean retest is required before claiming the final flow passed.
+The first live test exposed a consent defect, which is retained as failed
+evidence. A subsequent real call passed strict permission, received a PENDING
+receipt and was rep-approved in the dashboard. Its shortened spoken disclosure
+was corrected and checked separately without submitting another booking.
+The evidence distinguishes the original call from that later speech check.
 
 Thanks,
 Santi

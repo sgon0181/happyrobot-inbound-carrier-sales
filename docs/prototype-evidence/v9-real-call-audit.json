@@ -1,0 +1,82 @@
+{
+  "run_id": "112f1a4a-84f3-420f-bce4-d7f374b381d1",
+  "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+  "version_id": "01a19550-bb92-7b91-87ca-b3af46e459f8",
+  "session_id": "e4daa9a5-049f-4ef3-826a-b21bde64d301",
+  "evidence_label": "REAL_OWNER_VOICE_REAL_SERVICE_ACK_PENDING_ONE_WRITE_INTENT",
+  "overall_assessment": "Booking consent and receipt integrity passed; spoken handoff requirement failed",
+  "criteria": {
+    "carrier_and_code_verification": "passed",
+    "three_genuine_counter_turns": "passed",
+    "price_question_did_not_negotiate": "passed",
+    "fresh_exact_permission_question_and_yes": "passed",
+    "same_session_and_current_agreement_proof": "passed",
+    "no_interrupted_consent": "passed",
+    "actual_pending_receipt": "passed",
+    "full_neutral_simulated_transfer_spoken": "failed",
+    "native_agent_hangup": "passed"
+  },
+  "load_id": "LD01085",
+  "agreed_public_total": 2950,
+  "booking_state": "ACK_PENDING",
+  "booking_reference": "EME8U26DKEX5DESS",
+  "review_required": false,
+  "booking_consent": true,
+  "stored_consent_proof": {
+    "answer_id": "2483386d-9ed4-47f2-9691-5254524c37a0",
+    "session_id": "e4daa9a5-049f-4ef3-826a-b21bde64d301",
+    "question_id": "01a19575-c98e-78a7-8403-3a4fc0e0fb8b",
+    "agreement_version": "2b1c09ef26164aadaa13f582786e8a71"
+  },
+  "question_content": "May I book load LD01085 at $2950 total?",
+  "answer_content": "Yes, please.",
+  "question_interrupted": false,
+  "answer_interrupted": false,
+  "next_tool_after_yes": "request_booking",
+  "agree_rate_count": 3,
+  "request_booking_count": 5,
+  "negotiation_round_count": 3,
+  "genuine_counter_segments": [
+    {
+      "caller_utterances": [
+        "Could you do 25",
+        "dollars more?"
+      ],
+      "submitted_public_total": "2900",
+      "tool_message_id": "01a19575-0b44-7dd7-89f7-b2c978dc5683",
+      "no_interrupted_flag": true
+    },
+    {
+      "caller_utterances": [
+        "Only if you can do 25",
+        "extra dollars on top of that."
+      ],
+      "submitted_public_total": "2925",
+      "tool_message_id": "01a19575-4989-7ed3-aa05-02f185aa149f",
+      "no_interrupted_flag": true
+    },
+    {
+      "caller_utterances": [
+        "2925",
+        "No. Do 2950."
+      ],
+      "submitted_public_total": "2950",
+      "tool_message_id": "01a19575-882f-7ce1-af4b-2c9a38d75d2a",
+      "no_interrupted_flag": true
+    }
+  ],
+  "sure_answer_was_not_accepted": true,
+  "actual_closing_assistant_content": "Transferring for review.",
+  "closing_message_argument": "We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.",
+  "closing_message_actual_speech_mismatch": true,
+  "actual_hangup_speech": "Have a good day.",
+  "native_end_event": "agent_hung_up",
+  "material_failure": "The full neutral rep-review explanation and simulated-transfer disclosure were supplied in a tool argument but were not rendered as actual speech.",
+  "limits": [
+    "Actual session records and voice-node transcript were reviewed. The recording audio was not independently listened to.",
+    "Three complete caller counter turns were recorded, including a self-corrected third total. No missing speech was inferred.",
+    "No new booking, reconcile, rep action, business integration, or state write was performed by this audit."
+  ],
+  "rep_decision_at_audit": "awaiting",
+  "later_rep_approval_evidence": "v9-real-app-approval.json"
+}

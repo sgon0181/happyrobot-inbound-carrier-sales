@@ -5,9 +5,11 @@ from service.config import settings,ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW='01a19476-5384-704b-9c5e-569fd96f9adf'
-VERSION='01a19550-bb92-7b91-87ca-b3af46e459f8'
+VERSION='01a19592-7887-751f-85aa-4faba052b68c'
 HOST='https://codex-e2e-lab-sg-20261031.fly.dev'
 BASE='/versions/'+VERSION
+HANDOFF_LINE=('We have agreed on the rate. A senior representative will review and confirm the booking. '
+              'I am now transferring you to a senior representative; this transfer is simulated for the demo.')
 DEFINITIONS=[
     ('verify_carrier','/carriers/verify',[('mc','MC digits stated by the caller.')]),
     ('send_code','/otp/send',[]),
@@ -19,6 +21,7 @@ DEFINITIONS=[
         ('load_id','A load from find_loads.'),('rate','Exact whole-number ask, or the current offer on acceptance.')]),
     ('request_booking','/bookings',[]),
     ('finish_call',None,[]),
+    ('finish_handoff',None,[]),
 ]
 
 
@@ -97,12 +100,13 @@ def main():
     for name,route,parameters in DEFINITIONS:
         tool=nodes[name]['id'];action=nodes['Prototype '+name]['id']
         binding_group=nodes[name]['persistent_id']
-        if name=='finish_call':parameters=[('closing_message','The short terminal business outcome to say aloud, with no codes or confidential pricing. For senior_review use the complete required neutral mocked-transfer line. Otherwise give the actual refusal or result and goodbye.')]
+        if name=='finish_call':parameters=[('closing_message','The short refusal, outage, test-only result or caller goodbye to say aloud, with no codes or confidential pricing. Senior review uses finish_handoff instead.')]
         descriptions={
             'find_loads':'Find matching loads after verification. Present one offer, total first, then a short operational summary. Price questions are answered without negotiation or booking tools. For terminal no_match or tms_unavailable, use finish_call with the actual result, then native hangup.',
             'agree_rate':'Use only for a COMPLETE price acceptance or a genuine proposed counter amount. A request to repeat, explain or confirm what the rate IS does not call this tool. Never submit an assumed acceptance while asking a clarification question. After price agreement, a yes to booking permission goes to request_booking directly, not here.',
             'request_booking':'Prepare booking permission after a complete price agreement. On confirmation_required read its exact standalone question and wait. A fresh yes answering it calls this tool directly, without agree_rate. A rate question is answered conversationally; it is not permission, refusal or a closing reason.',
-            'finish_call':'Speak the actual terminal outcome and close the record. Use ONLY for a backend terminal outcome/end_call_required or a complete clear caller request to end. NEVER use for confirmation_required, an unanswered permission question, hesitation, a misunderstanding or any rate question. Continue helping in those cases. Pass closing_message; its configured voice message speaks it. Then invoke native end_conversation.',
+            'finish_call':'Close a refusal, outage, test-only result or clear caller goodbye. Never use for senior_review; use finish_handoff there. NEVER use for pending permission, an unanswered question, hesitation or misunderstanding. Continue helping in those cases. Give the actual public reason in closing_message and the native spoken message, then use native end_conversation.',
+            'finish_handoff':'Use ONLY after the backend returns senior_review. This tool plays the complete fixed review and simulated-transfer disclosure and closes the record. Then use native end_conversation. No message arguments or extra speech. Never use for price questions, pending permission, refusals or consent_verified.',
         }
         function={'description':paragraph(descriptions.get(name,'Call '+name+' in the required verification, matching, negotiation and handoff order. Only the backend decides.')),
             'parameters':[{'name':k,'description':paragraph(d),'required':k not in ('origin_state','dest_state'),
@@ -111,9 +115,10 @@ def main():
             function['message']={'type':'ai','description':paragraph(
                 'Speak the closing_message argument as the terminal business outcome. Use only the public facts in this conversation. '
                 'Do not ask a question or include a verification code, internal pricing or private information. '
-                'For senior_review say exactly: We have agreed on the rate. A senior representative will review and confirm the booking. '
-                'I am now transferring you to a senior representative; this transfer is simulated for the demo. '
-                'For other terminal outcomes explain the actual refusal or failure briefly and say goodbye without a transfer.')}
+                'This tool is never for senior_review; finish_handoff handles that outcome with fixed speech. '
+                'Explain the actual refusal, failure, test-only result or caller goodbye briefly, then say goodbye without a transfer.')}
+        if name=='finish_handoff':
+            function['message']={'type':'fixed','content':paragraph(HANDOFF_LINE),'uninterruptible':True}
         p.request(BASE+'/nodes/'+tool,{'type':'tool','name':name,'function':function},'PUT')
         body={'run_id':variable('current','run_id')}
         for field,_ in parameters:body[field]=variable(binding_group,field)

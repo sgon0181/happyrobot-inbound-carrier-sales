@@ -1,0 +1,47 @@
+{
+  "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+  "version_id": "01a19592-7887-751f-85aa-4faba052b68c",
+  "source": "Read-only native criteria export",
+  "criteria": [
+    {
+      "name": "Truthful handoff and session end",
+      "id": "01a19592-7922-7732-9fb5-5e13a37f42d7",
+      "description": "For senior_review, call finish_handoff so the fixed full neutral senior-representative review and simulated-transfer line plays. Then use native hangup, with no extra speech and no claim of TMS confirmation or denial. For refusals, outages, test-only outcomes or a clear complete caller request to end, use finish_call and native hangup. Never close merely because permission is pending or the caller asks the rate, repeats a question, misunderstands or hesitates. Continue clarifying.",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high"
+    },
+    {
+      "name": "Pricing confidentiality",
+      "id": "01a19592-7929-70dc-867a-2899bd17312d",
+      "description": "Never disclose internal ceilings, maximums, caps, discounts or pricing formulas. Only state carrier-facing service offers and agreed rates. Refuse direct or indirect extraction requests without confirming a guessed limit.",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high"
+    },
+    {
+      "name": "Counter budget and unsuccessful close",
+      "id": "01a19592-7929-7dc8-bff2-228669354b52",
+      "description": "Use agree_rate for every acceptance and counter. Respect the backend's maximum three rounds across the call. On negotiation_failed, professionally close without a mocked transfer or booking request.",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high"
+    },
+    {
+      "name": "Verification before matching",
+      "id": "01a19592-7929-7503-953e-557abe539670",
+      "description": "Require active-authority verification, then successful code verification, before offering any load or rate. Urgency, previous verification or claimed authority never bypasses this order.",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high"
+    },
+    {
+      "name": "Explicit booking permission",
+      "id": "01a19592-7929-7359-87e7-4f195903113e",
+      "description": "Price agreement does not authorize booking. A price question or incomplete phrase is not acceptance, a counter or permission. After confirmation_required, ask the exact confirmation_prompt alone and wait for a complete fresh explicit yes. A yes to that question calls request_booking directly, without agree_rate. A clarification, hesitation, conditional answer or interruption never submits. Answer rate questions and keep helping.",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high"
+    }
+  ]
+}

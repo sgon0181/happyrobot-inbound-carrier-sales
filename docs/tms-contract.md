@@ -123,7 +123,8 @@ awaiting rep review with reason `caller_confirmation_review`. Confirmation is
 blocked, and this call does not count as a successful consented handoff.
 The prototype now requires a new explicit yes after its exact load-and-total
 question, checked against platform-owned messages. This fix passed offline
-replay and regression checks; it has not had a second live booking test.
+replay and regression checks, and the later real owner call proved fresh
+permission before a second live booking.
 
 Keep LD01094 blocked permanently in this campaign. No new send is permitted
 after this reference-bearing receipt without another owner instruction.
@@ -134,8 +135,23 @@ This confirms the documented need for durable external receipt storage.
 This active-MC acknowledgement also returned `PENDING`. Therefore inactivity
 of MC 872144 cannot by itself explain all observed pending acknowledgements.
 It does not establish what causes finalization or prove that `PENDING` means
-a reservation. The historical seven sends plus this call total eight sends
-across six load IDs, with zero observed `BOOKED` responses.
+a reservation.
+
+A later real owner call, run 112f1a4a-84f3-420f-bce4-d7f374b381d1, used the
+single allocated follow-up permission for LD01085 at 2950. Fresh exact-question
+consent passed. The complete 97-byte response was PENDING, reference
+EME8U26DKEX5DESS, SHA-256
+17f2a4563d82ef3e3d3cb132482c8efb953cb3563990013e5834d0e776fe11e5.
+Twin and the exported journal match. Local App rep approval did not change
+TMS PENDING and did not execute a TMS finalization operation. The call's shortened
+spoken handoff is a separately recorded presentation defect.
+See [receipt](prototype-evidence/v9-live-receipt.txt),
+[consent audit](prototype-evidence/v9-real-call-audit.json) and
+[rep readback](prototype-evidence/v9-real-app-approval.json).
+
+The historical seven sends plus these two calls total nine sends across seven
+load IDs, with zero observed BOOKED responses. Both prototype permissions are
+spent; no new send, repeat booking or MC probe is authorized.
 
 All statuses below are historical 2026-10-31 snapshots, not current availability. These IDs are sandbox test inventory, not credentials.
 

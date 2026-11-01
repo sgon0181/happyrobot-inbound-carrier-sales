@@ -4,11 +4,13 @@ No external sending, repository push, reviewer invitation or submission has
 been made by this continuation. Prepare concrete results before asking for
 the owner's final publication approval.
 
-- [ ] One clean real voice call with explicit booking permission, code entry,
-  counter, reference, neutral handoff and agent termination.
-- [ ] Real call and redacted transcript visible in Apps.
-- [ ] Rep approval recorded only for that clean call, distinct from TMS status.
-- [ ] QA results updated with exact live, hybrid and simulated outcomes.
+- [x] Real voice booking with explicit permission, fresh code entry, counters,
+  complete PENDING receipt and native termination, LD01085 at 2950.
+- [x] Full neutral handoff repaired and checked separately without another send.
+  The original booking call's shortened disclosure remains a recorded failure.
+- [x] Real call and redacted transcript visible in Apps.
+- [x] Rep approval saved for the valid call only, distinct from TMS PENDING.
+- [x] QA results separate live, hybrid and simulated outcomes and preserve failures.
 - [ ] Check Luke's reply about PENDING and review Q8 before final handoff.
 - [ ] Prospect email finalized, with accurate links and no unverified claims.
 - [ ] IT/business build description finalized against the tested implementation.

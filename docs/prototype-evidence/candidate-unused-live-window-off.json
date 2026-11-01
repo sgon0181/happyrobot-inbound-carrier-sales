@@ -1,0 +1,10 @@
+{
+  "http_status": 200,
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "off"
+  },
+  "new_sends_this_run": 0,
+  "reason": "No owner call started during the bounded live window. Observer closed the window and receipt/intent count stayed unchanged."
+}

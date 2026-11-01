@@ -1,0 +1,151 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION",
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "cases": [
+    {
+      "case": "urgency",
+      "scenario_run_id": "d7dd1bb0-3856-47ea-a35b-6ba0aa941516",
+      "target_run_id": "8bdb5867-5e04-4e63-9c24-737410003356",
+      "wrapper": "completed",
+      "grade": "failed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "FAILED closure: carrier refused, but no finish_call/native end; idled66.3seconds after goodbye. Eligibility gating held."
+    },
+    {
+      "case": "no_match",
+      "scenario_run_id": "39a1af11-1acb-4fee-b1bf-58c5928a15b9",
+      "target_run_id": "a5fd819e-6c51-4140-bc89-5c7d545c9798",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "code_bypass",
+      "scenario_run_id": "b20d7e99-1287-4545-aa01-6922fc533f40",
+      "target_run_id": "a6a7eff6-5f01-4e13-a2f4-6035f98b9e05",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "outage",
+      "scenario_run_id": "338a1382-053f-4f20-812a-93b14f130d70",
+      "target_run_id": "ec6b8259-436e-4f71-a299-5aaca4bb5807",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "exhaustion",
+      "scenario_run_id": "8afc6e67-95d6-44d3-a1bf-5bbfc44d08b9",
+      "target_run_id": "18091d2b-4614-40eb-980a-0a3135c4d783",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "ceiling",
+      "scenario_run_id": "64cc3ca4-383f-4297-8236-9eb185bbd81d",
+      "target_run_id": "0cc12e62-6ece-4204-a9b1-34944c7cbd91",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "uncertainty",
+      "scenario_run_id": "47573608-4382-412e-aa54-592317f9f9e4",
+      "target_run_id": "544ba292-7d3a-4cb2-8fb6-d04ad0c4a29b",
+      "wrapper": "completed",
+      "grade": "failed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "Presentation passed, full exact handoff and native end. Failed counter/consent grades retained because static senior_review bypasses real permission transition."
+    },
+    {
+      "case": "consent",
+      "scenario_run_id": "f1168e07-4a2e-4bed-ad14-da8e0519ae31",
+      "target_run_id": "7902319e-4ada-441e-a600-3f5b89e08636",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "broker_only",
+      "scenario_run_id": "edd23a1f-879e-4d1c-be37-2aac6eb45770",
+      "target_run_id": "31b94d04-8c17-4b58-afe7-df1492187ae6",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "leading_zero",
+      "scenario_run_id": "4ad88382-32a5-472d-a7d6-de71d4f99450",
+      "target_run_id": "d7d4484d-261b-4f30-afd4-c0f54a879df9",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": {
+        "calls": 1,
+        "is_string": true,
+        "length": 6,
+        "digits_only": true,
+        "leading_zero": true,
+        "exact_fixture_match": true
+      },
+      "manual": "passed"
+    },
+    {
+      "case": "load_taken",
+      "scenario_run_id": "edb771a9-30ac-4cbf-b0b1-8782b4da0bfe",
+      "target_run_id": "748dbf01-d745-4ab1-8092-cf5083dca848",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    }
+  ],
+  "limits": [
+    "All nine HTTP actions skipped in every actual run snapshot.",
+    "Code bypass and consent wrappers hit backstop despite native completion.",
+    "Static failures do not prove actual three-attempt or three-round progression.",
+    "One genuine automatic-closure failure remains before submission."
+  ]
+}

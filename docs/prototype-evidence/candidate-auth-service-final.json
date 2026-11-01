@@ -1,0 +1,206 @@
+{
+  "label": "LIVE_AUTH_BOUNDARY",
+  "routes": 16,
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/carriers/verify",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/carriers/verify",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/send",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/send",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/verify",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/otp/verify",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/loads/search",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/loads/search",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/negotiate",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/negotiate",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/calls/not-a-valid-run/close",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/calls/not-a-valid-run/close",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/bookings",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/bookings",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/ops/snapshot",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "GET",
+      "path": "/ops/snapshot",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/confirm",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/confirm",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/decline",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/decline",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/reconcile",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/bookings/missing/reconcile",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/collect-transcripts",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/collect-transcripts",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/fmcsa-probe",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/fmcsa-probe",
+      "case": "wrong_role",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/calls/not-a-valid-run/qa",
+      "case": "missing",
+      "status": 401
+    },
+    {
+      "method": "POST",
+      "path": "/ops/calls/not-a-valid-run/qa",
+      "case": "wrong_role",
+      "status": 401
+    }
+  ],
+  "all_unauthorized": true,
+  "authenticated_health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "off"
+  },
+  "business_writes": 0,
+  "tms_sends": 0
+}

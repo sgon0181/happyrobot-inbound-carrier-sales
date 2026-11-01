@@ -1,0 +1,92 @@
+{
+  "label": "LIVE_AUTH_BOUNDARY",
+  "checks": [
+    {
+      "method": "GET",
+      "path": "/",
+      "case": "missing_session",
+      "status": 307,
+      "expected": 307
+    },
+    {
+      "method": "GET",
+      "path": "/",
+      "case": "forged_session",
+      "status": 307,
+      "expected": 307
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "case": "missing_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "GET",
+      "path": "/api/health",
+      "case": "forged_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/confirm",
+      "case": "missing_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/confirm",
+      "case": "forged_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/decline",
+      "case": "missing_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/decline",
+      "case": "forged_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/reconcile",
+      "case": "missing_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/bookings/00000000-0000-4000-8000-000000000000/reconcile",
+      "case": "forged_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/refresh",
+      "case": "missing_session",
+      "status": 401,
+      "expected": 401
+    },
+    {
+      "method": "POST",
+      "path": "/api/auth/refresh",
+      "case": "forged_session",
+      "status": 401,
+      "expected": 401
+    }
+  ],
+  "rep_actions": 0,
+  "business_writes": 0,
+  "tms_sends": 0
+}

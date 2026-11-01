@@ -1,0 +1,27 @@
+{
+  "label": "LIVE_PUBLISHED_CONFIG",
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "tested_version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "same_version": true,
+  "nodes": 20,
+  "http_actions": 9,
+  "tools": [
+    "finish_handoff",
+    "verify_carrier",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "request_booking",
+    "send_code",
+    "finish_call"
+  ],
+  "prepublication_safe_fields_per_tool": 16,
+  "offer_round_final_exposed": true,
+  "prompt_source_sha256": "c7b2bc9731a6894122410eb5d8944a01380c1949f899b96157d2ec8640f6ee35",
+  "prompt_matches_published_snapshot": true,
+  "native_definitions_and_actual_snapshots_checked": true,
+  "notes": [
+    "Tool schemas and exact visibility were inspected before publication. Published-version inspection is rejected by the immutable API.",
+    "Actual final-version native conversations use this same published graph."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "label": "LIVE_READ_ONLY_FLY_SQL",
+  "samples_ms": [
+    96.4,
+    255.8,
+    211.1,
+    257.2,
+    244.2,
+    260.6,
+    260.8,
+    237.0
+  ],
+  "median_ms": 250.0,
+  "p95_ms": 260.8,
+  "writes": 0,
+  "tms_sends": 0
+}

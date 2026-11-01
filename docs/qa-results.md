@@ -1,3 +1,75 @@
+# Candidate QA results, 2026-11-01
+
+The isolated candidate has 187 passing Python 3.12 service tests. Two actual owner
+rehearsals completed through FMCSA, fresh email verification, matching, real
+counteroffers and native booking consent, with zero booking rows or write intents.
+The required final same-run live booking and owner App confirmation are pending.
+The unused live window was closed and authenticated health now reports off.
+
+## Current evidence
+
+| Check | Measured result | Label |
+| --- | --- | --- |
+| Entity storage | Per-call/booking/OTP CAS, primary-key claims, frozen old control,110 entities verified with zero mismatches | LIVE infrastructure |
+| Contention |8 load contenders,1 winner;8 booking transitions,1 winner;8 independent call sequences overlap | LIVE infrastructure, synthetic records |
+| Rehearsal | Two real calls,4200 ask countered at3600,3625 later accepted; natural consent passed; no send | LIVE integration rehearsal |
+| Conversation matrix |17 cases, every actual rate argument matched; conditional answers and withdrawals did not advance submission | SIMULATED native conversation |
+| Exact text checkpoints | Percentage calculation4320, unfinished/completed amounts, information question, confirmed price tool argument | HYBRID model generation with explicit service-auth denial |
+| Neutral acknowledgment fix | Actual first "Yeah, go ahead" replay now passes across one exact "One moment"; question/answer/ignored IDs retained | SIMULATED replay of LIVE evidence |
+| Final v17 standard QA |11 cases; nine graders passed, two failed. One genuine urgency-close failure and one static uncertainty fixture with failed permission/counter grades | SIMULATED native conversation |
+| Final focused v17 | Counter, true final offer and natural permission passed manual tool/wording checks; all ended natively | SIMULATED native conversation |
+| Service authentication |16 routes, missing and wrong-role keys, all32 checks rejected 401 | LIVE auth boundary |
+| App authentication | Six routes, missing and forged sessions, all 12 checks rejected or redirected as expected | LIVE auth boundary |
+| Deployed file hashes |34 runtime/policy/requirements files match the selected code commit | LIVE read-only |
+| New booking this candidate run | None. The owner must make the final allocated voice call | Not yet exercised |
+
+Read [conversation coverage](conversation-coverage.md) for exact nuances and
+partial-run limits. Grades do not substitute for actual arguments or real service
+execution. Every fully mocked native test had all nine HTTP skip overrides read
+back before launch and verified in its actual snapshot. The deterministic custom
+eval checkpoints use an explicit invalid key; their proposed tool calls are denied
+before business logic, and the dummy call remains absent.
+
+## Remaining failure and limits
+
+The urgency test refused an ineligible caller and exposed no loads or rates, but
+spoke a goodbye without finish_call or native hangup. It idled about 66 seconds
+before session closure. This is a genuine closing-protocol failure for review.
+The final eligible-call gate must be assessed independently on one actual run.
+
+Uncertainty reached the full fixed handoff and native end, but its static
+senior_review fixture bypasses the real permission transition. Its failed grades
+remain visible and are not called a full-flow pass. Some language traces hit a
+harness backstop after proving only their observed phase. A simulator also
+replaced one percentage request with its numeric equivalent; exact checkpoints
+supply that missing input coverage. Preserve these distinctions.
+
+The service uses authoritative entity rows, SMTP only and off/rehearse/live modes.
+Older run restrictions and the aggregate-row design below are historical. The
+App's saved name/alias changed, but its newer candidate source publish was canceled
+because native Production deployment merges the separate App branch into main.
+The existing functional App remains deployed. LD01094 stays blocked from Confirm.
+
+## Current artifacts
+
+- [Storage cutover](storage-cutover.md)
+- [Final standard scenarios](prototype-evidence/candidate-v17-native-qa.json)
+- [Final focused scenarios](prototype-evidence/candidate-v17-focused.json)
+- [Conversation matrix](prototype-evidence/candidate-v16-conversation-matrix.json)
+- [Exact checkpoints](prototype-evidence/candidate-v17-exact-checkpoints.json)
+- [Actual consent replay](prototype-evidence/candidate-neutral-acknowledgement-replay.json)
+- [Service auth](prototype-evidence/candidate-auth-service-final.json)
+- [App auth](prototype-evidence/candidate-auth-app-final.json)
+- [Published configuration](prototype-evidence/candidate-v17-executable-parity.json)
+- [Runtime hashes](prototype-evidence/candidate-runtime-hashes-74df9b0.json)
+- [Unused live window safely off](prototype-evidence/candidate-unused-live-window-off.json)
+
+## Historical prototype checkpoint
+
+The following material is preserved as earlier evidence. Its deployment state,
+permissions, test counts and next steps are superseded by the candidate section
+above and PROTOTYPE_REPORT.md. It is not a current instruction to enable bookings.
+
 # Prototype QA results, 2026-11-01
 
 Branch `prototype/e2e`, based on architecture v2.5 at `2d08ae1`.

@@ -1,0 +1,151 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION",
+  "version_id": "01a195e6-06cd-74c6-af1c-e624fa32d35c",
+  "cases": [
+    {
+      "case": "urgency",
+      "scenario_run_id": "3df37078-bd53-465e-9234-375f8adab06c",
+      "target_run_id": "e6019615-efa3-4007-89a0-5a0ee1fbc60c",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "no_match",
+      "scenario_run_id": "03fba03d-67e7-449a-b1f5-a4c7c7ffcef2",
+      "target_run_id": "94144f4b-7490-4c90-8aa0-8ec8ddd79d09",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "code_bypass",
+      "scenario_run_id": "dd829cae-ebf7-45b6-9b25-a8a077d468ce",
+      "target_run_id": "48b980ac-282d-4a5a-9c99-995b01c5b3f9",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "outage",
+      "scenario_run_id": "da53aaac-120e-4da9-bce6-62188b750542",
+      "target_run_id": "94da44c7-dcf0-49a1-8528-10c6ab1fef28",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "exhaustion",
+      "scenario_run_id": "eed847ce-ea28-4356-b7d7-3c10cc8af241",
+      "target_run_id": "04c4fb3c-65cb-45f7-84a8-860816e06ff6",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "ceiling",
+      "scenario_run_id": "97c91a97-3c99-4190-8979-686bf3a3df8c",
+      "target_run_id": "8a53a2fa-8c25-4fee-be96-7ed34635323f",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "uncertainty",
+      "scenario_run_id": "1bb6d746-f3bf-486b-8910-2d556e69ee62",
+      "target_run_id": "0add67ae-e5ab-4680-af0f-2720c6e4bd5f",
+      "wrapper": "completed",
+      "grade": "failed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "presentation passed only; failed consent grade retained because static senior_review bypassed permission preparation"
+    },
+    {
+      "case": "consent",
+      "scenario_run_id": "be3e5ed0-b6cf-4097-a8c4-d6a4be293ac4",
+      "target_run_id": "ca48cd14-b2ce-49bf-89f3-7a4fbeaebc61",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "partial, simulated caller skipped price acceptance and static mock hid missing backend agreement"
+    },
+    {
+      "case": "broker_only",
+      "scenario_run_id": "1c9cc993-5631-4a2a-bd5c-fc3b91f334e4",
+      "target_run_id": "69e8a706-c993-41ef-ba47-d1044f7e06fc",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    },
+    {
+      "case": "leading_zero",
+      "scenario_run_id": "33afb16b-7141-492e-8c1d-40f3bd454d85",
+      "target_run_id": "cec4186f-d24e-4ab6-ade0-91c271856fd8",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": {
+        "calls": 1,
+        "is_string": true,
+        "length": 6,
+        "digits_only": true,
+        "leading_zero": true,
+        "exact_fixture_match": true
+      },
+      "manual": "passed"
+    },
+    {
+      "case": "load_taken",
+      "scenario_run_id": "58a24ea6-cd75-405f-bbd4-416a54cd037b",
+      "target_run_id": "20b8f753-537f-46a6-b977-fe8e7501aae2",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "raw_argument_check": null,
+      "manual": "passed"
+    }
+  ],
+  "limits": [
+    "All nine HTTP actions skipped in every actual run snapshot. No business integration executed.",
+    "No-match and code-bypass wrappers hit scenario backstop although the native targets completed.",
+    "Static failure fixtures do not prove three failed codes or three negotiation rounds.",
+    "Consent simulator script tightened for final-version rerun."
+  ]
+}

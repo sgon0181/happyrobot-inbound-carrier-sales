@@ -1,0 +1,40 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION",
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "manual_all_pass": true,
+  "cases": [
+    {
+      "case": "counter_false",
+      "scenario_run_id": "8c4a4a33-065a-4320-a235-6eded1c4a44d",
+      "target_run_id": "a7424691-a63f-4c94-b4ef-17ac1bff7bd3",
+      "wrapper": "completed",
+      "grade": "passed",
+      "agree_rate_calls": 1,
+      "booking_calls": 0,
+      "native_end_observed": true
+    },
+    {
+      "case": "final_true",
+      "scenario_run_id": "1d545825-c1d6-4ced-aa44-3f797bcf33a9",
+      "target_run_id": "b228e3ba-b6c3-42c1-8e03-b94de8068391",
+      "wrapper": "completed",
+      "grade": "passed",
+      "agree_rate_calls": 1,
+      "booking_calls": 0,
+      "native_end_observed": true
+    },
+    {
+      "case": "natural_permission",
+      "scenario_run_id": "0948a326-6292-4bbc-8fa8-e99644d513d9",
+      "target_run_id": "261e19ac-e15b-42fb-b0d6-0c8be8a88ba0",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "agree_rate_calls": 1,
+      "booking_calls": 2,
+      "native_end_observed": true
+    }
+  ],
+  "http_actions_skipped_per_run": 9,
+  "business_service_calls": 0,
+  "tms_sends": 0
+}

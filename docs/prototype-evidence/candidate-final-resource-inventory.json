@@ -1,0 +1,92 @@
+{
+  "label": "LIVE_READ_ONLY_FINAL_RESOURCE_INVENTORY",
+  "calls": [
+    {
+      "run_id": "bde0340f-15d9-4dab-b7b1-c7e68cfbce98",
+      "tables": {
+        "bookings": [],
+        "negotiation_rounds": [
+          "736837b02125463c80a6b35c5e7cffbf",
+          "aa591f3323c947b58b8d7e22dff4488b"
+        ],
+        "call_events": [
+          "3fdb6328202c4608ac4833ba501d2607",
+          "c3801122cd644c4a9c2127470fba84a6",
+          "f2077ae31c294502ac5d3547874af4fd",
+          "2d715e0c755a40eb96370a455b7fdf35",
+          "45dd3a35a7c74fe3ab987662a7c4b09f",
+          "883318313534466fa60377274bd9aeec",
+          "b710efffbfdd4c58892491916bfa18c5",
+          "7d207257a51348d99a2d27f264b64685",
+          "60f37100a1dc4c2893a53f77466d1587"
+        ],
+        "call_transcripts": [
+          "bde0340f-15d9-4dab-b7b1-c7e68cfbce98"
+        ],
+        "calls": [
+          "bde0340f-15d9-4dab-b7b1-c7e68cfbce98"
+        ],
+        "otp_challenges": [
+          "9daf3eae17474222a999f74ce7b49ff7"
+        ],
+        "carriers_reused": [
+          "138328"
+        ],
+        "booking_claims": []
+      }
+    },
+    {
+      "run_id": "5783608f-d54b-4a5d-b028-89db98ae10ec",
+      "tables": {
+        "bookings": [
+          "e65944b8-f823-490b-b212-97f3645354d1"
+        ],
+        "negotiation_rounds": [
+          "57b1496d8a1c461dbba050bb082edb28",
+          "1e05492cd4cf414f86c7b4ec9e122e8c"
+        ],
+        "call_events": [
+          "81e201cc14204576afa5b14cceac7ecd",
+          "027e204118f24a05add8b2ba9d43436d",
+          "0a6587182505484bad9b54f144bc387e",
+          "ef4e4787d281407680b7be2077009816",
+          "bab87bbae9b647edb3438abb66f0de35",
+          "62878534526c4a2e8d970d1eb7f49f2a",
+          "425daa73bc69434a9d9be01fbe096573",
+          "e845fad24949492f8380fdb837b8bd51",
+          "7a203648505d4b80ad586a31718247c2",
+          "95c8d3be424e43dea3553c71ac8a6d34",
+          "9a424790a6594d609708b89b5ce7a268",
+          "c589a51fb981438abe297d8f254c2f01",
+          "3f9f3bf4a5a74bc2884db2500ac6734f"
+        ],
+        "call_transcripts": [
+          "5783608f-d54b-4a5d-b028-89db98ae10ec"
+        ],
+        "calls": [
+          "5783608f-d54b-4a5d-b028-89db98ae10ec"
+        ],
+        "otp_challenges": [
+          "08cee3c77a4b486a8e06d8dd0f5f48a4"
+        ],
+        "carriers_reused": [
+          "138328"
+        ],
+        "booking_claims": [
+          "call:5783608f-d54b-4a5d-b028-89db98ae10ec",
+          "load:LD01062"
+        ]
+      }
+    }
+  ],
+  "later_existing_booking_event": [
+    {
+      "row_id": "d1a6d8e7adb34c19bb2b3adc580698d1",
+      "action": "rep_decline",
+      "status": "ACK_PENDING",
+      "at": 1793528522.6111991,
+      "booking_id": "2134811d-6ed5-4914-8755-ccb2fc2a1677"
+    }
+  ],
+  "cleanup": "Preserve receipts, flags and audit history. Later owner-approved cleanup may target these prototype rows only. No supported TMS cancellation or reset was established."
+}

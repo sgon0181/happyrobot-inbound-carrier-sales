@@ -48,8 +48,8 @@ MC while masking the code. [Final proof](prototype-evidence/candidate-clean-run.
 [receipt](prototype-evidence/candidate-live-receipt.txt) and
 [App readback](prototype-evidence/candidate-app-confirmed-row.png).
 
-The first affirmative was followed by unmarked "Alright" speech, which correctly
-failed the conservative proof matcher and caused an unnecessary repeat. The
+The first affirmative was followed by unmarked "Alright" speech, which
+failed closed in the conservative proof matcher and caused an unnecessary repeat. The
 second natural answer passed. The agent added a brief goodbye after the fixed
 handoff, contrary to the prompt's instruction to add no speech. These quality
 issues remain visible. Do not widen filler acceptance without a bounded replay
@@ -104,8 +104,33 @@ The existing functional App remains deployed. LD01094 stays blocked from Confirm
 - [Service auth](prototype-evidence/candidate-auth-service-final.json)
 - [App auth](prototype-evidence/candidate-auth-app-final.json)
 - [Published configuration](prototype-evidence/candidate-v17-executable-parity.json)
-- [Runtime hashes](prototype-evidence/candidate-runtime-hashes-74df9b0.json)
+- [Runtime hashes](prototype-evidence/candidate-runtime-hashes-dd57d54.json)
 - [Unused live window safely off](prototype-evidence/candidate-unused-live-window-off.json)
+
+## Final deployment and shutdown
+
+The post-call exclusion policy was deployed with bookings off. All 34 checked
+runtime/policy/requirements hashes match commit dd57d54; subsequent delivery
+changes are documentation and evidence only. Their final Git blobs are compared
+with these observed deployed hashes before handoff. Authenticated health verified
+off, the original call/load claims remain active, and the final booking remains
+ACK_PENDING with rep_decision confirmed. make idle completed and the same single
+Fly Machine was explicitly stopped and read back as stopped. No new resource or
+second booking was created.
+
+A later rep_decline event on the older LD01094 record was observed at 10:22:02 UTC.
+It now has rep_decision declined, review_required true and reason needs_release.
+Its original receipt, intent and ACK_PENDING state remain retained. No agent rep
+action or TMS release was performed. The original consent-review evidence remains
+preserved, and the load remains blocked. This event does not change the final
+LD01062 approval or the one-send result.
+
+[Environment readback](prototype-evidence/candidate-final-environment.json),
+[stopped Machine](prototype-evidence/candidate-final-machine.json), and
+[exact new row inventory](prototype-evidence/candidate-final-resource-inventory.json).
+The pre-call and post-call byte observations are separate: the voice call ran
+c25f66b; the later runtime differs only by the spent-load exclusion and its JSON
+formatting. Pricing numbers and fixed handoff text are unchanged.
 
 ## Historical prototype checkpoint
 

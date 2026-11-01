@@ -13,7 +13,7 @@ and rep decisions into one place.
 
 One live demonstration completed verification, a genuine counteroffer, natural
 booking permission, a reference-bearing PENDING response, the spoken handoff and
-saved senior-rep approval for that same call. The final agreed total was3625. The
+saved senior-rep approval for that same call. The final agreed total was 3625. The
 build note and QA report explain the measured result and documented assumptions.
 
 - [Workflow](https://platform.happyrobot.ai/deployments/yhcdrf4kne4j)

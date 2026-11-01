@@ -10,7 +10,7 @@ LD01062 agreed at 3625, reference 9HH6VP5Q2LQ09GCO. Exactly one new booking was
 sent; nothing was resent. 187 offline tests pass. Bookings are off; main and the
 original workflow are unchanged, and nothing was pushed. Conversation polish,
 slow-storage limits and external finalization remain for review. The owner will
-handle the video separately.
+handle the video separately. Fly is idle and stopped after final verification.
 
 ## 2. Clean-run gate
 
@@ -54,13 +54,13 @@ and unread. Auxiliary inserts/upserts are independent and best effort.
 
 | Real-table probe from Fly, synthetic business data | Result | Median | p95 |
 | --- | --- | --- | --- |
-| 8 contenders for one load | 1winner | 26217.0 ms | 27099.2 ms |
-| 8 conditional booking transitions | 1winner | 4882.4 ms | 5770.5 ms |
+| 8 contenders for one load | 1 winner | 26217.0 ms | 27099.2 ms |
+| 8 conditional booking transitions | 1 winner | 4882.4 ms | 5770.5 ms |
 | 8 independent call sequences, four saves each | All completed | 17186.3 ms | 18065.5 ms |
 
 Independent sequences took 18065.7 ms wall time versus 137459.8 ms summed durations,
 showing overlap without a global business-state lock. These are contention tests,
-not ordinary voice-tool latency. Earlier429 failures remain recorded. SQL starts
+not ordinary voice-tool latency. Earlier 429 failures remain recorded. SQL starts
 are paced at 4/s with at most 4 in flight. Uncontended read samples from Fly measured
 250.0 ms median and 260.8 ms p95, including pacing. Two redundant booking reads were
 removed. A simulated 0.35 s-per-operation case can exhaust its budget after intent,
@@ -154,13 +154,17 @@ and documentation changes after reviewing these commits.
 | Versions this run | v12=01a195d8-59dc-7e7e-a713-61e78631fb49; v13=01a195e6-06cd-74c6-af1c-e624fa32d35c; v14=01a195f3-8fbf-7706-8f4e-1068ee1a92bd; v15=01a195f7-d2e8-79da-a553-ddbeed310f4d; v16=01a1960a-43b4-7448-8310-93e814308f2c; Production v17=01a1961c-9e0b-7d40-aea5-957e4d6e1453. Preserve failures before owner cleanup. |
 | Native QA | Eight reused scenario resources; all run IDs in final/native conversation evidence. Six custom-eval resources, including failed baseline 01a19608-4c0a-7c90-b512-60df0953db73; exact IDs in checkpoint evidence. Export definitions/outcomes before removing only prototype tests. |
 | Twin | Existing proto_carriers, proto_calls, proto_call_transcripts, proto_call_events, proto_otp_challenges, proto_negotiation_rounds, proto_bookings, proto_unmet_demand, proto_booking_claims. Keep records/control frozen until export; later owner cleanup must target only this namespace. Synthetic contention probe 7fe611ed2eff49f485ce3167fcc99cd3 and earlier failed probes remain preserved. |
+| Final owner records | Run 5783608f-d54b-4a5d-b028-89db98ae10ec, booking e65944b8-f823-490b-b212-97f3645354d1, claims call:5783608f-d54b-4a5d-b028-89db98ae10ec and load:LD01062. Preserve receipt and audit before owner-approved prototype cleanup. No supported TMS reset is known. |
 | App | Existing codex-lab-carrier-sales-v24, renamed HappyRobot Logistics Carrier Sales; alias carrier-sales-santiago.happyrobot.dev. Old URL remains active. Two-file candidate overlay exactly matches source e6766e64915e4a4069253fb28fbb7d358c8d6b79 over b2fd163. Production source publish canceled because it merges App main. Revert metadata/alias or publish only after owner review. |
 | Private configuration | Existing approved keys reused; no roles/capacity changed. Remove only prototype-specific app variables/keys after owner cleanup. No values in Git. |
 | Local recording setup | Unfinished OBS scene Carrier Sales Final Take and new macOS Screen Capture 2. No recording started. Owner now handles video and can remove that scene/source later. |
 
 The [synthetic resource inventory](docs/prototype-evidence/candidate-synthetic-resource-inventory.json)
 lists the exact 64 call, 24 booking and 36 claim row IDs from the four storage probes.
-No rows or resources were deleted.
+The [final resource inventory](docs/prototype-evidence/candidate-final-resource-inventory.json)
+lists both later owner calls and their OTP, event, round and transcript row IDs.
+A later local rep decline on LD01094 retained its review/release warning and
+original receipt. No rows or resources were deleted.
 
 ## 9. Before merge and submission
 

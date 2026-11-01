@@ -1,0 +1,9 @@
+{
+  "label": "LIVE_FLY_MACHINE_READBACK",
+  "verified_at": "2026-11-01T10:30:41.196551+00:00",
+  "machine_count": 1,
+  "machine_id": "84eee5dbdd0008",
+  "state": "stopped",
+  "idle_command_completed": true,
+  "new_resources": 0
+}

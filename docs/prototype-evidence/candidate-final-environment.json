@@ -1,0 +1,26 @@
+{
+  "label": "LIVE_POST_DEPLOY_READBACK",
+  "verified_at": "2026-11-01T10:29:42.888585+00:00",
+  "source_commit": "dd57d543e95942b602e3493f09c9ab0e95bbd5e0",
+  "health_http_status": 200,
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "off"
+  },
+  "new_sends_this_run": 1,
+  "total_prototype_historical_intents": 3,
+  "final_booking_id": "e65944b8-f823-490b-b212-97f3645354d1",
+  "final_booking_state": "ACK_PENDING",
+  "final_tms_status": "PENDING",
+  "final_rep_decision": "confirmed",
+  "active_claims": [
+    "call:5783608f-d54b-4a5d-b028-89db98ae10ec",
+    "load:LD01062"
+  ],
+  "LD01094_review_preserved": true,
+  "LD01094_rep_decision": "declined",
+  "LD01094_reason": "needs_release",
+  "LD01062_in_tracked_spent_policy": true,
+  "deployed_runtime_hashes_match": true
+}

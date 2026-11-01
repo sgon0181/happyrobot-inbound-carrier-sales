@@ -5,5 +5,11 @@
   "delivery_status": "sent",
   "recipient": "configured demo inbox",
   "new_live_tms_sends": 0,
-  "limit": "SMTP accepted; human inbox arrival and code entry are pending the next owner call."
+  "limit": "New sender delivery and human code entry passed. That call failed dialogue handling before any booking send.",
+  "owner_followup": {
+    "run_id": "043af7ce-ecb6-42f8-b8f4-162143ce9d20",
+    "smtp_provider": "LIVE_SMTP",
+    "code_passed_at": 1793503788.525257,
+    "human_code_entry": "passed on real voice call"
+  }
 }

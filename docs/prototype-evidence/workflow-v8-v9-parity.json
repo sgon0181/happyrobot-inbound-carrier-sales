@@ -1,0 +1,174 @@
+{
+  "label": "READ_ONLY_WORKFLOW_PROMOTION_PARITY",
+  "source_version": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+  "production_candidate": "01a19550-bb92-7b91-87ca-b3af46e459f8",
+  "node_count": 18,
+  "semantic_configuration_equal": true,
+  "sha256": "4a951ca73aa66c70cbde071c9f22e90a9f04978dc0adeaf91eecfa46bcc35c32",
+  "ignored_metadata_fields": [
+    "id",
+    "node_output",
+    "org_id",
+    "parent_id",
+    "timestamp",
+    "version_id",
+    "workflow_id"
+  ],
+  "tool_schemas": [
+    {
+      "tool": "verify_code",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "send_code",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "verify_carrier",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "find_loads",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "agree_rate",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "request_booking",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "finish_call",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    }
+  ],
+  "limit": "Configuration parity, not a separate human call or TMS booking."
+}

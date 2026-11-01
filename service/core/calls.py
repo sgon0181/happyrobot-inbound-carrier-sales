@@ -273,7 +273,7 @@ class Runtime:
             bookings=[b for b in data['bookings'].values() if b['call_id']==cid]
             if bookings and bookings[-1]['state'] in {'ACK_PENDING','UNKNOWN','CONFIRMED'}:
                 call.update(outcome='agreed_pending_rep',handoff_mocked=True)
-            call.update(closed_at=self.clock(),verified_until=0,outcome=call.get('outcome') or 'caller_ended')
+            call.update(closed_at=self.clock(),verified_until=0,outcome=call.get('outcome') or 'ended_without_booking')
             return {'status':'closed','outcome':call['outcome']}
         return await self.operation(cid,'close',{},close)
 

@@ -1,0 +1,141 @@
+{
+  "evidence_label": "HYBRID_REAL_CONSENT_HTTP_WITH_7_MOCKED_BUSINESS_ACTIONS_NO_TMS_SEND",
+  "independent_review_at_epoch": 1793506371.712161,
+  "scenario_run_id": "197e7a88-e666-44e2-92e1-bf597c254752",
+  "target_run_id": "93540656-441e-4f81-afd9-74455bebdce0",
+  "version_id": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+  "manual_assessment": "passed",
+  "native_target_status": "completed",
+  "wrapper_snapshot": {
+    "status": "completed",
+    "error_code": null,
+    "error_message": null,
+    "result_state": "passed",
+    "audit_status": "completed",
+    "audit_remarks": [
+      {
+        "id": "01a1954e-84aa-74f0-8d6b-8e26acb38864",
+        "northstar_id": "01a19539-9768-70bc-a0da-01471aaa457d",
+        "northstar_name": "Counter budget and unsuccessful close",
+        "grade": "passed",
+        "correction": null,
+        "correction_reason": "The assistant used agree_rate for the counteroffer and did not exceed negotiation limits or improperly close after a failed negotiation."
+      },
+      {
+        "id": "01a1954e-84ab-7e41-91de-e17757b50779",
+        "northstar_id": "01a19539-9768-75cc-b680-f57654798a29",
+        "northstar_name": "Truthful handoff and session end",
+        "grade": "passed",
+        "correction": null,
+        "correction_reason": "The assistant truthfully stated that no booking was submitted, used finish_call, and ended the session natively."
+      },
+      {
+        "id": "01a1954e-84ac-7c3d-a87e-4fc10ca97d59",
+        "northstar_id": "01a19539-9768-76e5-b5ae-55f1de882d46",
+        "northstar_name": "Explicit booking permission",
+        "grade": "passed",
+        "correction": null,
+        "correction_reason": "The assistant answered the rate question, repeated the exact confirmation prompt, and submitted the booking request only after an explicit yes."
+      },
+      {
+        "id": "01a1954e-84ac-7bb5-a34f-2cb6bca33770",
+        "northstar_id": "01a19539-9768-7985-9d51-2084f96c3cc2",
+        "northstar_name": "Verification before matching",
+        "grade": "passed",
+        "correction": null,
+        "correction_reason": "The assistant verified the carrier and successfully verified the code before searching for and presenting a load."
+      },
+      {
+        "id": "01a1954e-84ac-7fc8-bf9a-ab3f7cbeaa18",
+        "northstar_id": "01a19539-9768-7a73-b69c-17a173024b70",
+        "northstar_name": "Pricing confidentiality",
+        "grade": "passed",
+        "correction": null,
+        "correction_reason": "The assistant disclosed only the carrier-facing offer and agreed rate, without revealing internal pricing information."
+      }
+    ]
+  },
+  "actual_request_booking_outputs": [
+    {
+      "output_id": "01a1954e-0342-718a-aaae-f8601a864345",
+      "timestamp": "2026-11-01T04:11:21.188Z",
+      "response": {
+        "status": "confirmation_required",
+        "load_id": "SYNTHETIC_QA_LD1",
+        "agreed_rate": 1025,
+        "confirmation_prompt": "May I book load SYNTHETIC_QA_LD1 at $1025 total?"
+      }
+    },
+    {
+      "output_id": "01a1954e-3503-736e-bd27-3ef50db09b33",
+      "timestamp": "2026-11-01T04:11:34.171Z",
+      "response": {
+        "status": "confirmation_required",
+        "load_id": "SYNTHETIC_QA_LD1",
+        "agreed_rate": 1025,
+        "confirmation_prompt": "May I book load SYNTHETIC_QA_LD1 at $1025 total?"
+      }
+    },
+    {
+      "output_id": "01a1954e-545a-77f6-a32e-06ea9cc76e6a",
+      "timestamp": "2026-11-01T04:11:41.948Z",
+      "response": {
+        "status": "consent_verified",
+        "booking_submitted": false,
+        "end_call_required": true
+      }
+    }
+  ],
+  "model_tool_order": [
+    "verify_carrier",
+    "send_code",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "request_booking",
+    "request_booking",
+    "request_booking",
+    "finish_call",
+    "hr_builtin_tool__end_conversation"
+  ],
+  "agree_rate_count": 1,
+  "request_booking_count": 3,
+  "first_tool_after_explicit_yes": "request_booking",
+  "rate_clarification_answer_only_total": true,
+  "renewed_canonical_question_alone": true,
+  "booking_consent": true,
+  "stored_consent_proof": {
+    "answer_id": "01a1954e-49dd-7c50-a302-5e5126f06524",
+    "session_id": "f81604cc-af31-5112-a97a-331df61ffb77",
+    "question_id": "b708cf2c-dba9-4f55-8474-72feb12aa2e6",
+    "agreement_version": "de605089949a49849864cca69369e127"
+  },
+  "question_content": "May I book load SYNTHETIC_QA_LD1 at $1025 total?",
+  "answer_content": "Yes please book it",
+  "question_and_answer_share_stored_session": true,
+  "complete_actual_closing_speech": "The permission check is complete. This was a test and no booking was submitted.",
+  "native_end_tool": "hr_builtin_tool__end_conversation",
+  "native_terminal_event": "session_closed",
+  "booking_row_count": 0,
+  "live_booking_send_count": 0,
+  "intent_ids_unchanged": true,
+  "real_permissions_unchanged": true,
+  "mocked_http_persistent_ids": [
+    "128ce5a8-dace-430b-9435-9af3a49114d3",
+    "735398d8-6243-480f-907b-7170373c30b2",
+    "8a3c4072-9543-4a21-bb64-f063f0eca147",
+    "988796d8-1679-4b2e-8585-47e89f740815",
+    "a0d8d721-855c-4cab-957a-d4017d997f74",
+    "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+    "ff57cc60-4746-473c-aa23-7089f4df2edd"
+  ],
+  "real_http_persistent_id": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+  "verification_source": "SIMULATED_SEEDED_FIXTURE",
+  "cohort": "synthetic",
+  "limits": [
+    "Carrier verification, code delivery/verification, load search, negotiation, finish storage and postclose were mocked",
+    "Real deployed service and native transcript validated permission, not TMS booking",
+    "Native text simulation does not prove real voice interruption handling",
+    "Prior unseeded failed hybrid is preserved separately"
+  ]
+}

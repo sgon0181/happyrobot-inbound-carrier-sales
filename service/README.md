@@ -76,8 +76,7 @@ excluded from the successful-handoff metric.
 
 The owner configured Gmail SMTP privately through
 `python -m service.scripts.set_email_credential`. The deployed transport accepted
-a new code email on a synthetic call. Actual inbox receipt with this new sender
-still needs the next owner call. Never put the app password in chat or Git.
+a new code email on a synthetic call. Actual inbox receipt and human code entry passed on the second owner call. Never put the app password in chat or Git.
 
 `make warm` keeps the existing single Fly Machine available during active QA;
 `make idle` restores auto-stop. The owner budget is USD3 total, and Fly has no
@@ -96,3 +95,10 @@ normalized atomic storage, not a claim that the original schema was proven.
 Receipt captures use a private local journal plus Twin and a restricted log
 fallback. Container files are ephemeral. Export captures before replacement;
 this implementation does not promise cross-machine journal durability.
+
+Price questions and pending permission are nonterminal. The revised voice
+contract was tested against incomplete questions, a genuine counter, repeated
+rate questions and a fresh yes through the real consent endpoint on synthetic
+state. Calls with no recorded business result close as ended_without_booking;
+that value does not assert who ended the call. See
+[the clarification record](../docs/clarification-fix.md).

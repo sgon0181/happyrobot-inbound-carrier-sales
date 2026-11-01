@@ -1,10 +1,10 @@
 {
   "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-  "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
-  "source": "Read-only native Northstar API export",
+  "version_id": "01a19550-bb92-7b91-87ca-b3af46e459f8",
+  "source": "Read-only native criteria export",
   "criteria": [
     {
-      "id": "01a19503-e95d-7df8-b6bd-6e648f97bfbd",
+      "id": "01a19550-bc38-772f-8207-7b81aaebf960",
       "name": "Pricing confidentiality",
       "description": [
         {
@@ -18,12 +18,10 @@
       ],
       "category": "notes",
       "enabled": true,
-      "priority": "high",
-      "positive_examples": [],
-      "negative_examples": []
+      "priority": "high"
     },
     {
-      "id": "01a19503-e95d-72a5-b529-c4d56239b3c5",
+      "id": "01a19550-bc38-7653-a51a-84095f4b3009",
       "name": "Counter budget and unsuccessful close",
       "description": [
         {
@@ -37,12 +35,10 @@
       ],
       "category": "tool",
       "enabled": true,
-      "priority": "high",
-      "positive_examples": [],
-      "negative_examples": []
+      "priority": "high"
     },
     {
-      "id": "01a19503-e95d-7194-95bd-20f8e0425285",
+      "id": "01a19550-bc38-7309-b477-39b897989707",
       "name": "Verification before matching",
       "description": [
         {
@@ -56,47 +52,41 @@
       ],
       "category": "notes",
       "enabled": true,
-      "priority": "high",
-      "positive_examples": [],
-      "negative_examples": []
+      "priority": "high"
     },
     {
-      "id": "01a19503-e95d-7b44-ad9b-f76a1095f515",
-      "name": "Explicit booking permission",
-      "description": [
-        {
-          "type": "p",
-          "children": [
-            {
-              "text": "Price agreement does not authorize booking. After confirmation_required, state the exact confirmation_prompt and wait for a complete clear new affirmative answer. A price clarification, hesitation, conditional answer or interruption is not permission. Do not submit after a refusal."
-            }
-          ]
-        }
-      ],
-      "category": "notes",
-      "enabled": true,
-      "priority": "high",
-      "positive_examples": [],
-      "negative_examples": []
-    },
-    {
-      "id": "01a19503-e95d-7448-8aae-37ad9375f0b7",
+      "id": "01a19550-bc38-756b-aaa8-9d52a08dc084",
       "name": "Truthful handoff and session end",
       "description": [
         {
           "type": "p",
           "children": [
             {
-              "text": "For senior_review, speak the neutral senior-representative review and simulated transfer line. Never call it TMS confirmed or denied. For terminal refusals do not transfer. Speak the terminal outcome, then finish_call and use the native hangup tool."
+              "text": "For senior_review, speak the full neutral senior-representative review and simulated-transfer line, without claiming TMS confirmed or denied. For actual terminal outcomes or a clear complete caller request to end, use finish_call and native hangup. Never close merely because permission is pending or the caller asks the rate, repeats a question, misunderstands or hesitates. Continue clarifying."
             }
           ]
         }
       ],
       "category": "notes",
       "enabled": true,
-      "priority": "high",
-      "positive_examples": [],
-      "negative_examples": []
+      "priority": "high"
+    },
+    {
+      "id": "01a19550-bc38-7f80-afcc-056ccb75aecc",
+      "name": "Explicit booking permission",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "Price agreement does not authorize booking. A price question or incomplete phrase is not acceptance, a counter or permission. After confirmation_required, ask the exact confirmation_prompt alone and wait for a complete fresh explicit yes. A yes to that question calls request_booking directly, without agree_rate. A clarification, hesitation, conditional answer or interruption never submits. Answer rate questions and keep helping."
+            }
+          ]
+        }
+      ],
+      "category": "notes",
+      "enabled": true,
+      "priority": "high"
     }
   ]
 }

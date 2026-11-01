@@ -1,0 +1,83 @@
+{
+  "run_id": "043af7ce-ecb6-42f8-b8f4-162143ce9d20",
+  "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+  "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+  "session_id": "a1bc75f5-f48d-43ef-8c03-588095ea0c2e",
+  "evidence_type": "Read-only inspection of one real owner call; no business action or booking resend",
+  "verification": "Carrier and email-code verification succeeded; no OTP retained here",
+  "selected_load_id": "LD01085",
+  "agree_rate_progression": [
+    "opening_offer",
+    "opening_offer_plus_25",
+    "opening_offer_plus_50"
+  ],
+  "agree_rate_progression_verified": true,
+  "agree_rate_output_ids": [
+    "01a19528-b54e-725a-8286-85f916e4b2a4",
+    "01a19528-eb9c-7541-957b-15d8aeede673",
+    "01a19529-2901-74b7-a486-ccc6169c9cfa"
+  ],
+  "request_booking_results": [
+    {
+      "output_id": "01a19528-beab-7eac-a3fe-3a45e3fed8a8",
+      "status": "confirmation_required",
+      "end_call_required_present": false
+    },
+    {
+      "output_id": "01a19528-f68d-7f23-b6d0-3057150cf669",
+      "status": "confirmation_required",
+      "end_call_required_present": false
+    },
+    {
+      "output_id": "01a19529-3118-7cd9-abc8-cce62e92de7e",
+      "status": "confirmation_required",
+      "end_call_required_present": false
+    }
+  ],
+  "incomplete_first_utterance": [
+    "Could you",
+    "the offer?"
+  ],
+  "incomplete_first_action": "agree_rate submitted the opening offer while its spoken tool announcement asked which rate the caller wanted",
+  "final_user": {
+    "timestamp": "2026-11-01T03:31:14.325Z",
+    "text": "What's the rate"
+  },
+  "final_assistant": {
+    "timestamp": "2026-11-01T03:31:20.091Z",
+    "text": "The agreed rate is [RATE REDACTED]. Booking permission was not confirmed. Goodbye.",
+    "action": "finish_call"
+  },
+  "finish_call": {
+    "output_id": "01a19529-63b9-706e-a7fd-8ea7279f093f",
+    "status": "closed",
+    "stored_outcome": "caller_ended"
+  },
+  "native_end": {
+    "timestamp": "2026-11-01T03:31:22.191Z",
+    "tool": "_hangup",
+    "event": "agent_hung_up",
+    "assistant_text": "Goodbye."
+  },
+  "confirmed_findings": [
+    "All HTTP nodes succeeded; no native integration failure observed",
+    "No explicit fresh booking authorization observed",
+    "All booking preparation responses required confirmation and none instructed the call to end",
+    "The agent ended the call after a price clarification instead of answering and asking the canonical permission question again",
+    "The current prompt already required clarification and a repeated complete permission question when unclear",
+    "caller_ended is inconsistent with the native agent_hung_up event",
+    "No actual LOAD_BOOK send occurred in this call"
+  ],
+  "limits": [
+    "Transcript fragments do not establish unrecorded words or audio overlap",
+    "No inference is made about whether ambiguous relative counters referred to a new increase or a restatement",
+    "No service, TMS, SMTP, or booking integration was invoked during this read-only diagnosis"
+  ],
+  "safe_recommendations": [
+    "Keep confirmation_required active; a price clarification must not trigger finish_call",
+    "Do not call agree_rate on an incomplete offer question",
+    "Clarify the reference total of an ambiguous relative counter before accepting it",
+    "Preserve the backend consent guard",
+    "Use a neutral unbooked outcome and separately record native closed_by agent"
+  ]
+}

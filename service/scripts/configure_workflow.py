@@ -5,7 +5,7 @@ from service.config import settings,ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW='01a19476-5384-704b-9c5e-569fd96f9adf'
-VERSION='01a19503-e8c4-768a-aade-7bf67ff9c590'
+VERSION='01a19550-bb92-7b91-87ca-b3af46e459f8'
 HOST='https://codex-e2e-lab-sg-20261031.fly.dev'
 BASE='/versions/'+VERSION
 DEFINITIONS=[
@@ -99,8 +99,10 @@ def main():
         binding_group=nodes[name]['persistent_id']
         if name=='finish_call':parameters=[('closing_message','The short terminal business outcome to say aloud, with no codes or confidential pricing. For senior_review use the complete required neutral mocked-transfer line. Otherwise give the actual refusal or result and goodbye.')]
         descriptions={
-            'find_loads':'Find live matching loads after verification. If status is no_match or tms_unavailable, speak a short closing sentence, immediately call finish_call, then use the native end_conversation hangup tool. Do not wait for the caller or idle timeout.',
-            'finish_call':'Use this tool to SPEAK the terminal outcome and close the call record as one action. Pass closing_message and invoke immediately on no_match, ineligible, code_failed, negotiation_failed, unavailable outcomes or senior_review. Do not deliver separate final chat text first. The configured voice message speaks your words. After it returns, invoke the native end_conversation hangup tool.',
+            'find_loads':'Find matching loads after verification. Present one offer, total first, then a short operational summary. Price questions are answered without negotiation or booking tools. For terminal no_match or tms_unavailable, use finish_call with the actual result, then native hangup.',
+            'agree_rate':'Use only for a COMPLETE price acceptance or a genuine proposed counter amount. A request to repeat, explain or confirm what the rate IS does not call this tool. Never submit an assumed acceptance while asking a clarification question. After price agreement, a yes to booking permission goes to request_booking directly, not here.',
+            'request_booking':'Prepare booking permission after a complete price agreement. On confirmation_required read its exact standalone question and wait. A fresh yes answering it calls this tool directly, without agree_rate. A rate question is answered conversationally; it is not permission, refusal or a closing reason.',
+            'finish_call':'Speak the actual terminal outcome and close the record. Use ONLY for a backend terminal outcome/end_call_required or a complete clear caller request to end. NEVER use for confirmation_required, an unanswered permission question, hesitation, a misunderstanding or any rate question. Continue helping in those cases. Pass closing_message; its configured voice message speaks it. Then invoke native end_conversation.',
         }
         function={'description':paragraph(descriptions.get(name,'Call '+name+' in the required verification, matching, negotiation and handoff order. Only the backend decides.')),
             'parameters':[{'name':k,'description':paragraph(d),'required':k not in ('origin_state','dest_state'),

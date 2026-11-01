@@ -17,17 +17,26 @@
     "live-call.json": "9d5ad7626336bf095bcb6ac0cd355dc0f5a6734315a9cf534cfe8ef7f7a6f722",
     "live-receipt.txt": "12b164a333db0ebb71dcd5411aac27178a6580ffe6bb6a1aec934b65b0826b35",
     "native-conversation-qa.json": "cb3036f1331c9b676fe18cec7cd29aa853331d0a65f24a69d30a05962082087e",
-    "smtp-check.json": "475dd551e712dfeab1f9024d205f79cc14db06f212f5cad833a7fd0c9e49c275",
+    "owner-v7-clarification-failure.json": "986f81f637f483d4daaa2c4c8211394899d439592b9daa257555ef70a82b5eea",
+    "owner-v7-review-annotation.json": "4c73074b3914f57fcc3b5a8f452c1ad319a1f43daf0c07d51eccf5772b8425bf",
+    "smtp-check.json": "675a27d1667b37771cf6d3aeb7d7bc4de481573d8aeab04c98e6d79761f4891c",
     "twin-contention.json": "64cafa2ae12b65e2eeeb89b21689de5cf3f2324e5f7811de3276129a79f170be",
     "twin-schema.png": "e7ff7482100d79b6932c18577b56264ec8a1de294b127946948848c817ccf54d",
+    "v8-dialogue-regressions.json": "6e887f6e5e5947e8c0fcbd633770707a774137a5eddd9f2dd8113e19bd6a7450",
+    "v8-hybrid-consent.json": "4b019719785efda058f04868675f1366932feabbb5c92da79fabdbe511931f76",
+    "v8-hybrid-setup-failure.json": "de72942f63c10e8cc8047beca3c9bfc57c263a1ccc954ddda3b5184f59cdbda1",
+    "v9-deployed-code.json": "9f4017851d00cb5a874d0c445c75c95e250d8894c3ac388fff1ed39f76907496",
+    "v9-pre-call-check.json": "820d7c0603a0c49e0535ed620ef9e214552010a61878877722a6e93302e87d9f",
     "workflow-v2-snapshot.json": "329eced3aba101bf8ebe4b81a117885b33328c094c96010a7925f94982d146d7",
-    "workflow-v6-v7-parity.json": "a25c6fb4ab8502ba72c043e1736887872949bddadf44378ae1b3d9ab7ec01806"
+    "workflow-v6-v7-parity.json": "a25c6fb4ab8502ba72c043e1736887872949bddadf44378ae1b3d9ab7ec01806",
+    "workflow-v8-v9-parity.json": "e10e2df6aad57d3f00b7a63c3b44a5d12976f925b16a99e0622b0c0e34cab204"
   },
   "repository_files": {
-    "happyrobot/northstars.json": "cb2b89fc881d012e1f6b9a58f9087d8b7561f6b1dbd56fea3738ca9a72f32af8",
-    "happyrobot/prototype-prompt.txt": "bf4e5471b00fad2a9279d31eaa9c5d8229b7aa0ff3aa7e5588eef240d77ffa62",
-    "happyrobot/prototype-topology.json": "47687576f5cdce051cd07c9375a5ea2aa581ff4b7df78edf6b2ce24e2238ba2d",
-    "happyrobot/prototype-workflow.json": "e755a86d53beaa76781b694eccc91c69114ad5415cc4a89ce1e1ce6ea44f7962",
+    "happyrobot/clarification-qa-scenarios.json": "f37588e7bec0558384ca8ee8d4c2d4ecfc11c508a6dd0242f2e85d620f05a5ab",
+    "happyrobot/northstars.json": "1aad026bb443835bbce472387ce1364d8b2dcd3f99b006dfcd8ddade470c4875",
+    "happyrobot/prototype-prompt.txt": "8889a868025d4324971c1de6b0a063df8c204f4fdc3af2be398a21710a35dae9",
+    "happyrobot/prototype-topology.json": "c150430937aa4c04d4d2a17b6096b25aa3a93e82a93e951d1ace892e6be1fc40",
+    "happyrobot/prototype-workflow.json": "e310f93c7f4e451bded7bb28357e36986b0e52e0141332cf8aea91eb34c856d9",
     "happyrobot/qa-scenarios.json": "bbd20a4c455179bac34765e3793bac47e101535c5c961724e348775fb72c90bd"
   }
 }

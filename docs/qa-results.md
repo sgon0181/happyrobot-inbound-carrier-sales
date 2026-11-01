@@ -23,7 +23,7 @@ claimed until that controlled call completes.
 
 | Check | Result | Evidence level |
 | --- | --- | --- |
-| Python 3.12 service suite | 153 passed, 0 failed; local fake TCP only, external network blocked | SIMULATED |
+| Python 3.12 service suite | 154 passed, 0 failed; local fake TCP only, external network blocked | SIMULATED |
 | Receipt faults and durability behavior | Pre-send failure, partial/late receipt, save failure, duplicate suppression, restart/reconcile and cleanup checks passed in the suite | SIMULATED |
 | Pricing and negotiation policy | Exact money, ceiling controls, round limits, repeat actions and stale selected agreement checks passed | SIMULATED |
 | API policy gates | Authority/code gates, call-bound consumed code, resend/failure budgets, hidden identity injection and role separation passed | SIMULATED |
@@ -40,7 +40,7 @@ claimed until that controlled call completes.
 | Ineligible carrier and urgency bypass | Native text tool called the service and refused inactive MC 872144; no code or loads returned | LIVE segmented conversation |
 | Booking-off API flow | Real FMCSA, email submission, TMS search and negotiation; synthetic QA code proof; FAILED/live_booking_disabled, no write intent | HYBRID |
 | Owner email/code | New email received and code successfully entered during actual voice call | LIVE |
-| Gmail SMTP replacement | Owner supplied app password privately; deployed sender accepted a new code email on a clearly synthetic call; human inbox receipt pending | LIVE transport / synthetic call |
+| Gmail SMTP replacement | Owner supplied app password privately; deployed sender accepted a new code email on a synthetic call; the second real owner call then proved receipt and entry | LIVE transport and human entry |
 | Owner booking send | Exactly one send for LD01094 at 1075, complete 97-byte PENDING receipt and stored reference | LIVE |
 | Owner conversation consent | FAILED: price clarification preceded submission without clear booking permission | LIVE |
 | Neutral wording and mocked transfer | Spoken senior review and simulated transfer present in transcript | LIVE |
@@ -70,6 +70,7 @@ claimed until that controlled call completes.
 - [Eight reusable fully mocked definitions](../happyrobot/qa-scenarios.json)
 - [Five native criteria](../happyrobot/northstars.json)
 - [Tested-to-Production workflow parity](prototype-evidence/workflow-v6-v7-parity.json)
+- [Current v8-to-v9 parity](prototype-evidence/workflow-v8-v9-parity.json)
 - [Synthetic App action result](prototype-evidence/app-actions.json)
 - [Deployed authentication checks](prototype-evidence/auth-checks.json)
 - [Deployed source hash verification](prototype-evidence/deployed-code.json)
@@ -91,9 +92,8 @@ claimed until that controlled call completes.
   pending. The strict matcher may require another explicit question.
 - Cause of PENDING, external BOOKED finalization, cancellation, expiry, full
   rate-format bounds, money scale or cross-token ownership.
-- Human inbox receipt and code entry using the new SMTP sender. Sender acceptance
-  is proved. The temporary action-test fallback remains in code and would expose
-  expected codes in privileged notification records if explicitly re-enabled.
+- The temporary action-test notifier remains in code as an inactive fallback.
+  New Gmail SMTP receipt and human code entry are proved by the second owner call.
 - Durable receipt capture across machine replacement or automatic stop/start.
   The container journal was unavailable, but Twin retained the full receipt.
 - Every native conversation/adversarial case in architecture section 9.
@@ -116,7 +116,7 @@ grades, scenario wrapper status, actual rendered assistant content and closing
 tools are assessed separately. The fixed-message v5 said <no-value> despite
 some passing grades and is not acceptable evidence of correct speech.
 
-The v6 Development correction uses an AI tool message tied to the closing
+The earlier v6 Development correction uses an AI tool message tied to the closing
 action. Two targeted checks verified actual rendering and both closing tools:
 
 | Case | Actual terminal behavior | Automated result and limit |
@@ -128,7 +128,15 @@ Both had no <no-value> rendering and mocked every external business action.
 The twenty-run artifact preserves historical failures, criteria and wrapper
 states. No further real booking probe was used to develop these changes.
 
-Production v7 is an unchanged executable fork of tested Development v6.
+Historical Production v7 was an unchanged executable fork of tested Development v6.
 All eighteen node configurations/topology and seven exact safe output schemas
 were checked before publication. This supports configuration promotion, not
 a claim that the twenty historical attempts all ran on v7 or passed.
+
+## Off-script call and corrected dialogue
+
+The second owner call passed authority and the new SMTP code, then ended
+prematurely during a rate question. It sent no booking. Three subsequent native
+regressions and the real-endpoint synthetic permission test passed; one earlier
+hybrid setup failure is preserved separately. Production v9 matches tested v8.
+A clean human booking is still pending. See [the focused record](clarification-fix.md).

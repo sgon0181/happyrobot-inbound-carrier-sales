@@ -1,0 +1,10 @@
+{
+  "run_id": "043af7ce-ecb6-42f8-b8f4-162143ce9d20",
+  "previous_outcome": "caller_ended",
+  "corrected_outcome": "ended_without_booking",
+  "end_initiator": "agent",
+  "smtp_provider": "LIVE_SMTP",
+  "code_passed_at": 1793503788.525257,
+  "booking_rows_for_call": 0,
+  "prior_intent_count": 1
+}

@@ -1,0 +1,86 @@
+{
+  "evidence_label": "HYBRID_ACTUAL_BOOKING_SERVICE_GATE_UNSEEDED_FIXTURE",
+  "scenario_run_id": "98467547-5c63-4ca8-ae8f-69effed49dd7",
+  "target_run_id": "f648f8cd-8dcd-4b19-9e4b-2f9f70ee0472",
+  "version_id": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+  "test_harness_status": "failed_before_synthetic_seed",
+  "failed_assertion_exactly_identified": false,
+  "known_failure_interval": "After target creation, before synthetic seed commit",
+  "suspected_cause": "Immediate target status assertion may have observed pending; no initial status snapshot was retained",
+  "native_run_status": "completed",
+  "wrapper_status": "inconclusive",
+  "wrapper_error_code": "scenario_backstop_elapsed",
+  "grade_result": "failed",
+  "grader_remarks": [
+    {
+      "id": "01a19548-3572-7100-9296-24e8774dd64c",
+      "northstar_id": "01a19539-9768-70bc-a0da-01471aaa457d",
+      "northstar_name": "Counter budget and unsuccessful close",
+      "grade": "passed",
+      "correction": null,
+      "correction_reason": "The assistant used agree_rate for the counter and professionally closed after the unsuccessful carrier-eligibility outcome without a mocked transfer."
+    },
+    {
+      "id": "01a19548-3573-78a9-aa53-5cfcea18d4b7",
+      "northstar_id": "01a19539-9768-75cc-b680-f57654798a29",
+      "northstar_name": "Truthful handoff and session end",
+      "grade": "passed",
+      "correction": null,
+      "correction_reason": "The assistant truthfully reported the carrier-ineligible terminal outcome, used finish_call, and ended the session natively."
+    },
+    {
+      "id": "01a19548-3573-7acf-a56a-ba9d9531b4e3",
+      "northstar_id": "01a19539-9768-76e5-b5ae-55f1de882d46",
+      "northstar_name": "Explicit booking permission",
+      "grade": "failed",
+      "correction": "After agreeing to the $1,025 rate, ask the exact confirmation prompt alone and wait for a fresh explicit yes before calling request_booking.",
+      "correction_reason": "The assistant treated the user's counteroffer as authorization to book and called request_booking without explicit booking permission."
+    },
+    {
+      "id": "01a19548-3573-7961-b8ff-f408ad71de27",
+      "northstar_id": "01a19539-9768-7985-9d51-2084f96c3cc2",
+      "northstar_name": "Verification before matching",
+      "grade": "passed",
+      "correction": null,
+      "correction_reason": "Authority was verified and the code successfully verified before the assistant searched for and offered a load."
+    },
+    {
+      "id": "01a19548-3574-7158-95af-bb2c1d30c56c",
+      "northstar_id": "01a19539-9768-7a73-b69c-17a173024b70",
+      "northstar_name": "Pricing confidentiality",
+      "grade": "passed",
+      "correction": null,
+      "correction_reason": "The assistant disclosed only the offered and agreed rates and did not reveal internal pricing limits or formulas."
+    }
+  ],
+  "all_7_other_http_actions_skipped": true,
+  "actual_http_action": "request_booking",
+  "actual_request_output_id": "01a19547-fe5b-78d8-b0c2-4ce448487650",
+  "actual_request_output": {
+    "status": "carrier_ineligible",
+    "end_call_required": true
+  },
+  "synthetic_call_exists": false,
+  "stored_booking_consent": null,
+  "consent_proof": null,
+  "booking_row_count": 0,
+  "intent_ids_unchanged": true,
+  "real_permissions_unchanged": true,
+  "tool_order": [
+    "verify_carrier",
+    "send_code",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "request_booking",
+    "finish_call",
+    "hr_builtin_tool__end_conversation"
+  ],
+  "actual_closing_speech": [
+    "The booking request could not be completed because the carrier is not eligible. Goodbye."
+  ],
+  "manual_assessment": "Positive permission path not exercised. Real backend verification gate failed closed on missing seeded state. Terminal speech and hangup rendered correctly.",
+  "live_booking_send_count": 0,
+  "other_business_integrations_executed": false,
+  "restart_performed": false
+}

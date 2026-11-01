@@ -114,8 +114,10 @@ expiry and lost-receipt ownership remain unresolved. MAX_BUY is treated as the
 internal ceiling under the documented candidate assumption.
 
 The owner configured Gmail SMTP for service-owned code delivery. It replaces
-the temporary native action-test route on the deployed prototype. Sender
-acceptance and the next actual inbox/code proof are recorded separately.
+the temporary native action-test route on the deployed prototype. The second
+owner call proved actual inbox receipt and code entry, then exposed a dialogue
+failure during price clarification. The revised dialogue and real consent path
+passed controlled tests; a clean human booking retest remains pending.
 
 The canonical Twin aggregate, demo inbox identity policy, strict consent
 matcher and deterministic post-call summary are prototype choices. Stronger

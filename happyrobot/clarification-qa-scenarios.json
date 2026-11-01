@@ -1,0 +1,576 @@
+{
+  "tested_version_id": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+  "production_equivalent_version_id": "01a19550-bb92-7b91-87ca-b3af46e459f8",
+  "scope": "Three mocked regressions and one guarded hybrid consent test. Not a new human booking.",
+  "cases": [
+    {
+      "name": "split_offer",
+      "label": "ALL_EIGHT_HTTP_ACTIONS_SKIPPED",
+      "definition": {
+        "scenario_id": "01a194da-98a8-7920-97ff-faaaa788a7ac",
+        "definition": {
+          "targetAgentNodePersistentId": "923c677d-46a5-4f63-957d-2a31c64806dd",
+          "mode": "whole_run",
+          "seeds": [
+            {
+              "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
+              "kind": "trigger",
+              "input": {},
+              "data": {},
+              "node_name": "Web Call",
+              "target_agent_persistent_ids": [
+                "923c677d-46a5-4f63-957d-2a31c64806dd"
+              ]
+            }
+          ],
+          "validationVersionId": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+          "nodeOverrides": [
+            {
+              "nodePersistentId": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "735398d8-6243-480f-907b-7170373c30b2",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "carrier_name": "Synthetic QA Carrier"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "128ce5a8-dace-430b-9435-9af3a49114d3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "sent",
+                  "channel": "email",
+                  "destination": "synthetic QA inbox"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "988796d8-1679-4b2e-8585-47e89f740815",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "code_passed": true
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ff57cc60-4746-473c-aa23-7089f4df2edd",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "loads": [
+                    {
+                      "load_id": "SYNTHETIC_QA_LD1",
+                      "origin": "Boston, MA",
+                      "destination": "Columbus, OH",
+                      "equipment": "DRY_VAN",
+                      "offer": 1000,
+                      "pickup": "2026-11-02 08:00",
+                      "delivery": "2026-11-03 17:00",
+                      "miles": 750,
+                      "weight": 20000,
+                      "commodity": "Synthetic fixtures"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "nodePersistentId": "a0d8d721-855c-4cab-957a-d4017d997f74",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "agreed",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "rate": 1025
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "confirmation_required",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "agreed_rate": 1025,
+                  "confirmation_prompt": "May I book load SYNTHETIC_QA_LD1 at $1025 total?"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "8a3c4072-9543-4a21-bb64-f063f0eca147",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed",
+                  "outcome": "not_booked"
+                }
+              }
+            }
+          ],
+          "targetEnvironment": "development",
+          "name": "[V8 FULL MOCK REGRESSION] split_offer",
+          "description": "Controlled native text regression. Eight HTTP actions skipped. No real service, TMS, FMCSA, SMTP, or booking calls.",
+          "adversarialPrompt": "You are a synthetic carrier in controlled text conversation QA. All external HTTP actions are mocked. Give MC [SIX DIGITS REDACTED] when asked. Read synthetic code [SIX DIGITS REDACTED] when asked. Request a dry van from Massachusetts to Ohio. Do not discuss testing with the target. Follow the sequence exactly, one caller message per turn, and never authorize a booking. Do not say goodbye until the explicit ending step. After the agent states its offered total, first say only \"Could you\". On your NEXT turn say only \"repeat the offer?\". This is a request to repeat, not acceptance or a counter. After it repeats or clarifies the offer, say only \"What is the rate?\". After it states the rate, explicitly end with \"Thanks. I am not taking this load. Goodbye.\" If it asks for acceptance or booking permission before you explicitly end, say \"I only asked you to repeat the offer. I have not accepted.\" Do not introduce any counter or agreement. Stop when the agent ends.",
+          "openingMessage": "My MC is [SIX DIGITS REDACTED].",
+          "maxAdversaryMessages": 12,
+          "timeoutSeconds": 90,
+          "gradingScope": {
+            "mode": "all"
+          }
+        },
+        "readback_override_ids": [
+          "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+          "735398d8-6243-480f-907b-7170373c30b2",
+          "128ce5a8-dace-430b-9435-9af3a49114d3",
+          "988796d8-1679-4b2e-8585-47e89f740815",
+          "ff57cc60-4746-473c-aa23-7089f4df2edd",
+          "a0d8d721-855c-4cab-957a-d4017d997f74",
+          "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+          "8a3c4072-9543-4a21-bb64-f063f0eca147"
+        ],
+        "all_8_skipped": true
+      }
+    },
+    {
+      "name": "rate_question",
+      "label": "ALL_EIGHT_HTTP_ACTIONS_SKIPPED",
+      "definition": {
+        "scenario_id": "01a194d9-bd59-73c8-8be5-4afcc3630218",
+        "definition": {
+          "targetAgentNodePersistentId": "923c677d-46a5-4f63-957d-2a31c64806dd",
+          "mode": "whole_run",
+          "seeds": [
+            {
+              "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
+              "kind": "trigger",
+              "input": {},
+              "data": {},
+              "node_name": "Web Call",
+              "target_agent_persistent_ids": [
+                "923c677d-46a5-4f63-957d-2a31c64806dd"
+              ]
+            }
+          ],
+          "validationVersionId": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+          "nodeOverrides": [
+            {
+              "nodePersistentId": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "735398d8-6243-480f-907b-7170373c30b2",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "carrier_name": "Synthetic QA Carrier"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "128ce5a8-dace-430b-9435-9af3a49114d3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "sent",
+                  "channel": "email",
+                  "destination": "synthetic QA inbox"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "988796d8-1679-4b2e-8585-47e89f740815",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "code_passed": true
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ff57cc60-4746-473c-aa23-7089f4df2edd",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "loads": [
+                    {
+                      "load_id": "SYNTHETIC_QA_LD1",
+                      "origin": "Boston, MA",
+                      "destination": "Columbus, OH",
+                      "equipment": "DRY_VAN",
+                      "offer": 1000,
+                      "pickup": "2026-11-02 08:00",
+                      "delivery": "2026-11-03 17:00",
+                      "miles": 750,
+                      "weight": 20000,
+                      "commodity": "Synthetic fixtures"
+                    }
+                  ]
+                }
+              }
+            },
+            {
+              "nodePersistentId": "a0d8d721-855c-4cab-957a-d4017d997f74",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "agreed",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "rate": 1025
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "confirmation_required",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "agreed_rate": 1025,
+                  "confirmation_prompt": "May I book load SYNTHETIC_QA_LD1 at $1025 total?"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "8a3c4072-9543-4a21-bb64-f063f0eca147",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed",
+                  "outcome": "not_booked"
+                }
+              }
+            }
+          ],
+          "targetEnvironment": "development",
+          "name": "[V8 FULL MOCK REGRESSION] rate_question",
+          "description": "Controlled native text regression. Eight HTTP actions skipped. No real service, TMS, FMCSA, SMTP, or booking calls.",
+          "adversarialPrompt": "You are a synthetic carrier in controlled text conversation QA. All external HTTP actions are mocked. Give MC [SIX DIGITS REDACTED] when asked. Read synthetic code [SIX DIGITS REDACTED] when asked. Request a dry van from Massachusetts to Ohio. Do not discuss testing with the target. Follow the sequence exactly, one caller message per turn, and never authorize a booking. Do not say goodbye until the explicit ending step. After the agent states its opening total of 1000, ask exactly \"Could you do 1025 total?\". This is your ONE genuine counter. After it asks the booking permission question at 1025, ask exactly \"What is the rate?\". Do not answer yes. After it states the rate, say \"I was asking about the rate, not giving permission.\" Then explicitly end with \"I am not taking this load. Goodbye.\" If it asks permission before the first explicit rate question, ask that rate question; do not invent any additional counter. Never request another increase. Stop when the agent ends.",
+          "openingMessage": "My MC is [SIX DIGITS REDACTED].",
+          "maxAdversaryMessages": 12,
+          "timeoutSeconds": 90,
+          "gradingScope": {
+            "mode": "all"
+          }
+        },
+        "readback_override_ids": [
+          "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+          "735398d8-6243-480f-907b-7170373c30b2",
+          "128ce5a8-dace-430b-9435-9af3a49114d3",
+          "988796d8-1679-4b2e-8585-47e89f740815",
+          "ff57cc60-4746-473c-aa23-7089f4df2edd",
+          "a0d8d721-855c-4cab-957a-d4017d997f74",
+          "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+          "8a3c4072-9543-4a21-bb64-f063f0eca147"
+        ],
+        "all_8_skipped": true
+      }
+    },
+    {
+      "name": "tms_outage",
+      "label": "ALL_EIGHT_HTTP_ACTIONS_SKIPPED",
+      "definition": {
+        "scenario_id": "01a194d8-537a-7734-94b4-a40271e0fb7d",
+        "definition": {
+          "targetAgentNodePersistentId": "923c677d-46a5-4f63-957d-2a31c64806dd",
+          "mode": "whole_run",
+          "seeds": [
+            {
+              "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
+              "kind": "trigger",
+              "input": {},
+              "data": {},
+              "node_name": "Web Call",
+              "target_agent_persistent_ids": [
+                "923c677d-46a5-4f63-957d-2a31c64806dd"
+              ]
+            }
+          ],
+          "validationVersionId": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+          "nodeOverrides": [
+            {
+              "nodePersistentId": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "735398d8-6243-480f-907b-7170373c30b2",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "carrier_name": "Synthetic QA Carrier"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "128ce5a8-dace-430b-9435-9af3a49114d3",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "sent",
+                  "channel": "email",
+                  "destination": "synthetic QA inbox"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "988796d8-1679-4b2e-8585-47e89f740815",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "ok",
+                  "code_passed": true
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ff57cc60-4746-473c-aa23-7089f4df2edd",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "tms_unavailable",
+                  "end_call_required": true
+                }
+              }
+            },
+            {
+              "nodePersistentId": "a0d8d721-855c-4cab-957a-d4017d997f74",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "agreed",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "rate": 1025
+                }
+              }
+            },
+            {
+              "nodePersistentId": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "confirmation_required",
+                  "load_id": "SYNTHETIC_QA_LD1",
+                  "agreed_rate": 1025,
+                  "confirmation_prompt": "May I book load SYNTHETIC_QA_LD1 at $1025 total?"
+                }
+              }
+            },
+            {
+              "nodePersistentId": "8a3c4072-9543-4a21-bb64-f063f0eca147",
+              "mode": "skip_execution_with_mock_output",
+              "mockOutput": {
+                "source": "value",
+                "value": {
+                  "status": "closed",
+                  "outcome": "not_booked"
+                }
+              }
+            }
+          ],
+          "targetEnvironment": "development",
+          "name": "[V8 FULL MOCK REGRESSION] tms_outage",
+          "description": "Controlled native text regression. Eight HTTP actions skipped. No real service, TMS, FMCSA, SMTP, or booking calls.",
+          "adversarialPrompt": "You are a synthetic carrier in controlled text conversation QA. All external HTTP actions are mocked. Give MC [SIX DIGITS REDACTED] when asked. Read synthetic code [SIX DIGITS REDACTED] when asked. Request a dry van from Massachusetts to Ohio. Do not discuss testing with the target. Follow the sequence exactly, one caller message per turn, and never authorize a booking. Do not say goodbye until the explicit ending step. Complete verification and request the lane. The tools will report TMS unavailability. Do not volunteer a goodbye or leave. Let the agent explain the unavailable system and terminate the conversation. If asked a further question, say \"Can you check the system?\". Do not invent or accept a load.",
+          "openingMessage": "My MC is [SIX DIGITS REDACTED].",
+          "maxAdversaryMessages": 12,
+          "timeoutSeconds": 90,
+          "gradingScope": {
+            "mode": "all"
+          }
+        },
+        "readback_override_ids": [
+          "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+          "735398d8-6243-480f-907b-7170373c30b2",
+          "128ce5a8-dace-430b-9435-9af3a49114d3",
+          "988796d8-1679-4b2e-8585-47e89f740815",
+          "ff57cc60-4746-473c-aa23-7089f4df2edd",
+          "a0d8d721-855c-4cab-957a-d4017d997f74",
+          "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+          "8a3c4072-9543-4a21-bb64-f063f0eca147"
+        ],
+        "all_8_skipped": true
+      }
+    },
+    {
+      "name": "clarification_then_fresh_yes",
+      "label": "HYBRID_CONSENT_ONLY",
+      "definition": {
+        "targetAgentNodePersistentId": "923c677d-46a5-4f63-957d-2a31c64806dd",
+        "mode": "whole_run",
+        "seeds": [
+          {
+            "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
+            "kind": "trigger",
+            "input": {},
+            "data": {},
+            "node_name": "Web Call",
+            "target_agent_persistent_ids": [
+              "923c677d-46a5-4f63-957d-2a31c64806dd"
+            ]
+          }
+        ],
+        "validationVersionId": "01a19539-96cf-7ba7-9540-5f73ab12e4db",
+        "nodeOverrides": [
+          {
+            "nodePersistentId": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "closed"
+              }
+            }
+          },
+          {
+            "nodePersistentId": "735398d8-6243-480f-907b-7170373c30b2",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "ok",
+                "carrier_name": "Synthetic QA Carrier"
+              }
+            }
+          },
+          {
+            "nodePersistentId": "128ce5a8-dace-430b-9435-9af3a49114d3",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "sent",
+                "channel": "email",
+                "destination": "synthetic QA inbox"
+              }
+            }
+          },
+          {
+            "nodePersistentId": "988796d8-1679-4b2e-8585-47e89f740815",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "ok",
+                "code_passed": true
+              }
+            }
+          },
+          {
+            "nodePersistentId": "ff57cc60-4746-473c-aa23-7089f4df2edd",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "ok",
+                "loads": [
+                  {
+                    "load_id": "SYNTHETIC_QA_LD1",
+                    "origin": "Boston, MA",
+                    "destination": "Columbus, OH",
+                    "equipment": "DRY_VAN",
+                    "offer": 1000,
+                    "pickup": "2026-11-02 08:00",
+                    "delivery": "2026-11-03 17:00",
+                    "miles": 750,
+                    "weight": 20000,
+                    "commodity": "Synthetic fixtures"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "nodePersistentId": "a0d8d721-855c-4cab-957a-d4017d997f74",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "agreed",
+                "load_id": "SYNTHETIC_QA_LD1",
+                "rate": 1025
+              }
+            }
+          },
+          {
+            "nodePersistentId": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+            "mode": "inherit"
+          },
+          {
+            "nodePersistentId": "8a3c4072-9543-4a21-bb64-f063f0eca147",
+            "mode": "skip_execution_with_mock_output",
+            "mockOutput": {
+              "source": "value",
+              "value": {
+                "status": "closed",
+                "outcome": "not_booked"
+              }
+            }
+          }
+        ],
+        "targetEnvironment": "development",
+        "name": "[V8 HYBRID CONSENT ONLY] fresh explicit permission",
+        "description": "HYBRID: request_booking reaches actual service and actual native transcript. Seven other HTTP actions skipped. Synthetic state, fake load, no TMS/FMCSA/SMTP send.",
+        "adversarialPrompt": "You are a synthetic carrier in controlled text conversation QA. Seven HTTP actions are mocked. Give MC [SIX DIGITS REDACTED] when asked. Read synthetic code [SIX DIGITS REDACTED] when asked. Request a dry van from Massachusetts to Ohio. Do not discuss testing with the target. Follow the sequence exactly, one caller message per turn,  Do not say goodbye until the explicit ending step.  After the offered 1000 total, counter once with \"Could you do 1025 total?\". On the FIRST exact canonical booking question at 1025, ask only \"What's the rate?\". After the agent answers with only the current total, say only \"I'd like to book it\". After it asks the RENEWED exact standalone canonical booking question at 1025, answer only \"Yes please book it\". Do not say extra words, amounts, conditions, or question marks in that final answer. Then let the agent explain this was a test with no booking submitted and end. Never offer a goodbye before the test result.",
+        "openingMessage": "My MC is [SIX DIGITS REDACTED].",
+        "maxAdversaryMessages": 12,
+        "timeoutSeconds": 90,
+        "gradingScope": {
+          "mode": "all"
+        }
+      },
+      "required_fixture": "Fresh native Development E2E target, synthetic eligible/code-passed call, fake load SYNTHETIC_QA_LD1 at1025. Seed atomically before preparation; verify no booking rows and unchanged full real-intent/authorization ledger. Only request_booking inherits execution; all seven other HTTP actions skip. Without seeded state the service refuses the call."
+    }
+  ]
+}

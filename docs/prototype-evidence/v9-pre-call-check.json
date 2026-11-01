@@ -1,0 +1,10 @@
+{
+  "checked_at": "2026-11-01T04:19:49.581888+00:00",
+  "allocated_load": "LD01085",
+  "load_status": "OPEN",
+  "unused_authorization": true,
+  "real_intent_count": 1,
+  "new_live_booking_sends": 0,
+  "synthetic_consent_test_closed": true,
+  "production_version": "01a19550-bb92-7b91-87ca-b3af46e459f8"
+}

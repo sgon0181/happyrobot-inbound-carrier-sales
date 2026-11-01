@@ -1,0 +1,13 @@
+{
+  "checked_at": "2026-11-01T04:29:15.020944+00:00",
+  "local_and_deployed_sha256": {
+    "service/api/app.py": "50e4895df58953efdcec22360e3debadcff2965653f2c22282aaab5349dacccd",
+    "service/core/calls.py": "cf6ec5d0860c234b817f6d5eea62d30ad6ec09533314adc13263a0ce16e86dc5",
+    "service/core/campaign.py": "d85b32692607c3bbfe3352b16649e26ec8ff06a96282e61050c999f6f3e1d876",
+    "service/adapters/confirmation.py": "d9da1220b5ba1c1cef3798d95c940cfac34c1d3c4242b4db22ffe6f473670fa7",
+    "service/adapters/twin/bookings.py": "a4bde68354719dd6d540be4358d7edaa5b62187d4079eb1de411603cdcfcc250",
+    "service/adapters/notify/email.py": "0eb5838af4e299398f27706ddc5b4bf5b9d259d2132d5b3fea36fe42ffa2c895"
+  },
+  "all_match": true,
+  "scope": "Read-only file verification, no TMS operation"
+}

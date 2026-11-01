@@ -132,10 +132,17 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
                                        json={'run_id':self.cid,'mc':'138328',key:'injected'})
             self.assertEqual(result.status_code,400)
 
-    async def test_early_hangup_is_stored(self):
+    async def test_close_without_business_result_is_neutral_about_who_ended(self):
         result=await self.runtime.close(self.cid)
-        self.assertEqual(result['outcome'],'caller_ended')
+        self.assertEqual(result['outcome'],'ended_without_booking')
         self.assertIsNotNone(self.repository.data['calls'][self.cid]['closed_at'])
+
+    async def test_close_preserves_a_recorded_business_outcome(self):
+        self.repository.data['calls'][self.cid]=self.runtime.new_call(self.cid)
+        self.repository.data['calls'][self.cid]['outcome']='negotiation_failed'
+        result=await self.runtime.close(self.cid)
+        self.assertEqual(result['outcome'],'negotiation_failed')
+        self.assertEqual(len(self.server.book_requests),0)
 
     async def test_terminal_api_result_explicitly_requires_closing_tools(self):
         response=await self.http.post('/loads/search',headers=self.agent,json={'run_id':self.cid,'equipment':'DRY_VAN'})

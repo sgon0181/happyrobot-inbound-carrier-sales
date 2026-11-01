@@ -545,7 +545,13 @@ class Runtime:
                 current["booking_consent"] = bool(evidence.get("approved"))
                 if evidence.get("approved"):
                     current["consent_proof"] = {
-                        k: evidence.get(k) for k in ("question_id", "answer_id", "session_id")
+                        k: evidence.get(k)
+                        for k in (
+                            "question_id",
+                            "answer_id",
+                            "session_id",
+                            "ignored_acknowledgement_ids",
+                        )
                     }
                     current["consent_proof"]["agreement_version"] = agreement["version"]
                 self.event(

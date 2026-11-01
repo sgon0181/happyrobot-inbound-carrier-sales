@@ -19,6 +19,59 @@ class ConfirmationTests(unittest.TestCase):
     def test_explicit_yes_after_exact_total_passes(self):
         self.assertTrue(consent_evidence(self.messages("Yes please"), 1075, "u1")["approved"])
 
+    def test_neutral_acknowledgement_after_permission_keeps_original_proof(self):
+        for text in ("One moment...", "Just a moment.", "Let me check.", "Let me see..."):
+            messages = self.messages("Yeah, go ahead.")
+            messages.append({"id": "ack", "role": "assistant", "content": text})
+            proof = consent_evidence(messages, 1075, "u1")
+            self.assertTrue(proof["approved"])
+            self.assertEqual(proof["question_id"], "a1")
+            self.assertEqual(proof["answer_id"], "u2")
+            self.assertEqual(proof["ignored_acknowledgement_ids"], ["ack"])
+        messages = self.messages("Yes please.")
+        messages.extend(
+            [
+                {"id": "ack1", "role": "assistant", "content": "One"},
+                {"id": "ack2", "role": "assistant", "content": "moment..."},
+            ]
+        )
+        proof = consent_evidence(messages, 1075, "u1")
+        self.assertTrue(proof["approved"])
+        self.assertEqual(proof["ignored_acknowledgement_ids"], ["ack1", "ack2"])
+
+    def test_substantive_speech_and_interrupted_acknowledgement_still_fail(self):
+        for text in (
+            "One moment, the total is $1200.",
+            "One moment. Is that right?",
+            "One moment. Let me check.",
+            "One moment, please.",
+            "Booking confirmed.",
+            "Okay.",
+        ):
+            messages = self.messages("Yes please.")
+            messages.append({"id": "ack", "role": "assistant", "content": text})
+            self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+        messages = self.messages("Yes please.")
+        messages.append(
+            {"id": "ack", "role": "assistant", "content": "One moment...", "is_interrupted": True}
+        )
+        self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+
+    def test_neutral_acknowledgement_cannot_rescue_invalid_permission(self):
+        for answer in ("Yes but wait", "Is that the total?", "No", "1075", "Maybe"):
+            messages = self.messages(answer)
+            messages.append({"id": "ack", "role": "assistant", "content": "One moment..."})
+            self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+        messages = self.messages("Yes please.", interrupted=True)
+        messages.append({"id": "ack", "role": "assistant", "content": "One moment..."})
+        self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+        self.assertFalse(consent_evidence(messages, 1075, "u2")["approved"])
+        messages = self.messages("Yes please.")
+        messages.append({"id": "ack", "role": "assistant", "content": "One moment..."})
+        self.assertFalse(consent_evidence(messages, 1075, "u2")["approved"])
+        messages.append({"id": "withdraw", "role": "user", "content": "Wait, do not book it."})
+        self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+
     def test_clarification_hesitation_and_negation_fail(self):
         for answer in [
             "I just want the initial one plus 25 dollars more",

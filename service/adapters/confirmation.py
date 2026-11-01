@@ -34,6 +34,22 @@ def dialogue_turns(messages):
 
 def consent_evidence(messages, rate, anchor=None, load_id=None):
     turns = dialogue_turns(messages)
+    acknowledgement = None
+    # Native neutral speech is sometimes missing its filler flag. Keep the
+    # original consent evidence and retain every ignored message ID for audit.
+    if (
+        len(turns) >= 3
+        and turns[-1]["role"] == "assistant"
+        and not turns[-1]["interrupted"]
+        and turns[-2]["role"] == "user"
+        and re.fullmatch(
+            r"(?:one moment|just a moment|let me check|let me see)[.!]*",
+            turns[-1]["text"].strip(),
+            re.I,
+        )
+    ):
+        acknowledgement = list(turns[-1]["ids"])
+        turns = turns[:-1]
     users = [turn for turn in turns if turn["role"] == "user"]
     latest = users[-1]["id"] if users else None
     result = {"anchor": latest, "approved": False}
@@ -83,6 +99,8 @@ def consent_evidence(messages, rate, anchor=None, load_id=None):
         result["approved"] = True
         result["question_id"] = question["id"]
         result["answer_id"] = user["id"]
+        if acknowledgement is not None:
+            result["ignored_acknowledgement_ids"] = acknowledgement
     return result
 
 

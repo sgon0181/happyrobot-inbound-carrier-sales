@@ -1,0 +1,17 @@
+{
+  "label": "SIMULATED_REPLAY_OF_LIVE_REHEARSAL",
+  "call_id": "91846d16-1f21-4fab-b19a-ea331bc28aa5",
+  "before_approved": false,
+  "after_proof": {
+    "anchor": "a33ea5d4-bb1d-4f01-af70-d433c3ad2a0e",
+    "approved": true,
+    "question_id": "01a19600-4f86-7be7-9df5-e2c6f2ef61cb",
+    "answer_id": "a33ea5d4-bb1d-4f01-af70-d433c3ad2a0e",
+    "ignored_acknowledgement_ids": [
+      "01a19600-60b5-7e7c-b46f-61c00577a87e"
+    ]
+  },
+  "change": "One exact uninterrupted neutral assistant acknowledgement after the answer no longer obstructs the unchanged canonical question and natural approval. Raw evidence is preserved.",
+  "tms_sends": 0,
+  "business_writes": 0
+}

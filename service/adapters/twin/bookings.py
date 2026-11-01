@@ -33,14 +33,18 @@ class TwinBookingStore:
     def __init__(self, repository, live=False, clock=time.time):
         self.repository, self.live, self.clock = repository, live, clock
 
-    async def for_call(self, cid):
+    async def for_call(self, cid, bookings=None):
         _, claim = await self.repository.get("booking_claims", "call:" + cid)
         if claim and claim.get("active"):
             _, row = await self.repository.get("bookings", claim["booking_id"])
             if row is None:
                 raise BookingConflict("An incomplete reservation requires review")
             return row
-        rows = await self.repository.rows("bookings", call_id=cid)
+        rows = (
+            bookings
+            if bookings is not None
+            else await self.repository.rows("bookings", call_id=cid)
+        )
         return next(
             (r for _, _, r in rows if r["state"] != "FAILED" or r.get("write_intent_id")), None
         )
@@ -62,7 +66,7 @@ class TwinBookingStore:
                 if row.get("fingerprint") != fingerprint:
                     raise OperationConflict("Changed booking operation")
                 return decode(row), False
-        existing = await self.for_call(booking.call_id)
+        existing = await self.for_call(booking.call_id, rows)
         if existing:
             if (
                 existing.get("operation_id") == operation_id
@@ -96,9 +100,11 @@ class TwinBookingStore:
             )
             await self.release(failed)
             raise BookingConflict("Load already claimed")
-        _, call = await self.repository.get("calls", booking.call_id)
-        cohort = (call or {}).get("cohort", "real" if self.live else "synthetic")
-        if call is not None:
+        call = None
+        cohort = "real" if self.live else "synthetic"
+        if not self.live:
+            _, call = await self.repository.get("calls", booking.call_id)
+        if self.live or call is not None:
 
             def freeze(current):
                 agreement = current.get("agreement")
@@ -119,8 +125,9 @@ class TwinBookingStore:
                 if current.get("booking_id") not in (None, booking.id):
                     raise BookingConflict("Call already reserved")
                 current["booking_id"] = booking.id
+                return current.get("cohort", cohort)
 
-            await self.repository.mutate("calls", booking.call_id, freeze)
+            cohort = await self.repository.mutate("calls", booking.call_id, freeze)
         row = {
             **encode(booking),
             "operation_id": operation_id,

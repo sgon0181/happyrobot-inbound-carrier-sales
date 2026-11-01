@@ -28,13 +28,22 @@ def make_app(runtime, values, platform=None):
         if platform is None:
             return {"status": "unavailable", "collected": 0}
         collected = {}
-        calls = await runtime.repository.rows("calls", filters={"cohort": "real"}, limit=40)
+        calls = await runtime.repository.rows("calls", filters={"cohort": "real"})
+        previous_rows = {
+            cid: row
+            for cid, _, row in await runtime.repository.rows(
+                "call_transcripts", ids=[cid for cid, _, _ in calls]
+            )
+        }
         for cid, _, call in calls:
-            _, previous = await runtime.repository.get("call_transcripts", cid)
+            previous = previous_rows.get(cid)
             if (
                 not call.get("closed_at")
                 or call["cohort"] != "real"
-                or (previous or {}).get("redaction_version") == 3
+                or (
+                    (previous or {}).get("redaction_version") == 3
+                    and (previous or {}).get("complete") is True
+                )
             ):
                 continue
             try:
@@ -77,11 +86,10 @@ def make_app(runtime, values, platform=None):
                         "source": "LIVE_PLATFORM_TRANSCRIPT",
                         "redaction_version": 3,
                     }
+                    await runtime.repository.upsert("call_transcripts", cid, collected[cid])
             except Exception:
                 continue
 
-        for cid, row in collected.items():
-            await runtime.repository.upsert("call_transcripts", cid, row)
         return {"status": "ok", "collected": len(collected)}
 
     @asynccontextmanager

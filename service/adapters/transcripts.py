@@ -97,7 +97,7 @@ def redact_transcript(messages, mc=None):
                 prefix = text[: match.start()]
                 labelled = bool(re.search(MC_LABEL, prefix[-70:], re.I))
                 code_before = bool(re.search(r"\bcode\b", prefix, re.I))
-                allowed = (labelled and (not code_context or mixed)) or (
+                allowed = (labelled and not code_before and (not code_context or mixed)) or (
                     context.get(session) == "mc" and not code_context and not code_before
                 )
                 if value == mc and allowed:

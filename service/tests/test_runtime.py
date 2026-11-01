@@ -72,12 +72,61 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await self.http.aclose()
         await self.server.__aexit__(None, None, None)
 
+    async def test_collector_reaches_new_calls_and_retries_incomplete_transcripts(self):
+        for index in range(42):
+            cid = "collector-" + str(index)
+            self.repository.data["calls"][cid] = {
+                "cohort": "real",
+                "closed_at": 1,
+                "mc": "138328",
+                "outcome": "not_booked",
+            }
+            if index < 41:
+                self.repository.data["call_transcripts"][cid] = {
+                    "redaction_version": 3,
+                    "complete": index < 40,
+                }
+
+        class TranscriptPlatform:
+            def __init__(self):
+                self.runs = []
+
+            def request(self, path):
+                if path.endswith("/sessions"):
+                    return {"data": [{"id": "session"}]}
+                if path.startswith("/sessions/"):
+                    return {"data": [{"role": "assistant", "content": "Goodbye."}]}
+                self.runs.append(path)
+                return {"workflow_id": "collector-workflow"}
+
+        platform = TranscriptPlatform()
+        values = {**VALUES, "PROTOTYPE_WORKFLOW_ID": "collector-workflow"}
+        async with httpx.AsyncClient(
+            transport=httpx.ASGITransport(app=make_app(self.runtime, values, platform)),
+            base_url="http://local",
+        ) as client:
+            result = await client.post("/ops/collect-transcripts", headers=self.ops)
+            self.assertEqual(result.json(), {"status": "ok", "collected": 2})
+            result = await client.post("/ops/collect-transcripts", headers=self.ops)
+            self.assertEqual(result.json(), {"status": "ok", "collected": 0})
+        self.assertEqual(set(platform.runs), {"/runs/collector-40", "/runs/collector-41"})
+
     async def ready(self):
         await self.runtime.verify_carrier(self.cid, "138328")
         await self.runtime.send_code(self.cid)
         await self.runtime.verify_code(self.cid, self.sent[-1][0])
         self.repository.data["calls"][self.cid]["cohort"] = "real"
         return await self.runtime.search(self.cid, {"equipment": "DRY_VAN"})
+
+    async def test_leading_zero_code_remains_a_string_and_verifies(self):
+        await self.runtime.verify_carrier(self.cid, "138328")
+        with patch("service.core.calls.secrets.randbelow", return_value=1):
+            await self.runtime.send_code(self.cid)
+        code = self.sent[-1][0]
+        self.assertIsInstance(code, str)
+        self.assertEqual(len(code), 6)
+        self.assertTrue(code.startswith("0"))
+        self.assertEqual((await self.runtime.verify_code(self.cid, code))["status"], "ok")
 
     async def test_reservation_in_flight_does_not_claim_handoff_or_reset_verification(self):
         await self.ready()

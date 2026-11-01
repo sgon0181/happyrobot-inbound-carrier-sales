@@ -1,0 +1,39 @@
+{
+  "label": "SIMULATED_OFFLINE_LATENCY_INJECTION",
+  "network_calls": 0,
+  "live_sends": 0,
+  "fixture_seconds": {
+    "native_consent": 1,
+    "tms_read": 1,
+    "mock_booking": 1
+  },
+  "critical_operations_before_send": {
+    "before": 17,
+    "after": 15
+  },
+  "after_results": [
+    {
+      "per_operation_seconds": 0.25,
+      "total_seconds": 7.774,
+      "outcome": "ACK_PENDING"
+    },
+    {
+      "per_operation_seconds": 0.3,
+      "total_seconds": 8.721,
+      "outcome": "ACK_PENDING"
+    },
+    {
+      "per_operation_seconds": 0.35,
+      "total_seconds": 8.671,
+      "outcome": "FAILED/deadline_before_send",
+      "intent_created": true,
+      "sends": 0,
+      "claims_retained": true
+    }
+  ],
+  "limits": [
+    "Memory-backed timing fixture, not measured end-to-end Fly performance.",
+    "Slow conditional storage can exhaust the HTTP budget after intent; the load remains blocked conservatively.",
+    "No guard bypass or real booking used."
+  ]
+}

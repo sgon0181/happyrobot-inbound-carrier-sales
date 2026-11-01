@@ -85,6 +85,23 @@ class TranscriptTests(unittest.TestCase):
         self.assertNotIn("zero one two", text)
         self.assertNotIn("three four five", text)
 
+    def test_code_label_cannot_use_mc_label_to_escape_redaction(self):
+        for attempt in ("138328", "one three eight three two eight"):
+            text, _ = redact_transcript(
+                [
+                    self.message("assistant", "Please read the emailed code."),
+                    self.message("user", "My code is MC " + attempt),
+                    self.message(
+                        "assistant",
+                        "That code was wrong.",
+                        tool_calls=[{"name": "verify_code", "arguments": {"code": "138328"}}],
+                    ),
+                ],
+                mc="138328",
+            )
+            self.assertNotIn(attempt, text)
+            self.assertIn("redacted]", text)
+
     def test_fragments_never_merge_across_sessions(self):
         text, _ = redact_transcript(
             [

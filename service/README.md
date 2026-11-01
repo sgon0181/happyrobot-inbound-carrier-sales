@@ -47,7 +47,7 @@ The prototype corrects the phase 1 gaps exposed by the harness:
 ## Prototype operation
 
 `make test` runs offline tests. `make deploy` builds and deploys only the approved
-Fly app. Provision the eight `proto_` Twin tables first. Runtime configuration
+Fly app. Provision the `proto_` Twin tables first. Runtime configuration
 comes from ignored `.env` or process secrets. Do not import tests in a live
 process, because their network guard deliberately blocks external connections.
 
@@ -55,3 +55,15 @@ process, because their network guard deliberately blocks external connections.
 MC 138328, excludes protected inventory, caps this campaign at three durable
 send reservations, and closes further sends after its first real acknowledged
 receipt. No booking retry or namespace reset is supported.
+
+Twin's SQL endpoint rejects data-modifying CTEs, and its runtime role cannot
+create tables. The approved last-resort implementation uses one canonical
+version-checked JSONB row in `proto_calls`, behind the same storage interface.
+Eight physical business tables plus `proto_booking_claims` are monotonic read
+models. The operations app reads the canonical service API, since the native
+Twin gateway remains Failed. This is an explicit prototype deviation from
+normalized atomic storage, not a claim that the original schema was proven.
+
+Receipt captures use a private local journal plus Twin and a restricted log
+fallback. Container files are ephemeral. Export captures before replacement;
+this implementation does not promise cross-machine journal durability.

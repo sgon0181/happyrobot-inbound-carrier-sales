@@ -8,6 +8,7 @@ from dataclasses import dataclass, field, replace
 import hashlib
 import random
 import re
+import uuid
 
 from service.adapters.tms.mapping import to_load, to_summary
 from service.adapters.tms.protocol import (
@@ -78,8 +79,10 @@ def classify_booking_reply(raw, load_id):
 
 
 class TmsClient:
-    def __init__(self, settings):
+    accepts_intent_id=True
+    def __init__(self, settings, journal=None):
         self.settings = settings
+        self.journal = journal
         self.capture = contextvars.ContextVar("tms_capture", default=None)
 
     @property
@@ -102,7 +105,11 @@ class TmsClient:
                 if not chunk:
                     return bytes(buffer)
                 buffer.extend(chunk)
-                if evidence is not None: evidence["received"].extend(chunk)
+                if evidence is not None:
+                    evidence["received"].extend(chunk)
+                    if self.journal:
+                        try:self.journal.received(evidence['intent_id'],chunk.replace(self.settings.token.encode(),b'[HIDDEN]'))
+                        except Exception:evidence['journal_capture_failed']=True
                 check_bounds(buffer)
                 if frame_complete(buffer):
                     return bytes(buffer)
@@ -188,7 +195,7 @@ class TmsClient:
             raise TmsUnavailable("TMS lookup returned the wrong record.")
         return to_load(reply.records[0])
 
-    async def book(self, load_id, mc, rate):
+    async def book(self, load_id, mc, rate, *, intent_id=None):
         """Send LOAD_BOOK exactly once. A failed or unclear reply is never retried here."""
         if not self.booking_enabled:
             raise BookingDisabled("Live LOAD_BOOK is disabled.")
@@ -202,7 +209,10 @@ class TmsClient:
             {"LOAD_ID": load_id, "MC_NUM": mc, "AGREED_RATE": rate},
         )
         evidence = {"phase": "prepared", "send_started": False, "write_drained": False,
-                    "received": bytearray(), "error_type": None}
+                    "received": bytearray(), "error_type": None,"intent_id":intent_id or str(uuid.uuid4())}
+        if self.journal:
+            try:self.journal.begin({'intent_id':evidence['intent_id'],'load_id':load_id,'mc':mc,'rate':rate})
+            except Exception:return BookingReceipt(BookingOutcome.REJECTED,reason='private_capture_unavailable')
         marker = self.capture.set(evidence)
         try:
             raw = await asyncio.wait_for(self._exchange(request), self.settings.write_seconds)
@@ -219,3 +229,11 @@ class TmsClient:
         diagnostic.update(response_bytes=len(raw), response_sha256=hashlib.sha256(raw).hexdigest(),
                           received_b64=base64.b64encode(safe_raw).decode())
         return replace(receipt, diagnostic=diagnostic)
+
+    def recover_receipt(self,booking):
+        if self.journal is None or not booking.write_intent_id:return None
+        raw=self.journal.read({'intent_id':booking.write_intent_id,'load_id':booking.load_id,
+                              'mc':booking.mc,'rate':booking.rate})
+        if raw is None:return None
+        receipt=classify_booking_reply(raw,booking.load_id)
+        return receipt if receipt.outcome in {BookingOutcome.ACK_PENDING,BookingOutcome.CONFIRMED} else None

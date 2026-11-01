@@ -278,14 +278,14 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(await service.recover(), [])
         self.assertEqual(await self.store.get(booking.id), booking)
 
-    async def test_a_late_reply_cannot_change_a_recovered_state_but_is_kept(self):
+    async def test_a_late_identifying_ack_strengthens_unknown_and_preserves_review(self):
         async def recover_then_reply():
             await service.recover()
             return BookingReceipt(BookingOutcome.ACK_PENDING, "REF1", "PENDING", "raw")
 
         service = BookingService(self.store, ScriptedTms(self.load, recover_then_reply))
         booking = await request(service)
-        self.assertIs(booking.state, State.UNKNOWN)
+        self.assertIs(booking.state, State.ACK_PENDING)
         self.assertEqual(booking.reference, "REF1")
         self.assertEqual(booking.reason, "late_reply")
         self.assertTrue(booking.review_required)

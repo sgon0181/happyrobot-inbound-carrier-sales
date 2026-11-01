@@ -1,5 +1,11 @@
 # TMS reference for coding agents
 
+Prototype branch note, 2026-11-01: the implementation and test-state paragraphs
+below retain the earlier main checkpoint. On prototype/e2e, use
+[PROTOTYPE_REPORT.md](../../PROTOTYPE_REPORT.md) and
+[qa-results.md](../qa-results.md) for the deployed service, complete live receipt,
+consent correction and current test limits. The wire guidance remains relevant.
+
 Internal reference for authorized contributors, including Claude Code and Codex. Handbook checked 2026-10-31 (Australia/Sydney). Keep it in the private project repository; it contains no credentials.
 
 Start with [agent onboarding](../agent-onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../../PROJECT_GUIDE.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../../Questions.Md) identify token-specific differences. Keep assumptions explicit.

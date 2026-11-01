@@ -2,19 +2,14 @@
 import json
 from service.config import settings,ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
-from service.scripts.configure_workflow import WORKFLOW,VERSION,PROMPT,AGENT,POST_CLOSE,DEFINITIONS
+from service.scripts.configure_workflow import WORKFLOW,VERSION,node_map
 
 
 def main():
     values=settings();p=Platform(values)
     response=p.request('/versions/'+VERSION);version=response.get('data',response)
-    ids=['01a194ae-0d4c-75f7-beb4-cd07c1bb9dd8',PROMPT,AGENT,POST_CLOSE]
-    for _,tool,action,_,_ in DEFINITIONS:ids.extend([tool,action])
-    nodes=[]
-    for identity in ids:
-        node=p.request('/versions/'+VERSION+'/nodes/'+identity)['data']
-        node.pop('node_output',None)
-        nodes.append(node)
+    nodes=list(node_map(p).values())
+    for node in nodes:node.pop('node_output',None)
     result={'workflow_id':WORKFLOW,'version_id':VERSION,'version_slug':version.get('slug'),
             'workflow_slug':'yhcdrf4kne4j','web_call_url':'https://platform.happyrobot.ai/deployments/yhcdrf4kne4j',
             'source':'Read-only platform snapshot','version':version,'nodes':nodes}
@@ -23,6 +18,9 @@ def main():
         if any(k in key for k in ('KEY','SECRET','TOKEN','PASSWORD')) and isinstance(value,str) and len(value)>10:
             text=text.replace(value,'[REDACTED]')
     (ROOT/'happyrobot/prototype-workflow.json').write_text(text+'\n')
+    topology={'workflow_id':WORKFLOW,'version_id':VERSION,'version_slug':version.get('slug'),
+              'nodes':[{k:n[k] for k in ('id','persistent_id','name')} for n in nodes]}
+    (ROOT/'happyrobot/prototype-topology.json').write_text(json.dumps(topology,indent=2)+'\n')
     print('Sanitized workflow snapshot saved:',len(nodes),'nodes')
 
 

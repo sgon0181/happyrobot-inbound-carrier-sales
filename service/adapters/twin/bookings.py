@@ -2,6 +2,7 @@
 from dataclasses import asdict,fields,replace
 import time
 from service.core.booking import (Booking,State,RepDecision,ACTIVE,BookingConflict,OperationConflict)
+from service.core.campaign import permission
 
 PROTECTED=frozenset({'LD01086','LD01082','LD01081','LD01075','LD01077',
                      'LD01023','LD01032','LD01036','LD01069'})
@@ -50,9 +51,12 @@ class TwinBookingStore:
             if changes.get('rep_decision') is RepDecision.CONFIRMED and booking.reason=='caller_confirmation_review':
                 raise ValueError('Caller consent requires review.')
             if self.live and changes.get('state') is State.SUBMITTING:
-                sends=[b for b in data['bookings'].values() if b.get('write_intent_id') and b.get('cohort')=='real']
-                if len(sends)>=3 or any(b['state'] in {'ACK_PENDING','CONFIRMED'} and b.get('reference') for b in sends):
+                if row.get('cohort')!='real':raise BookingConflict('Synthetic calls cannot send live bookings')
+                authorization=permission(data,booking.call_id,booking.load_id)
+                if authorization is None:
                     raise BookingConflict('Prototype live send gate closed')
+                if not authorization.get('initial'):
+                    authorization.update(consumed_intent_id=changes['write_intent_id'],consumed_call_id=booking.call_id)
             updated=replace(booking,**changes)
             row.update(encode(updated),updated_at=time.time())
             return updated

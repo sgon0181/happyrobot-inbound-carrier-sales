@@ -1,0 +1,19 @@
+{
+  "label": "READ_ONLY_CONTINUATION_DEPLOYMENT_VERIFICATION",
+  "checked_at": "2026-11-01T03:01:16.086684+00:00",
+  "local_and_deployed_sha256": {
+    "service/api/app.py": "50e4895df58953efdcec22360e3debadcff2965653f2c22282aaab5349dacccd",
+    "service/core/calls.py": "ccbfa7cfc15121097ddded981d1c9d700bfb013202e6460fc0cf5ad5612c68c6",
+    "service/core/campaign.py": "d85b32692607c3bbfe3352b16649e26ec8ff06a96282e61050c999f6f3e1d876",
+    "service/adapters/confirmation.py": "d9da1220b5ba1c1cef3798d95c940cfac34c1d3c4242b4db22ffe6f473670fa7",
+    "service/adapters/twin/bookings.py": "a4bde68354719dd6d540be4358d7edaa5b62187d4079eb1de411603cdcfcc250",
+    "service/adapters/notify/email.py": "0eb5838af4e299398f27706ddc5b4bf5b9d259d2132d5b3fea36fe42ffa2c895"
+  },
+  "all_match": true,
+  "smtp_configured": true,
+  "health_status": "ok",
+  "prior_intent_count": 1,
+  "prior_reference_unchanged": true,
+  "unconsumed_followup_permissions": 0,
+  "new_live_sends": 0
+}

@@ -1,0 +1,27 @@
+{
+  "label": "READ_ONLY_FLY_CONFIGURATION",
+  "checked_at": "2026-11-01T03:23:28.010340+00:00",
+  "app": "codex-e2e-lab-sg-20261031",
+  "machine_count": 1,
+  "machine_id": "84eee5dbdd0008",
+  "observed_state": "started",
+  "region": "iad",
+  "guest": {
+    "cpu_kind": "shared",
+    "cpus": 1,
+    "memory_mb": 256
+  },
+  "services": [
+    {
+      "autostop": true,
+      "autostart": true,
+      "min_machines_running": 1
+    }
+  ],
+  "owner_budget_usd_total": 3,
+  "payment_setup": "Owner completed setup; matching Fly account lists a payment method. No card data stored.",
+  "hard_spending_cap": false,
+  "live_booking_followup_armed": true,
+  "state_source": "Continuous VM observation after make warm started the existing Machine.",
+  "idle_default_min_machines_running": 0
+}

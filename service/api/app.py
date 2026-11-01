@@ -156,7 +156,13 @@ def make_app(runtime,values,platform=None):
         data=await body(request);cid=identity(data)
         lock=runtime.locks.setdefault(cid,asyncio.Lock())
         async with lock:
-            try:return await action(cid,data)
+            try:
+                result=await action(cid,data)
+                if result.get('status') in {'no_match','carrier_ineligible','code_failed','negotiation_failed',
+                    'pricing_review_required','tms_unavailable','confirmation_unavailable','live_campaign_complete',
+                    'not_booked','booking_failed','senior_review','consent_verified'}:
+                    result={**result,'end_call_required':True}
+                return result
             except (KeyError,ValueError):raise
             except Exception:return {'status':'temporarily_unavailable'}
     @app.get('/health')

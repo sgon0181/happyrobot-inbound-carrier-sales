@@ -137,6 +137,11 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result['outcome'],'caller_ended')
         self.assertIsNotNone(self.repository.data['calls'][self.cid]['closed_at'])
 
+    async def test_terminal_api_result_explicitly_requires_closing_tools(self):
+        response=await self.http.post('/loads/search',headers=self.agent,json={'run_id':self.cid,'equipment':'DRY_VAN'})
+        self.assertEqual(response.json()['status'],'carrier_ineligible')
+        self.assertTrue(response.json()['end_call_required'])
+
     async def test_transcript_redaction_preserves_lane_and_handles_failed_spoken_codes(self):
         text,_=redact_transcript([{'role':'user','content':'My code is zero one two three four five, Texas to New Jersey.'},
                                  {'role':'user','content':'Wrong code 123456. Try 9 8 7 6 5 4.'}])

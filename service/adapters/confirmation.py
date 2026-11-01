@@ -59,7 +59,10 @@ class NativeConfirmation:
                 suffix=('?cursor='+cursor) if cursor else ('?page='+str(page))
                 path='/sessions/'+session['id']+'/messages'+suffix
                 response=await asyncio.to_thread(self.platform.request,path)
-                messages.extend(response.get('data',[]))
+                rows=response.get('data')
+                if not isinstance(rows,list):raise ValueError('Missing dialogue page')
+                if any(m.get('session_id')!=session['id'] for m in rows):raise ValueError('Unexpected dialogue session')
+                messages.extend(rows)
                 cursor=response.get('next_cursor') or (response.get('pagination') or {}).get('next_cursor')
                 pagination=response.get('pagination') or {}
                 if not cursor and not pagination.get('has_next_page'):break
@@ -70,4 +73,10 @@ class NativeConfirmation:
             try:return float(value)
             except (TypeError,ValueError):return datetime.fromisoformat(value.replace('Z','+00:00')).timestamp()
         messages.sort(key=timestamp)
-        return consent_evidence(messages,rate,anchor,load_id)
+        users=[m for m in messages if m.get('role')=='user']
+        if not users:return {'anchor':None,'approved':False}
+        session_id=users[-1]['session_id']
+        current=[m for m in messages if m['session_id']==session_id]
+        result=consent_evidence(current,rate,anchor,load_id)
+        result['session_id']=session_id
+        return result

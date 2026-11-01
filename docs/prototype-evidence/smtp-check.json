@@ -1,0 +1,9 @@
+{
+  "label": "LIVE_EMAIL_TRANSPORT_ON_SYNTHETIC_CALL",
+  "run_id": "e56b710e-a7eb-40f0-949d-0aca8340def7",
+  "smtp_provider": "LIVE_SMTP",
+  "delivery_status": "sent",
+  "recipient": "configured demo inbox",
+  "new_live_tms_sends": 0,
+  "limit": "SMTP accepted; human inbox arrival and code entry are pending the next owner call."
+}

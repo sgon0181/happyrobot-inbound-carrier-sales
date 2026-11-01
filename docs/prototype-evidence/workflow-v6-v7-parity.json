@@ -1,0 +1,174 @@
+{
+  "label": "READ_ONLY_WORKFLOW_PROMOTION_PARITY",
+  "source_version": "01a194f6-2b5d-7919-87cc-4f0dbe8c2e88",
+  "production_candidate": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+  "node_count": 18,
+  "semantic_configuration_equal": true,
+  "sha256": "5f83250d66030a1d3fa95d83bd64908f2ff592f9a5c51312ff10d01d9310b096",
+  "ignored_metadata_fields": [
+    "id",
+    "node_output",
+    "org_id",
+    "parent_id",
+    "timestamp",
+    "version_id",
+    "workflow_id"
+  ],
+  "tool_schemas": [
+    {
+      "tool": "find_loads",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "agree_rate",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "finish_call",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "verify_code",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "verify_carrier",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "send_code",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    },
+    {
+      "tool": "request_booking",
+      "approved_fields": [
+        "agreed_rate",
+        "carrier_name",
+        "channel",
+        "code_passed",
+        "confirmation_prompt",
+        "destination",
+        "end_call_required",
+        "final",
+        "handoff_allowed",
+        "load_id",
+        "loads",
+        "offer",
+        "outcome",
+        "rate",
+        "round",
+        "status"
+      ],
+      "state": "valid"
+    }
+  ],
+  "limit": "Parity supports promotion of tested configuration; it is not a new conversation or live business test."
+}

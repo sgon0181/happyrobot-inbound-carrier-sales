@@ -1,0 +1,74 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATION_WITH_REAL_ACTIVE_PLATFORM_READS",
+  "all_external_business_actions_mocked": true,
+  "service_calls": 0,
+  "live_tms_sends": 0,
+  "observations": [
+    {
+      "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+      "status_before": "in-progress",
+      "status_after": "in-progress",
+      "stage": "other_or_changed",
+      "duration_ms": 1140.9,
+      "proof": {
+        "approved": false,
+        "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+        "question_id": null,
+        "answer_id": null
+      }
+    },
+    {
+      "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+      "status_before": "in-progress",
+      "status_after": "in-progress",
+      "stage": "other_or_changed",
+      "duration_ms": 1021.1,
+      "proof": {
+        "approved": false,
+        "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+        "question_id": null,
+        "answer_id": null
+      }
+    },
+    {
+      "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+      "status_before": "in-progress",
+      "status_after": "in-progress",
+      "stage": "clarification",
+      "duration_ms": 1054.3,
+      "proof": {
+        "approved": false,
+        "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+        "question_id": null,
+        "answer_id": null
+      }
+    },
+    {
+      "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+      "status_before": "in-progress",
+      "status_after": "in-progress",
+      "stage": "clarification",
+      "duration_ms": 1050.9,
+      "proof": {
+        "approved": false,
+        "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+        "question_id": null,
+        "answer_id": null
+      }
+    },
+    {
+      "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+      "status_before": "in-progress",
+      "status_after": "in-progress",
+      "stage": "affirmative",
+      "duration_ms": 1068.5,
+      "proof": {
+        "approved": true,
+        "session_id": "44e0f979-aab8-5ad1-aec9-be3becd2c8d1",
+        "question_id": "bf9d0919-1a80-4901-ac38-9862cfd44ab9",
+        "answer_id": "01a194e0-9bfa-7390-acd5-f917c72b1ddb"
+      }
+    }
+  ],
+  "limit": "Proves native active-session read and consent matcher boundaries, not human identity, real pricing, booking or voice acoustics."
+}

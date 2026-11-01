@@ -15,6 +15,7 @@ from service.core.negotiation import respond,Action
 from service.core.pricing import PricingPolicy,price_load
 from service.core.ports import TmsUnavailable
 from service.adapters.twin.bookings import TwinBookingStore,PROTECTED,decode
+from service.core.campaign import permission
 
 
 class Runtime:
@@ -228,14 +229,10 @@ class Runtime:
         if denied:return denied
         agreement=call['agreement']
         if not agreement:return {'status':'agreement_required'}
-        if self.repository.label=='LIVE' and self.tms.booking_enabled and call.get('cohort')!='real':
-            return {'status':'booking_failed'}
         if call.get('outcome')=='negotiation_failed':return {'status':'negotiation_failed'}
         # Price agreement is not booking consent. Live calls need a fresh, platform-owned
         # affirmative answer to a completed question containing the exact total.
         if self.repository.label=='LIVE' and self.tms.booking_enabled:
-            if any(b.get('cohort')=='real' and b.get('reference') for b in data['bookings'].values()):
-                return {'status':'live_campaign_complete'}
             try:
                 if self.confirmation is None:raise ValueError('No trusted dialogue source')
                 evidence=await self.confirmation(cid,agreement['load_id'],agreement['rate'],agreement.get('confirmation_anchor'))
@@ -243,10 +240,10 @@ class Runtime:
             def record(data):
                 current=data['calls'][cid]['agreement']
                 if not current or current['version']!=agreement['version']:return False
-                current['confirmation_anchor']=evidence.get('anchor')
+                if not evidence.get('approved'):current['confirmation_anchor']=evidence.get('anchor')
                 current['booking_consent']=bool(evidence.get('approved'))
                 if evidence.get('approved'):
-                    current['consent_proof']={k:evidence.get(k) for k in ('question_id','answer_id')}
+                    current['consent_proof']={k:evidence.get(k) for k in ('question_id','answer_id','session_id')}
                     current['consent_proof']['agreement_version']=agreement['version']
                 self.event(data,cid,'booking_consent','approved' if evidence.get('approved') else 'required')
                 return True
@@ -254,6 +251,8 @@ class Runtime:
             if not evidence.get('approved'):
                 return {'status':'confirmation_required','load_id':agreement['load_id'],'agreed_rate':agreement['rate'],
                         'confirmation_prompt':f"May I book load {agreement['load_id']} at ${agreement['rate']} total?"}
+            if call.get('cohort')!='real':return {'status':'consent_verified','booking_submitted':False}
+            if permission(data,cid,agreement['load_id']) is None:return {'status':'live_campaign_complete'}
         try:
             booking=await self.bookings.request(call_id=cid,operation_id=agreement['version'],load_id=agreement['load_id'],
                 mc=call['mc'],rate=agreement['rate'],agreement_version=agreement['version'],deadline=deadline)

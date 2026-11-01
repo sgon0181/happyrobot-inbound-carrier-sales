@@ -56,8 +56,10 @@ process, because their network guard deliberately blocks external connections.
 
 `BOOKING_ENABLED` defaults off. The live BookingStore additionally permits only
 MC 138328, excludes protected inventory, caps this campaign at three durable
-send reservations, and closes further sends after its first real acknowledged
-receipt. No booking retry or namespace reset is supported.
+send reservations, and closes the original authorization after its first real
+acknowledged receipt. Any follow-up needs a new appended authorization tied to
+one fresh load and the unchanged prior intent ledger. Its consumption is
+atomic with the new send intent. No booking retry or namespace reset is supported.
 
 The owner call saved a complete PENDING receipt but failed caller consent.
 Price agreement alone no longer authorizes a live send. The first booking tool
@@ -65,9 +67,23 @@ request records a native user-turn anchor and returns the exact load-and-total
 question. A subsequent request requires a fresh explicit affirmative answer,
 with complete non-interrupted dialogue fetched by the service. Missing or
 ambiguous evidence fails closed. This new gate passed offline replay and
-regression checks, but has not been tested with another real booking. The
-campaign is already closed after its saved reference. Keep that call in
-caller-consent review, excluded from the successful-handoff metric.
+regression checks. A native simulated conversation also proved that the live
+platform exposes same-session messages while active: clarification failed and
+a later explicit yes passed. All business tools were mocked in that test.
+Another real human booking has not yet tested the correction. One exact-load
+follow-up permission is armed for LD01085. Keep the original call in caller-consent review,
+excluded from the successful-handoff metric.
+
+The owner configured Gmail SMTP privately through
+`python -m service.scripts.set_email_credential`. The deployed transport accepted
+a new code email on a synthetic call. Actual inbox receipt with this new sender
+still needs the next owner call. Never put the app password in chat or Git.
+
+`make warm` keeps the existing single Fly Machine available during active QA;
+`make idle` restores auto-stop. The owner budget is USD3 total, and Fly has no
+hard spending cap. See [the session plan](../docs/fly-session-budget.md).
+Card setup is complete and the single VM passed a continuous-runtime check
+beyond five minutes with the same boot and instance.
 
 Twin's SQL endpoint rejects data-modifying CTEs, and its runtime role cannot
 create tables. The approved last-resort implementation uses one canonical

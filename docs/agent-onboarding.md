@@ -1,5 +1,12 @@
 # Coding-agent onboarding
 
+Prototype branch note, 2026-11-01: prototype/e2e contains the isolated full
+service, App source mirror and controlled test artifacts. Start with
+PROTOTYPE_REPORT.md and docs/qa-results.md for that branch's measured state.
+The baseline map below describes main at the earlier checkpoint. The owner's
+isolation instruction overrides the usual main-writing workflow for this
+prototype only. Do not copy its experiment permissions or secrets into main.
+
 Checked 2026-10-31 (Australia/Sydney). This is the shared starting map for Claude Code, Codex and authorized developers. A Git clone includes the tracked context below; it does not inherit browser sessions, local `.env`, ignored evidence or MCP authentication.
 
 ## Read first

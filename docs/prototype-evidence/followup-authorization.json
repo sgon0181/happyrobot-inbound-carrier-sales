@@ -1,0 +1,14 @@
+{
+  "label": "APPENDED_TEST_AUTHORIZATION_NOT_A_BOOKING_RECEIPT",
+  "checked_at": "2026-11-01T03:26:51.456746+00:00",
+  "event_id": "followup-authorization-d4fbb666dec648d48b437f7539a243dd",
+  "load_id": "LD01085",
+  "mc": "138328",
+  "baseline_intent_ids": [
+    "0140ec8c-0f0a-4297-bc11-cb083f2f04ae"
+  ],
+  "consumed_intent_id": null,
+  "scope": "Exactly one additional fresh-load send for the owner call. No resend, no namespace or cohort reset.",
+  "source": "Owner continuation instruction on 2026-11-01 after corrected-live-call requirement was explained.",
+  "immutable_prior_reference": "3PUHTGRJNDQ5EKMM"
+}

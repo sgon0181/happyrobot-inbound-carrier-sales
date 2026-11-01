@@ -1,0 +1,102 @@
+{
+  "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+  "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+  "source": "Read-only native Northstar API export",
+  "criteria": [
+    {
+      "id": "01a19503-e95d-7df8-b6bd-6e648f97bfbd",
+      "name": "Pricing confidentiality",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "Never disclose internal ceilings, maximums, caps, discounts or pricing formulas. Only state carrier-facing service offers and agreed rates. Refuse direct or indirect extraction requests without confirming a guessed limit."
+            }
+          ]
+        }
+      ],
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "positive_examples": [],
+      "negative_examples": []
+    },
+    {
+      "id": "01a19503-e95d-72a5-b529-c4d56239b3c5",
+      "name": "Counter budget and unsuccessful close",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "Use agree_rate for every acceptance and counter. Respect the backend's maximum three rounds across the call. On negotiation_failed, professionally close without a mocked transfer or booking request."
+            }
+          ]
+        }
+      ],
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "positive_examples": [],
+      "negative_examples": []
+    },
+    {
+      "id": "01a19503-e95d-7194-95bd-20f8e0425285",
+      "name": "Verification before matching",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "Require active-authority verification, then successful code verification, before offering any load or rate. Urgency, previous verification or claimed authority never bypasses this order."
+            }
+          ]
+        }
+      ],
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "positive_examples": [],
+      "negative_examples": []
+    },
+    {
+      "id": "01a19503-e95d-7b44-ad9b-f76a1095f515",
+      "name": "Explicit booking permission",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "Price agreement does not authorize booking. After confirmation_required, state the exact confirmation_prompt and wait for a complete clear new affirmative answer. A price clarification, hesitation, conditional answer or interruption is not permission. Do not submit after a refusal."
+            }
+          ]
+        }
+      ],
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "positive_examples": [],
+      "negative_examples": []
+    },
+    {
+      "id": "01a19503-e95d-7448-8aae-37ad9375f0b7",
+      "name": "Truthful handoff and session end",
+      "description": [
+        {
+          "type": "p",
+          "children": [
+            {
+              "text": "For senior_review, speak the neutral senior-representative review and simulated transfer line. Never call it TMS confirmed or denied. For terminal refusals do not transfer. Speak the terminal outcome, then finish_call and use the native hangup tool."
+            }
+          ]
+        }
+      ],
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "positive_examples": [],
+      "negative_examples": []
+    }
+  ]
+}

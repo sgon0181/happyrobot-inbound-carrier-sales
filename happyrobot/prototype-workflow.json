@@ -1,34 +1,30 @@
 {
   "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-  "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-  "version_slug": "8yspwmt9ftll",
+  "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+  "version_slug": "2wac8qo11ebu",
   "workflow_slug": "yhcdrf4kne4j",
   "web_call_url": "https://platform.happyrobot.ai/deployments/yhcdrf4kne4j",
   "source": "Read-only platform snapshot",
   "version": {
-    "id": "01a194ae-0d43-7970-84c7-69c591936a37",
-    "name": "Version 2",
-    "slug": "8yspwmt9ftll",
+    "id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+    "name": "Version 7",
+    "slug": "2wac8qo11ebu",
     "workflow_slug": "yhcdrf4kne4j",
-    "version_number": 2,
+    "version_number": 7,
     "is_published": true,
     "is_live": true,
     "environment": "production",
     "workflow_version": 3,
     "published_at": null,
-    "timestamp": "2026-11-01T01:16:37.043Z",
+    "timestamp": "2026-11-01T02:50:23.801Z",
     "node_count": 18,
     "node_counts_by_type": {
-      "action": 9,
       "agent": 1,
+      "action": 9,
       "prompt": 1,
       "tool": 7
     },
     "events": [
-      {
-        "event_id": "6e32e01e-722f-4b8b-9372-500b845686d1",
-        "name": "Web call"
-      },
       {
         "event_id": "0192e5dc-08df-78bf-a549-f43c6bf9f087",
         "name": "Inbound Voice Agent"
@@ -36,24 +32,28 @@
       {
         "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
         "name": "POST"
+      },
+      {
+        "event_id": "6e32e01e-722f-4b8b-9372-500b845686d1",
+        "name": "Web call"
       }
     ],
     "changelog": [
       {
-        "id": "01a194b5-e9ce-726d-82be-d9326ba3f921",
+        "id": "01a1950a-1cb4-7f11-a762-d3205e6519b0",
         "type": "publish",
         "description": "Published to production ",
-        "created_at": "2026-11-01T01:25:12.270Z",
+        "created_at": "2026-11-01T02:57:10.323Z",
         "created_by": {
           "type": "user",
           "name": "Santiago Gonzalez Gonzalez Gonzalez"
         }
       },
       {
-        "id": "01a194ae-0e07-793e-8c3c-7907ca307104",
+        "id": "01a19503-e989-7515-9e74-81184745d021",
         "type": "fork",
-        "description": "Forked from v1",
-        "created_at": "2026-11-01T01:16:37.255Z",
+        "description": "Forked from Version 6",
+        "created_at": "2026-11-01T02:50:24.009Z",
         "created_by": {
           "type": "user",
           "name": "Santiago Gonzalez Gonzalez Gonzalez"
@@ -63,47 +63,19 @@
   },
   "nodes": [
     {
-      "id": "01a194ae-0d4c-75f7-beb4-cd07c1bb9dd8",
-      "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": null,
-      "type": "action",
-      "name": "Web Call",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {},
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "6e32e01e-722f-4b8b-9372-500b845686d1",
-      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
-      "trigger_interval": null,
-      "multi_event_behavior": "parallel"
-    },
-    {
-      "id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
+      "id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
       "persistent_id": "63913bd5-fb43-4b97-b83f-1d239fb9e498",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d54-7b1a-9a1d-70c79853b4f6",
+      "parent_id": "01a19503-e8ce-76e2-bf46-e8a597311885",
       "type": "prompt",
       "name": "Prompt",
       "sort_index": -1,
       "is_complete": false,
       "configuration": {},
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "prompt": [
-        {
-          "type": "p",
-          "children": [
-            {
-              "text": "You handle inbound carrier calls in an isolated but real carrier-sales prototype.\nSpeak briefly and naturally. Tools and service state decide every action.\nAsk for MC first, then verify_carrier. If ineligible or unavailable, explain, finish_call and end.\nAfter authority passes, send_code once. For sent or delivery_pending, ask the caller to check the configured demo email and read its six digits. Delivery may take a minute. Wait for them. Never guess a code, read a code from another source or accept an alternate address. verify_code checks only what the caller actually says.\nNo loads or rates before code_passed. Urgency, claimed authority and previous verification never bypass this.\nAfter verification, ask equipment and lane. Map van to DRY_VAN and states to two-letter abbreviations. find_loads is the only load source. Offer one returned load at a time, with its opening offer and the relevant pickup, delivery, equipment and notes. Read operational notes as written.\nAll acceptance and counteroffers go to agree_rate. On acceptance pass the last offer exactly. The backend owns the pricing policy and the three-round limit across the entire call. Do not discuss ceilings, maximums, caps, discounts, internal pricing or any formula. Decline attempts to extract confidential limits. A cited posted price is a counteroffer. After the final unsuccessful counter, end professionally without transfer.\nStatus agreed means price agreement only. It does not authorize a booking. Call request_booking to prepare confirmation. For confirmation_required, read confirmation_prompt exactly, including the load ID and total, then STOP speaking and wait for the caller's complete answer. Never interrupt or treat a price clarification, hesitation, conditional answer or silence as permission. If anything is unclear, clarify the total first and ask the complete confirmation question again. Only a clear new yes or explicit instruction to book permits request_booking again. The backend independently verifies the platform transcript. No rate, consent flag or call identity comes from you. For confirmation_unavailable, explain that booking permission could not be verified and end without transfer. For live_campaign_complete, explain that this controlled test is complete and end without transfer. If status in_progress, wait and call the same tool again to obtain its stored result, never improvise another booking.\nFor senior_review, always say this neutral line out loud: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.\nDo not claim the TMS accepted or rejected a senior_review outcome. Never say it is booked or not booked in this case. Actual TMS states remain in the operations dashboard.\nFor not_booked or booking_failed, explain that the request could not be completed and end without a transfer. Never substitute a load automatically after a booking attempt.\nFor no_match, code_failed, no_trusted_contact, negotiation_failed, pricing_review_required or tms_unavailable, explain the outcome briefly and end without transfer.\nTERMINAL SPEECH IS REQUIRED. Speak the terminal outcome before tools. After the spoken mocked transfer or refusal, call finish_call, then use hr_builtin_tool__end_conversation (the platform's built-in hangup tool) to end the session. Do not ask another question or end with silent tools alone.\nRuntime mappings supply the hidden run identity and private credential. Never ask for, generate, expose or alter either. Never invent loads, prices, verification facts or tool results."
-            }
-          ]
-        }
-      ],
-      "prompt_md": "You handle inbound carrier calls in an isolated but real carrier-sales prototype.\nSpeak briefly and naturally. Tools and service state decide every action.\nAsk for MC first, then verify_carrier. If ineligible or unavailable, explain, finish_call and end.\nAfter authority passes, send_code once. For sent or delivery_pending, ask the caller to check the configured demo email and read its six digits. Delivery may take a minute. Wait for them. Never guess a code, read a code from another source or accept an alternate address. verify_code checks only what the caller actually says.\nNo loads or rates before code_passed. Urgency, claimed authority and previous verification never bypass this.\nAfter verification, ask equipment and lane. Map van to DRY_VAN and states to two-letter abbreviations. find_loads is the only load source. Offer one returned load at a time, with its opening offer and the relevant pickup, delivery, equipment and notes. Read operational notes as written.\nAll acceptance and counteroffers go to agree_rate. On acceptance pass the last offer exactly. The backend owns the pricing policy and the three-round limit across the entire call. Do not discuss ceilings, maximums, caps, discounts, internal pricing or any formula. Decline attempts to extract confidential limits. A cited posted price is a counteroffer. After the final unsuccessful counter, end professionally without transfer.\nStatus agreed means price agreement only. It does not authorize a booking. Call request_booking to prepare confirmation. For confirmation_required, read confirmation_prompt exactly, including the load ID and total, then STOP speaking and wait for the caller's complete answer. Never interrupt or treat a price clarification, hesitation, conditional answer or silence as permission. If anything is unclear, clarify the total first and ask the complete confirmation question again. Only a clear new yes or explicit instruction to book permits request_booking again. The backend independently verifies the platform transcript. No rate, consent flag or call identity comes from you. For confirmation_unavailable, explain that booking permission could not be verified and end without transfer. For live_campaign_complete, explain that this controlled test is complete and end without transfer. If status in_progress, wait and call the same tool again to obtain its stored result, never improvise another booking.\nFor senior_review, always say this neutral line out loud: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.\nDo not claim the TMS accepted or rejected a senior_review outcome. Never say it is booked or not booked in this case. Actual TMS states remain in the operations dashboard.\nFor not_booked or booking_failed, explain that the request could not be completed and end without a transfer. Never substitute a load automatically after a booking attempt.\nFor no_match, code_failed, no_trusted_contact, negotiation_failed, pricing_review_required or tms_unavailable, explain the outcome briefly and end without transfer.\nTERMINAL SPEECH IS REQUIRED. Speak the terminal outcome before tools. After the spoken mocked transfer or refusal, call finish_call, then use hr_builtin_tool__end_conversation (the platform's built-in hangup tool) to end the session. Do not ask another question or end with silent tools alone.\nRuntime mappings supply the hidden run identity and private credential. Never ask for, generate, expose or alter either. Never invent loads, prices, verification facts or tool results.\n",
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "prompt_md": "You handle inbound carrier calls in an isolated but real carrier-sales prototype.\nSpeak briefly and naturally. Tools and service state decide every action.\nENDING THE CALL IS A TOOL ACTION. Never deliver a terminal goodbye as a normal chat response and then wait. On end_call_required true or a terminal outcome, immediately invoke finish_call with closing_message containing the exact brief business outcome you want the caller to hear. Its configured voice message speaks that text and the tool closes the record. After the tool returns, immediately invoke hr_builtin_tool__end_conversation. Do not wait for another caller turn and do not rely on idle timeout. For senior_review, closing_message must contain the complete neutral mocked-transfer line below. For refusals it must explain the actual result and say goodbye, with no transfer.\nAsk for MC first, then verify_carrier. If ineligible or unavailable, explain, finish_call and end.\nAfter authority passes, send_code once. For sent or delivery_pending, ask the caller to check the configured demo email and read its six digits. Delivery may take a minute. Wait for them. Never guess a code, read a code from another source or accept an alternate address. verify_code checks only what the caller actually says.\nNo loads or rates before code_passed. Urgency, claimed authority and previous verification never bypass this.\nAfter verification, ask equipment and lane. Map van to DRY_VAN and states to two-letter abbreviations. find_loads is the only load source. Offer one returned load at a time, with its opening offer and the relevant pickup, delivery, equipment and notes. Read operational notes as written.\nAll acceptance and counteroffers go to agree_rate. On acceptance pass the last offer exactly. The backend owns the pricing policy and the three-round limit across the entire call. Do not discuss ceilings, maximums, caps, discounts, internal pricing or any formula. Decline attempts to extract confidential limits. A cited posted price is a counteroffer. After the final unsuccessful counter, end professionally without transfer.\nStatus agreed means price agreement only. It does not authorize a booking. Call request_booking to prepare confirmation. For confirmation_required, read confirmation_prompt exactly, including the load ID and total, then STOP speaking and wait for the caller's complete answer. Never interrupt or treat a price clarification, hesitation, conditional answer or silence as permission. If anything is unclear, clarify the total first and ask the complete confirmation question again. Only a clear new yes or explicit instruction to book permits request_booking again. The backend independently verifies the platform transcript. No rate, consent flag or call identity comes from you. For confirmation_unavailable, explain that booking permission could not be verified and end without transfer. For live_campaign_complete, explain that this controlled test is complete and end without transfer. If status in_progress, wait and call the same tool again to obtain its stored result, never improvise another booking.\nFor consent_verified, say: The permission check is complete. This was a test and no booking was submitted. Then finish_call and end the session without a transfer.\nFor senior_review, always say this neutral line out loud: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.\nDo not claim the TMS accepted or rejected a senior_review outcome. Never say it is booked or not booked in this case. Actual TMS states remain in the operations dashboard.\nFor not_booked or booking_failed, explain that the request could not be completed and end without a transfer. Never substitute a load automatically after a booking attempt.\nFor no_match, code_failed, no_trusted_contact, negotiation_failed, pricing_review_required or tms_unavailable, explain the outcome briefly and end without transfer.\nTERMINAL SPEECH IS REQUIRED THROUGH finish_call(closing_message). For a mocked transfer or refusal, invoke finish_call with the appropriate full spoken message, then use hr_builtin_tool__end_conversation (the platform's built-in hangup tool). Do not add another question or wait silently. The configured tool voice message provides the speech, so do not duplicate it in a separate chat response.\nRuntime mappings supply the hidden run identity and private credential. Never ask for, generate, expose or alter either. Never invent loads, prices, verification facts or tool results.\n",
       "initial_message": [
         {
           "type": "paragraph",
@@ -124,74 +96,195 @@
       }
     },
     {
-      "id": "01a194ae-0d54-7b1a-9a1d-70c79853b4f6",
-      "persistent_id": "923c677d-46a5-4f63-957d-2a31c64806dd",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8d3-70d3-8dc3-e89879cfc4c5",
+      "persistent_id": "ff57cc60-4746-473c-aa23-7089f4df2edd",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d4c-75f7-beb4-cd07c1bb9dd8",
+      "parent_id": "01a19503-e8d5-7e93-92fa-375e24218617",
       "type": "action",
-      "name": "Inbound Voice Agent",
+      "name": "Prototype find_loads",
       "sort_index": 0,
       "is_complete": true,
       "configuration": {
-        "agent": {
-          "name": [
-            {
-              "type": "paragraph",
-              "children": [
-                {
-                  "text": "Paul"
-                }
-              ]
-            }
-          ],
-          "voices": [
-            {
-              "type": "static",
-              "static": {
-                "id": "m357hexpjk2s",
-                "name": "Paul"
+        "url": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/loads/search"
               }
-            }
-          ],
-          "languages": [
-            {
-              "type": "static",
-              "static": {
-                "id": "en",
-                "name": "English"
-              }
-            }
-          ],
-          "language_accents": [
-            {
-              "type": "static",
-              "static": {
-                "id": "en-us",
-                "name": "English (US)"
-              }
-            }
-          ]
+            ]
+          }
+        ],
+        "body": {
+          "raw": "{\"run_id\":{{$var:current.run_id}},\"equipment\":{{$var:51153eb0-2461-470e-bb2c-13b119de81c2.equipment}},\"origin_state\":{{$var:51153eb0-2461-470e-bb2c-13b119de81c2.origin_state}},\"dest_state\":{{$var:51153eb0-2461-470e-bb2c-13b119de81c2.dest_state}}}",
+          "contentType": "application/json",
+          "schemaVersion": 2
         },
-        "disable_hangup": false,
-        "max_call_duration": 540,
-        "max_silence_hold_duration": 60,
-        "business_hours_setting_name": "default"
+        "token": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "use_case_variables",
+                "variable_id": "PROTOTYPE_AGENT_KEY"
+              },
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "authType": "bearer",
+        "ignore5XX": false,
+        "ignoreTimeouts": false,
+        "webhookSchemaVersion": 2
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "0192e5dc-08df-78bf-a549-f43c6bf9f087",
-      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
+      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
       "trigger_interval": null,
-      "multi_event_behavior": "parallel"
+      "multi_event_behavior": "group"
     },
     {
-      "id": "01a194ae-0d58-78c8-ac64-178ce8a0f36e",
-      "persistent_id": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8d0-77fa-82c0-891cb1706abe",
+      "persistent_id": "a0d8d721-855c-4cab-957a-d4017d997f74",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d54-7b1a-9a1d-70c79853b4f6",
+      "parent_id": "01a19503-e8d8-709b-a946-40fb5b41b126",
+      "type": "action",
+      "name": "Prototype agree_rate",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "url": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/negotiate"
+              }
+            ]
+          }
+        ],
+        "body": {
+          "raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:57022450-d36f-4299-9d1e-c1208ace9060.load_id}},\"rate\":{{$var:57022450-d36f-4299-9d1e-c1208ace9060.rate}}}",
+          "contentType": "application/json",
+          "schemaVersion": 2
+        },
+        "token": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "use_case_variables",
+                "variable_id": "PROTOTYPE_AGENT_KEY"
+              },
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "authType": "bearer",
+        "ignore5XX": false,
+        "ignoreTimeouts": false,
+        "webhookSchemaVersion": 2
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
+      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
+      "trigger_interval": null,
+      "multi_event_behavior": "group"
+    },
+    {
+      "id": "01a19503-e8d1-788b-afb9-8f22eb244511",
+      "persistent_id": "735398d8-6243-480f-907b-7170373c30b2",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8d7-7e09-9451-5bfc8179d67e",
+      "type": "action",
+      "name": "Prototype verify_carrier",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "url": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/carriers/verify"
+              }
+            ]
+          }
+        ],
+        "body": {
+          "raw": "{\"run_id\":{{$var:current.run_id}},\"mc\":{{$var:4906cc32-2a91-4749-9303-a794d22a646e.mc}}}",
+          "contentType": "application/json",
+          "schemaVersion": 2
+        },
+        "token": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "use_case_variables",
+                "variable_id": "PROTOTYPE_AGENT_KEY"
+              },
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "authType": "bearer",
+        "ignore5XX": false,
+        "ignoreTimeouts": false,
+        "webhookSchemaVersion": 2
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
+      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
+      "trigger_interval": null,
+      "multi_event_behavior": "group"
+    },
+    {
+      "id": "01a19503-e8d0-7bb1-9b88-1b6045b2300e",
+      "persistent_id": "d3ddc471-8c67-4ecf-bd2d-c5cb3e7a0bd3",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8ce-76e2-bf46-e8a597311885",
       "type": "action",
       "name": "Prototype post-call close",
       "sort_index": 0,
@@ -253,71 +346,21 @@
         "ignoreTimeouts": false,
         "webhookSchemaVersion": 2
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
       "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
       "trigger_interval": null,
       "multi_event_behavior": "group"
     },
     {
-      "id": "01a194ae-0d5a-71e2-9cad-512d0e77432c",
-      "persistent_id": "4906cc32-2a91-4749-9303-a794d22a646e",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8cd-79c5-942b-66e44d577e4a",
+      "persistent_id": "988796d8-1679-4b2e-8585-47e89f740815",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
-      "type": "tool",
-      "name": "verify_carrier",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "tool_call_result_ack": "ack"
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "function": {
-        "message": {
-          "type": "none"
-        },
-        "parameters": [
-          {
-            "name": "mc",
-            "binding": {
-              "mode": "agent"
-            },
-            "required": true,
-            "description": [
-              {
-                "type": "paragraph",
-                "children": [
-                  {
-                    "text": "MC digits stated by the caller."
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "description": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "Call verify_carrier in the required verification, matching, negotiation and handoff order. Only the backend decides."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "01a194ae-0d4f-7ee9-8a97-5047290f1877",
-      "persistent_id": "735398d8-6243-480f-907b-7170373c30b2",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5a-71e2-9cad-512d0e77432c",
+      "parent_id": "01a19503-e8d6-7321-9e1a-346886511b3d",
       "type": "action",
-      "name": "Prototype verify_carrier",
+      "name": "Prototype verify_code",
       "sort_index": 0,
       "is_complete": true,
       "configuration": {
@@ -326,13 +369,13 @@
             "type": "paragraph",
             "children": [
               {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/carriers/verify"
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/otp/verify"
               }
             ]
           }
         ],
         "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}},\"mc\":{{$var:01a194ae-0d5a-71e2-9cad-512d0e77432c.mc}}}",
+          "raw": "{\"run_id\":{{$var:current.run_id}},\"code\":{{$var:af17a0af-564e-44da-8136-43fc5696fc94.code}}}",
           "contentType": "application/json",
           "schemaVersion": 2
         },
@@ -364,51 +407,154 @@
         "ignoreTimeouts": false,
         "webhookSchemaVersion": 2
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
       "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
       "trigger_interval": null,
       "multi_event_behavior": "group"
     },
     {
-      "id": "01a194ae-0d5b-7405-b94f-da48fa187079",
-      "persistent_id": "a05bbcef-ebdf-477f-9ac0-063dd99a986e",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8cf-79b4-bf80-d827410cfaae",
+      "persistent_id": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
-      "type": "tool",
-      "name": "send_code",
+      "parent_id": "01a19503-e8d9-7e54-9560-c3280a25fa26",
+      "type": "action",
+      "name": "Prototype request_booking",
       "sort_index": 0,
       "is_complete": true,
       "configuration": {
-        "tool_call_result_ack": "ack"
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "function": {
-        "message": {
-          "type": "none"
-        },
-        "parameters": [],
-        "description": [
+        "url": [
           {
             "type": "paragraph",
             "children": [
               {
-                "text": "Call send_code in the required verification, matching, negotiation and handoff order. Only the backend decides."
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/bookings"
               }
             ]
           }
-        ]
-      }
+        ],
+        "body": {
+          "raw": "{\"run_id\":{{$var:current.run_id}}}",
+          "contentType": "application/json",
+          "schemaVersion": 2
+        },
+        "token": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "use_case_variables",
+                "variable_id": "PROTOTYPE_AGENT_KEY"
+              },
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "authType": "bearer",
+        "ignore5XX": false,
+        "ignoreTimeouts": false,
+        "webhookSchemaVersion": 2
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
+      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
+      "trigger_interval": null,
+      "multi_event_behavior": "group"
     },
     {
-      "id": "01a194ae-0d50-79d7-927e-1c0107abcbbe",
-      "persistent_id": "128ce5a8-dace-430b-9435-9af3a49114d3",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8cc-7872-aa76-05c13989d82c",
+      "persistent_id": "8a3c4072-9543-4a21-bb64-f063f0eca147",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5b-7405-b94f-da48fa187079",
+      "parent_id": "01a19503-e8d5-7e41-a764-f32af6e1d18f",
+      "type": "action",
+      "name": "Prototype finish_call",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "url": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/calls/"
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "current",
+                "variable_id": "run_id"
+              },
+              {
+                "text": "/close"
+              }
+            ]
+          }
+        ],
+        "body": {
+          "raw": "{\"run_id\":{{$var:current.run_id}},\"closing_message\":{{$var:59db3288-c43d-4d27-8031-f1048f4ac668.closing_message}}}",
+          "contentType": "application/json",
+          "schemaVersion": 2
+        },
+        "token": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              },
+              {
+                "type": "variable",
+                "children": [
+                  {
+                    "text": ""
+                  }
+                ],
+                "group_id": "use_case_variables",
+                "variable_id": "PROTOTYPE_AGENT_KEY"
+              },
+              {
+                "text": ""
+              }
+            ]
+          }
+        ],
+        "authType": "bearer",
+        "ignore5XX": false,
+        "ignoreTimeouts": false,
+        "webhookSchemaVersion": 2
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
+      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
+      "trigger_interval": null,
+      "multi_event_behavior": "group"
+    },
+    {
+      "id": "01a19503-e8ca-7fe1-8e14-9acd21291864",
+      "persistent_id": "128ce5a8-dace-430b-9435-9af3a49114d3",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8d7-73ca-8879-d753a1ae19a3",
       "type": "action",
       "name": "Prototype send_code",
       "sort_index": 0,
@@ -457,130 +603,37 @@
         "ignoreTimeouts": false,
         "webhookSchemaVersion": 2
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
       "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
       "trigger_interval": null,
       "multi_event_behavior": "group"
     },
     {
-      "id": "01a194ae-0d5c-7f6c-8f30-075b184b212b",
-      "persistent_id": "af17a0af-564e-44da-8136-43fc5696fc94",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8ce-7ded-9676-2a41a7ef062a",
+      "persistent_id": "6279e1dd-977a-495c-974f-961be8be17bf",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
-      "type": "tool",
-      "name": "verify_code",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "tool_call_result_ack": "ack"
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "function": {
-        "message": {
-          "type": "none"
-        },
-        "parameters": [
-          {
-            "name": "code",
-            "binding": {
-              "mode": "agent"
-            },
-            "required": true,
-            "description": [
-              {
-                "type": "paragraph",
-                "children": [
-                  {
-                    "text": "The six digits the caller actually read. Preserve leading zeros."
-                  }
-                ]
-              }
-            ]
-          }
-        ],
-        "description": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "Call verify_code in the required verification, matching, negotiation and handoff order. Only the backend decides."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "01a194ae-0d52-7e57-b8f8-830a993aaaed",
-      "persistent_id": "988796d8-1679-4b2e-8585-47e89f740815",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5c-7f6c-8f30-075b184b212b",
+      "parent_id": null,
       "type": "action",
-      "name": "Prototype verify_code",
+      "name": "Web Call",
       "sort_index": 0,
       "is_complete": true,
-      "configuration": {
-        "url": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/otp/verify"
-              }
-            ]
-          }
-        ],
-        "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}},\"code\":{{$var:01a194ae-0d5c-7f6c-8f30-075b184b212b.code}}}",
-          "contentType": "application/json",
-          "schemaVersion": 2
-        },
-        "token": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": ""
-              },
-              {
-                "type": "variable",
-                "children": [
-                  {
-                    "text": ""
-                  }
-                ],
-                "group_id": "use_case_variables",
-                "variable_id": "PROTOTYPE_AGENT_KEY"
-              },
-              {
-                "text": ""
-              }
-            ]
-          }
-        ],
-        "authType": "bearer",
-        "ignore5XX": false,
-        "ignoreTimeouts": false,
-        "webhookSchemaVersion": 2
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
-      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
+      "configuration": {},
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "6e32e01e-722f-4b8b-9372-500b845686d1",
+      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
       "trigger_interval": null,
-      "multi_event_behavior": "group"
+      "multi_event_behavior": "parallel"
     },
     {
-      "id": "01a194ae-0d5d-74a9-bbda-fe71d41e65ca",
+      "id": "01a19503-e8d5-7e93-92fa-375e24218617",
       "persistent_id": "51153eb0-2461-470e-bb2c-13b119de81c2",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
       "type": "tool",
       "name": "find_loads",
       "sort_index": 0,
@@ -588,7 +641,7 @@
       "configuration": {
         "tool_call_result_ack": "ack"
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "function": {
         "message": {
           "type": "none"
@@ -651,7 +704,7 @@
             "type": "paragraph",
             "children": [
               {
-                "text": "Call find_loads in the required verification, matching, negotiation and handoff order. Only the backend decides."
+                "text": "Find live matching loads after verification. If status is no_match or tms_unavailable, speak a short closing sentence, immediately call finish_call, then use the native end_conversation hangup tool. Do not wait for the caller or idle timeout."
               }
             ]
           }
@@ -659,73 +712,12 @@
       }
     },
     {
-      "id": "01a194ae-0d4e-701a-98ae-2330360b6027",
-      "persistent_id": "ff57cc60-4746-473c-aa23-7089f4df2edd",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5d-74a9-bbda-fe71d41e65ca",
-      "type": "action",
-      "name": "Prototype find_loads",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "url": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/loads/search"
-              }
-            ]
-          }
-        ],
-        "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}},\"equipment\":{{$var:01a194ae-0d5d-74a9-bbda-fe71d41e65ca.equipment}},\"origin_state\":{{$var:01a194ae-0d5d-74a9-bbda-fe71d41e65ca.origin_state}},\"dest_state\":{{$var:01a194ae-0d5d-74a9-bbda-fe71d41e65ca.dest_state}}}",
-          "contentType": "application/json",
-          "schemaVersion": 2
-        },
-        "token": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": ""
-              },
-              {
-                "type": "variable",
-                "children": [
-                  {
-                    "text": ""
-                  }
-                ],
-                "group_id": "use_case_variables",
-                "variable_id": "PROTOTYPE_AGENT_KEY"
-              },
-              {
-                "text": ""
-              }
-            ]
-          }
-        ],
-        "authType": "bearer",
-        "ignore5XX": false,
-        "ignoreTimeouts": false,
-        "webhookSchemaVersion": 2
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
-      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
-      "trigger_interval": null,
-      "multi_event_behavior": "group"
-    },
-    {
-      "id": "01a194ae-0d5e-7640-a695-8a16d346fba6",
+      "id": "01a19503-e8d8-709b-a946-40fb5b41b126",
       "persistent_id": "57022450-d36f-4299-9d1e-c1208ace9060",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
       "type": "tool",
       "name": "agree_rate",
       "sort_index": 0,
@@ -733,7 +725,7 @@
       "configuration": {
         "tool_call_result_ack": "ack"
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "function": {
         "message": {
           "type": "none"
@@ -787,73 +779,266 @@
       }
     },
     {
-      "id": "01a194ae-0d53-70ae-b56c-ad794c5c96fc",
-      "persistent_id": "a0d8d721-855c-4cab-957a-d4017d997f74",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8d5-7e41-a764-f32af6e1d18f",
+      "persistent_id": "59db3288-c43d-4d27-8031-f1048f4ac668",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5e-7640-a695-8a16d346fba6",
-      "type": "action",
-      "name": "Prototype agree_rate",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
+      "type": "tool",
+      "name": "finish_call",
       "sort_index": 0,
       "is_complete": true,
       "configuration": {
-        "url": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/negotiate"
-              }
-            ]
-          }
-        ],
-        "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:01a194ae-0d5e-7640-a695-8a16d346fba6.load_id}},\"rate\":{{$var:01a194ae-0d5e-7640-a695-8a16d346fba6.rate}}}",
-          "contentType": "application/json",
-          "schemaVersion": 2
+        "tool_call_result_ack": "ack"
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "function": {
+        "message": {
+          "type": "ai",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Speak the closing_message argument as the terminal business outcome. Use only the public facts in this conversation. Do not ask a question or include a verification code, internal pricing or private information. For senior_review say exactly: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo. For other terminal outcomes explain the actual refusal or failure briefly and say goodbye without a transfer."
+                }
+              ]
+            }
+          ]
         },
-        "token": [
+        "parameters": [
           {
-            "type": "paragraph",
-            "children": [
+            "name": "closing_message",
+            "binding": {
+              "mode": "agent"
+            },
+            "required": true,
+            "description": [
               {
-                "text": ""
-              },
-              {
-                "type": "variable",
+                "type": "paragraph",
                 "children": [
                   {
-                    "text": ""
+                    "text": "The short terminal business outcome to say aloud, with no codes or confidential pricing. For senior_review use the complete required neutral mocked-transfer line. Otherwise give the actual refusal or result and goodbye."
                   }
-                ],
-                "group_id": "use_case_variables",
-                "variable_id": "PROTOTYPE_AGENT_KEY"
-              },
-              {
-                "text": ""
+                ]
               }
             ]
           }
         ],
-        "authType": "bearer",
-        "ignore5XX": false,
-        "ignoreTimeouts": false,
-        "webhookSchemaVersion": 2
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
-      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
-      "trigger_interval": null,
-      "multi_event_behavior": "group"
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Use this tool to SPEAK the terminal outcome and close the call record as one action. Pass closing_message and invoke immediately on no_match, ineligible, code_failed, negotiation_failed, unavailable outcomes or senior_review. Do not deliver separate final chat text first. The configured voice message speaks your words. After it returns, invoke the native end_conversation hangup tool."
+              }
+            ]
+          }
+        ]
+      }
     },
     {
-      "id": "01a194ae-0d5f-7f4c-b723-4e9f6a527a8d",
-      "persistent_id": "b61c7773-017b-4723-bfc0-279bf4c9b5af",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
+      "id": "01a19503-e8d6-7321-9e1a-346886511b3d",
+      "persistent_id": "af17a0af-564e-44da-8136-43fc5696fc94",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
       "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
       "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
+      "type": "tool",
+      "name": "verify_code",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "tool_call_result_ack": "ack"
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "function": {
+        "message": {
+          "type": "none"
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "binding": {
+              "mode": "agent"
+            },
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The six digits the caller actually read. Preserve leading zeros."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Call verify_code in the required verification, matching, negotiation and handoff order. Only the backend decides."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "01a19503-e8d7-7e09-9451-5bfc8179d67e",
+      "persistent_id": "4906cc32-2a91-4749-9303-a794d22a646e",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
+      "type": "tool",
+      "name": "verify_carrier",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "tool_call_result_ack": "ack"
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "function": {
+        "message": {
+          "type": "none"
+        },
+        "parameters": [
+          {
+            "name": "mc",
+            "binding": {
+              "mode": "agent"
+            },
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "MC digits stated by the caller."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Call verify_carrier in the required verification, matching, negotiation and handoff order. Only the backend decides."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "01a19503-e8d7-73ca-8879-d753a1ae19a3",
+      "persistent_id": "a05bbcef-ebdf-477f-9ac0-063dd99a986e",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
+      "type": "tool",
+      "name": "send_code",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "tool_call_result_ack": "ack"
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "function": {
+        "message": {
+          "type": "none"
+        },
+        "parameters": [],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Call send_code in the required verification, matching, negotiation and handoff order. Only the backend decides."
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "id": "01a19503-e8ce-76e2-bf46-e8a597311885",
+      "persistent_id": "923c677d-46a5-4f63-957d-2a31c64806dd",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8ce-7ded-9676-2a41a7ef062a",
+      "type": "action",
+      "name": "Inbound Voice Agent",
+      "sort_index": 0,
+      "is_complete": true,
+      "configuration": {
+        "agent": {
+          "name": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Paul"
+                }
+              ]
+            }
+          ],
+          "voices": [
+            {
+              "type": "static",
+              "static": {
+                "id": "m357hexpjk2s",
+                "name": "Paul"
+              }
+            }
+          ],
+          "languages": [
+            {
+              "type": "static",
+              "static": {
+                "id": "en",
+                "name": "English"
+              }
+            }
+          ],
+          "language_accents": [
+            {
+              "type": "static",
+              "static": {
+                "id": "en-us",
+                "name": "English (US)"
+              }
+            }
+          ]
+        },
+        "disable_hangup": false,
+        "max_call_duration": 540,
+        "max_silence_hold_duration": 60,
+        "business_hours_setting_name": "default"
+      },
+      "timestamp": "2026-11-01T02:50:23.801Z",
+      "event_id": "0192e5dc-08df-78bf-a549-f43c6bf9f087",
+      "integration_id": "0192e48a-81d8-71cb-93dc-efd8ad63d86b",
+      "trigger_interval": null,
+      "multi_event_behavior": "parallel"
+    },
+    {
+      "id": "01a19503-e8d9-7e54-9560-c3280a25fa26",
+      "persistent_id": "b61c7773-017b-4723-bfc0-279bf4c9b5af",
+      "version_id": "01a19503-e8c4-768a-aade-7bf67ff9c590",
+      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
+      "parent_id": "01a19503-e8d3-7f0b-865a-741c911e1a6d",
       "type": "tool",
       "name": "request_booking",
       "sort_index": 0,
@@ -861,7 +1046,7 @@
       "configuration": {
         "tool_call_result_ack": "ack"
       },
-      "timestamp": "2026-11-01T01:16:37.043Z",
+      "timestamp": "2026-11-01T02:50:23.801Z",
       "function": {
         "message": {
           "type": "none"
@@ -878,173 +1063,6 @@
           }
         ]
       }
-    },
-    {
-      "id": "01a194ae-0d55-776c-9dbd-1ced052edc9f",
-      "persistent_id": "ad65981e-a8f5-43ba-b274-fcd4389a4b95",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d5f-7f4c-b723-4e9f6a527a8d",
-      "type": "action",
-      "name": "Prototype request_booking",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "url": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/bookings"
-              }
-            ]
-          }
-        ],
-        "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}}}",
-          "contentType": "application/json",
-          "schemaVersion": 2
-        },
-        "token": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": ""
-              },
-              {
-                "type": "variable",
-                "children": [
-                  {
-                    "text": ""
-                  }
-                ],
-                "group_id": "use_case_variables",
-                "variable_id": "PROTOTYPE_AGENT_KEY"
-              },
-              {
-                "text": ""
-              }
-            ]
-          }
-        ],
-        "authType": "bearer",
-        "ignore5XX": false,
-        "ignoreTimeouts": false,
-        "webhookSchemaVersion": 2
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
-      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
-      "trigger_interval": null,
-      "multi_event_behavior": "group"
-    },
-    {
-      "id": "01a194ae-0d60-74b5-bee4-01c632e9cc67",
-      "persistent_id": "59db3288-c43d-4d27-8031-f1048f4ac668",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d59-7710-a523-a6d129e5cae6",
-      "type": "tool",
-      "name": "finish_call",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "tool_call_result_ack": "ack"
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "function": {
-        "message": {
-          "type": "none"
-        },
-        "parameters": [],
-        "description": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "Call finish_call in the required verification, matching, negotiation and handoff order. Only the backend decides."
-              }
-            ]
-          }
-        ]
-      }
-    },
-    {
-      "id": "01a194ae-0d55-7de2-b5c3-c93e91d12dd6",
-      "persistent_id": "8a3c4072-9543-4a21-bb64-f063f0eca147",
-      "version_id": "01a194ae-0d43-7970-84c7-69c591936a37",
-      "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
-      "org_id": "01a17a99-0856-7f88-b09f-4b787e20413c",
-      "parent_id": "01a194ae-0d60-74b5-bee4-01c632e9cc67",
-      "type": "action",
-      "name": "Prototype finish_call",
-      "sort_index": 0,
-      "is_complete": true,
-      "configuration": {
-        "url": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": "https://codex-e2e-lab-sg-20261031.fly.dev/calls/"
-              },
-              {
-                "type": "variable",
-                "children": [
-                  {
-                    "text": ""
-                  }
-                ],
-                "group_id": "current",
-                "variable_id": "run_id"
-              },
-              {
-                "text": "/close"
-              }
-            ]
-          }
-        ],
-        "body": {
-          "raw": "{\"run_id\":{{$var:current.run_id}}}",
-          "contentType": "application/json",
-          "schemaVersion": 2
-        },
-        "token": [
-          {
-            "type": "paragraph",
-            "children": [
-              {
-                "text": ""
-              },
-              {
-                "type": "variable",
-                "children": [
-                  {
-                    "text": ""
-                  }
-                ],
-                "group_id": "use_case_variables",
-                "variable_id": "PROTOTYPE_AGENT_KEY"
-              },
-              {
-                "text": ""
-              }
-            ]
-          }
-        ],
-        "authType": "bearer",
-        "ignore5XX": false,
-        "ignoreTimeouts": false,
-        "webhookSchemaVersion": 2
-      },
-      "timestamp": "2026-11-01T01:16:37.043Z",
-      "event_id": "01926f2b-2973-7ebf-ada1-e984251e27ec",
-      "integration_id": "01926a93-064a-7a00-81b2-8ab78d5907e0",
-      "trigger_interval": null,
-      "multi_event_behavior": "group"
     }
   ]
 }

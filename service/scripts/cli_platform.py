@@ -13,7 +13,12 @@ class CliPlatform(Platform):
             async with httpx.AsyncClient(base_url=self.base,headers=headers,timeout=8) as client:
                 try:
                     response=await client.request(method or ('POST' if body is not None else 'GET'),path,json=body)
-                    if response.status_code>=400:raise PlatformError(response.status_code)
+                    if response.status_code>=400:
+                        try:detail=response.json().get('message','request rejected')
+                        except (ValueError,AttributeError):detail='request rejected'
+                        for value in self.values.values():
+                            if isinstance(value,str) and len(value)>8:detail=detail.replace(value,'[REDACTED]')
+                        raise PlatformError(response.status_code,detail)
                     return response.json()
                 except (httpx.HTTPError,ValueError):raise PlatformError('unavailable') from None
         return asyncio.run(run())

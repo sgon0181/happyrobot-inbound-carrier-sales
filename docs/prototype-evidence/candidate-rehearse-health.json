@@ -1,0 +1,8 @@
+{
+  "http_status": 200,
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "rehearse"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "label": "LIVE_CONFIGURATION_PREFLIGHT_FAILURE",
+  "version_id": "01a195d8-59dc-7e7e-a713-61e78631fb49",
+  "observed": "Result inspection returned only an error field instead of the approved sixteen fields",
+  "publication_blocked": true,
+  "action_execution": false,
+  "disposition": "Separated all configuration updates from later sample/visibility writes, increased bounded refresh wait, and re-inspected exact approved fields."
+}

@@ -6,7 +6,7 @@ from service.config import settings, ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW = "01a19476-5384-704b-9c5e-569fd96f9adf"
-VERSION = "01a19592-7887-751f-85aa-4faba052b68c"
+VERSION = "01a195e6-06cd-74c6-af1c-e624fa32d35c"
 HOST = "https://codex-e2e-lab-sg-20261031.fly.dev"
 BASE = "/versions/" + VERSION
 HANDOFF_LINE = (
@@ -78,7 +78,7 @@ def node_map(p):
     return by_name
 
 
-def wait_for_result_fields(p, tool, action, approved, attempts=20, interval=0.5):
+def wait_for_result_fields(p, tool, action, approved, attempts=60, interval=0.5):
     """Wait for custom-output schema refresh without testing any integration.
 
     Inspect can briefly return the previous output, including a lone error.
@@ -153,7 +153,7 @@ def main():
             "type": "prompt",
             "prompt_md": text,
             "initial_message": paragraph(
-                "Hi, this is the carrier sales prototype. What is your MC number?"
+                "Hi, this is HappyRobot Logistics carrier sales. What is your MC number?"
             ),
         },
         "PUT",
@@ -193,7 +193,7 @@ def main():
         "carrier_name": "SCHEMA_EXAMPLE",
         "code_passed": False,
         "channel": "email",
-        "destination": "configured demo inbox",
+        "destination": "email on file",
         "offer": 1000,
         "round": 1,
         "final": False,
@@ -224,6 +224,7 @@ def main():
             }
         ],
     }
+    configured = []
     for name, route, parameters in DEFINITIONS:
         tool = nodes[name]["id"]
         action = nodes["Prototype " + name]["id"]
@@ -237,8 +238,18 @@ def main():
             ]
         descriptions = {
             "find_loads": "Find matching loads after verification. Present one offer, total first, then a short operational summary. Price questions are answered without negotiation or booking tools. For terminal no_match or tms_unavailable, use finish_call with the actual result, then native hangup.",
-            "agree_rate": "Use only for a COMPLETE price acceptance or a genuine proposed counter amount. A request to repeat, explain or confirm what the rate IS does not call this tool. Never submit an assumed acceptance while asking a clarification question. After price agreement, a yes to booking permission goes to request_booking directly, not here.",
-            "request_booking": "Prepare booking permission after a complete price agreement. On confirmation_required read its exact standalone question and wait. A fresh yes answering it calls this tool directly, without agree_rate. A rate question is answered conversationally; it is not permission, refusal or a closing reason.",
+            "agree_rate": (
+                "Use only for complete price acceptance or a genuine counter amount. Rate questions "
+                "do not call this tool. On counter or ask_again state the returned offer, ask if it "
+                "works, then wait. Say final only when final is true. On agreed confirm that total "
+                "and prepare booking permission with request_booking. Never infer acceptance."
+            ),
+            "request_booking": (
+                "Prepare permission after price agreement. On confirmation_required briefly confirm "
+                "the agreed total and read the exact confirmation_prompt as the final sentence, "
+                "then wait. A fresh natural yes, Sure or Yeah go ahead calls this tool directly. "
+                "Rate questions are conversation, not permission, refusal or a closing reason."
+            ),
             "finish_call": "Close a refusal, outage, test-only result or clear caller goodbye. Never use for senior_review; use finish_handoff there. NEVER use for pending permission, an unanswered question, hesitation or misunderstanding. Continue helping in those cases. Give the actual public reason in closing_message and the native spoken message, then use native end_conversation.",
             "finish_handoff": "Use ONLY after the backend returns senior_review. This tool plays the complete fixed review and simulated-transfer disclosure and closes the record. Then use native end_conversation. No message arguments or extra speech. Never use for price questions, pending permission, refusals or consent_verified.",
         }
@@ -304,6 +315,10 @@ def main():
             },
             "PUT",
         )
+        configured.append((name, tool, action))
+    # No parent/tool configuration changes follow these samples. Each result is
+    # inspected before model visibility is written, without executing any action.
+    for name, tool, action in configured:
         p.request(BASE + "/nodes/" + action + "/custom-output", {"data": schema}, "PUT")
         exposed = wait_for_result_fields(p, tool, action, schema)
         p.request(

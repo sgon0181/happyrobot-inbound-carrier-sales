@@ -1,0 +1,71 @@
+{
+  "label": "LIVE_CONFIG_WITH_SIMULATED_TEXT_EVIDENCE",
+  "version_id": "01a195e6-06cd-74c6-af1c-e624fa32d35c",
+  "tested_version_id": "01a195d8-59dc-7e7e-a713-61e78631fb49",
+  "graph_parity": true,
+  "nodes": 20,
+  "http_actions": 9,
+  "all_tools": [
+    {
+      "tool": "finish_handoff",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "verify_carrier",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "verify_code",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "send_code",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "agree_rate",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "finish_call",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "find_loads",
+      "prepublication_safe_field_count": 16
+    },
+    {
+      "tool": "request_booking",
+      "prepublication_safe_field_count": 16
+    }
+  ],
+  "visibility_validation": "All eight tools inspected and 16 approved fields set before publishing; post-publication inspection is rejected by the immutable-version API. Final native QA verifies offer/round/final behavior.",
+  "fixed_handoff_sha256": "ed305da489a7d184ff761a1198b65e023bebf8020845cef41dc06b20c911b80b",
+  "text_cases": [
+    {
+      "case": "counter_false",
+      "scenario_run_id": "1bc96979-58ea-4a6b-92ed-d34865073135",
+      "manual_pass": true,
+      "wrapper": "inconclusive",
+      "native": "completed"
+    },
+    {
+      "case": "final_true",
+      "scenario_run_id": "82dd230e-108a-409a-bea8-b52f8ee96aab",
+      "manual_pass": true,
+      "wrapper": "completed",
+      "native": "completed"
+    },
+    {
+      "case": "natural_permission",
+      "scenario_run_id": "43612609-dc25-42f4-80ef-e3eb2af74417",
+      "manual_pass": true,
+      "wrapper": "completed",
+      "native": "completed"
+    }
+  ],
+  "limitations": [
+    "All nine HTTP actions skipped in text cases, no service/TMS/email executed.",
+    "Static mocks prove dialogue routing only, not backend transitions."
+  ]
+}

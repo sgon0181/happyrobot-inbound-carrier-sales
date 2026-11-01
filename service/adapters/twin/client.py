@@ -1,6 +1,7 @@
 """Production Twin SQL transport, with no credential-bearing error output."""
 
 import asyncio
+import random
 import json
 import time
 import urllib.error
@@ -24,6 +25,9 @@ class Platform:
         self.values, self.key = values, values["HAPPYROBOT_API_KEY"]
         self.latencies = []
         self.notification_lock = asyncio.Lock()
+        self.sql_slots = asyncio.Semaphore(4)
+        self.sql_starts = asyncio.Lock()
+        self.next_sql_start = 0.0
 
     def request(self, path, body=None, method=None):
         request = urllib.request.Request(
@@ -60,4 +64,17 @@ class Platform:
         return result
 
     async def sql(self, sql):
-        return await asyncio.to_thread(self.request, "/twin/sql", {"sql": sql})
+        for attempt in range(6):
+            try:
+                async with self.sql_slots:
+                    async with self.sql_starts:
+                        now = asyncio.get_running_loop().time()
+                        await asyncio.sleep(max(0, self.next_sql_start - now))
+                        self.next_sql_start = asyncio.get_running_loop().time() + 0.25
+                    return await asyncio.to_thread(self.request, "/twin/sql", {"sql": sql})
+            except PlatformError as error:
+                if error.code != 429 or attempt == 5:
+                    raise
+                # Retry rate-limit rejections only. Every write remains conditional
+                # or idempotent; arbitrary transport failures are never retried here.
+                await asyncio.sleep(min(2, 0.2 * 2**attempt) + random.random() * 0.1)

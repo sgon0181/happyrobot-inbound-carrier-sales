@@ -1,0 +1,71 @@
+{
+  "label": "LIVE_TWIN_ENTITY_CUTOVER",
+  "original_projection_mismatches": 0,
+  "entity_counts": {
+    "carriers": 2,
+    "calls": 16,
+    "call_transcripts": 3,
+    "call_events": 63,
+    "otp_challenges": 5,
+    "negotiation_rounds": 7,
+    "bookings": 5,
+    "unmet_demand": 0,
+    "booking_claims": 9
+  },
+  "rows_repaired_or_enriched": [
+    {
+      "table": "calls",
+      "id": "112f1a4a-84f3-420f-bce4-d7f374b381d1"
+    },
+    {
+      "table": "calls",
+      "id": "50fbc2fa-c6e2-44a6-97b7-d23d467cb9e2"
+    },
+    {
+      "table": "calls",
+      "id": "65b66ccb-bfb3-44e9-904d-19c98bb1f88f"
+    },
+    {
+      "table": "calls",
+      "id": "94ad9f38-1cc8-4f87-8bb7-af945c6b9563"
+    },
+    {
+      "table": "booking_claims",
+      "id": "load:LD01085"
+    },
+    {
+      "table": "booking_claims",
+      "id": "load:LD01094"
+    },
+    {
+      "table": "booking_claims",
+      "id": "load:SYNTHETIC-APP-CONFIRM"
+    },
+    {
+      "table": "booking_claims",
+      "id": "call:112f1a4a-84f3-420f-bce4-d7f374b381d1"
+    },
+    {
+      "table": "booking_claims",
+      "id": "call:50fbc2fa-c6e2-44a6-97b7-d23d467cb9e2"
+    },
+    {
+      "table": "booking_claims",
+      "id": "call:65b66ccb-bfb3-44e9-904d-19c98bb1f88f"
+    },
+    {
+      "table": "booking_claims",
+      "id": "call:94ad9f38-1cc8-4f87-8bb7-af945c6b9563"
+    },
+    {
+      "table": "booking_claims",
+      "id": "load:SYNTHETIC-95608556a4c74f23b46a10c87dec8580"
+    }
+  ],
+  "active_bookings_claims_rebuilt": 4,
+  "frozen_control_unchanged": true,
+  "frozen_control_sha256": "6e2514aa1909f37e0e6e17f0eb74e3dc5b065bc9cb4e9a0a82fa44754e86830e",
+  "all_expected_entities_verified": true,
+  "new_tms_sends": 0,
+  "limit": "No multi-table transaction. New hot paths use entity CAS and durable primary-key claims."
+}

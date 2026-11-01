@@ -1,0 +1,30 @@
+{
+  "label": "LIVE_CUTOVER_SAFETY_READBACK",
+  "historical_write_intents": 2,
+  "historical_records": [
+    {
+      "load_id": "LD01094",
+      "state": "ACK_PENDING",
+      "tms_status": "PENDING",
+      "rep_decision": "awaiting",
+      "review_required": true,
+      "reason": "caller_confirmation_review",
+      "receipt_sha256": "12b164a333db0ebb71dcd5411aac27178a6580ffe6bb6a1aec934b65b0826b35"
+    },
+    {
+      "load_id": "LD01085",
+      "state": "ACK_PENDING",
+      "tms_status": "PENDING",
+      "rep_decision": "confirmed",
+      "review_required": false,
+      "reason": null,
+      "receipt_sha256": "17f2a4563d82ef3e3d3cb132482c8efb953cb3563990013e5834d0e776fe11e5"
+    }
+  ],
+  "authenticated_health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_enabled": false
+  },
+  "new_tms_sends": 0
+}

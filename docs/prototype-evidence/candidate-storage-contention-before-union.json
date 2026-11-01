@@ -1,0 +1,30 @@
+{
+  "label": "LIVE_INFRASTRUCTURE_SIMULATED_BUSINESS",
+  "host": "FLY_MACHINE",
+  "mode": "Authoritative entity rows and primary-key claims",
+  "probe_id": "0e26e5f6e2734812a2e17050654c0241",
+  "claim_contenders": 8,
+  "claim_winners": 1,
+  "claim_latency": {
+    "median_ms": 26226.0,
+    "p95_ms": 27095.5
+  },
+  "conditional_contenders": 8,
+  "conditional_winners": 1,
+  "conditional_latency": {
+    "median_ms": 4890.7,
+    "p95_ms": 5770.8
+  },
+  "parallel_calls": 8,
+  "conditional_saves_per_independent_call": 4,
+  "parallel_calls_completed": 8,
+  "parallel_call_latency": {
+    "median_ms": 25213.8,
+    "p95_ms": 26090.6
+  },
+  "parallel_wall_ms": 26090.8,
+  "sum_individual_call_ms": 201753.4,
+  "live_tms_sends": 0,
+  "emails": 0,
+  "limit": "Eight independent call-state sequences, not eight voice or integration calls. No multi-table transactions."
+}

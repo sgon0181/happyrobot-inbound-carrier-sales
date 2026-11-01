@@ -33,7 +33,9 @@ class Runtime:
         self.confirmation = confirmation
         self.policy = PricingPolicy.load()
         self.locks = {}
-        self.booking_store = TwinBookingStore(repository, live=repository.label == "LIVE")
+        self.booking_store = TwinBookingStore(
+            repository, live=repository.label == "LIVE", clock=self.clock
+        )
         self.bookings = BookingService(self.booking_store, tms)
 
     def digest(self, text):
@@ -77,6 +79,9 @@ class Runtime:
 
         def change(data):
             call = data["calls"].setdefault(cid, self.new_call(cid))
+            if call.get("booking_id") and action != "close":
+                reserved = data["bookings"].get(call["booking_id"])
+                return agent_view(decode(reserved)) if reserved else {"status": "in_progress"}
             previous = call["operations"].get(fingerprint)
             if previous and self.clock() - previous["finished_at"] <= 5:
                 cached = previous["result"]
@@ -97,11 +102,15 @@ class Runtime:
             self.event(data, cid, action, result.get("status", "ok"), fingerprint=fingerprint)
             return result
 
-        return await self.repository.update(change)
+        return await self.repository.update_call(
+            cid, lambda data, call: change(data), self.new_call(cid)
+        )
 
     def gate(self, call):
         if call.get("closed_at"):
             return {"status": "call_closed"}
+        if call.get("booking_id"):
+            return {"status": "in_progress"}
         if not call.get("eligible"):
             return {"status": "carrier_ineligible"}
         if call["verified_until"] <= self.clock():
@@ -111,10 +120,13 @@ class Runtime:
         from service.adapters.fmcsa.client import FMCSAClient
 
         mc = FMCSAClient.normalize_mc(mc)
-        _, data = await self.repository.read()
+        _, data = await self.repository.read_call(cid)
         call = data["calls"].get(cid)
         if call and call.get("closed_at"):
             return {"status": "call_closed"}
+        if call and call.get("booking_id"):
+            reserved = data["bookings"].get(call["booking_id"])
+            return agent_view(decode(reserved)) if reserved else {"status": "in_progress"}
         if call and call.get("mc") == mc and self.clock() - call.get("authority_at", 0) <= 5:
             return {
                 "status": "ok" if call["eligible"] else call["outcome"],
@@ -126,12 +138,11 @@ class Runtime:
             authority = {"eligible": False, "reason": "fmcsa_unavailable", "source": "unavailable"}
 
         def apply(data, call):
-            if any(
-                b["call_id"] == cid and b["state"] != "FAILED" for b in data["bookings"].values()
-            ):
-                return {"status": "senior_review"}
-            if call.get("challenge"):
-                data["otp_challenges"][call["challenge"]]["invalidated_at"] = self.clock()
+            reserved = data["bookings"].get(call.get("booking_id"))
+            if call.get("booking_id"):
+                return agent_view(decode(reserved)) if reserved else {"status": "in_progress"}
+            if any(b["state"] != "FAILED" for b in data["bookings"].values()):
+                return {"status": "in_progress"}
             if call.get("mc") != mc:
                 call["operations"] = {}
             name = (authority.get("carrier") or {}).get("legalName")
@@ -160,6 +171,21 @@ class Runtime:
 
         return await self.operation(cid, "verify_carrier", {"mc": mc}, apply)
 
+    async def reserve_code_budget(self, mc):
+        for identity, limit in (("otp-rate:" + mc, 3), ("otp-rate:global", 10)):
+
+            def reserve(row):
+                times = [t for t in row.get("times", []) if t > self.clock() - 60]
+                if len(times) >= limit:
+                    return False
+                row.update(kind="otp_throttle", times=times + [self.clock()])
+                return True
+
+            allowed = await self.repository.mutate("booking_claims", identity, reserve, initial={})
+            if not allowed:
+                return False
+        return True
+
     async def send_code(self, cid):
         code = f"{secrets.randbelow(1000000):06d}"
         challenge = uuid.uuid4().hex
@@ -175,65 +201,65 @@ class Runtime:
                 return {"status": "send_limit"}
             if not self.values.get("DEMO_OTP_EMAIL"):
                 return {"status": "no_trusted_contact"}
-            recent = [
-                c
-                for c in data["otp_challenges"].values()
-                if c["expires_at"] - 300 > self.clock() - 60
-            ]
-            if sum(c["mc"] == call["mc"] for c in recent) >= 3 or len(recent) >= 10:
-                return {"status": "send_throttled"}
-            old = data["otp_challenges"].get(call.get("challenge"))
-            if old:
-                old["invalidated_at"] = self.clock()
             call.update(challenge=challenge, verified_until=0, sends=call["sends"] + 1)
-            data["otp_challenges"][challenge] = {
-                "call_id": cid,
-                "mc": call["mc"],
-                "purpose": "call-load-access",
-                "destination_version": "configured-demo-inbox",
-                "hash": self.digest(cid + "|" + call["mc"] + "|" + code),
-                "expires_at": self.clock() + 300,
-                "consumed_at": None,
-                "delivery_status": "delivery_pending",
-            }
-            return {"status": "submitting", "challenge_id": challenge}
+            return {"status": "submitting", "challenge_id": challenge, "mc": call["mc"]}
 
         result = await self.operation(cid, "send_code", {}, issue)
         if result.get("challenge_id") != challenge:
             if result["status"] == "submitting":
                 return {"status": "delivery_pending", "channel": "email"}
             return result
-        try:
-            receipt = await self.notifier(code, cid)
-            status = (
-                "sent"
-                if receipt.get("sent")
-                else ("delivery_pending" if receipt.get("submitted") else "delivery_unknown")
-            )
-        except Exception:
-            receipt = {}
-            status = "delivery_unknown"
+        mc = result["mc"]
+        allowed = await self.reserve_code_budget(mc)
+        row = {
+            "call_id": cid,
+            "mc": mc,
+            "purpose": "call-load-access",
+            "destination_version": "configured-demo-inbox",
+            "hash": self.digest(cid + "|" + mc + "|" + code),
+            "expires_at": self.clock() + 300,
+            "consumed_at": None,
+            "delivery_status": "delivery_pending" if allowed else "send_throttled",
+        }
+        if not await self.repository.cas("otp_challenges", challenge, None, row):
+            raise ValueError("Challenge already exists")
+        receipt = {}
+        if allowed:
+            try:
+                receipt = await self.notifier(code, cid)
+                status = (
+                    "sent"
+                    if receipt.get("sent")
+                    else ("delivery_pending" if receipt.get("submitted") else "delivery_unknown")
+                )
+            except Exception:
+                status = "delivery_unknown"
+        else:
+            status = "send_throttled"
 
-        def save(data):
-            data["otp_challenges"][challenge].update(
+        def delivered(current):
+            current.update(
                 delivery_status=status,
                 provider_message_id=receipt.get("message_id"),
                 provider=receipt.get("source"),
             )
-            safe = {"status": status, "channel": "email", "destination": "configured demo inbox"}
-            call = data["calls"][cid]
+
+        await self.repository.mutate("otp_challenges", challenge, delivered)
+        safe = {"status": status, "channel": "email", "destination": "configured demo inbox"}
+
+        def finish(data, call):
             for op in call["operations"].values():
                 if op["result"].get("challenge_id") == challenge:
                     op["result"] = safe
             self.event(data, cid, "code_delivery", status)
             return safe
 
-        return await self.repository.update(save)
+        return await self.repository.update_call(cid, finish, self.new_call(cid))
 
     async def verify_code(self, cid, code):
         code = str(code)
 
-        def verify(data, call):
+        def prepare(data, call):
             if call.get("closed_at"):
                 return {"status": "call_closed"}
             if not call["eligible"]:
@@ -260,12 +286,48 @@ class Runtime:
                 if call["failed_codes"] >= 3:
                     call["outcome"] = "code_failed"
                 return {"status": "code_failed" if call["failed_codes"] >= 3 else "wrong_code"}
-            challenge["consumed_at"] = self.clock()
-            call["verified_until"] = self.clock() + 1800
-            call["code_passed_at"] = self.clock()
-            return {"status": "ok", "code_passed": True}
+            return {"status": "consume", "challenge_id": call["challenge"], "mc": call["mc"]}
 
-        return await self.operation(cid, "verify_code", {"code_hash": self.digest(code)}, verify)
+        result = await self.operation(cid, "verify_code", {"code_hash": self.digest(code)}, prepare)
+        if result.get("status") != "consume":
+            return result
+        challenge_id, mc = result["challenge_id"], result["mc"]
+
+        def consume(row):
+            if (
+                row.get("consumed_at")
+                or row["expires_at"] <= self.clock()
+                or row.get("invalidated_at")
+            ):
+                return False
+            if row["call_id"] != cid or row["mc"] != mc:
+                return False
+            row["consumed_at"] = self.clock()
+            return True
+
+        if not await self.repository.mutate("otp_challenges", challenge_id, consume):
+            return {"status": "code_expired_or_used"}
+
+        def promote(data, call):
+            if (
+                call.get("closed_at")
+                or not call.get("eligible")
+                or call.get("mc") != mc
+                or call.get("challenge") != challenge_id
+                or call["failed_codes"] >= 3
+            ):
+                return {"status": "code_expired_or_used"}
+            call.update(verified_until=self.clock() + 1800, code_passed_at=self.clock())
+            safe = {"status": "ok", "code_passed": True}
+            for op in call["operations"].values():
+                if (
+                    op["result"].get("challenge_id") == challenge_id
+                    and op["result"].get("status") == "consume"
+                ):
+                    op["result"] = safe
+            return safe
+
+        return await self.repository.update_call(cid, promote, self.new_call(cid))
 
     def terms(self, load):
         return price_load(
@@ -293,7 +355,7 @@ class Runtime:
         return data
 
     async def search(self, cid, criteria):
-        _, data = await self.repository.read()
+        _, data = await self.repository.read_call(cid)
         call = data["calls"].get(cid, self.new_call(cid))
         denied = self.gate(call)
         if denied:
@@ -308,7 +370,7 @@ class Runtime:
         }.get(criteria.get("equipment"), criteria.get("equipment", "DRY_VAN"))
         try:
             summaries = await self.tms.query(**criteria, limit=100)
-            blocked = await self.booking_store.blocked_load_ids()
+            blocked = await self.booking_store.blocked_load_ids([row.load_id for row in summaries])
             selected = select_offers(
                 summaries,
                 datetime.now(timezone.utc),
@@ -320,6 +382,7 @@ class Runtime:
             )
         except TmsUnavailable:
             return await self.set_outcome(cid, "tms_unavailable")
+        blocked = await self.booking_store.blocked_load_ids([row.load_id for row in selected])
         priced = []
         for load in loads:
             if isinstance(load, Exception) or load is None:
@@ -365,7 +428,7 @@ class Runtime:
         return await self.operation(cid, "search", criteria, save)
 
     async def negotiate(self, cid, load_id, rate):
-        _, data = await self.repository.read()
+        _, data = await self.repository.read_call(cid)
         call = data["calls"].get(cid, self.new_call(cid))
         denied = self.gate(call)
         if denied:
@@ -377,6 +440,8 @@ class Runtime:
         except TmsUnavailable:
             return await self.set_outcome(cid, "tms_unavailable")
         if load is None or not select_offers([load], datetime.now(timezone.utc), PROTECTED):
+            return {"status": "load_gone"}
+        if load_id in await self.booking_store.blocked_load_ids([load_id]):
             return {"status": "load_gone"}
         terms = self.terms(load)
         if terms is None:
@@ -432,10 +497,12 @@ class Runtime:
         return await self.operation(cid, "negotiate", {"load_id": load_id, "rate": rate}, act)
 
     async def book(self, cid, deadline):
-        _, data = await self.repository.read()
+        _, data = await self.repository.read_call(cid)
         call = data["calls"].get(cid, self.new_call(cid))
         existing = [
-            b for b in data["bookings"].values() if b["call_id"] == cid and b["state"] != "FAILED"
+            b
+            for b in data["bookings"].values()
+            if b["call_id"] == cid and (b["state"] != "FAILED" or b.get("write_intent_id"))
         ]
         if existing:
             return agent_view(decode(existing[0]))
@@ -463,6 +530,8 @@ class Runtime:
                 return {"status": "confirmation_unavailable"}
 
             def record(data):
+                if data["calls"][cid].get("booking_id"):
+                    return False
                 current = data["calls"][cid]["agreement"]
                 if not current or current["version"] != agreement["version"]:
                     return False
@@ -482,14 +551,24 @@ class Runtime:
                 )
                 return True
 
-            if not await self.repository.update(record):
+            if not await self.repository.update_call(
+                cid, lambda state, call: record(state), self.new_call(cid)
+            ):
+                try:
+                    known = await self.booking_store.for_call(cid)
+                    if known:
+                        return agent_view(decode(known))
+                except BookingConflict:
+                    return {"status": "in_progress"}
                 return {"status": "agreement_required"}
             if not evidence.get("approved"):
                 return {
                     "status": "confirmation_required",
                     "load_id": agreement["load_id"],
                     "agreed_rate": agreement["rate"],
-                    "confirmation_prompt": f"May I book load {agreement['load_id']} at ${agreement['rate']} total?",
+                    "confirmation_prompt": (
+                        f"May I book load {agreement['load_id']} " f"at ${agreement['rate']} total?"
+                    ),
                 }
             if call.get("cohort") != "real":
                 return {"status": "consent_verified", "booking_submitted": False}
@@ -520,7 +599,9 @@ class Runtime:
             self.event(data, cid, "outcome", status)
             return {"status": status}
 
-        return await self.repository.update(save)
+        return await self.repository.update_call(
+            cid, lambda state, call: save(state), self.new_call(cid)
+        )
 
     async def close(self, cid):
         def close(data, call):

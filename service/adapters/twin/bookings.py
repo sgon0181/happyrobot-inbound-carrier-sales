@@ -1,7 +1,8 @@
-"""BookingStore on the physical Twin booking rows."""
+"""One booking row plus durable call and load claims, without multi-table transactions."""
 
 from dataclasses import asdict, fields, replace
 import time
+
 from service.core.booking import (
     Booking,
     State,
@@ -10,7 +11,6 @@ from service.core.booking import (
     BookingConflict,
     OperationConflict,
 )
-from service.core.campaign import permission
 
 PROTECTED = frozenset(
     {
@@ -42,50 +42,132 @@ def decode(row):
 
 
 class TwinBookingStore:
-    def __init__(self, repository, live=False):
-        self.repository, self.live = repository, live
+    def __init__(self, repository, live=False, clock=time.time):
+        self.repository, self.live, self.clock = repository, live, clock
+
+    async def for_call(self, cid):
+        _, claim = await self.repository.get("booking_claims", "call:" + cid)
+        if claim and claim.get("active"):
+            _, row = await self.repository.get("bookings", claim["booking_id"])
+            if row is None:
+                raise BookingConflict("An incomplete reservation requires review")
+            return row
+        rows = await self.repository.rows("bookings", call_id=cid)
+        return next(
+            (r for _, _, r in rows if r["state"] != "FAILED" or r.get("write_intent_id")), None
+        )
+
+    async def claim(self, key, booking):
+        row = {
+            "booking_id": booking.id,
+            "call_id": booking.call_id,
+            "load_id": booking.load_id,
+            "active": True,
+            "write_intent_id": None,
+        }
+        return await self.repository.acquire_claim(key, row)
 
     async def create(self, booking, operation_id, fingerprint):
-        def change(data):
-            for row in data["bookings"].values():
-                if self.live and row.get("write_intent_id") and row["load_id"] == booking.load_id:
-                    if row["call_id"] == booking.call_id:
-                        return decode(row), False
-                    raise BookingConflict(
-                        "Previously reserved load cannot be resent in this campaign"
-                    )
-                if row["call_id"] == booking.call_id and row.get("operation_id") == operation_id:
-                    if row["fingerprint"] != fingerprint:
-                        raise OperationConflict("Changed booking operation")
-                    return decode(row), False
-                if State(row["state"]) in ACTIVE and (
-                    row["load_id"] == booking.load_id or row["call_id"] == booking.call_id
-                ):
-                    if row["call_id"] == booking.call_id:
-                        return decode(row), False
-                    raise BookingConflict("Load already claimed")
-            if self.live and (booking.mc != "138328" or booking.load_id in PROTECTED):
-                raise BookingConflict("Outside prototype live authorization")
-            row = encode(booking)
-            cohort = (
-                data["calls"]
-                .get(booking.call_id, {})
-                .get("cohort", "real" if self.live else "synthetic")
+        rows = await self.repository.rows("bookings", call_id=booking.call_id)
+        for _, _, row in rows:
+            if row.get("operation_id") == operation_id:
+                if row.get("fingerprint") != fingerprint:
+                    raise OperationConflict("Changed booking operation")
+                return decode(row), False
+        existing = await self.for_call(booking.call_id)
+        if existing:
+            if (
+                existing.get("operation_id") == operation_id
+                and existing.get("fingerprint") != fingerprint
+            ):
+                raise OperationConflict("Changed booking operation")
+            return decode(existing), False
+        if self.live and (booking.mc != "138328" or booking.load_id in PROTECTED):
+            raise BookingConflict("Outside prototype live authorization")
+        # A past intent remains blocking even if its state later becomes FAILED.
+        if booking.load_id in await self.blocked_load_ids([booking.load_id]):
+            raise BookingConflict("Load already claimed")
+        if not await self.claim("call:" + booking.call_id, booking):
+            known = await self.for_call(booking.call_id)
+            if known:
+                return decode(known), False
+            raise BookingConflict("Call already claimed")
+        if not await self.claim("load:" + booking.load_id, booking):
+            failed = replace(booking, state=State.FAILED, reason="load_claim_conflict")
+            await self.repository.cas(
+                "bookings",
+                booking.id,
+                None,
+                {
+                    **encode(failed),
+                    "operation_id": operation_id,
+                    "fingerprint": fingerprint,
+                    "cohort": "synthetic" if not self.live else "real",
+                    "created_at": time.time(),
+                },
             )
-            row.update(
-                operation_id=operation_id,
-                fingerprint=fingerprint,
-                cohort=cohort,
-                created_at=time.time(),
-            )
-            data["bookings"][booking.id] = row
-            return booking, True
+            await self.release(failed)
+            raise BookingConflict("Load already claimed")
+        _, call = await self.repository.get("calls", booking.call_id)
+        cohort = (call or {}).get("cohort", "real" if self.live else "synthetic")
+        if call is not None:
 
-        return await self.repository.update(change)
+            def freeze(current):
+                agreement = current.get("agreement")
+                if agreement and agreement.get("version") != booking.agreement_version:
+                    raise BookingConflict("Agreement changed before reservation")
+                if self.live and (
+                    not agreement
+                    or not agreement.get("booking_consent")
+                    or agreement.get("load_id") != booking.load_id
+                    or agreement.get("rate") != booking.rate
+                    or current.get("mc") != booking.mc
+                    or current.get("cohort") != "real"
+                    or not current.get("eligible")
+                    or current.get("verified_until", 0) <= self.clock()
+                    or current.get("closed_at")
+                ):
+                    raise BookingConflict("Fresh verified agreement and consent required")
+                if current.get("booking_id") not in (None, booking.id):
+                    raise BookingConflict("Call already reserved")
+                current["booking_id"] = booking.id
+
+            await self.repository.mutate("calls", booking.call_id, freeze)
+        row = {
+            **encode(booking),
+            "operation_id": operation_id,
+            "fingerprint": fingerprint,
+            "cohort": cohort,
+            "created_at": time.time(),
+        }
+        if not await self.repository.cas("bookings", booking.id, None, row):
+            raise BookingConflict("Booking identity already exists")
+        return booking, True
+
+    async def release(self, booking):
+        if booking.state is not State.FAILED or booking.write_intent_id:
+            return
+        _, call = await self.repository.get("calls", booking.call_id)
+        if call:
+
+            def unfreeze(current):
+                if current.get("booking_id") == booking.id:
+                    current.pop("booking_id", None)
+
+            await self.repository.mutate("calls", booking.call_id, unfreeze)
+        # Keep the old call claim until its freeze and load claim are released.
+        for key in ("load:" + booking.load_id, "call:" + booking.call_id):
+
+            def clear(claim):
+                if claim.get("booking_id") == booking.id and not claim.get("write_intent_id"):
+                    claim["active"] = False
+
+            _, claim = await self.repository.get("booking_claims", key)
+            if claim:
+                await self.repository.mutate("booking_claims", key, clear)
 
     async def update(self, booking_id, expected, **changes):
-        def change(data):
-            row = data["bookings"][booking_id]
+        def change(row):
             booking = decode(row)
             if booking.state not in expected:
                 return None
@@ -100,34 +182,40 @@ class TwinBookingStore:
             ):
                 raise ValueError("Caller consent requires review.")
             if self.live and changes.get("state") is State.SUBMITTING:
-                if row.get("cohort") != "real":
-                    raise BookingConflict("Synthetic calls cannot send live bookings")
-                authorization = permission(data, booking.call_id, booking.load_id)
-                if authorization is None:
-                    raise BookingConflict("Prototype live send gate closed")
-                if not authorization.get("initial"):
-                    authorization.update(
-                        consumed_intent_id=changes["write_intent_id"],
-                        consumed_call_id=booking.call_id,
-                    )
+                raise BookingConflict("Live sending is disabled during storage cutover")
             updated = replace(booking, **changes)
             row.update(encode(updated), updated_at=time.time())
             return updated
 
-        return await self.repository.update(change)
+        updated = await self.repository.mutate("bookings", booking_id, change)
+        if updated and updated.state is State.FAILED:
+            await self.release(updated)
+        return updated
 
     async def get(self, booking_id):
-        _, data = await self.repository.read()
-        return decode(data["bookings"][booking_id])
+        _, row = await self.repository.get("bookings", booking_id)
+        if row is None:
+            raise KeyError(booking_id)
+        return decode(row)
 
     async def in_states(self, states):
-        _, data = await self.repository.read()
-        return [decode(row) for row in data["bookings"].values() if State(row["state"]) in states]
+        rows = await self.repository.rows("bookings")
+        return [decode(row) for _, _, row in rows if State(row["state"]) in states]
 
-    async def blocked_load_ids(self):
-        _, data = await self.repository.read()
-        return frozenset(
-            row["load_id"]
-            for row in data["bookings"].values()
-            if State(row["state"]) in ACTIVE or (self.live and row.get("write_intent_id"))
-        )
+    async def blocked_load_ids(self, load_ids=None):
+        ids = ["load:" + key for key in load_ids] if load_ids is not None else None
+        claims = await self.repository.rows("booking_claims", ids=ids)
+        blocked = {
+            r["load_id"]
+            for _, _, r in claims
+            if r.get("load_id") and (r.get("active") or r.get("write_intent_id"))
+        }
+        # Memory fixtures may predate migration. Live rows always use durable claims.
+        if hasattr(self.repository, "data"):
+            rows = await self.repository.rows("bookings")
+            blocked.update(
+                r["load_id"]
+                for _, _, r in rows
+                if r["state"] != "FAILED" or r.get("write_intent_id")
+            )
+        return frozenset(blocked)

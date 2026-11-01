@@ -13,13 +13,13 @@ from service.adapters.tms.fake import make_load
 
 
 class Guards(unittest.IsolatedAsyncioTestCase):
-    async def test_corrupt_nonempty_canonical_state_fails_closed(self):
+    async def test_corrupt_entity_row_fails_closed(self):
         class Client:
             async def sql(self, sql):
-                return {"rows": [{"version": 3, "data": {"calls": {}}}]}
+                return {"rows": [{"version": 3, "data": "not an entity"}]}
 
         with self.assertRaises(RuntimeError):
-            await TwinRepository(Client()).read()
+            await TwinRepository(Client()).get("calls", "call")
 
     async def test_spent_failed_load_cannot_be_reserved_again(self):
         repo = MemoryRepository()

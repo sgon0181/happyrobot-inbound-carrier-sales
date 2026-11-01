@@ -1,0 +1,8 @@
+{
+  "label": "LIVE_INFRASTRUCTURE_SIMULATED_BUSINESS_FAILURE",
+  "host": "FLY_MACHINE",
+  "stage": "independent call-state sequences",
+  "result": "HTTP 429 after the claim and conditional-update assertions completed",
+  "live_tms_sends": 0,
+  "disposition": "Preserved failure and synthetic rows. Lowered SQL start rate to four per second; concurrency remains bounded at four. No business state lock was introduced."
+}

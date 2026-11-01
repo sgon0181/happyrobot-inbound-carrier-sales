@@ -67,6 +67,37 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await self.runtime.verify_code(self.cid, self.sent[-1][0])
         return await self.runtime.search(self.cid, {"equipment": "DRY_VAN"})
 
+    async def test_reservation_in_flight_does_not_claim_handoff_or_reset_verification(self):
+        await self.ready()
+        call = self.repository.data["calls"][self.cid]
+        call["booking_id"] = "not-yet-inserted"
+        before = call["verified_until"]
+        self.assertEqual((await self.runtime.search(self.cid, {}))["status"], "in_progress")
+        self.assertEqual((await self.runtime.send_code(self.cid))["status"], "in_progress")
+        self.assertEqual(self.repository.data["calls"][self.cid]["verified_until"], before)
+
+    async def test_sent_failed_booking_returns_its_recorded_result_on_retry(self):
+        from service.adapters.twin.bookings import encode
+
+        booking = Booking(
+            "failed",
+            self.cid,
+            "LD1",
+            "138328",
+            1000,
+            "a",
+            state=State.FAILED,
+            write_intent_id="spent",
+            reason="rejected",
+        )
+        self.repository.data["calls"][self.cid] = {
+            **self.runtime.new_call(self.cid),
+            "booking_id": "failed",
+        }
+        self.repository.data["bookings"]["failed"] = encode(booking)
+        result = await self.runtime.book(self.cid, None)
+        self.assertEqual(result, {"status": "not_booked", "reason": "rejected"})
+
     async def test_all_routes_require_auth_and_roles_are_separate(self):
         for method, path in [
             ("GET", "/health"),
@@ -282,6 +313,40 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         text, _ = redact_transcript(messages)
         self.assertNotIn("123", text)
         self.assertNotIn("456", text)
+
+    async def test_late_consent_response_preserves_a_frozen_approved_agreement(self):
+        from service.adapters.twin.bookings import encode
+
+        result = await self.ready()
+        rate = result["loads"][0]["offer"]
+        await self.runtime.negotiate(self.cid, "LD1", str(rate))
+        self.repository.label = "LIVE"
+        self.repository.data["calls"][self.cid]["cohort"] = "real"
+
+        async def late(cid, load_id, total, anchor):
+            call = self.repository.data["calls"][cid]
+            call["booking_id"] = "in-flight"
+            call["agreement"].update(booking_consent=True, consent_proof={"answer_id": "original"})
+            booking = Booking(
+                "in-flight",
+                cid,
+                load_id,
+                "138328",
+                total,
+                call["agreement"]["version"],
+                state=State.SUBMITTING,
+                write_intent_id="intent",
+            )
+            self.repository.data["bookings"][booking.id] = encode(booking)
+            return {"approved": False, "anchor": "late-negative"}
+
+        self.runtime.confirmation = late
+        result = await self.runtime.book(self.cid, None)
+        self.assertEqual(result["status"], "in_progress")
+        agreement = self.repository.data["calls"][self.cid]["agreement"]
+        self.assertTrue(agreement["booking_consent"])
+        self.assertEqual(agreement["consent_proof"]["answer_id"], "original")
+        self.assertEqual(len(self.server.book_requests), 0)
 
     async def test_live_booking_requires_fresh_trusted_consent(self):
         result = await self.ready()

@@ -1,14 +1,10 @@
-"""Approved last-resort Twin CAS state with separate physical read models.
-
-Twin wraps SQL and rejects data-modifying CTEs. Therefore the versioned control
-row is authoritative. Eight business tables and the claims table are projected
-read models. This is an explicit prototype deviation, not normalized atomic SQL.
-"""
+"""Authoritative entity rows in Twin, with compare-and-set per mutable row."""
 
 import asyncio
 import copy
 import json
 import re
+
 from .client import literal
 
 GROUPS = (
@@ -23,6 +19,7 @@ GROUPS = (
     "booking_claims",
 )
 CONTROL = "__prototype_commit_version__"
+CRITICAL = {"calls", "bookings", "otp_challenges", "booking_claims"}
 
 
 class Conflict(RuntimeError):
@@ -33,139 +30,264 @@ def empty():
     return {name: {} for name in GROUPS}
 
 
-class MemoryRepository:
+class Repository:
+    """Shared row contract. Bulk reads exist only for operators and migration."""
+
+    def __init__(self):
+        self.pending = set()
+        self.projection_errors = 0
+
+    async def mutate(self, table, key, change, initial=None):
+        for _ in range(20):
+            version, before = await self.get(table, key)
+            row = copy.deepcopy(before if before is not None else initial)
+            if row is None:
+                raise KeyError(key)
+            result = change(row)
+            if row == before:
+                return result
+            if await self.cas(table, key, version, row):
+                return result
+            await asyncio.sleep(0)
+        raise Conflict("Entity update did not settle")
+
+    async def read_call(self, cid):
+        version, call = await self.get("calls", cid)
+        state = empty()
+        if call is not None:
+            state["calls"][cid] = call
+            challenge = call.get("challenge")
+            if challenge:
+                _, row = await self.get("otp_challenges", challenge)
+                if row is not None:
+                    state["otp_challenges"][challenge] = row
+        state["bookings"] = {key: row for key, _, row in await self.rows("bookings", call_id=cid)}
+        return version, state
+
+    async def update_call(self, cid, change, initial):
+        for _ in range(20):
+            version, state = await self.read_call(cid)
+            call = state["calls"].setdefault(cid, copy.deepcopy(initial))
+            before = copy.deepcopy(state)
+            result = change(state, call)
+            if state["otp_challenges"] != before["otp_challenges"]:
+                raise ValueError("OTP changes require their own conditional row update")
+            if state["bookings"] != before["bookings"]:
+                raise ValueError("Booking changes require the booking store")
+            if call != before["calls"].get(cid) or version is None:
+                if not await self.cas("calls", cid, version, call):
+                    await asyncio.sleep(0)
+                    continue
+            for group in GROUPS:
+                if group in CRITICAL:
+                    continue
+                for key, row in state[group].items():
+                    if before[group].get(key) != row:
+                        self.defer_aux(group, key, row)
+            return result
+        raise Conflict("Call update did not settle")
+
+    def defer_aux(self, table, key, row):
+        async def save():
+            try:
+                await self.upsert(table, key, row)
+            except Exception:
+                self.projection_errors += 1
+
+        task = asyncio.create_task(save())
+        self.pending.add(task)
+        task.add_done_callback(self.pending.discard)
+
+    async def acquire_claim(self, key, row):
+        version, current = await self.get("booking_claims", key)
+        if current and (current.get("active") or current.get("write_intent_id")):
+            return False
+        return await self.cas("booking_claims", key, version, row)
+
+    async def read(self):
+        state = empty()
+        for group, rows in zip(GROUPS, await asyncio.gather(*(self.rows(g) for g in GROUPS))):
+            state[group] = {key: row for key, _, row in rows}
+        return 0, state
+
+    async def drain(self):
+        if self.pending:
+            await asyncio.gather(*tuple(self.pending))
+
+
+class MemoryRepository(Repository):
     label = "SIMULATED"
 
     def __init__(self):
+        super().__init__()
         self.data = empty()
+        self.versions = {}
         self.lock = asyncio.Lock()
 
     async def initialize(self):
         pass
 
-    async def read(self):
-        return 0, copy.deepcopy(self.data)
+    async def get(self, table, key):
+        row = self.data[table].get(key)
+        return (
+            (self.versions.get((table, key), 0), copy.deepcopy(row))
+            if row is not None
+            else (None, None)
+        )
+
+    async def cas(self, table, key, version, row):
+        async with self.lock:
+            actual = self.versions.get((table, key), 0) if key in self.data[table] else None
+            if actual != version:
+                return False
+            self.data[table][key] = copy.deepcopy(row)
+            self.versions[table, key] = (version or 0) + 1
+            return True
+
+    async def rows(self, table, *, call_id=None, ids=None, filters=None, limit=None):
+        result = []
+        for key, row in self.data[table].items():
+            if key == CONTROL or (ids is not None and key not in ids):
+                continue
+            if call_id is not None and row.get("call_id") != call_id:
+                continue
+            if filters and any(str(row.get(k)) != str(v) for k, v in filters.items()):
+                continue
+            result.append((key, self.versions.get((table, key), 0), copy.deepcopy(row)))
+        return result[:limit] if limit else result
+
+    async def upsert(self, table, key, row):
+        async with self.lock:
+            if self.data[table].get(key) != row:
+                self.data[table][key] = copy.deepcopy(row)
+                self.versions[table, key] = self.versions.get((table, key), 0) + 1
 
     async def update(self, fn):
+        """Fixture setup compatibility, never used by production hot paths."""
         async with self.lock:
-            data = copy.deepcopy(self.data)
-            result = fn(data)
-            self.data = data
+            state = copy.deepcopy(self.data)
+            result = fn(state)
+            self.data = state
             return result
 
+    def defer_aux(self, table, key, row):
+        self.data[table][key] = copy.deepcopy(row)
 
-class TwinRepository:
+
+class TwinRepository(Repository):
     label = "LIVE"
 
     def __init__(self, client, prefix="proto_"):
+        super().__init__()
         if not re.fullmatch(r"[a-z][a-z0-9_]{0,30}_", prefix):
             raise ValueError("Invalid table prefix")
         self.client, self.prefix = client, prefix
-        self.pending = set()
-        self.projection_errors = 0
 
     def table(self, name):
         if name not in GROUPS:
             raise ValueError("Unknown table")
         return self.prefix + name
 
-    async def initialize(self):
-        for name in GROUPS:
-            extra = (
-                ", active_load text UNIQUE, active_call text UNIQUE" if name == "bookings" else ""
-            )
-            await self.client.sql(
-                f"CREATE TABLE IF NOT EXISTS {self.table(name)} "
-                f"(id text PRIMARY KEY, version bigint NOT NULL DEFAULT 0, data jsonb NOT NULL{extra})"
-            )
-        await self.client.sql(
-            f'INSERT INTO {self.table("calls")}(id,data) '
-            f"VALUES ({literal(CONTROL)},'{{}}'::jsonb) ON CONFLICT DO NOTHING"
+    async def get(self, table, key):
+        if key == CONTROL:
+            raise ValueError("The frozen control row is not an entity")
+        result = await self.client.sql(
+            f"SELECT version,data FROM {self.table(table)} WHERE id={literal(key)}"
+        )
+        rows = result["rows"]
+        if not rows:
+            return None, None
+        if len(rows) != 1 or not isinstance(rows[0].get("data"), dict):
+            raise RuntimeError("Invalid entity row")
+        return int(rows[0]["version"]), rows[0]["data"]
+
+    async def read_call(self, cid):
+        calls, challenges, bookings = (
+            self.table(name) for name in ("calls", "otp_challenges", "bookings")
+        )
+        key = literal(cid)
+        sql = (
+            f"SELECT 'calls' AS entity,id,version,data FROM {calls} WHERE id={key} "
+            f"UNION ALL SELECT 'otp_challenges' AS entity,id,version,data FROM {challenges} "
+            f"WHERE id=(SELECT data->>'challenge' FROM {calls} WHERE id={key}) "
+            f"UNION ALL SELECT 'bookings' AS entity,id,version,data FROM {bookings} "
+            f"WHERE data->>'call_id'={key}"
+        )
+        state, version = empty(), None
+        for row in (await self.client.sql(sql))["rows"]:
+            if row["entity"] not in {"calls", "otp_challenges", "bookings"} or not isinstance(
+                row["data"], dict
+            ):
+                raise RuntimeError("Invalid scoped entity result")
+            state[row["entity"]][row["id"]] = row["data"]
+            if row["entity"] == "calls":
+                version = int(row["version"])
+        return version, state
+
+    def booking_columns(self, table, row):
+        if table != "bookings":
+            return "", "", ""
+        active = row.get("state") != "FAILED" or bool(row.get("write_intent_id"))
+        load = literal(row.get("load_id") if active else None)
+        call = literal(row.get("call_id") if active else None)
+        return (
+            ",active_load,active_call",
+            f",{load},{call}",
+            f",active_load={load},active_call={call}",
         )
 
-    async def read(self):
-        rows = (
-            await self.client.sql(
-                f'SELECT version,data FROM {self.table("calls")} WHERE id={literal(CONTROL)}'
+    async def cas(self, table, key, version, row):
+        name = self.table(table)
+        value = literal(json.dumps(row)) + "::jsonb"
+        columns, values, assignments = self.booking_columns(table, row)
+        if version is None:
+            sql = (
+                f"INSERT INTO {name}(id,version,data{columns}) "
+                f"VALUES ({literal(key)},1,{value}{values}) ON CONFLICT DO NOTHING RETURNING id"
             )
-        )["rows"]
-        if len(rows) != 1:
-            raise RuntimeError("Prototype schema not initialized")
-        row = rows[0]
-        data = row["data"]
-        if data == {}:
-            return int(row["version"]), empty()
-        if not isinstance(data, dict) or any(
-            k not in data or not isinstance(data[k], dict) for k in GROUPS
-        ):
-            raise RuntimeError("Canonical Twin state is incomplete; writes blocked")
-        return int(row["version"]), data
+        else:
+            sql = (
+                f"UPDATE {name} SET version=version+1,data={value}{assignments} "
+                f"WHERE id={literal(key)} AND version={int(version)} RETURNING id"
+            )
+        return bool((await self.client.sql(sql))["rows"])
 
-    async def update(self, fn):
-        for _ in range(30):
-            version, before = await self.read()
-            data = copy.deepcopy(before)
-            result = fn(data)
-            for key, row in data["bookings"].items():
-                if before["bookings"].get(key) == row:
-                    continue
-                for kind, value in [("load", row["load_id"]), ("call", row["call_id"])]:
-                    claim = kind + ":" + value
-                    active = row["state"] != "FAILED"
-                    previous = data["booking_claims"].get(claim)
-                    if previous and previous["booking_id"] != key:
-                        if not active:
-                            continue
-                        if previous["active"]:
-                            raise Conflict("Physical claim already held")
-                    data["booking_claims"][claim] = {
-                        "booking_id": key,
-                        "active": active,
-                        "load_id": row["load_id"],
-                        "call_id": row["call_id"],
-                    }
-            rows = (
-                await self.client.sql(
-                    f'UPDATE {self.table("calls")} SET version=version+1, '
-                    f"data={literal(json.dumps(data))}::jsonb WHERE id={literal(CONTROL)} "
-                    f"AND version={version} RETURNING version"
-                )
-            )["rows"]
-            if rows:
-                task = asyncio.create_task(self.project(before, data, version + 1))
-                self.pending.add(task)
-                task.add_done_callback(self.pending.discard)
-                return result
-            await asyncio.sleep(0.01)
-        raise Conflict("Prototype concurrent update did not settle")
+    async def rows(self, table, *, call_id=None, ids=None, filters=None, limit=None):
+        where = [f"id<>{literal(CONTROL)}"]
+        if call_id is not None:
+            where.append(f"data->>'call_id'={literal(call_id)}")
+        if ids is not None:
+            if not ids:
+                return []
+            where.append("id IN (" + ",".join(literal(key) for key in ids) + ")")
+        for key, value in (filters or {}).items():
+            if not re.fullmatch(r"[a-z_]+", key):
+                raise ValueError("Invalid filter")
+            where.append(f"data->>{literal(key)}={literal(value)}")
+        suffix = f" LIMIT {int(limit)}" if limit else ""
+        result = await self.client.sql(
+            f"SELECT id,version,data FROM {self.table(table)} WHERE " + " AND ".join(where) + suffix
+        )
+        return [(r["id"], int(r["version"]), r["data"]) for r in result["rows"]]
 
-    async def project(self, before, data, version):
-        # These are monotonic read models, not the source of coordination.
-        # The canonical row commits first. Projection failure cannot lose an ACK.
-        for name in GROUPS:
-            changed = [
-                (key, row) for key, row in data[name].items() if before[name].get(key) != row
-            ]
-            if not changed:
-                continue
-            table = self.table(name)
-            fields = "id,version,data"
-            values = []
-            updates = "version=EXCLUDED.version,data=EXCLUDED.data"
-            if name == "bookings":
-                fields += ",active_load,active_call"
-                updates += ",active_load=EXCLUDED.active_load,active_call=EXCLUDED.active_call"
-            for key, row in changed:
-                value = f"({literal(key)},{version},{literal(json.dumps(row))}::jsonb"
-                if name == "bookings":
-                    active = row["state"] != "FAILED"
-                    value += f',{literal(row["load_id"] if active else None)},{literal(row["call_id"] if active else None)}'
-                values.append(value + ")")
-            try:
-                await self.client.sql(
-                    f"INSERT INTO {table}({fields}) VALUES "
-                    + ",".join(values)
-                    + f" ON CONFLICT(id) DO UPDATE SET {updates} WHERE {table}.version<EXCLUDED.version"
-                )
-            except Exception:
-                self.projection_errors += 1
+    async def acquire_claim(self, key, row):
+        name = self.table("booking_claims")
+        result = await self.client.sql(
+            f"INSERT INTO {name}(id,version,data) "
+            f"VALUES ({literal(key)},1,{literal(json.dumps(row))}::jsonb) "
+            f"ON CONFLICT(id) DO UPDATE SET version={name}.version+1,data=EXCLUDED.data "
+            f"WHERE {name}.data->>'active'='false' "
+            f"AND COALESCE({name}.data->>'write_intent_id','')='' RETURNING id"
+        )
+        return bool(result["rows"])
+
+    async def upsert(self, table, key, row):
+        if table in CRITICAL:
+            raise ValueError("Critical entities require compare-and-set")
+        name = self.table(table)
+        await self.client.sql(
+            f"INSERT INTO {name}(id,version,data) "
+            f"VALUES ({literal(key)},1,{literal(json.dumps(row))}::jsonb) "
+            f"ON CONFLICT(id) DO UPDATE SET version={name}.version+1,data=EXCLUDED.data "
+            f"WHERE {name}.data IS DISTINCT FROM EXCLUDED.data RETURNING id"
+        )

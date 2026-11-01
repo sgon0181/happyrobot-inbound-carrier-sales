@@ -1,0 +1,8 @@
+{
+  "label": "LIVE_INFRASTRUCTURE_SIMULATED_BUSINESS_FAILURE",
+  "host": "FLY_MACHINE",
+  "stage": "eight claim contenders",
+  "result": "Twin SQL gateway rejected a request with HTTP 429",
+  "live_tms_sends": 0,
+  "disposition": "Preserved failed probe and synthetic rows. Added bounded retry only for explicit 429 rejections, retaining conditional-write semantics. Re-run uses fresh synthetic identifiers."
+}

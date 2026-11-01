@@ -90,13 +90,14 @@ def make_app(runtime, values, platform=None):
     async def collect():
         if platform is None:
             return {"status": "unavailable", "collected": 0}
-        _, state = await runtime.repository.read()
         collected = {}
-        for cid, call in list(state["calls"].items())[-40:]:
+        calls = await runtime.repository.rows("calls", filters={"cohort": "real"}, limit=40)
+        for cid, _, call in calls:
+            _, previous = await runtime.repository.get("call_transcripts", cid)
             if (
                 not call.get("closed_at")
                 or call["cohort"] != "real"
-                or state["call_transcripts"].get(cid, {}).get("redaction_version") == 2
+                or (previous or {}).get("redaction_version") == 2
             ):
                 continue
             try:
@@ -142,25 +143,21 @@ def make_app(runtime, values, platform=None):
             except Exception:
                 continue
 
-        def save(data):
-            for cid, row in collected.items():
-                data["call_transcripts"][cid] = row
-            return {"status": "ok", "collected": len(collected)}
-
-        return await runtime.repository.update(save)
+        for cid, row in collected.items():
+            await runtime.repository.upsert("call_transcripts", cid, row)
+        return {"status": "ok", "collected": len(collected)}
 
     @asynccontextmanager
     async def lifespan(app):
         # Provisioning is an explicit setup command. Runtime never attempts DDL.
-        await runtime.repository.read()
+        await runtime.repository.rows("calls", limit=1)
         await runtime.bookings.recover()
 
         async def sweep():
             while True:
                 await asyncio.sleep(45)
                 try:
-                    _, data = await runtime.repository.read()
-                    for cid, call in data["calls"].items():
+                    for cid, _, call in await runtime.repository.rows("calls"):
                         if (
                             not call.get("closed_at")
                             and time.time() - call["last_activity"] >= 1800
@@ -369,7 +366,12 @@ def make_app(runtime, values, platform=None):
                 booking_id=bid,
             )
 
-        await runtime.repository.update(audit)
+        from service.adapters.twin.repository import empty
+
+        state = empty()
+        audit(state)
+        for key, row in state["call_events"].items():
+            runtime.repository.defer_aux("call_events", key, row)
         return {
             "status": "ok",
             "state": booking.state.value,
@@ -394,6 +396,8 @@ def make_app(runtime, values, platform=None):
             raise ValueError("Run ID required")
 
         def change(data):
+            if data["calls"].get(cid, {}).get("booking_id"):
+                raise ValueError("A reserved call cannot be relabelled as QA.")
             if any(
                 b["call_id"] == cid and (b.get("write_intent_id") or b.get("reference"))
                 for b in data["bookings"].values()
@@ -401,12 +405,11 @@ def make_app(runtime, values, platform=None):
                 raise ValueError("A spent or acknowledged call cannot be relabelled as QA.")
             call = data["calls"].setdefault(cid, runtime.new_call(cid))
             call.update(cohort="synthetic", qa_source="HYBRID_INTEGRATION_CHECK")
-            for booking in data["bookings"].values():
-                if booking["call_id"] == cid:
-                    booking["cohort"] = "synthetic"
             return {"status": "ok"}
 
-        return await runtime.repository.update(change)
+        return await runtime.repository.update_call(
+            cid, lambda data, call: change(data), runtime.new_call(cid)
+        )
 
     app.state.runtime = runtime
     return app

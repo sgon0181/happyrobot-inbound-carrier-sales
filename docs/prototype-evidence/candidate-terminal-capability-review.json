@@ -1,0 +1,24 @@
+{
+  "label": "LIVE_READ_ONLY_PLATFORM_CAPABILITY_REVIEW",
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "agent_event_id": "0192e5dc-08df-78bf-a549-f43c6bf9f087",
+  "sources": [
+    "Official documentation search",
+    "Read-only integration searches for end call, hangup, terminate",
+    "Inbound Voice Agent configuration schema"
+  ],
+  "verified_settings": {
+    "disable_hangup": false,
+    "max_call_duration": 540,
+    "max_silence_hold_duration": 60
+  },
+  "verified_hangup_path": "Model-selected built-in hr_builtin_tool__end_conversation",
+  "not_verified": [
+    "Per-outcome deterministic end-call integration",
+    "Automatic-after-custom-tool-message field"
+  ],
+  "decision": "Retain explicit closing-tool sequencing and the measured failed urgency case. Do not invent unsupported flags or shorten the global silence limit, which could interrupt code waits.",
+  "writes": 0,
+  "action_tests": 0,
+  "tms_sends": 0
+}

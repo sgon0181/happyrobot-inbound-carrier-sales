@@ -30,7 +30,7 @@ separate speech checks to mark this gate passed.
 
 | Additional check | Evidence |
 | --- | --- |
-| Genuine agent counteroffer | Both rehearsals:4200 ask,3600 response; final-run proof pending |
+| Genuine agent counteroffer | Both rehearsals: 4200 ask,3600 response; final-run proof pending |
 | Natural booking permission | Both rehearsals passed native consent; final-run proof pending |
 
 ## 3. Storage results
@@ -94,7 +94,7 @@ The prototype's two prior intent rows are only part of that cross-harness histor
 | LD01081 | 872144 | 1324 | PENDING, Z7G5ZSRACFA5BU7G |
 | LD01086 | 872144 | 7900 | Authorized historical replay, ALREADY_BOOKED |
 | LD01077 | 138328 | 3225 | UNKNOWN, no retained receipt/reference; later status-only PENDING |
-| LD01094 | 138328 | 1075 | ACK_PENDING/PENDING,3PUHTGRJNDQ5EKMM; consent review, Confirm blocked |
+| LD01094 | 138328 | 1075 | ACK_PENDING/PENDING, 3PUHTGRJNDQ5EKMM; consent review, Confirm blocked |
 | LD01085 | 138328 | 2950 | ACK_PENDING/PENDING, EME8U26DKEX5DESS; valid consent/local rep approval, shortened-speech failure |
 
 No replay is authorized. LD01062 was OPEN at final preflight, but no owner call
@@ -115,6 +115,8 @@ the earlier sends and their limits.
 - Keep tentative handoffs, TMS confirmations and rep decisions as separate KPIs.
 - Review deterministic terminal-call closure: one ineligible simulation omitted
   closing tools and idled about 66 seconds. Eligibility and booking protection held.
+  No per-outcome automatic hangup action/flag was verified in the exposed platform
+  schemas. Shortening the global silence timeout would also affect code waits.
 
 ARCHITECTURE.md and Questions.Md were not edited. Claude decides the final design
 and documentation changes after reviewing these commits.

@@ -84,3 +84,7 @@ arguments, actual native ending, stored business facts or a real receipt.
 Text tests do not prove pronunciation, acoustic interruption behavior or reliable
 handling of every possible utterance. The live final call is the integration
 proof; the owner will handle the video separately.
+
+[Read-only terminal capability review](prototype-evidence/candidate-terminal-capability-review.json)
+found a model-selected built-in hangup and global timeouts, but no verified
+per-outcome automatic hangup action. No unsupported flag was added.

@@ -72,3 +72,76 @@ class ConfirmationTests(unittest.TestCase):
         messages = self.messages("Yes")
         messages[-1]["is_interrupted"] = True
         self.assertFalse(consent_evidence(messages, 1075, "u1")["approved"])
+
+    def test_required_natural_approval_answers(self):
+        approvals = [
+            "Yes.",
+            "Yes please.",
+            "Go ahead.",
+            "Book it.",
+            "Yes, book it.",
+            "Yeah.",
+            "Yeah, go ahead.",
+            "Yep.",
+            "Sure.",
+            "Correct.",
+            "Okay.",
+            "Okay, perfect.",
+            "Sounds good.",
+            "That works.",
+            "Yes, that's fine.",
+            "Yes, please do.",
+            "Yes sir.",
+            "Yes, thanks.",
+        ]
+        for answer in approvals:
+            with self.subTest(answer=answer):
+                self.assertTrue(consent_evidence(self.messages(answer), 1075, "u1")["approved"])
+        self.assertFalse(
+            consent_evidence(self.messages("Yeah. That sounds about right."), 1075, "u1")[
+                "approved"
+            ]
+        )
+
+    def test_canonical_question_can_be_last_sentence_after_price_or_fragment(self):
+        for prefix in ["Yes, I can do $1075. ", "Okay. ", "The total is $1,075. "]:
+            self.assertTrue(
+                consent_evidence(
+                    self.messages(
+                        "Yeah, go ahead.", prefix + "May I book load LD1 at $1075 total?"
+                    ),
+                    1075,
+                    "u1",
+                )["approved"]
+            )
+        self.assertFalse(
+            consent_evidence(
+                self.messages("Yes.", "May I book load LD1 at $1075 total? Please confirm."),
+                1075,
+                "u1",
+            )["approved"]
+        )
+
+    def test_unknown_or_conditional_tails_and_long_answers_fail(self):
+        for answer in [
+            "Sure if you can",
+            "Okay but wait",
+            "Yes actually",
+            "Yeah maybe",
+            "Correct only",
+            "Yes don't",
+            "Yes not",
+            "Yep hold",
+            "Yes no",
+            "Yes ١",
+            "Please book it",
+            "Yeah that sounds about right",
+            "Yes please thanks perfect sir please thanks perfect please",
+        ]:
+            with self.subTest(answer=answer):
+                self.assertFalse(consent_evidence(self.messages(answer), 1075, "u1")["approved"])
+        self.assertTrue(
+            consent_evidence(
+                self.messages("Yes please thanks perfect sir please thanks perfect"), 1075, "u1"
+            )["approved"]
+        )

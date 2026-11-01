@@ -1,0 +1,86 @@
+{
+  "label": "SIMULATED_DIALOGUE_POLICY",
+  "required_answers": [
+    {
+      "answer": "Yes.",
+      "approved": true
+    },
+    {
+      "answer": "Yes please.",
+      "approved": true
+    },
+    {
+      "answer": "Go ahead.",
+      "approved": true
+    },
+    {
+      "answer": "Book it.",
+      "approved": true
+    },
+    {
+      "answer": "Yes, book it.",
+      "approved": true
+    },
+    {
+      "answer": "Yeah.",
+      "approved": true
+    },
+    {
+      "answer": "Yeah, go ahead.",
+      "approved": true
+    },
+    {
+      "answer": "Yep.",
+      "approved": true
+    },
+    {
+      "answer": "Sure.",
+      "approved": true
+    },
+    {
+      "answer": "Correct.",
+      "approved": true
+    },
+    {
+      "answer": "Okay.",
+      "approved": true
+    },
+    {
+      "answer": "Okay, perfect.",
+      "approved": true
+    },
+    {
+      "answer": "Sounds good.",
+      "approved": true
+    },
+    {
+      "answer": "That works.",
+      "approved": true
+    },
+    {
+      "answer": "Yes, that's fine.",
+      "approved": true
+    },
+    {
+      "answer": "Yes, please do.",
+      "approved": true
+    },
+    {
+      "answer": "Yes sir.",
+      "approved": true
+    },
+    {
+      "answer": "Yes, thanks.",
+      "approved": true
+    },
+    {
+      "answer": "Yeah. That sounds about right.",
+      "approved": false
+    }
+  ],
+  "approved": 18,
+  "rejected_price_confirmation": 1,
+  "existing_rejection_tests_retained": true,
+  "lead_in_supported": true,
+  "live_tms_sends": 0
+}

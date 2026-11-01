@@ -52,24 +52,24 @@ def consent_evidence(messages, rate, anchor=None, load_id=None):
         or question["interrupted"]
     ):
         return result
-    # Do not erase a new amount or question mark and turn it into a bare yes.
-    if re.search(r"[0-9$?]", user["text"]):
+    # Reject contradictory or conditional answers before removing punctuation.
+    original = user["text"].lower().replace("\u2019", "'")
+    if re.search(r"[\d$?]", original):
         return result
-    answer = re.sub(r"[.,!]", " ", user["text"].lower())
-    answer = " ".join(answer.split())
-    positives = {
-        "yes",
-        "yes please",
-        "yes go ahead",
-        "yes please go ahead",
-        "yes book it",
-        "yes please book it",
-        "go ahead",
-        "go ahead and book it",
-        "please book it",
-        "book it",
-    }
-    if answer not in positives:
+    if re.search(r"\b(?:no|not|don't|wait|hold|but|if|only|actually|maybe)\b", original):
+        return result
+    answer = " ".join(re.sub(r"[.,!]", " ", original).split())
+    if len(answer.split()) > 8:
+        return result
+    affirmative = (
+        r"(?:yes|yeah|yep|yup|sure|correct|that's right|go ahead|"
+        r"book it|sounds good|that works|okay)"
+    )
+    polite = (
+        r"(?:please|thanks|thank you|perfect|that's fine|sir|ma'am|"
+        r"do|go ahead|book it|and book it)"
+    )
+    if not re.fullmatch(affirmative + r"(?:\s+" + polite + r")*", answer):
         return result
     amounts = "(?:" + re.escape(str(rate)) + "|" + re.escape(format(rate, ",")) + ")"
     expected = (
@@ -79,7 +79,7 @@ def consent_evidence(messages, rate, anchor=None, load_id=None):
         + amounts
         + r"\s+total\?"
     )
-    if load_id and re.fullmatch(expected, question["text"].strip(), re.I):
+    if load_id and re.search(r"\b" + expected + r"\s*\Z", question["text"], re.I):
         result["approved"] = True
         result["question_id"] = question["id"]
         result["answer_id"] = user["id"]

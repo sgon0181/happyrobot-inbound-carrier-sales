@@ -1,8 +1,11 @@
 """Async TMS client: bounded read retries, and one guarded send for bookings."""
 
 import asyncio
+import base64
+import contextvars
 from contextlib import suppress
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
+import hashlib
 import random
 import re
 
@@ -65,6 +68,9 @@ def classify_booking_reply(raw, load_id):
     status = record.get("STATUS")
     if record.get("LOAD_ID") != load_id or not reference:
         return unknown("receipt_does_not_match", status)
+    from service.adapters.tms.mapping import parse_timestamp
+    if parse_timestamp(record.get("TIMESTAMP")) is None:
+        return unknown("invalid_receipt_timestamp", status)
     outcomes = {"PENDING": BookingOutcome.ACK_PENDING, "BOOKED": BookingOutcome.CONFIRMED}
     if status not in outcomes:
         return unknown("unexpected_status", status)
@@ -74,6 +80,7 @@ def classify_booking_reply(raw, load_id):
 class TmsClient:
     def __init__(self, settings):
         self.settings = settings
+        self.capture = contextvars.ContextVar("tms_capture", default=None)
 
     @property
     def booking_enabled(self):
@@ -81,23 +88,28 @@ class TmsClient:
 
     async def _exchange(self, request):
         """One request on a fresh connection. Stops at END, without waiting for close."""
+        evidence = self.capture.get()
+        if evidence is not None: evidence["phase"] = "connecting"
         reader, writer = await asyncio.open_connection(self.settings.host, self.settings.port)
         try:
+            if evidence is not None: evidence.update(phase="sending", send_started=True)
             writer.write(request)
             await writer.drain()
+            if evidence is not None: evidence.update(phase="reading", write_drained=True)
             buffer = bytearray()
             while True:
                 chunk = await reader.read(4096)
                 if not chunk:
                     return bytes(buffer)
                 buffer.extend(chunk)
+                if evidence is not None: evidence["received"].extend(chunk)
                 check_bounds(buffer)
                 if frame_complete(buffer):
                     return bytes(buffer)
         finally:
-            writer.close()
-            with suppress(OSError):
-                await writer.wait_closed()
+            with suppress(Exception): writer.close()
+            with suppress(Exception):
+                async with asyncio.timeout(.05): await writer.wait_closed()
 
     async def _read(self, command, fields, echo=False):
         settings = self.settings
@@ -189,8 +201,21 @@ class TmsClient:
             self.settings.token,
             {"LOAD_ID": load_id, "MC_NUM": mc, "AGREED_RATE": rate},
         )
+        evidence = {"phase": "prepared", "send_started": False, "write_drained": False,
+                    "received": bytearray(), "error_type": None}
+        marker = self.capture.set(evidence)
         try:
             raw = await asyncio.wait_for(self._exchange(request), self.settings.write_seconds)
+            receipt = classify_booking_reply(raw.replace(self.settings.token.encode(), b"[HIDDEN]"), load_id)
         except (TimeoutError, OSError, MalformedReply) as error:
-            return BookingReceipt(BookingOutcome.UNKNOWN, reason=type(error).__name__)
-        return classify_booking_reply(raw.replace(self.settings.token.encode(), b"[HIDDEN]"), load_id)
+            raw = bytes(evidence["received"])
+            evidence["error_type"] = type(error).__name__
+            receipt = BookingReceipt(BookingOutcome.UNKNOWN if evidence["send_started"] else BookingOutcome.REJECTED,
+                                     raw_reply=raw.replace(self.settings.token.encode(),b"[HIDDEN]").decode("ascii",errors="replace"),
+                                     reason=type(error).__name__ if evidence["send_started"] else "tms_unavailable")
+        finally: self.capture.reset(marker)
+        safe_raw = raw.replace(self.settings.token.encode(), b"[HIDDEN]")
+        diagnostic = {k:v for k,v in evidence.items() if k != "received"}
+        diagnostic.update(response_bytes=len(raw), response_sha256=hashlib.sha256(raw).hexdigest(),
+                          received_b64=base64.b64encode(safe_raw).decode())
+        return replace(receipt, diagnostic=diagnostic)

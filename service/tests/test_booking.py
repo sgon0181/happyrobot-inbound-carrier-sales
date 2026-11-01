@@ -413,7 +413,7 @@ class AgentViewTests(Base):
         unknown = replace(booking, state=State.UNKNOWN)
         self.assertEqual(agent_view(booking), agent_view(unknown))
         self.assertEqual(agent_view(booking),
-                         {"status": "request_accepted", "agreed_rate": 2000})
+                         {"status": "senior_review", "agreed_rate": 2000})
 
     async def test_the_view_hides_internal_fields(self):
         async with FakeTMS([make_load("LD1", MAX_BUY="2345")]) as tms:

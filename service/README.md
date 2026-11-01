@@ -1,6 +1,8 @@
 # Carrier Sales Service
 
-Phase 1 of [`ARCHITECTURE.md`](../ARCHITECTURE.md): the TMS adapter and the booking and pricing core. It has no endpoints yet, and it uses only the Python standard library. The deployed target is Python 3.12.
+Prototype of [`ARCHITECTURE.md`](../ARCHITECTURE.md), built on the existing TMS,
+booking and pricing core. Python 3.12 with FastAPI. Deployment state and measured
+limits are recorded in the root `PROTOTYPE_REPORT.md` when this run finishes.
 
 ## Run the tests
 
@@ -31,16 +33,25 @@ The tests run offline. They use a local fake TMS over real TCP, and importing th
 - **`max_rate` stays inside the service.** It is excluded from `repr`, and `agent_view` is the only booking data the voice agent gets.
 - **`InMemoryBookingStore` says nothing about Twin.** It shows what the `BookingStore` interface needs: an atomic claim and a conditional update. T-1 proved both on Twin probe rows, and the real schema must still show them.
 
-## Known gaps
+## Receipt and state handling
 
-Codex's live test exposed these, and they are fixed before phase 2 ([architecture section 11](../ARCHITECTURE.md#11-delivery-plan)):
+The prototype corrects the phase 1 gaps exposed by the harness:
 
-- **Lost evidence:** on a timeout or reset, `TmsClient.book` keeps only the error type and discards any reply bytes already received.
-- **False unknown:** a connection that never opens is `UNKNOWN`, which blocks the load for good. It should be `FAILED`, because nothing was sent.
-- **Lost receipt:** if saving the receipt fails, the booking stays `SUBMITTING` and the receipt is gone.
-- **Overclaiming:** `agent_view` says `request_accepted` on `UNKNOWN`. It should use the neutral status from D-18.
-- **Confirm on `UNKNOWN`:** `confirm` still accepts these bookings, pending the owner's decision on D-18.
+- Received bytes, phase, error class and digest survive a failed reply.
+- A connection that never opens is rejected before send, resulting in FAILED.
+- Receipt storage retries independently; the final fallback is restricted service
+  evidence logging, never another booking send.
+- ACK_PENDING and UNKNOWN share the neutral `senior_review` agent status.
+- Confirm requires ACK_PENDING or CONFIRMED, and never performs a TMS write.
 
-## Not built yet
+## Prototype operation
 
-Endpoints, authentication, the Twin, FMCSA and email adapters, Docker and deployment.
+`make test` runs offline tests. `make deploy` builds and deploys only the approved
+Fly app. Provision the eight `proto_` Twin tables first. Runtime configuration
+comes from ignored `.env` or process secrets. Do not import tests in a live
+process, because their network guard deliberately blocks external connections.
+
+`BOOKING_ENABLED` defaults off. The live BookingStore additionally permits only
+MC 138328, excludes protected inventory, caps this campaign at three durable
+send reservations, and closes further sends after its first real acknowledged
+receipt. No booking retry or namespace reset is supported.

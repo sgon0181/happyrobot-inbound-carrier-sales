@@ -6,7 +6,11 @@ fact. Nothing here resends a booking, and nothing counts as confirmed without
 authoritative TMS evidence (INV-7).
 """
 
-from dataclasses import dataclass, replace
+import asyncio
+from dataclasses import dataclass, replace, field
+from datetime import datetime, timezone
+import json
+import logging
 from enum import Enum
 import hashlib
 from typing import Protocol
@@ -57,6 +61,8 @@ class Booking:
     rep: str | None = None
     review_required: bool = False
     reason: str | None = None
+    diagnostic: dict = field(default_factory=dict, repr=False)
+    persistence_pending: bool = False
 
 
 class BookingConflict(Exception):
@@ -137,7 +143,7 @@ def agent_view(booking):
         return {"status": "not_booked", "reason": booking.reason}
     if booking.state in (State.AGREED, State.SUBMITTING):
         return {"status": "in_progress"}
-    return {"status": "request_accepted", "agreed_rate": booking.rate}
+    return {"status": "senior_review", "agreed_rate": booking.rate}
 
 
 class BookingService:
@@ -145,8 +151,9 @@ class BookingService:
         self.store = store
         self.tms = tms
         self.new_id = new_id
+        self.pending = set()
 
-    async def request(self, *, call_id, operation_id, load_id, mc, rate, agreement_version):
+    async def request(self, *, call_id, operation_id, load_id, mc, rate, agreement_version, deadline=None):
         """Create the booking, recheck the load, send once, and record the actual reply."""
         if type(rate) is not int or rate <= 0:
             raise ValueError("Use a positive whole rate.")
@@ -157,7 +164,10 @@ class BookingService:
         booking, created = await self.store.create(booking, operation_id, fingerprint)
         if not created:
             return booking
-        return await self._submit(booking)
+        task = asyncio.create_task(self._submit(booking, deadline))
+        self.pending.add(task)
+        task.add_done_callback(self.pending.discard)
+        return await asyncio.shield(task)
 
     async def _fail(self, booking, reason):
         updated = await self.store.update(
@@ -165,7 +175,7 @@ class BookingService:
         )
         return updated or await self.store.get(booking.id)
 
-    async def _submit(self, booking):
+    async def _submit(self, booking, deadline=None):
         if not self.tms.booking_enabled:
             return await self._fail(booking, "live_booking_disabled")
         try:
@@ -174,10 +184,14 @@ class BookingService:
             return await self._fail(booking, "tms_unavailable")
         if load is None or load.status != "OPEN":
             return await self._fail(booking, "load_gone")
+        if load.pickup_datetime is None or load.pickup_datetime <= datetime.now(timezone.utc):
+            return await self._fail(booking, "pickup_ineligible")
         if load.max_rate is None:
             return await self._fail(booking, "ceiling_unavailable")
         if booking.rate > load.max_rate:
             return await self._fail(booking, "ceiling_fell")
+        if deadline is not None and deadline-asyncio.get_running_loop().time()<6:
+            return await self._fail(booking,"deadline_before_send")
 
         # The intent must be durable before the write can happen.
         claimed = await self.store.update(
@@ -187,9 +201,35 @@ class BookingService:
         if claimed is None:
             return await self.store.get(booking.id)
         receipt = await self.tms.book(booking.load_id, booking.mc, booking.rate)
-        return await self._record(booking.id, receipt)
+        return await self._record(booking.id, receipt, claimed)
 
-    async def _record(self, booking_id, receipt):
+    async def _record(self, booking_id, receipt, fallback=None):
+        for attempt in range(3):
+            try:
+                return await self._record_once(booking_id, receipt)
+            except Exception:
+                try:
+                    saved = await self.store.get(booking_id)
+                    if (saved.state in {State.ACK_PENDING, State.CONFIRMED}
+                            and saved.reference == receipt.reference):
+                        return saved
+                except Exception:
+                    pass
+                await asyncio.sleep(.05 * attempt)
+        # This restricted service log is the INV-10 fallback. No outbound AUTH,
+        # expected OTP, ceiling or contact is ever included in this event.
+        logging.getLogger("receipt_evidence").error(json.dumps({
+            "event": "receipt_persistence_failure", "booking_id": booking_id,
+            "outcome": receipt.outcome.value, "reference": receipt.reference,
+            "tms_status": receipt.tms_status, "raw_reply": receipt.raw_reply,
+            "diagnostic": receipt.diagnostic,
+        }))
+        booking = fallback or await self.store.get(booking_id)
+        return replace(booking, state=RESULT_STATES[receipt.outcome], reference=receipt.reference,
+                       tms_status=receipt.tms_status, raw_reply=receipt.raw_reply,
+                       diagnostic=receipt.diagnostic, review_required=True, persistence_pending=True)
+
+    async def _record_once(self, booking_id, receipt):
         state = RESULT_STATES[receipt.outcome]
         recorded = await self.store.update(
             booking_id, frozenset({State.SUBMITTING}),
@@ -199,6 +239,7 @@ class BookingService:
             raw_reply=receipt.raw_reply,
             reason=receipt.reason,
             review_required=state is State.UNKNOWN,
+            diagnostic=receipt.diagnostic,
         )
         if recorded is not None:
             return recorded
@@ -239,6 +280,8 @@ class BookingService:
 
     async def confirm(self, booking_id, rep):
         """Record the rep's confirmation. Never writes to the TMS."""
+        if (await self.store.get(booking_id)).state not in {State.ACK_PENDING, State.CONFIRMED}:
+            raise ValueError("A matching acknowledgement is required before rep confirmation.")
         return await self._decide(booking_id, RepDecision.CONFIRMED, rep)
 
     async def decline(self, booking_id, rep):

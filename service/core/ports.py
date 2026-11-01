@@ -1,6 +1,6 @@
 """What the core needs from the TMS, without depending on the wire protocol."""
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from enum import Enum
 from typing import Protocol
 
@@ -25,6 +25,7 @@ class BookingReceipt:
     tms_status: str | None = None
     raw_reply: str | None = None
     reason: str | None = None
+    diagnostic: dict = field(default_factory=dict, repr=False)
 
 
 class TmsPort(Protocol):

@@ -212,11 +212,11 @@ class BookingTests(unittest.IsolatedAsyncioTestCase):
             receipt = await client_for(tms).book("LD404", "138328", 2000)
         self.assertIs(receipt.outcome, BookingOutcome.REJECTED)
 
-    async def test_a_closed_port_is_unknown(self):
+    async def test_a_closed_port_is_rejected_because_nothing_was_sent(self):
         async with FakeTMS([]) as tms:
             client = client_for(tms)
         receipt = await client.book("LD1", "138328", 2000)
-        self.assertIs(receipt.outcome, BookingOutcome.UNKNOWN)
+        self.assertIs(receipt.outcome, BookingOutcome.REJECTED)
 
     async def test_the_token_never_reaches_a_stored_reply(self):
         async with FakeTMS([make_load("LD1", NOTES="")]) as tms:

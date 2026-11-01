@@ -11,16 +11,16 @@ The unused live window was closed and authenticated health now reports off.
 | Check | Measured result | Label |
 | --- | --- | --- |
 | Entity storage | Per-call/booking/OTP CAS, primary-key claims, frozen old control,110 entities verified with zero mismatches | LIVE infrastructure |
-| Contention |8 load contenders,1 winner;8 booking transitions,1 winner;8 independent call sequences overlap | LIVE infrastructure, synthetic records |
-| Rehearsal | Two real calls,4200 ask countered at3600,3625 later accepted; natural consent passed; no send | LIVE integration rehearsal |
-| Conversation matrix |17 cases, every actual rate argument matched; conditional answers and withdrawals did not advance submission | SIMULATED native conversation |
+| Contention | 8 load contenders,1 winner;8 booking transitions,1 winner;8 independent call sequences overlap | LIVE infrastructure, synthetic records |
+| Rehearsal | Two real calls,4200 ask countered at 3600,3625 later accepted; natural consent passed; no send | LIVE integration rehearsal |
+| Conversation matrix | 17 cases, every actual rate argument matched; conditional answers and withdrawals did not advance submission | SIMULATED native conversation |
 | Exact text checkpoints | Percentage calculation4320, unfinished/completed amounts, information question, confirmed price tool argument | HYBRID model generation with explicit service-auth denial |
 | Neutral acknowledgment fix | Actual first "Yeah, go ahead" replay now passes across one exact "One moment"; question/answer/ignored IDs retained | SIMULATED replay of LIVE evidence |
-| Final v17 standard QA |11 cases; nine graders passed, two failed. One genuine urgency-close failure and one static uncertainty fixture with failed permission/counter grades | SIMULATED native conversation |
+| Final v17 standard QA | 11 cases; nine graders passed, two failed. One genuine urgency-close failure and one static uncertainty fixture with failed permission/counter grades | SIMULATED native conversation |
 | Final focused v17 | Counter, true final offer and natural permission passed manual tool/wording checks; all ended natively | SIMULATED native conversation |
-| Service authentication |16 routes, missing and wrong-role keys, all32 checks rejected 401 | LIVE auth boundary |
+| Service authentication | 16 routes, missing and wrong-role keys, all32 checks rejected 401 | LIVE auth boundary |
 | App authentication | Six routes, missing and forged sessions, all 12 checks rejected or redirected as expected | LIVE auth boundary |
-| Deployed file hashes |34 runtime/policy/requirements files match the selected code commit | LIVE read-only |
+| Deployed file hashes | 34 runtime/policy/requirements files match the selected code commit | LIVE read-only |
 | New booking this candidate run | None. The owner must make the final allocated voice call | Not yet exercised |
 
 Read [conversation coverage](conversation-coverage.md) for exact nuances and
@@ -54,6 +54,7 @@ The existing functional App remains deployed. LD01094 stays blocked from Confirm
 
 - [Storage cutover](storage-cutover.md)
 - [Final standard scenarios](prototype-evidence/candidate-v17-native-qa.json)
+- [Fully mocked final-version fixtures](../happyrobot/qa-scenarios-candidate-v17.json)
 - [Final focused scenarios](prototype-evidence/candidate-v17-focused.json)
 - [Conversation matrix](prototype-evidence/candidate-v16-conversation-matrix.json)
 - [Exact checkpoints](prototype-evidence/candidate-v17-exact-checkpoints.json)

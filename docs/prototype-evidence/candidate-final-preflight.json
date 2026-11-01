@@ -1,0 +1,20 @@
+{
+  "label": "LIVE_READ_ONLY_PREFLIGHT",
+  "checked_at": "2026-11-01T08:03:44.816116+00:00",
+  "load_id": "LD01062",
+  "lane": "CA to KY",
+  "equipment": "DRY_VAN",
+  "status": "OPEN",
+  "pickup": "2026-11-02T22:40:00+00:00",
+  "opening_offer": 3500,
+  "caller_ask": 4200,
+  "real_counter_expected": true,
+  "prior_prototype_write_intents": 2,
+  "new_sends_this_run": 0,
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "rehearse"
+  },
+  "pricing_policy_sha256": "c17f2055dde316fd6f9249c2eb18947e04ee57ab3e62e15112f9e9f7de538e8d"
+}

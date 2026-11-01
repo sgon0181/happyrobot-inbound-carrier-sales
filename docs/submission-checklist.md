@@ -1,33 +1,27 @@
 # Final submission checklist
 
-No external sending, repository push, reviewer invitation or submission has
-been made by this continuation. Prepare concrete results before asking for
-the owner's final publication approval.
+No repository push, reviewer invitation, external message or submission is
+included in this isolated run. Claude reviews the local commits first.
 
-- [x] Real voice booking with explicit permission, fresh code entry, counters,
-  complete PENDING receipt and native termination, LD01085 at 2950.
-- [x] Full neutral handoff repaired and checked separately without another send.
-  The original booking call's shortened disclosure remains a recorded failure.
-- [x] Real call and redacted transcript visible in Apps.
-- [x] Rep approval saved for the valid call only, distinct from TMS PENDING.
-- [x] QA results separate live, hybrid and simulated outcomes and preserve failures.
-- [ ] Check Luke's reply about PENDING and review Q8 before final handoff.
-- [ ] Prospect email finalized, with accurate links and no unverified claims.
-- [ ] IT/business build description finalized against the tested implementation.
-- [ ] Approximately five-minute walkthrough recorded and reviewed for secrets.
-- [ ] Exact isolated branch/commit selected for owner-approved publication.
-- [ ] Private repository visibility and actual submitted remote commit checked.
-- [ ] Named reviewer accounts obtained from the real submission instructions.
-- [ ] Existing/pending invitations and workflow/App access verified.
-- [ ] Final resource cost and cleanup plan agreed, including Fly's lack of a
-  hard spending cap and any ongoing volume charge.
+- [ ] One final run passes exactly the nine architecture section 11 items.
+- [ ] The same run has a genuine agent counteroffer and natural booking permission.
+- [ ] Full fixed handoff was actually spoken and the agent ended the call.
+- [ ] Owner confirmed the valid final booking in the signed-in App.
+- [ ] Receipt exported, every new live send entered in the TMS contract, and spent inventory blocked.
+- [ ] Final live mode is off and the existing Fly Machine is idle or stopped.
+- [ ] All Python 3.12 tests pass and deployed runtime hashes match the final commit.
+- [ ] Final-version native QA and missing/wrong-role authentication checks documented.
+- [ ] Check Luke's PENDING reply and review Q8 before submission. Questions.Md remains unchanged in this run.
+- [ ] Claude reviews the candidate commits and the owner selects the merge/publication commit.
+- [ ] Resolve the separate App source publish, which requires its native main merge. Existing App name and alias already work.
+- [ ] Owner prepares the approximately five-minute walkthrough with code audio/screen redacted.
+- [ ] Prospect note and build description reference the actual tested result and reviewable links.
+- [ ] Private repository and submitted remote commit verified after authorized publication.
+- [ ] Reviewer accounts obtained from real submission instructions and their access checked.
+- [ ] Workflow/App/video access checked as the intended reviewer.
 - [ ] Owner approves the concrete push, sharing, email and submission actions.
 
-The PDF does not name reviewer accounts. Do not guess them or invite unrelated
-users. A local branch is not yet a remotely reviewable code submission.
-
-Read-only checks on 2026-11-01: the GitHub repository is private, and its
-collaborator list contains only the owner's sgon0181 account. The latest Luke
-reply found in the authorized mailbox is the clarification already recorded
-from 2026-10-30 Sydney time. No newer PENDING answer or named reviewer accounts
-were found in that email thread. No invitation or message was sent.
+The PDF does not identify reviewer usernames. Do not guess accounts or send
+invitations. A local branch is not a remotely reviewable submission. There is no
+hard Fly spending cap; retain the single-machine cleanup plan and review actual
+billing before leaving the service running.

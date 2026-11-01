@@ -30,8 +30,18 @@ import {
 
 export const dynamic = "force-dynamic";
 
-const PAGE_TITLE = "Carrier Sales Prototype";
+const PAGE_TITLE = "HappyRobot Logistics Carrier Sales";
 const cell = "py-3 text-left";
+
+// Epoch milliseconds for sorting; unparseable or missing values sort last.
+function toMs(v: string | number | null): number {
+  if (v === null) return Number.NEGATIVE_INFINITY;
+  const t = typeof v === "number" ? (v < 1e12 ? v * 1000 : v) : Date.parse(v);
+  return Number.isNaN(t) ? Number.NEGATIVE_INFINITY : t;
+}
+function newestFirst<T>(rows: T[], at: (r: T) => string | number | null): T[] {
+  return [...rows].sort((a, b) => toMs(at(b)) - toMs(at(a)) || 0);
+}
 
 function fmtTime(v: string | number | null): string {
   if (v === null) return "n/a";
@@ -69,10 +79,10 @@ export default async function HomePage() {
     <AppShell title={PAGE_TITLE}>
       <Alert>
         <IconAlertTriangle />
-        <AlertTitle>Prototype</AlertTitle>
+        <AlertTitle>Booking review</AlertTitle>
         <AlertDescription>
-          Data and rep actions go through the carrier sales service. A rep decision is recorded by the service;
-          booking status in the TMS is shown exactly as the TMS reports it.
+          Rep approval records the rep&apos;s decision only. It does not change the load status in the TMS, which is
+          shown exactly as the TMS reports it.
         </AlertDescription>
       </Alert>
 
@@ -84,14 +94,23 @@ export default async function HomePage() {
       ) : (
         <>
           <KpiOverview kpis={result.snapshot.kpis} queue={result.snapshot.queue} status={result.snapshot.status} />
-          <RepQueue rows={result.snapshot.queue.filter((r) => r.cohort === "real")} title="Rep queue: real" />
           <RepQueue
-            rows={result.snapshot.queue.filter((r) => r.cohort !== "real")}
+            rows={newestFirst(result.snapshot.queue.filter((r) => r.cohort === "real"), (r) => r.createdAt)}
+            title="Rep queue: real"
+          />
+          <RepQueue
+            rows={newestFirst(result.snapshot.queue.filter((r) => r.cohort !== "real"), (r) => r.createdAt)}
             title="Rep queue: synthetic"
             description="Test bookings. Kept separate from real results."
           />
-          <CallLog calls={result.snapshot.calls.filter((c) => c.cohort === "real")} title="Call log: real" />
-          <CallLog calls={result.snapshot.calls.filter((c) => c.cohort !== "real")} title="Call log: synthetic" />
+          <CallLog
+            calls={newestFirst(result.snapshot.calls.filter((c) => c.cohort === "real"), (c) => c.startedAt ?? c.closedAt)}
+            title="Call log: real"
+          />
+          <CallLog
+            calls={newestFirst(result.snapshot.calls.filter((c) => c.cohort !== "real"), (c) => c.startedAt ?? c.closedAt)}
+            title="Call log: synthetic"
+          />
         </>
       )}
     </AppShell>

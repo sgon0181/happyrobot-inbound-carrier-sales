@@ -52,11 +52,11 @@ export function AppSidebar() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   isActive={pathname === "/"}
-                  tooltip="Carrier Sales Prototype"
+                  tooltip="Carrier Sales"
                   render={<Link href="/" />}
                 >
                   <IconLayoutDashboard />
-                  <span>Carrier Sales Prototype</span>
+                  <span>Carrier Sales</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>

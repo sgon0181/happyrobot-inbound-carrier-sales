@@ -1,0 +1,12 @@
+{
+  "label": "LIVE_SIGNED_IN_APP_READ",
+  "alias": "https://carrier-sales-santiago.happyrobot.dev",
+  "resource_name": "HappyRobot Logistics Carrier Sales",
+  "deployed_page_heading": "Carrier Sales Prototype",
+  "candidate_source_published": false,
+  "unsafe_load_id": "LD01094",
+  "matching_rows": 2,
+  "confirm_buttons_on_unsafe_rows": 0,
+  "rep_actions_performed": 0,
+  "business_writes": 0
+}

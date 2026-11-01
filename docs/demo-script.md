@@ -1,40 +1,32 @@
-# Five-minute business walkthrough
+# Five-minute walkthrough
 
-Recording readiness: real consented booking and App approval are available.
-The final walkthrough has not been recorded. Use the completed real-call
-recording and the separate speech-check evidence, clearly identified.
-No further live booking is allocated. Do not present a simulation as a new
-booking or imply the original call spoke the corrected disclosure.
+The owner will handle recording and editing separately. The video is not part of
+this run's remaining workflow gate. Use the exact final call identified in
+PROTOTYPE_REPORT.md, followed by its App record and QA evidence. Do not present
+two different calls as a single clean call.
 
-| Time | Show and say |
+| Time | Show and explain |
 | --- | --- |
-| 0:00-0:30 | Explain missed calls, repeated verification and inconsistent negotiation. Show the web-call entry and describe the first leg the agent owns. |
-| 0:30-2:50 | Show the recorded real call: active MC, emailed code, matching lane, counters, exact total and explicit permission. Redact the code in audio and screen. Explain its shortened transfer disclosure, then show the separate fixed-speech check; no new booking. |
-| 2:50-3:50 | Open the real call in Apps. Show load, MC, agreed rate, receipt and actual PENDING status. Review the notes. Show the saved rep approval for LD01085. Explain that it is a local business decision and does not change the TMS to BOOKED. |
-| 3:50-4:40 | Show qa-results.md and native test results. Explain one blocked code-bypass attempt and one uncertainty/duplicate-send control. Separate live evidence from synthetic cases. |
-| 4:40-5:00 | State the measured outcome and the important assumptions. Explain that external finalization is unresolved and outline the next production work. |
+| 0:00-0:30 | The inbound carrier problem, the web-call entry and what the agent handles. |
+| 0:30-3:00 | The final native call: active MC, fresh email verification, lane match, a real agent counteroffer, clearly accepted total, natural booking permission, full simulated-transfer disclosure and agent hangup. |
+| 3:00-4:00 | That same run in Apps: MC, load, agreed rate, reference, actual PENDING status, redacted transcript and saved rep decision. Explain that rep approval is separate from external confirmation. |
+| 4:00-4:40 | QA: verification bypass, unavailable load, leading-zero code, TMS faults and duplicate-send controls. Distinguish actual integrations from mocked cases. |
+| 4:40-5:00 | The measured outcome, the unanswered external-finalization question and the next production work. |
 
-## Before pressing record
+## Recording controls
 
-- Verify reviewer access, the exact repository commit and the active workflow.
-- Use make warm only if the dashboard needs the service. The post-card runtime
-  check passed. Both prototype booking permissions are consumed; do not place
-  another booking or reuse LD01085/LD01094.
-- Hide code entry and inbox content in the existing call recording. Redact the
-  spoken code in the final audio, with a "verification code redacted" label.
-  The underlying verification was an actual human action.
-- Keep the App open and signed in. Ensure real and synthetic cohorts are clear.
-- If any check fails, record the failure honestly and stop the booking attempt.
-  A repeat take on another load needs another owner authorization.
+- Redact the verification code in screen and audio while keeping the sequence
+  honest. Keep the private original out of the submitted package.
+- Show only project windows. Keep inbox content, credentials, raw platform logs
+  and internal pricing off screen.
+- Use the same final run throughout. Preserve the earlier failed calls as QA
+  history, not as substitute evidence of this run's spoken handoff.
+- The final call's native recording is the voice source. Rep confirmation can
+  be shown as the saved App decision if it was not recorded on screen.
+- Never resend that load to recreate a shot. Another live take needs a fresh
+  allocation and new owner authorization. Live mode stays off after the test.
+- Verify final reviewer access, the selected commit and the video redaction
+  before submission. No publication or external email is authorized here.
 
-## Evidence to use
-
-The latest real run is 112f1a4a-84f3-420f-bce4-d7f374b381d1, load LD01085,
-MC 138328, total 2950, TMS PENDING and reference EME8U26DKEX5DESS.
-Local rep confirmation is saved. Its full speech assessment is in qa-results.md.
-Use the separate no-send voice run only to demonstrate the repaired handoff.
-
-The original LD01094 call is a failed-consent example and must never be
-confirmed, resent or shown as a clean success. Neither spent load can be used
-for another take. A new real submission would require separate exact-load
-authorization, which is not part of this recording plan.
+Links: [workflow](https://platform.happyrobot.ai/deployments/yhcdrf4kne4j),
+[dashboard](https://carrier-sales-santiago.happyrobot.dev), [QA](qa-results.md).

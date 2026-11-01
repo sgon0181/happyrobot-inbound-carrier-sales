@@ -1,0 +1,14 @@
+{
+  "label": "LIVE_PLATFORM_SOURCE_READ",
+  "app_slug": "codex-lab-carrier-sales-v24",
+  "display_name": "HappyRobot Logistics Carrier Sales",
+  "custom_url": "https://carrier-sales-santiago.happyrobot.dev",
+  "source_commit": "e6766e64915e4a4069253fb28fbb7d358c8d6b79",
+  "mirrored_files": {
+    "src/app/page.tsx": "a8158588bd0361f97c6654e6d819ef54fcb225d2d29d39365d2a6ffded5e7e6e",
+    "src/components/app-sidebar.tsx": "b256867c0bf352f9a64a1078c90db7c64896898d6d767258e3a74317a1a0e2db"
+  },
+  "production_source_changed": false,
+  "reason": "Native Production deployment explicitly merges the separate App working branch into main. Canceled under the owner hard limit. Existing deployed dashboard remains functional; rename and alias saved separately.",
+  "checks": "Builder reports typecheck, build, action gate/redaction and sort checks passed. Parent mirrored the exact visible diff and matched both source hashes."
+}

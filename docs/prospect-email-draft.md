@@ -1,35 +1,24 @@
-# Prospect summary email, draft only
+# Prospect email, draft only
 
-Do not send this draft until the review links and video below are final. Sending is not authorized by the current isolated-build instruction.
+Do not send until the final live-call result, video and reviewer access are ready.
 
-Subject: Inbound carrier sales prototype and demonstration
+Subject: Inbound carrier sales demonstration
 
 Hi team,
 
-I built a prototype that handles the first part of an inbound carrier call:
-authority verification, an emailed code, load matching, controlled negotiation
-and a tentative booking request, followed by a simulated senior-rep handoff.
+I built an inbound carrier sales assistant that verifies authority and an emailed
+code, matches loads, negotiates within pricing limits and prepares a tentative
+booking for senior review. The dashboard brings call records, actual TMS receipts
+and rep decisions into one place.
 
-The operations dashboard brings the agreed rate, actual TMS receipt, review
-status and call record into one place. Rep approval stays separate from the
-TMS status, so a pending request is never presented as a confirmed booking.
+Two live rehearsals demonstrated real counteroffers and booking permission without
+spending a load. The final booking demonstration is pending. The build note and
+QA report explain the measured behavior and documented assumptions.
 
-The demonstration will show the real call journey, the operator review and
-the documented standard, failure and adversarial checks. The build document
-explains the assumptions, controls and remaining production work.
-
-Review package:
-
-- Private repository and submitted commit: pending owner-approved publication.
-- Workflow: https://platform.happyrobot.ai/deployments/yhcdrf4kne4j
-- Dashboard: https://codex-lab-carrier-sales-v24.happyrobot.dev/
-- Walkthrough video: pending final recording and review.
-
-The first live test exposed a consent defect, which is retained as failed
-evidence. A subsequent real call passed strict permission, received a PENDING
-receipt and was rep-approved in the dashboard. Its shortened spoken disclosure
-was corrected and checked separately without submitting another booking.
-The evidence distinguishes the original call from that later speech check.
+- [Workflow](https://platform.happyrobot.ai/deployments/yhcdrf4kne4j)
+- [Dashboard](https://carrier-sales-santiago.happyrobot.dev)
+- [Private repository](https://github.com/sgon0181/happyrobot-inbound-carrier-sales)
+- Walkthrough video: owner preparing separately.
 
 Thanks,
 Santi

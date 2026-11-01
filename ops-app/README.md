@@ -1,24 +1,35 @@
-# Carrier Sales Prototype App
+# Carrier Sales App source mirror
 
-Sanitized native HappyRobot Apps source mirror. Source commit
-`b2fd1638705e6cf4c25da0cac4073b89e1dac5e6`, exported from the approved app
-`codex-lab-carrier-sales-v24` on 2026-11-01. One copied comment in .gitignore
-was normalized to comply with the repository punctuation rule.
+Base source: native HappyRobot Apps commit
+b2fd1638705e6cf4c25da0cac4073b89e1dac5e6, exported on 2026-11-01.
+The candidate overlay changes only src/app/page.tsx and
+src/components/app-sidebar.tsx to exactly match native sandbox commit
+e6766e64915e4a4069253fb28fbb7d358c8d6b79. Both SHA256 hashes are verified in
+[the source evidence](../docs/prototype-evidence/candidate-app-source.json).
+One earlier copied .gitignore comment was normalized for the punctuation rule.
+
+The existing App is codex-lab-carrier-sales-v24, now named HappyRobot Logistics
+Carrier Sales, with saved alias https://carrier-sales-santiago.happyrobot.dev.
+Its original URL stays active. The newer UI source is not published: native
+Production deployment explicitly merges the separate App branch into main, so
+it was canceled under the owner's hard limit. The prior functional dashboard
+remains deployed. This mirror makes the candidate UI reviewable locally.
 
 The App verifies HappyRobot sign-in and calls the service from its server.
-There are no direct Twin business-data reads or writes. OPS_API_KEY belongs
-only in the native App's server environment. It is never a public variable.
-The platform supplies the existing HR_PLATFORM_URL, organization, App identity
-and token-environment configuration. No credential file is included here.
+No direct Twin business-data read or write remains. OPS_API_KEY is server-only.
+The platform supplies HR_PLATFORM_URL, organization, App identity and token
+configuration. This mirror contains no credential file.
 
-Use Node 22 and npm ci. Run npm run build first in a fresh export so Next.js
-generates next-env.d.ts, then npm run typecheck. Native template lint has a
-known circular configuration failure, recorded in the prototype report.
+Use Node 22 and npm ci. Run npm run build in a fresh export to generate
+next-env.d.ts, then npm run typecheck. The native builder reports both passed
+for the candidate, along with action-gate, redaction and sorting checks.
+The template lint configuration has a known circular failure, retained in QA.
 
-The real call is in caller-consent review. Do not confirm it. Synthetic queue
-fixtures are clearly labelled and excluded from real KPIs. A local rep decision
-does not change the TMS from PENDING to BOOKED.
+LD01094 specifically remains blocked for caller-consent review. Never confirm
+that booking. UNKNOWN also has no Confirm action. Other valid pending receipts
+can receive a local rep decision, which never changes the external TMS to BOOKED.
+Real and synthetic cohorts remain separate.
 
-See the root PROTOTYPE_REPORT.md and docs/qa-results.md for measured outcomes
-and the failed clean-run consent gate. This source mirror is for review;
-publishing uses the native App deployment controls, not a Tech-Challenge push.
+Read [the report](../PROTOTYPE_REPORT.md) and [QA](../docs/qa-results.md) for the
+actual final run. Publishing the App source remains a separate owner-reviewed
+native deployment decision; no Tech-Challenge push is authorized here.

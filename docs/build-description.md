@@ -1,43 +1,31 @@
 # Inbound Carrier Sales: business and IT build description
 
-Status: controlled prototype on branch prototype/e2e. The first real call
-proved the integrations but failed caller consent. Its receipt remains blocked
-for review. A later real call passed strict permission, booked LD01085 at 2950
-with TMS PENDING, and received local rep approval. Its shortened spoken handoff
-was repaired and checked separately without another booking.
+This candidate handles the first part of an inbound carrier call and hands the
+result to a senior representative. The measured outcome and exact run are in
+[PROTOTYPE_REPORT.md](../PROTOTYPE_REPORT.md). The original workflow and main
+branch remain unchanged.
 
-## Business scope
+## Business flow
 
-The prototype answers inbound web calls, checks carrier authority, verifies
-an emailed code, finds suitable loads, negotiates within service-owned pricing
-rules, requests a tentative booking and announces a simulated senior-rep
-handoff. An operator can review the call and receipt in HappyRobot Apps.
+1. Verify the caller's MC against active FMCSA carrier authority.
+2. Email a fresh six-digit code to the approved demo inbox and verify it during
+   the call before showing any load or rate.
+3. Match equipment and lane to explicitly OPEN loads with future pickup,
+   excluding spent, protected and void inventory.
+4. Offer a service-calculated rate. Negotiate within the unchanged private
+   pricing policy and a three-round counter limit. Internal ceilings stay private.
+5. Clearly accept the agreed price, then ask the exact load-and-total booking
+   question. Check fresh natural permission from actual native speech.
+6. Persist call and load claims, the booking row and write intent before one
+   LOAD_BOOK send. Save the actual reply and reference.
+7. Speak the fixed senior-review and simulated-transfer disclosure, then hang up.
+8. Let a signed-in rep review the redacted call and actual receipt in Apps and
+   record Confirm or Decline. UNKNOWN is reconciled by read only.
 
-The brokerage keeps the final business decision. Rep approval is recorded
-locally and is separate from the TMS's actual status. PENDING is displayed as
-PENDING. No supported external finalization or cancellation operation has
-been established, and no BOOKED result is invented.
-
-## Carrier journey
-
-1. The caller gives an MC number. The service checks active FMCSA authority.
-2. A fresh code goes to the configured demo inbox. The caller must read it
-   during the call before seeing loads or rates. The demo destination was
-   approved for this challenge; it does not prove a real carrier's identity.
-3. The caller provides equipment and a lane. The service filters explicitly
-   OPEN loads with future pickup and excludes protected or spent inventory.
-4. The service returns carrier-safe offers and accepts at most three counter
-   rounds across the call. Internal ceiling and policy values stay backend-only.
-5. Price agreement is followed by an explicit permission question naming the
-   exact load and total. The service checks fresh affirmative speech from
-   the same native session. A clarification or interrupted answer blocks it.
-6. One permitted LOAD_BOOK send is made. A complete pending receipt becomes
-   ACK_PENDING; uncertain transport becomes UNKNOWN. Neither is described as
-   externally confirmed.
-7. The agent speaks the neutral senior-review and mocked-transfer line, then
-   closes the record and uses the platform hangup tool.
-8. The operator reviews the receipt, notes and redacted transcript. Confirm,
-   Decline and read-only Reconcile go through the authenticated service.
+Rep approval is a local business decision. TMS PENDING remains PENDING. No
+supported external confirmation, cancellation or expiry operation was established.
+The pending interpretation and Luke's unanswered question need review before
+submission, as recorded in Questions.Md.
 
 ## Components
 
@@ -45,89 +33,68 @@ been established, and no BOOKED result is invented.
 flowchart LR
     C[Carrier web call] --> H[HappyRobot voice workflow]
     H --> S[Authenticated Python service]
-    S --> F[FMCSA authority]
-    S --> E[Gmail SMTP to demo inbox]
-    S --> T[Legacy TMS over TCP]
-    S --> D[Twin canonical state]
+    S --> F[FMCSA]
+    S --> E[Gmail SMTP]
+    S --> T[Legacy TMS TCP]
+    S --> D[Twin entity rows and claims]
     A[Signed-in HappyRobot App] --> S
-    S --> R[Receipt journal]
+    S --> R[Private receipt journal]
 ```
 
-HappyRobot supplies the conversation and hidden runtime run ID. The model
-requests actions; it cannot set verification facts, the call identity, a
-pricing ceiling, an agreed booking rate or a consent boolean.
+HappyRobot supplies the hidden runtime call identity and conversation. Python
+owns authority, OTP, pricing, round counts, consent, booking transitions and audit
+records. The voice model requests actions and receives only carrier-safe results.
+It cannot supply a verification boolean, expected code, pricing ceiling, stored
+agreement or rep identity.
 
-The Python 3.12 service owns verification, matching, pricing, counter budgets,
-consent, booking transitions and audit records. It is Dockerized and deployed
-with make deploy to the isolated Fly app. Every service endpoint requires
-the appropriate agent or operations bearer credential.
+Twin stores one authoritative row per call, booking and OTP challenge with version
+checks. Primary-key call/load claims prevent duplicate submissions. There are no
+multi-table transactions, so every write is ordered to fail closed after a crash.
+Auxiliary inserts and upserts run independently. The old aggregate remains frozen
+and unread. [Storage results](storage-cutover.md) show real-table contention and
+latency, including the earlier failures and the limits of the measurements.
 
-Twin is the business datastore. The external SQL gateway rejected the attempted
-data-modifying CTE form, and the runtime role could not create tables.
-The approved fallback uses a version-checked canonical JSONB row with atomic
-claims and transitions. Separate proto_ business tables are monotonic read
-models, not a claim of normalized atomic transactions. Real contention testing
-produced one winner from eight claims and one from eight conditional changes.
+The App keeps HappyRobot sign-in and uses authenticated server-side service reads
+and rep actions. This is the T-7 fallback for the failed native Twin gateway.
+Neither credentials nor raw upstream errors reach the browser. App candidate UI
+source is mirrored locally; the separate native Production publish would merge
+its App repository into main and was canceled under the owner's hard limit.
+The existing functional dashboard, new name and saved alias remain available.
 
-The native Apps Twin gateway remained Failed after its allowed retry. The
-approved fallback keeps verified HappyRobot sign-in and routes App reads and
-actions through the service. The operations key stays server-side. Rep identity
-comes from the verified session, not from browser input.
+The service runs in a non-root Python 3.12 Docker container. make deploy updates
+one existing 256 MB Fly Machine. make warm prevents idle shutdown during a call;
+make idle restores automatic stopping afterwards. The total hosting budget is USD3.
 
-## Controls and failure behavior
+## Failure handling and evidence
 
-- Codes are call/MC-bound, expire in five minutes, are consumed once, and have
-  resend and failure budgets. Changing MC clears verification and selections.
-- The versioned pricing policy is deterministic for a load and policy secret.
-  It validates every offered/agreed rate against usable internal pricing.
-  Missing or ambiguous pricing goes to review.
-- Booking uses the stored agreement. Durable write intent, atomic claims and
-  one-shot sending prevent a repeated tool request from sending again.
-- A follow-up experiment requires appended authorization for a fresh load.
-  Prior intents and receipts are never relabelled or reset to regain budget.
-- Receipt bytes, digest, phase and error type are retained independently of
-  normal socket cleanup. Receipt-save recovery does not resend a booking.
-- A connection that never opens is FAILED. Ambiguous post-send transport is
-  UNKNOWN. Only authoritative final evidence can produce CONFIRMED.
-- UNKNOWN has no Confirm action. Caller-consent review also blocks Confirm.
-  Declining a pending/unknown booking retains the claim and release warning.
-- Transcript collection follows native pagination, joins ASR fragments and
-  redacts spoken codes, including failed attempts. Native privileged logs and
-  ignored raw evidence remain private.
+Codes are call/MC-bound, expire, are consumed once and have resend/failure budgets.
+Missing authority, failed verification, missing pricing and TMS outages are intended
+to close politely. QA retains one ineligible-call hangup failure, described in
+qa-results.md. Information questions do not grant booking permission. Every past send
+intent continues to block the load, including an ambiguous or failed result.
 
-## Operations and measurement
+Complete pending acknowledgements, uncertain transport and authoritative final
+confirmation stay distinct. Receipt capture and storage recovery never trigger a
+retry. UNKNOWN and the disputed LD01094 booking cannot be confirmed. Declining a
+pending request retains its claim and release warning.
 
-The App separates real and synthetic cohorts. The northstar counts consented,
-acknowledged tentative handoffs per code-passed real call. Confirmed TMS
-bookings and rep approvals are separate measures. The disputed first call
-does not count as a successful handoff.
+The App separates real and synthetic cohorts. The northstar measures consented,
+acknowledged tentative handoffs per code-passed real call. TMS confirmations and
+rep approvals are separate. Spoken disclosure is assessed from actual messages,
+not inferred from a handoff flag.
+These figures describe controlled owner calls and test records, not measured
+customer conversion.
 
-Current evidence, scenario coverage and limits are in qa-results.md. Native
-conversation simulations, fake TCP tests and actual owner voice calls have
-different labels. A passing conversational grade does not prove integration
-or real booking success.
+Transcripts redact codes and preserve contextual MC identity. Summaries are
+explicitly deterministic; sentiment is not assessed. The personal-inbox OTP route
+is Luke-approved demo scope and does not prove real carrier contact ownership.
+The private receipt journal is ephemeral and must be exported before replacement.
+Auxiliary write loss, gateway throttling and slow-storage deadline exhaustion
+remain production concerns. QA keeps live, hybrid and simulated results distinct.
 
-## Documented assumptions and production work
+## Review links
 
-The candidate interpretation maps TMS PENDING to an initial tentative stage,
-not a proven reservation guarantee. Currency/scale, finalization, cancellation,
-expiry and lost-receipt ownership remain unresolved. MAX_BUY is treated as the
-internal ceiling under the documented candidate assumption.
-
-The owner configured Gmail SMTP for service-owned code delivery. It replaces
-the temporary native action-test route on the deployed prototype. The second
-owner call proved actual inbox receipt and code entry, then exposed a dialogue
-failure during price clarification. The revised dialogue and real consent path
-passed controlled tests and a subsequent real consented booking. A dedicated
-fixed handoff tool repairs the separately observed spoken-disclosure defect.
-The original booking call and later no-send voice check are documented as
-separate evidence.
-
-The canonical Twin aggregate, demo inbox identity policy, strict consent
-matcher and deterministic post-call summary are prototype choices. Stronger
-storage transactions, durable cross-machine receipt retention, a real carrier
-contact source, tested AI analysis, operator permissions and full conversation
-QA need review before production. No unsupported ROI figures are claimed.
-
-The existing main checkout, real workflow and architecture were not changed.
-This branch and its external prototype resources remain isolated for review.
+- [Voice workflow](https://platform.happyrobot.ai/deployments/yhcdrf4kne4j)
+- [Operations dashboard](https://carrier-sales-santiago.happyrobot.dev)
+- [QA results](qa-results.md)
+- [Submission checklist](submission-checklist.md)

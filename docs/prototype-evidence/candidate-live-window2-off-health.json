@@ -1,0 +1,13 @@
+{
+  "http_status": 200,
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "off"
+  },
+  "call_id": "5783608f-d54b-4a5d-b028-89db98ae10ec",
+  "load_id": "LD01062",
+  "state": "ACK_PENDING",
+  "receipt_sha256": "6d95b96c98d14575b76531812536c1cca870f31fd4aecb52f9afd5ef30134d82",
+  "new_sends_this_run": 1
+}

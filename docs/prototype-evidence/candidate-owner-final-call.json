@@ -1,0 +1,126 @@
+{
+  "label": "LIVE_OWNER_FINAL_CALL",
+  "run_id": "5783608f-d54b-4a5d-b028-89db98ae10ec",
+  "redacted_transcript": "assistant: Hi, this is HappyRobot Logistics carrier sales. What is your MC number?\nuser: [SIX DIGITS REDACTED].\nassistant: A six-digit code was just emailed to you. Please read it back.\nassistant: Please\nuser: Okay. The COLI's [code redacted].\nassistant: What equipment and lane are you looking for?\nuser: I'm looking for a drive in from California to Kentucky.\nassistant: Three thousand five hundred dollars total. Sacramento, California to Louisville, Kentucky, dry van, picking up November second and delivering November fifth. Electronics, 23 pieces, 42,164 pounds. Interested?\nuser: Can you do 4200\nassistant: I can\u2019t do four thousand two hundred, but I can offer three thousand six hundred dollars total. Would that work?\nuser: How about 25 on top of that?\nassistant: Just checking, do you mean three thousand six hundred twenty-five dollars total?\nuser: Yes. That works.\nassistant: Yes, I can do three thousand six hundred twenty-five dollars total. May I book load LD01062 at $3625 total?\nuser: Yes, please. Go ahead.\nassistant: Alright... \nassistant: May I book load LD01062 at $3625 total?\nuser: Yeah. Go ahead.\nassistant: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.\nassistant: Have a great day.",
+  "tools": [
+    "verify_carrier",
+    "send_code",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "agree_rate",
+    "request_booking",
+    "request_booking",
+    "request_booking",
+    "finish_handoff",
+    "_hangup"
+  ],
+  "tool_arguments": [
+    {
+      "name": "verify_carrier",
+      "arguments": {}
+    },
+    {
+      "name": "send_code",
+      "arguments": {}
+    },
+    {
+      "name": "verify_code",
+      "arguments": {}
+    },
+    {
+      "name": "find_loads",
+      "arguments": {}
+    },
+    {
+      "name": "agree_rate",
+      "arguments": {
+        "load_id": "LD01062",
+        "rate": "4200"
+      }
+    },
+    {
+      "name": "agree_rate",
+      "arguments": {
+        "load_id": "LD01062",
+        "rate": "3625"
+      }
+    },
+    {
+      "name": "request_booking",
+      "arguments": {}
+    },
+    {
+      "name": "request_booking",
+      "arguments": {}
+    },
+    {
+      "name": "request_booking",
+      "arguments": {}
+    },
+    {
+      "name": "finish_handoff",
+      "arguments": {}
+    },
+    {
+      "name": "_hangup",
+      "arguments": {}
+    }
+  ],
+  "calls": [
+    {
+      "id": "5783608f-d54b-4a5d-b028-89db98ae10ec",
+      "outcome": "agreed_pending_rep",
+      "started_at": 1793528077.18123,
+      "closed_at": 1793528194.17373,
+      "eligible": true,
+      "verified_until": 0,
+      "booking_id": "e65944b8-f823-490b-b212-97f3645354d1",
+      "agreement": {
+        "rate": 3625,
+        "load_id": "LD01062",
+        "version": "6d9ca55f2bb14b41a67e14311ab52b3f",
+        "consent_proof": {
+          "answer_id": "a94b7ef1-2964-4704-8df0-e65e15aea63b",
+          "session_id": "c1bcb21c-a879-4e86-995b-a3347bdf6c34",
+          "question_id": "01a1969c-0e79-75c3-b295-0d300aea4319",
+          "agreement_version": "6d9ca55f2bb14b41a67e14311ab52b3f",
+          "ignored_acknowledgement_ids": null
+        },
+        "booking_consent": true,
+        "confirmation_anchor": "e0ab0179-0dce-4851-8b31-d16ac5c11c5a"
+      },
+      "consent_proof": null,
+      "rounds": 2
+    }
+  ],
+  "bookings": [
+    {
+      "id": "e65944b8-f823-490b-b212-97f3645354d1",
+      "state": "ACK_PENDING",
+      "load_id": "LD01062",
+      "write_intent_id": "b82a357b-038c-449b-b8b6-d03bd683e36b",
+      "reference": "9HH6VP5Q2LQ09GCO",
+      "external_status": null,
+      "rep_decision": "awaiting",
+      "reason": null,
+      "raw_reply_sha256": null
+    }
+  ],
+  "rounds": [
+    {
+      "id": null,
+      "ask": "4200",
+      "response": 3600,
+      "round": 1,
+      "load_id": "LD01062"
+    },
+    {
+      "id": null,
+      "ask": "3625",
+      "response": 3625,
+      "round": 2,
+      "load_id": "LD01062"
+    }
+  ]
+}

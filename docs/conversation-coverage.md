@@ -34,7 +34,7 @@ amount. This is model/tool-boundary evidence, not real business submission.
 | "Could you" followed by "repeat the rate" | No negotiation or booking preparation. |
 | "No, I mean 3625 total" | Treated as a price correction, not a refusal to continue. |
 | 3700 corrected to 3725 within one turn | Read back3725, waited, submitted 3725 once. |
-| "Is that3600 or3625?" | Repeated the actual 3600 offer without a tool. |
+| "Is that 3600 or3625?" | Repeated the actual 3600 offer without a tool. |
 | Numeric phrase split before the 25 | Preserved the 25 and submitted 3625. v16 prematurely suggested3600; final v17 exact checkpoint waited for completion instead. |
 | "Yeah. That sounds about right" after booking question | Did not treat price-only affirmation as permission; asked for explicit permission again. |
 
@@ -68,7 +68,11 @@ Static confirmation_required mocks cannot prove a required-to-approved state
 transition. Offline tests exercise the actual finite consent matcher, exact
 question, anchor, session, interruption, amount and negation checks. The real
 rehearsals independently passed native consent with zero intents or sends.
-The completed final owner run, if passed, is identified in PROTOTYPE_REPORT.md.
+The final owner run 5783608f-d54b-4a5d-b028-89db98ae10ec passed the nine-item
+gate with a real PENDING receipt and App approval. Its extra "Alright" caused
+one redundant question before a fresh natural answer passed. A brief extra
+goodbye followed the fixed handoff. These remain conversation-quality limits;
+no additional booking send occurred.
 
 Some simulated cases reached a harness backstop after proving their language
 phase. Do not claim full closure for those traces. v17 standard QA also found

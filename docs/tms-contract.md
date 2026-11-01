@@ -159,12 +159,38 @@ protected and voided inventory; durable claims also block every past intent.
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
 | Voided control | LD01069 | Never offer or book. |
 | Protected, historical `OPEN` snapshot | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
 The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
+
+## Final candidate owner call, 2026-11-01
+
+The owner authorized a fresh final take after the previous call arrived with
+bookings disabled. Run `5783608f-d54b-4a5d-b028-89db98ae10ec` selected LD01062
+from the requested California-to-Kentucky dry-van lane, without a caller load ID.
+Fresh preflight and pre-send reads required OPEN status and future pickup.
+MC 138328 passed live authority and a fresh emailed code. Ask 4200 was countered
+at 3600; the caller's next 3625 total was clarified and accepted. Fresh natural
+permission followed the exact load-and-total question.
+
+Exactly one LOAD_BOOK send at AGREED_RATE:3625 returned a complete 97-byte receipt:
+reference 9HH6VP5Q2LQ09GCO, STATUS:PENDING, timestamp 20261101101621.
+SHA-256: `6d95b96c98d14575b76531812536c1cca870f31fd4aecb52f9afd5ef30134d82`.
+[Exact reply bytes](prototype-evidence/candidate-live-receipt.txt) and
+[same-run evidence](prototype-evidence/candidate-clean-run.json) are retained.
+The full fixed handoff was spoken, the agent hung up, and the owner confirmed
+that row in Apps. The resulting rep_decision is confirmed; external TMS status
+remains PENDING. This is not an external finalization operation.
+
+Live mode was turned off immediately after native completion and verified through
+authenticated health. LD01062 is now spent and blocked in policy and durable
+claims. This run spent one of at most two authorized sends; testing stopped after
+the clean run. No resend, standalone MC probe or second send followed. Including
+history, there are ten wire sends across eight loads: seven complete pending
+acknowledgements, two explicit errors, one UNKNOWN and zero observed BOOKED.
 
 ## Still unproven
 

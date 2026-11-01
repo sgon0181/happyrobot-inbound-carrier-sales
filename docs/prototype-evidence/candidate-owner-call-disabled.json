@@ -1,0 +1,98 @@
+{
+  "label": "LIVE_OWNER_CALL_NO_BOOKING",
+  "run_id": "bde0340f-15d9-4dab-b7b1-c7e68cfbce98",
+  "redacted_transcript": "assistant: Hi, this is HappyRobot Logistics carrier sales. What is your MC number?\nuser: It is 13 8328.\nassistant: A six-digit code was just emailed to you. Please read it back.\nuser: Alright. Let me check it. The code is [code redacted].\nassistant: What equipment and lane are you looking for?\nuser: Am looking for a dry van from California to Kentucky without naming a load.\nassistant: Three thousand five hundred dollars total. Sacramento to Louisville, pickup November 2 and delivery November 5. Dry van, electronics, 23 pieces, 42,164 pounds.\nuser: I can do 4200 How's that?\nassistant: I can\u2019t do four thousand two hundred, but I can offer three thousand six hundred dollars total. Would that work?\nuser: What was your initial?\nassistant: The initial offer was three thousand five hundred dollars total.\nuser: Can you do 3600 and 25\nassistant: Just checking, do you mean three thousand six hundred twenty-five dollars total?\nuser: Yeah.\nassistant: The booking request could not be completed because booking is unavailable. Goodbye.\nuser: Okay. Goodbye.\nassistant: Goodbye.\nassistant: Have a good day.",
+  "tools": [
+    "verify_carrier",
+    "send_code",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "agree_rate",
+    "request_booking",
+    "finish_call",
+    "_hangup"
+  ],
+  "tool_arguments": [
+    {
+      "name": "verify_carrier",
+      "arguments": {}
+    },
+    {
+      "name": "send_code",
+      "arguments": {}
+    },
+    {
+      "name": "verify_code",
+      "arguments": {}
+    },
+    {
+      "name": "find_loads",
+      "arguments": {}
+    },
+    {
+      "name": "agree_rate",
+      "arguments": {
+        "load_id": "LD01062",
+        "rate": "4200"
+      }
+    },
+    {
+      "name": "agree_rate",
+      "arguments": {
+        "load_id": "LD01062",
+        "rate": "3625"
+      }
+    },
+    {
+      "name": "request_booking",
+      "arguments": {}
+    },
+    {
+      "name": "finish_call",
+      "arguments": {}
+    },
+    {
+      "name": "_hangup",
+      "arguments": {}
+    }
+  ],
+  "calls": [
+    {
+      "id": "bde0340f-15d9-4dab-b7b1-c7e68cfbce98",
+      "outcome": "ended_without_booking",
+      "started_at": 1793527120.7473807,
+      "closed_at": 1793527219.971073,
+      "code_passed": null,
+      "carrier_eligible": null,
+      "agreement": {
+        "rate": 3625,
+        "load_id": "LD01062",
+        "version": "f6f27e0edc644a1e8835b45ffac67ca7"
+      },
+      "consent_proof": null,
+      "rounds": 2
+    }
+  ],
+  "bookings": [],
+  "rounds": [
+    {
+      "id": null,
+      "ask": "4200",
+      "offer": null,
+      "status": null,
+      "round": 1,
+      "agreed_rate": null,
+      "load_id": "LD01062"
+    },
+    {
+      "id": null,
+      "ask": "3625",
+      "offer": null,
+      "status": null,
+      "round": 2,
+      "agreed_rate": null,
+      "load_id": "LD01062"
+    }
+  ]
+}

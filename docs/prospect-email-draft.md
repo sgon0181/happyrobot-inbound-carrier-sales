@@ -1,6 +1,6 @@
 # Prospect email, draft only
 
-Do not send until the final live-call result, video and reviewer access are ready.
+Draft only. The live-call result is verified; video and reviewer access still need completion.
 
 Subject: Inbound carrier sales demonstration
 
@@ -11,9 +11,10 @@ code, matches loads, negotiates within pricing limits and prepares a tentative
 booking for senior review. The dashboard brings call records, actual TMS receipts
 and rep decisions into one place.
 
-Two live rehearsals demonstrated real counteroffers and booking permission without
-spending a load. The final booking demonstration is pending. The build note and
-QA report explain the measured behavior and documented assumptions.
+One live demonstration completed verification, a genuine counteroffer, natural
+booking permission, a reference-bearing PENDING response, the spoken handoff and
+saved senior-rep approval for that same call. The final agreed total was3625. The
+build note and QA report explain the measured result and documented assumptions.
 
 - [Workflow](https://platform.happyrobot.ai/deployments/yhcdrf4kne4j)
 - [Dashboard](https://carrier-sales-santiago.happyrobot.dev)

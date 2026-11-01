@@ -72,6 +72,10 @@ agreement. Natural short approvals are accepted; conditions, rate questions,
 interrupted or stale speech fail closed. The fixed handoff text is unchanged.
 
 A valid PENDING receipt becomes ACK_PENDING. Ambiguous transport becomes UNKNOWN.
+The final controlled owner run 5783608f-d54b-4a5d-b028-89db98ae10ec produced one
+PENDING receipt and saved App approval. LD01062 is spent and blocked. See the
+report for complete evidence and quality limits.
+
 Only authoritative final evidence becomes CONFIRMED. Neither rep approval nor
 simulated speech changes the external TMS. UNKNOWN and caller_confirmation_review
 have no Confirm action. LD01094 remains blocked for consent review.

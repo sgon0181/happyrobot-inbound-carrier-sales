@@ -2,7 +2,9 @@
 
 The owner will handle recording and editing separately. The video is not part of
 this run's remaining workflow gate. Use the exact final call identified in
-PROTOTYPE_REPORT.md, followed by its App record and QA evidence. Do not present
+PROTOTYPE_REPORT.md: run 5783608f-d54b-4a5d-b028-89db98ae10ec, LD01062 at 3625,
+reference 9HH6VP5Q2LQ09GCO. Follow it with its saved App approval and QA evidence.
+Do not present
 two different calls as a single clean call.
 
 | Time | Show and explain |

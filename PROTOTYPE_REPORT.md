@@ -2,36 +2,47 @@
 
 ## 1. Status
 
-The isolated candidate is implemented and tested, but the required final live
-owner call and App confirmation are still pending. Two real rehearsals proved
-FMCSA, fresh email verification, matching, a genuine agent counteroffer and natural
-booking consent without spending a load. 187 offline tests pass; 17 conversation
-probes and five exact message checkpoints cover price interpretation and permission
-boundaries. Deployed bookings are off. Main and the original workflow are unchanged,
-and nothing was pushed. One ineligible-call hangup defect remains visible for
-review. The owner will handle the video separately.
+The isolated candidate passed the full nine-item workflow gate on owner call
+`5783608f-d54b-4a5d-b028-89db98ae10ec`: active authority, fresh emailed code,
+real counteroffer, natural booking permission, one complete PENDING receipt,
+full spoken handoff, native hangup, complete Twin record and owner App approval.
+LD01062 agreed at 3625, reference 9HH6VP5Q2LQ09GCO. Exactly one new booking was
+sent; nothing was resent. 187 offline tests pass. Bookings are off; main and the
+original workflow are unchanged, and nothing was pushed. Conversation polish,
+slow-storage limits and external finalization remain for review. The owner will
+handle the video separately.
 
 ## 2. Clean-run gate
 
-No final owner run has started. Do not combine rehearsals, older bookings and
-separate speech checks to mark this gate passed.
+All results below refer to run `5783608f-d54b-4a5d-b028-89db98ae10ec`, Production
+v17. [Same-run evidence](docs/prototype-evidence/candidate-clean-run.json) includes
+original question/answer IDs, events, rounds and the receipt hash. The owner
+attested to the complete spoken sentence and hangup, then confirmed the new row
+in Apps. This is a controlled demo result, not a claim of reliable production use.
 
 | Exactly the nine architecture section 11 items, on one run | Result |
 | --- | --- |
-| Real voice call with an active MC | Not passed, final run pending |
-| An emailed code | Not passed, final run pending |
-| At least one counter | Not passed, final run pending |
-| A TMS reference with PENDING | Not passed, final run pending |
-| Neutral wording to the carrier | Not passed, final run pending |
-| A spoken mocked transfer | Not passed, final run pending |
-| The agent ending the session | Not passed, final run pending |
-| A complete Twin record | Not passed, final run pending |
-| A rep confirmation in Apps | Not passed, final run pending |
+| Real voice call with an active MC | Passed, live FMCSA and MC 138328 |
+| An emailed code | Passed, fresh SMTP code verified before matching |
+| At least one counter | Passed, 4200 ask countered at 3600 |
+| A TMS reference with PENDING | Passed, 97-byte receipt, 9HH6VP5Q2LQ09GCO |
+| Neutral wording to the carrier | Passed, senior review without claiming final TMS confirmation |
+| A spoken mocked transfer | Passed, full fixed sentence in native messages and owner attestation |
+| The agent ending the session | Passed, native _hangup and completed run |
+| A complete Twin record | Passed, call, booking, consent, rounds, events and complete v3 transcript |
+| A rep confirmation in Apps | Passed, owner click and persisted rep_confirm event |
 
-| Additional check | Evidence |
+| Additional check | Same-run evidence |
 | --- | --- |
-| Genuine agent counteroffer | Both rehearsals: 4200 ask,3600 response; final-run proof pending |
-| Natural booking permission | Both rehearsals passed native consent; final-run proof pending |
+| Genuine agent counteroffer | Passed, 4200 request differed from service response 3600 |
+| Natural booking permission | Passed, exact load/total question followed by "Yeah. Go ahead." |
+
+The gate passed despite two conversation-quality issues: unmarked "Alright"
+after the first affirmative prompted a redundant question, and a short extra
+goodbye followed the fixed handoff. The second natural answer passed the strict
+gate. Only one durable intent and one wire send occurred. These are recorded
+for review, not hidden by the successful outcome. The earlier disabled-mode call
+is separate evidence and spent no load.
 
 ## 3. Storage results
 
@@ -65,8 +76,8 @@ and [budget limits](docs/prototype-evidence/candidate-booking-budget.json).
 | Lane/equipment matching and load fields | Real OPEN future inventory, public field projection, unit-tested mapping | HYBRID |
 | Private ceiling and negotiation policy | Unchanged pricing numbers; real counter 3600 against 4200; backend bound/round checks | HYBRID |
 | Three-counter limit | Durable offline policy checks; rehearsals each used two rounds | HYBRID |
-| Booking while on call | Earlier real PENDING receipts exist; new per-entity candidate write path awaits final call | HYBRID |
-| Mocked senior-rep handoff and native end | Fixed line passed prior voice check and final-version text; same-run live gate pending | HYBRID |
+| Booking while on call | Final candidate sent once and retained a complete PENDING receipt | LIVE |
+| Mocked senior-rep handoff and native end | Full line, owner attestation and native end on the same live run | LIVE |
 | Twin records and all activity | Real rehearsal records, consent proofs, redacted transcripts; auxiliary write loss remains a limit | LIVE |
 | HappyRobot Apps and KPIs | Existing signed-in service fallback; real/synthetic cohorts separate; rep decisions separate from TMS | LIVE |
 | TMS faults and duplicate protection | Fake TCP, partial/late receipts, save recovery, claims and replay checks | SIMULATED |
@@ -81,9 +92,10 @@ sentiment remains not_assessed. PENDING finalization still awaits Luke's answer.
 
 ## 5. Load ledger
 
-Nine historical wire sends across seven loads: six complete pending receipts,
-two explicit errors, one UNKNOWN, zero BOOKED. This run has made zero new sends.
-The prototype's two prior intent rows are only part of that cross-harness history.
+Ten total wire sends across eight loads: seven complete pending receipts,
+two explicit errors, one UNKNOWN, zero BOOKED. This candidate run made one new
+send on the owner voice call. The prototype now has three historical intent rows;
+that is only part of the cross-harness history.
 
 | Load | MC | Rate text | Exact outcome |
 | --- | --- | --- | --- |
@@ -96,11 +108,13 @@ The prototype's two prior intent rows are only part of that cross-harness histor
 | LD01077 | 138328 | 3225 | UNKNOWN, no retained receipt/reference; later status-only PENDING |
 | LD01094 | 138328 | 1075 | ACK_PENDING/PENDING, 3PUHTGRJNDQ5EKMM; consent review, Confirm blocked |
 | LD01085 | 138328 | 2950 | ACK_PENDING/PENDING, EME8U26DKEX5DESS; valid consent/local rep approval, shortened-speech failure |
+| LD01062 | 138328 | 3625 | ACK_PENDING/PENDING, 9HH6VP5Q2LQ09GCO; fresh natural consent, full handoff, owner App approval |
 
-No replay is authorized. LD01062 was OPEN at final preflight, but no owner call
-started in that bounded window; it was not spent or claimed. Refresh inventory
-before allocating the next take. The [TMS contract](docs/tms-contract.md) preserves
-the earlier sends and their limits.
+No replay is authorized. LD01062 was service-selected from the caller's lane,
+OPEN with future pickup at fresh preflight and pre-send. It is now spent and
+blocked by both durable claims and tracked policy. The [TMS contract](docs/tms-contract.md)
+records this send. The exported [97-byte receipt](docs/prototype-evidence/candidate-live-receipt.txt)
+has SHA-256 `6d95b96c98d14575b76531812536c1cca870f31fd4aecb52f9afd5ef30134d82`.
 
 ## 6. Proposed architecture changes
 
@@ -123,9 +137,8 @@ and documentation changes after reviewing these commits.
 
 ## 7. Still unproven
 
-- The final candidate's single-run nine-item gate, including a new receipt and owner Confirm.
 - External finalization, cancellation, expiry and full money semantics; Q8 awaits Luke.
-- Reliable pronunciation and every possible interruption/utterance. Some text
+- Reliable pronunciation, natural filler handling and every possible interruption/utterance. Some text
   traces establish a bounded language phase only. See [conversation coverage](docs/conversation-coverage.md).
 - High-concurrency voice latency, auxiliary log durability and cross-machine receipt
   journal durability. The local container journal is ephemeral and must be exported.
@@ -151,15 +164,14 @@ No rows or resources were deleted.
 
 ## 9. Before merge and submission
 
-1. Owner replies Ready, makes one final allocated real voice call, then confirms
-   its valid pending receipt in Apps. Verify the exact nine items on that run,
-   export the receipt, append its ledger entry and block its spent load.
-2. Switch live off immediately, verify health, finish the final record and restore
-   Fly idle/stopped state. Do not resend or use a second send after a clean run.
-3. Resolve/review the ineligible-call closure failure and slow-storage limits.
+1. Preserve the successful call and receipt. Do not resend or use the second
+   authorized send after this clean run. No additional live call is required.
+2. Keep bookings off and Fly idle/stopped after final byte verification.
+3. Review the ineligible-call closure failure, redundant permission question,
+   extra goodbye and slow-storage limits.
 4. Review Q8/Luke's reply, App source publication and this candidate with Claude.
 5. Owner supplies the video, reviewer accounts and access, selects the exact private
-   remote commit and approves push/sharing/submission. Nothing was pushed or sent.
+   remote commit and approves push/sharing/submission. No repository push, invitation or submission message occurred.
 
 Checks and source hashes are in [QA results](docs/qa-results.md). The current 34
 runtime/policy/requirements hashes match deployed bytes. The delivery check also

@@ -3,7 +3,10 @@
 This candidate handles the first part of an inbound carrier call and hands the
 result to a senior representative. The measured outcome and exact run are in
 [PROTOTYPE_REPORT.md](../PROTOTYPE_REPORT.md). The original workflow and main
-branch remain unchanged.
+branch remain unchanged. One final owner call passed all nine required steps:
+LD01062 at 3625 returned a PENDING reference, the full handoff was spoken, and
+the owner saved rep approval in Apps. This is one controlled result, not a
+production conversion measure.
 
 ## Business flow
 

@@ -3,8 +3,10 @@
 The isolated candidate has 187 passing Python 3.12 service tests. Two actual owner
 rehearsals completed through FMCSA, fresh email verification, matching, real
 counteroffers and native booking consent, with zero booking rows or write intents.
-The required final same-run live booking and owner App confirmation are pending.
-The unused live window was closed and authenticated health now reports off.
+The final owner call and App confirmation passed the nine-item gate on run
+5783608f-d54b-4a5d-b028-89db98ae10ec. One new live send returned PENDING with
+a reference. Bookings were disabled immediately after native completion, and
+authenticated health verified off. No resend or second send followed.
 
 ## Current evidence
 
@@ -21,7 +23,7 @@ The unused live window was closed and authenticated health now reports off.
 | Service authentication | 16 routes, missing and wrong-role keys, all32 checks rejected 401 | LIVE auth boundary |
 | App authentication | Six routes, missing and forged sessions, all 12 checks rejected or redirected as expected | LIVE auth boundary |
 | Deployed file hashes | 34 runtime/policy/requirements files match the selected code commit | LIVE read-only |
-| New booking this candidate run | None. The owner must make the final allocated voice call | Not yet exercised |
+| Final owner run | One live send, valid natural consent, 97-byte PENDING receipt, full handoff, native end and owner App approval | LIVE same run |
 
 Read [conversation coverage](conversation-coverage.md) for exact nuances and
 partial-run limits. Grades do not substitute for actual arguments or real service
@@ -30,12 +32,52 @@ back before launch and verified in its actual snapshot. The deterministic custom
 eval checkpoints use an explicit invalid key; their proposed tool calls are denied
 before business logic, and the dummy call remains absent.
 
+## Final same-run evidence
+
+Run `5783608f-d54b-4a5d-b028-89db98ae10ec`, Production v17, passed exactly the
+nine required items. Its first request for 4200 received a genuine 3600 counter;
+the next 3625 proposal was clarified and accepted. The final exact question was
+followed by "Yeah. Go ahead." The original question/answer IDs and session are
+stored with the agreement. The owner attested to the full fixed sentence and
+native hangup, then clicked Confirm for LD01062 in the signed-in App.
+
+The single 97-byte reply is PENDING, reference 9HH6VP5Q2LQ09GCO. Its exported bytes,
+Twin diagnostic hash and final stored booking match. Rep approval remains local;
+the TMS is still PENDING. Complete v3 transcript storage retains the caller's own
+MC while masking the code. [Final proof](prototype-evidence/candidate-clean-run.json),
+[receipt](prototype-evidence/candidate-live-receipt.txt) and
+[App readback](prototype-evidence/candidate-app-confirmed-row.png).
+
+The first affirmative was followed by unmarked "Alright" speech, which correctly
+failed the conservative proof matcher and caused an unnecessary repeat. The
+second natural answer passed. The agent added a brief goodbye after the fixed
+handoff, contrary to the prompt's instruction to add no speech. These quality
+issues remain visible. Do not widen filler acceptance without a bounded replay
+and rejection tests. No extra intent or send occurred.
+
+The earlier preapproval export candidate-owner-final-call.json has null fields
+named external_status and raw_reply_sha256 because those are obsolete projection
+names. Its generic sanitizer also masks MC digits. This is an export limitation,
+not missing TMS evidence. The authoritative final proof uses tms_status and
+diagnostic.response_sha256 and checks the actual stored v3 transcript.
+
+## Owner call while bookings were off
+
+The owner later completed call `bde0340f-15d9-4dab-b7b1-c7e68cfbce98`
+after the earlier live window had closed. The service returned
+`not_booked` with `reason: booking_disabled`. No booking row or write intent
+was created, and no TMS booking was sent. This was a mode-timing mismatch,
+not a rejected TMS booking. The observed speech clearly rejected 4200 with a
+3600 counter and clarified "3600 and 25" as 3625 before submitting that rate.
+The owner was informed before opening a fresh, authenticated live window.
+[Call evidence](prototype-evidence/candidate-owner-call-disabled.json).
+
 ## Remaining failure and limits
 
 The urgency test refused an ineligible caller and exposed no loads or rates, but
 spoke a goodbye without finish_call or native hangup. It idled about 66 seconds
 before session closure. This is a genuine closing-protocol failure for review.
-The final eligible-call gate must be assessed independently on one actual run.
+The final eligible-call gate passed independently on the actual owner run above.
 
 Uncertainty reached the full fixed handoff and native end, but its static
 senior_review fixture bypasses the real permission transition. Its failed grades

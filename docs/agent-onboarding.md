@@ -77,8 +77,9 @@ make idle afterwards. Export private receipts before replacement. Verify the
 actual deployed booking mode with the authenticated health route. Keep live off
 outside an allocated owner call. The report lists every live send and its outcome.
 
-The final owner call is evaluated as one run against exactly nine architecture
-section 11 items, with genuine agent counteroffer and natural consent checked
-separately. Video preparation now belongs to the owner. Review final runtime
+The final owner call5783608f-d54b-4a5d-b028-89db98ae10ec passed exactly nine
+architecture section 11 items, with genuine agent counteroffer and natural consent
+checked separately. Its single PENDING receipt and owner App approval are saved.
+LD01062 is spent. Do not use another authorized send after this clean run. Video preparation now belongs to the owner. Review final runtime
 hashes, current QA, Q8, private reviewer access and publication details before
 merging or submitting. No external message or repository push is implied.

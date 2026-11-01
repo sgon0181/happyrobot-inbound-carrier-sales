@@ -1,0 +1,151 @@
+{
+  "label": "LIVE_SAME_RUN_END_TO_END",
+  "run_id": "5783608f-d54b-4a5d-b028-89db98ae10ec",
+  "session_id": "c1bcb21c-a879-4e86-995b-a3347bdf6c34",
+  "workflow_id": "01a19476-5384-704b-9c5e-569fd96f9adf",
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "runtime_commit_during_call": "c25f66b9493fc7e3291d2a0f5d1ff7117ac2522e",
+  "mc": "138328",
+  "load_id": "LD01062",
+  "rate": 3625,
+  "reference": "9HH6VP5Q2LQ09GCO",
+  "state": "ACK_PENDING",
+  "tms_status": "PENDING",
+  "rep_decision": "confirmed",
+  "review_required": false,
+  "booking_id": "e65944b8-f823-490b-b212-97f3645354d1",
+  "write_intent_id": "b82a357b-038c-449b-b8b6-d03bd683e36b",
+  "new_sends_this_run": 1,
+  "receipt_bytes": 97,
+  "receipt_sha256": "6d95b96c98d14575b76531812536c1cca870f31fd4aecb52f9afd5ef30134d82",
+  "owner_speech_attestation": "Full sentence and hangup completed",
+  "native_status": "completed",
+  "code_passed_at": 1793528099.3600538,
+  "first_offer_at": 1793528110.0626972,
+  "stored_transcript_complete": true,
+  "stored_transcript_redaction_version": 3,
+  "stored_transcript_sha256": "5b3ef6da77d0e6f5cccca4291e6407714180ee2f8fc6da69418e68152c91bc3d",
+  "redacted_transcript": "assistant: Hi, this is HappyRobot Logistics carrier sales. What is your MC number?\nuser: 138328.\nassistant: A six-digit code was just emailed to you. Please read it back.\nassistant: Please\nuser: Okay. The COLI's [code redacted].\nassistant: What equipment and lane are you looking for?\nuser: I'm looking for a drive in from California to Kentucky.\nassistant: Three thousand five hundred dollars total. Sacramento, California to Louisville, Kentucky, dry van, picking up November second and delivering November fifth. Electronics, 23 pieces, 42,164 pounds. Interested?\nuser: Can you do 4200\nassistant: I can\u2019t do four thousand two hundred, but I can offer three thousand six hundred dollars total. Would that work?\nuser: How about 25 on top of that?\nassistant: Just checking, do you mean three thousand six hundred twenty-five dollars total?\nuser: Yes. That works.\nassistant: Yes, I can do three thousand six hundred twenty-five dollars total. May I book load LD01062 at $3625 total?\nuser: Yes, please. Go ahead.\nassistant: Alright... \nassistant: May I book load LD01062 at $3625 total?\nuser: Yeah. Go ahead.\nassistant: We have agreed on the rate. A senior representative will review and confirm the booking. I am now transferring you to a senior representative; this transfer is simulated for the demo.\nassistant: Have a great day.",
+  "tools": [
+    "verify_carrier",
+    "send_code",
+    "verify_code",
+    "find_loads",
+    "agree_rate",
+    "agree_rate",
+    "request_booking",
+    "request_booking",
+    "request_booking",
+    "finish_handoff",
+    "_hangup"
+  ],
+  "question": {
+    "id": "01a1969c-0e79-75c3-b295-0d300aea4319",
+    "text": "May I book load LD01062 at $3625 total?",
+    "interrupted": false
+  },
+  "answer": {
+    "id": "a94b7ef1-2964-4704-8df0-e65e15aea63b",
+    "text": "Yeah. Go ahead.",
+    "interrupted": false
+  },
+  "rounds": [
+    {
+      "row_id": "57b1496d8a1c461dbba050bb082edb28",
+      "round": 1,
+      "ask": "4200",
+      "response": 3600,
+      "load_id": "LD01062"
+    },
+    {
+      "row_id": "1e05492cd4cf414f86c7b4ec9e122e8c",
+      "round": 2,
+      "ask": "3625",
+      "response": 3625,
+      "load_id": "LD01062"
+    }
+  ],
+  "events": [
+    {
+      "row_id": "81e201cc14204576afa5b14cceac7ecd",
+      "action": "verify_carrier",
+      "status": "ok",
+      "at": 1793528077.305633
+    },
+    {
+      "row_id": "027e204118f24a05add8b2ba9d43436d",
+      "action": "send_code",
+      "status": "submitting",
+      "at": 1793528079.289196
+    },
+    {
+      "row_id": "0a6587182505484bad9b54f144bc387e",
+      "action": "code_delivery",
+      "status": "sent",
+      "at": 1793528082.1991167
+    },
+    {
+      "row_id": "ef4e4787d281407680b7be2077009816",
+      "action": "verify_code",
+      "status": "consume",
+      "at": 1793528098.1100018
+    },
+    {
+      "row_id": "bab87bbae9b647edb3438abb66f0de35",
+      "action": "search",
+      "status": "ok",
+      "at": 1793528110.062839
+    },
+    {
+      "row_id": "62878534526c4a2e8d970d1eb7f49f2a",
+      "action": "negotiate",
+      "status": "counter",
+      "at": 1793528129.6078162
+    },
+    {
+      "row_id": "425daa73bc69434a9d9be01fbe096573",
+      "action": "negotiate",
+      "status": "agreed",
+      "at": 1793528147.9274237
+    },
+    {
+      "row_id": "e845fad24949492f8380fdb837b8bd51",
+      "action": "booking_consent",
+      "status": "required",
+      "at": 1793528150.2663195
+    },
+    {
+      "row_id": "7a203648505d4b80ad586a31718247c2",
+      "action": "booking_consent",
+      "status": "required",
+      "at": 1793528167.1809647
+    },
+    {
+      "row_id": "95c8d3be424e43dea3553c71ac8a6d34",
+      "action": "booking_consent",
+      "status": "approved",
+      "at": 1793528177.7116938
+    },
+    {
+      "row_id": "9a424790a6594d609708b89b5ce7a268",
+      "action": "outcome",
+      "status": "agreed_pending_rep",
+      "at": 1793528181.9873285
+    },
+    {
+      "row_id": "c589a51fb981438abe297d8f254c2f01",
+      "action": "close",
+      "status": "closed",
+      "at": 1793528194.1737356
+    },
+    {
+      "row_id": "3f9f3bf4a5a74bc2884db2500ac6734f",
+      "action": "rep_confirm",
+      "status": "ACK_PENDING",
+      "at": 1793528409.0261204
+    }
+  ],
+  "all_nine_items_passed": true,
+  "known_quality_issue": "The first affirmative was followed by unmarked Alright speech, so the conservative gate required a second complete booking question. The second natural affirmative passed. No extra booking send occurred. An extra goodbye followed the fixed handoff despite the instruction to add no further speech.",
+  "verified_at": "2026-11-01T10:21:42.078725+00:00"
+}

@@ -120,10 +120,16 @@ class InMemoryBookingStore:
         booking = self.bookings[booking_id]
         if booking.state not in expected:
             return None
-        if 'rep_decision' in changes and booking.rep_decision not in {RepDecision.AWAITING,changes['rep_decision']}:
-            raise ValueError('The rep has already decided.')
-        if changes.get('rep_decision') is RepDecision.CONFIRMED and booking.reason=='caller_confirmation_review':
-            raise ValueError('Caller consent requires review.')
+        if "rep_decision" in changes and booking.rep_decision not in {
+            RepDecision.AWAITING,
+            changes["rep_decision"],
+        }:
+            raise ValueError("The rep has already decided.")
+        if (
+            changes.get("rep_decision") is RepDecision.CONFIRMED
+            and booking.reason == "caller_confirmation_review"
+        ):
+            raise ValueError("Caller consent requires review.")
         self.bookings[booking_id] = replace(booking, **changes)
         return self.bookings[booking_id]
 
@@ -157,7 +163,9 @@ class BookingService:
         self.new_id = new_id
         self.pending = set()
 
-    async def request(self, *, call_id, operation_id, load_id, mc, rate, agreement_version, deadline=None):
+    async def request(
+        self, *, call_id, operation_id, load_id, mc, rate, agreement_version, deadline=None
+    ):
         """Create the booking, recheck the load, send once, and record the actual reply."""
         if type(rate) is not int or rate <= 0:
             raise ValueError("Use a positive whole rate.")
@@ -194,23 +202,33 @@ class BookingService:
             return await self._fail(booking, "ceiling_unavailable")
         if booking.rate > load.max_rate:
             return await self._fail(booking, "ceiling_fell")
-        if deadline is not None and deadline-asyncio.get_running_loop().time()<6:
-            return await self._fail(booking,"deadline_before_send")
+        if deadline is not None and deadline - asyncio.get_running_loop().time() < 6:
+            return await self._fail(booking, "deadline_before_send")
 
         # The intent must be durable before the write can happen.
         claimed = await self.store.update(
-            booking.id, frozenset({State.AGREED}),
-            state=State.SUBMITTING, write_intent_id=self.new_id(),
+            booking.id,
+            frozenset({State.AGREED}),
+            state=State.SUBMITTING,
+            write_intent_id=self.new_id(),
         )
         if claimed is None:
             return await self.store.get(booking.id)
-        if deadline is not None and deadline-asyncio.get_running_loop().time()<5:
-            recorded=await self.store.update(booking.id,frozenset({State.SUBMITTING}),
-                state=State.FAILED,reason='deadline_before_send',
-                diagnostic={'send_started':False,'phase':'intent_saved'})
+        if deadline is not None and deadline - asyncio.get_running_loop().time() < 5:
+            recorded = await self.store.update(
+                booking.id,
+                frozenset({State.SUBMITTING}),
+                state=State.FAILED,
+                reason="deadline_before_send",
+                diagnostic={"send_started": False, "phase": "intent_saved"},
+            )
             return recorded or await self.store.get(booking.id)
-        kwargs={'intent_id':claimed.write_intent_id} if getattr(self.tms,'accepts_intent_id',False) else {}
-        receipt = await self.tms.book(booking.load_id, booking.mc, booking.rate,**kwargs)
+        kwargs = (
+            {"intent_id": claimed.write_intent_id}
+            if getattr(self.tms, "accepts_intent_id", False)
+            else {}
+        )
+        receipt = await self.tms.book(booking.load_id, booking.mc, booking.rate, **kwargs)
         return await self._record(booking.id, receipt, claimed)
 
     async def _record(self, booking_id, receipt, fallback=None):
@@ -220,29 +238,46 @@ class BookingService:
             except Exception:
                 try:
                     saved = await self.store.get(booking_id)
-                    if (saved.state in {State.ACK_PENDING, State.CONFIRMED}
-                            and saved.reference == receipt.reference):
+                    if (
+                        saved.state in {State.ACK_PENDING, State.CONFIRMED}
+                        and saved.reference == receipt.reference
+                    ):
                         return saved
                 except Exception:
                     pass
-                await asyncio.sleep(.05 * attempt)
+                await asyncio.sleep(0.05 * attempt)
         # This restricted service log is the INV-10 fallback. No outbound AUTH,
         # expected OTP, ceiling or contact is ever included in this event.
-        logging.getLogger("receipt_evidence").error(json.dumps({
-            "event": "receipt_persistence_failure", "booking_id": booking_id,
-            "outcome": receipt.outcome.value, "reference": receipt.reference,
-            "tms_status": receipt.tms_status, "raw_reply": receipt.raw_reply,
-            "diagnostic": receipt.diagnostic,
-        }))
+        logging.getLogger("receipt_evidence").error(
+            json.dumps(
+                {
+                    "event": "receipt_persistence_failure",
+                    "booking_id": booking_id,
+                    "outcome": receipt.outcome.value,
+                    "reference": receipt.reference,
+                    "tms_status": receipt.tms_status,
+                    "raw_reply": receipt.raw_reply,
+                    "diagnostic": receipt.diagnostic,
+                }
+            )
+        )
         booking = fallback or await self.store.get(booking_id)
-        return replace(booking, state=RESULT_STATES[receipt.outcome], reference=receipt.reference,
-                       tms_status=receipt.tms_status, raw_reply=receipt.raw_reply,
-                       diagnostic=receipt.diagnostic, review_required=True, persistence_pending=True)
+        return replace(
+            booking,
+            state=RESULT_STATES[receipt.outcome],
+            reference=receipt.reference,
+            tms_status=receipt.tms_status,
+            raw_reply=receipt.raw_reply,
+            diagnostic=receipt.diagnostic,
+            review_required=True,
+            persistence_pending=True,
+        )
 
     async def _record_once(self, booking_id, receipt):
         state = RESULT_STATES[receipt.outcome]
         recorded = await self.store.update(
-            booking_id, frozenset({State.SUBMITTING}),
+            booking_id,
+            frozenset({State.SUBMITTING}),
             state=state,
             reference=receipt.reference,
             tms_status=receipt.tms_status,
@@ -256,9 +291,14 @@ class BookingService:
         # A late reply never overwrites newer state, but it is kept for the operator.
         booking = await self.store.get(booking_id)
         late = await self.store.update(
-            booking_id, frozenset({State.UNKNOWN}),
-            state=state if receipt.outcome in {BookingOutcome.ACK_PENDING,BookingOutcome.CONFIRMED}
-                           and (not booking.reference or booking.reference==receipt.reference) else State.UNKNOWN,
+            booking_id,
+            frozenset({State.UNKNOWN}),
+            state=(
+                state
+                if receipt.outcome in {BookingOutcome.ACK_PENDING, BookingOutcome.CONFIRMED}
+                and (not booking.reference or booking.reference == receipt.reference)
+                else State.UNKNOWN
+            ),
             reference=booking.reference or receipt.reference,
             raw_reply=receipt.raw_reply or booking.raw_reply,
             tms_status=receipt.tms_status or booking.tms_status,
@@ -274,13 +314,18 @@ class BookingService:
         for booking in await self.store.in_states(frozenset({State.AGREED})):
             recovered.append(await self._fail(booking, "interrupted_before_send"))
         for booking in await self.store.in_states(frozenset({State.SUBMITTING})):
-            proof=self.tms.recover_receipt(booking) if hasattr(self.tms,'recover_receipt') else None
+            proof = (
+                self.tms.recover_receipt(booking) if hasattr(self.tms, "recover_receipt") else None
+            )
             if proof:
-                recovered.append(await self._record(booking.id,proof,booking))
+                recovered.append(await self._record(booking.id, proof, booking))
                 continue
             updated = await self.store.update(
-                booking.id, frozenset({State.SUBMITTING}),
-                state=State.UNKNOWN, review_required=True, reason="interrupted_send",
+                booking.id,
+                frozenset({State.SUBMITTING}),
+                state=State.UNKNOWN,
+                review_required=True,
+                reason="interrupted_send",
             )
             recovered.append(updated or await self.store.get(booking.id))
         return recovered
@@ -298,9 +343,9 @@ class BookingService:
 
     async def confirm(self, booking_id, rep):
         """Record the rep's confirmation. Never writes to the TMS."""
-        booking=await self.store.get(booking_id)
-        if booking.reason=='caller_confirmation_review':
-            raise ValueError('Caller consent requires manual investigation before confirmation.')
+        booking = await self.store.get(booking_id)
+        if booking.reason == "caller_confirmation_review":
+            raise ValueError("Caller consent requires manual investigation before confirmation.")
         if booking.state not in {State.ACK_PENDING, State.CONFIRMED}:
             raise ValueError("A matching acknowledgement is required before rep confirmation.")
         return await self._decide(booking_id, RepDecision.CONFIRMED, rep)
@@ -333,14 +378,19 @@ class BookingService:
         expected = frozenset({booking.state})
         if load and status == "BOOKED" and self._matches(booking, load.evidence):
             confirmed = await self.store.update(
-                booking_id, expected, state=State.CONFIRMED,
-                reference=load.evidence.reference, tms_status=status, reason=None,
+                booking_id,
+                expected,
+                state=State.CONFIRMED,
+                reference=load.evidence.reference,
+                tms_status=status,
+                reason=None,
             )
             return confirmed or await self.store.get(booking_id)
 
         steady = booking.state is State.ACK_PENDING and status == "PENDING"
         updated = await self.store.update(
-            booking_id, expected,
+            booking_id,
+            expected,
             tms_status=status,
             review_required=booking.review_required or not steady,
             reason=booking.reason if steady else (booking.reason or "unexpected_tms_status"),

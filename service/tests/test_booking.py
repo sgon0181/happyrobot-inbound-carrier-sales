@@ -26,7 +26,11 @@ MC = "138328"
 
 def request(service, load_id="LD1", call_id="call-1", operation_id="op-1", rate=2000):
     return service.request(
-        call_id=call_id, operation_id=operation_id, load_id=load_id, mc=MC, rate=rate,
+        call_id=call_id,
+        operation_id=operation_id,
+        load_id=load_id,
+        mc=MC,
+        rate=rate,
         agreement_version="v1",
     )
 
@@ -74,8 +78,9 @@ class SubmitTests(Base):
     async def test_rechecks_the_load_before_sending(self):
         async with FakeTMS([make_load("LD1")]) as tms:
             await request(self.service_for(tms))
-        self.assertEqual([line.split("|")[0] for line in tms.requests],
-                         ["CMD:LOAD_GET", "CMD:LOAD_BOOK"])
+        self.assertEqual(
+            [line.split("|")[0] for line in tms.requests], ["CMD:LOAD_GET", "CMD:LOAD_BOOK"]
+        )
 
     async def test_a_direct_booked_reply_is_confirmed(self):
         async with FakeTMS([make_load("LD1")], booking_status="BOOKED") as tms:
@@ -293,8 +298,9 @@ class RecoveryTests(unittest.IsolatedAsyncioTestCase):
     async def test_a_late_unknown_cannot_downgrade_newer_evidence(self):
         async def confirm_then_time_out():
             booking = next(iter(self.store.bookings.values()))
-            await self.store.update(booking.id, frozenset({State.SUBMITTING}),
-                                    state=State.CONFIRMED, reference="REF1")
+            await self.store.update(
+                booking.id, frozenset({State.SUBMITTING}), state=State.CONFIRMED, reference="REF1"
+            )
             return BookingReceipt(BookingOutcome.UNKNOWN, reason="TimeoutError")
 
         service = BookingService(self.store, ScriptedTms(self.load, confirm_then_time_out))
@@ -412,14 +418,19 @@ class AgentViewTests(Base):
             booking = await request(self.service_for(tms))
         unknown = replace(booking, state=State.UNKNOWN)
         self.assertEqual(agent_view(booking), agent_view(unknown))
-        self.assertEqual(agent_view(booking),
-                         {"status": "senior_review", "agreed_rate": 2000})
+        self.assertEqual(agent_view(booking), {"status": "senior_review", "agreed_rate": 2000})
 
     async def test_the_view_hides_internal_fields(self):
         async with FakeTMS([make_load("LD1", MAX_BUY="2345")]) as tms:
             booking = await request(self.service_for(tms))
         view = repr(agent_view(booking))
-        for hidden in ("2345", booking.reference, "PENDING", "ACK_PENDING", booking.write_intent_id):
+        for hidden in (
+            "2345",
+            booking.reference,
+            "PENDING",
+            "ACK_PENDING",
+            booking.write_intent_id,
+        ):
             self.assertNotIn(hidden, view)
         self.assertNotIn("2345", repr(booking))
 
@@ -439,9 +450,7 @@ class OfferTests(unittest.TestCase):
     def test_only_explicitly_open_loads_are_offered(self):
         for status in ("PENDING", "BOOKED", "EXPIRED", ""):
             with self.subTest(status=status):
-                self.assertEqual(
-                    select_offers([self.summary("LD1", STATUS=status)], self.now), []
-                )
+                self.assertEqual(select_offers([self.summary("LD1", STATUS=status)], self.now), [])
 
     def test_past_or_unreadable_pickups_are_excluded(self):
         for pickup in ("20261031080000", "not-a-date"):
@@ -457,14 +466,14 @@ class OfferTests(unittest.TestCase):
 
     def test_matches_are_rechecked_locally(self):
         loads = [self.summary("LD1", EQTYPE="REEFER"), self.summary("LD2")]
-        offers = select_offers(loads, self.now, equipment="DRY_VAN", origin_state="TX",
-                               dest_state="GA")
+        offers = select_offers(
+            loads, self.now, equipment="DRY_VAN", origin_state="TX", dest_state="GA"
+        )
         self.assertEqual([load.load_id for load in offers], ["LD2"])
 
     def test_ranked_by_pickup_and_limited(self):
         loads = [
-            self.summary(f"LD{day}", PICKUP_DT=f"202611{day:02d}080000")
-            for day in (9, 3, 7, 5, 4)
+            self.summary(f"LD{day}", PICKUP_DT=f"202611{day:02d}080000") for day in (9, 3, 7, 5, 4)
         ]
         offers = select_offers(loads, self.now)
         self.assertEqual([load.load_id for load in offers], ["LD3", "LD4", "LD5"])
@@ -473,10 +482,14 @@ class OfferTests(unittest.TestCase):
 
 class MappingTests(unittest.TestCase):
     def test_dimensions_convert_from_feet_to_inches(self):
-        self.assertEqual(to_load(make_load(DIMS="40ft x 8ft x 9ft")).dimensions, "480 x 96 x 108 in")
+        self.assertEqual(
+            to_load(make_load(DIMS="40ft x 8ft x 9ft")).dimensions, "480 x 96 x 108 in"
+        )
 
     def test_free_text_dimensions_stay_as_written(self):
-        self.assertEqual(to_load(make_load(DIMS="48X40 STD PALLETS")).dimensions, "48X40 STD PALLETS")
+        self.assertEqual(
+            to_load(make_load(DIMS="48X40 STD PALLETS")).dimensions, "48X40 STD PALLETS"
+        )
 
     def test_the_ceiling_stays_out_of_repr(self):
         self.assertNotIn("7654", repr(to_load(make_load(MAX_BUY="7654"))))

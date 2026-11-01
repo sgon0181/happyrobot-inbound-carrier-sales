@@ -70,6 +70,7 @@ def classify_booking_reply(raw, load_id):
     if record.get("LOAD_ID") != load_id or not reference:
         return unknown("receipt_does_not_match", status)
     from service.adapters.tms.mapping import parse_timestamp
+
     if parse_timestamp(record.get("TIMESTAMP")) is None:
         return unknown("invalid_receipt_timestamp", status)
     outcomes = {"PENDING": BookingOutcome.ACK_PENDING, "BOOKED": BookingOutcome.CONFIRMED}
@@ -79,7 +80,8 @@ def classify_booking_reply(raw, load_id):
 
 
 class TmsClient:
-    accepts_intent_id=True
+    accepts_intent_id = True
+
     def __init__(self, settings, journal=None):
         self.settings = settings
         self.journal = journal
@@ -92,13 +94,16 @@ class TmsClient:
     async def _exchange(self, request):
         """One request on a fresh connection. Stops at END, without waiting for close."""
         evidence = self.capture.get()
-        if evidence is not None: evidence["phase"] = "connecting"
+        if evidence is not None:
+            evidence["phase"] = "connecting"
         reader, writer = await asyncio.open_connection(self.settings.host, self.settings.port)
         try:
-            if evidence is not None: evidence.update(phase="sending", send_started=True)
+            if evidence is not None:
+                evidence.update(phase="sending", send_started=True)
             writer.write(request)
             await writer.drain()
-            if evidence is not None: evidence.update(phase="reading", write_drained=True)
+            if evidence is not None:
+                evidence.update(phase="reading", write_drained=True)
             buffer = bytearray()
             while True:
                 chunk = await reader.read(4096)
@@ -108,15 +113,22 @@ class TmsClient:
                 if evidence is not None:
                     evidence["received"].extend(chunk)
                     if self.journal:
-                        try:self.journal.received(evidence['intent_id'],chunk.replace(self.settings.token.encode(),b'[HIDDEN]'))
-                        except Exception:evidence['journal_capture_failed']=True
+                        try:
+                            self.journal.received(
+                                evidence["intent_id"],
+                                chunk.replace(self.settings.token.encode(), b"[HIDDEN]"),
+                            )
+                        except Exception:
+                            evidence["journal_capture_failed"] = True
                 check_bounds(buffer)
                 if frame_complete(buffer):
                     return bytes(buffer)
         finally:
-            with suppress(Exception): writer.close()
             with suppress(Exception):
-                async with asyncio.timeout(.05): await writer.wait_closed()
+                writer.close()
+            with suppress(Exception):
+                async with asyncio.timeout(0.05):
+                    await writer.wait_closed()
 
     async def _read(self, command, fields, echo=False):
         settings = self.settings
@@ -148,8 +160,14 @@ class TmsClient:
         return reply.records[0]
 
     async def query(
-        self, *, equipment=None, origin_state=None, dest_state=None, origin_city=None,
-        pickup_date=None, limit=20,
+        self,
+        *,
+        equipment=None,
+        origin_state=None,
+        dest_state=None,
+        origin_city=None,
+        pickup_date=None,
+        limit=20,
     ):
         """Search by the established filters only. Unknown fields are silently ignored."""
         fields = {}
@@ -208,32 +226,64 @@ class TmsClient:
             self.settings.token,
             {"LOAD_ID": load_id, "MC_NUM": mc, "AGREED_RATE": rate},
         )
-        evidence = {"phase": "prepared", "send_started": False, "write_drained": False,
-                    "received": bytearray(), "error_type": None,"intent_id":intent_id or str(uuid.uuid4())}
+        evidence = {
+            "phase": "prepared",
+            "send_started": False,
+            "write_drained": False,
+            "received": bytearray(),
+            "error_type": None,
+            "intent_id": intent_id or str(uuid.uuid4()),
+        }
         if self.journal:
-            try:self.journal.begin({'intent_id':evidence['intent_id'],'load_id':load_id,'mc':mc,'rate':rate})
-            except Exception:return BookingReceipt(BookingOutcome.REJECTED,reason='private_capture_unavailable')
+            try:
+                self.journal.begin(
+                    {"intent_id": evidence["intent_id"], "load_id": load_id, "mc": mc, "rate": rate}
+                )
+            except Exception:
+                return BookingReceipt(BookingOutcome.REJECTED, reason="private_capture_unavailable")
         marker = self.capture.set(evidence)
         try:
             raw = await asyncio.wait_for(self._exchange(request), self.settings.write_seconds)
-            receipt = classify_booking_reply(raw.replace(self.settings.token.encode(), b"[HIDDEN]"), load_id)
+            receipt = classify_booking_reply(
+                raw.replace(self.settings.token.encode(), b"[HIDDEN]"), load_id
+            )
         except (TimeoutError, OSError, MalformedReply) as error:
             raw = bytes(evidence["received"])
             evidence["error_type"] = type(error).__name__
-            receipt = BookingReceipt(BookingOutcome.UNKNOWN if evidence["send_started"] else BookingOutcome.REJECTED,
-                                     raw_reply=raw.replace(self.settings.token.encode(),b"[HIDDEN]").decode("ascii",errors="replace"),
-                                     reason=type(error).__name__ if evidence["send_started"] else "tms_unavailable")
-        finally: self.capture.reset(marker)
+            receipt = BookingReceipt(
+                BookingOutcome.UNKNOWN if evidence["send_started"] else BookingOutcome.REJECTED,
+                raw_reply=raw.replace(self.settings.token.encode(), b"[HIDDEN]").decode(
+                    "ascii", errors="replace"
+                ),
+                reason=type(error).__name__ if evidence["send_started"] else "tms_unavailable",
+            )
+        finally:
+            self.capture.reset(marker)
         safe_raw = raw.replace(self.settings.token.encode(), b"[HIDDEN]")
-        diagnostic = {k:v for k,v in evidence.items() if k != "received"}
-        diagnostic.update(response_bytes=len(raw), response_sha256=hashlib.sha256(raw).hexdigest(),
-                          received_b64=base64.b64encode(safe_raw).decode())
+        diagnostic = {k: v for k, v in evidence.items() if k != "received"}
+        diagnostic.update(
+            response_bytes=len(raw),
+            response_sha256=hashlib.sha256(raw).hexdigest(),
+            received_b64=base64.b64encode(safe_raw).decode(),
+        )
         return replace(receipt, diagnostic=diagnostic)
 
-    def recover_receipt(self,booking):
-        if self.journal is None or not booking.write_intent_id:return None
-        raw=self.journal.read({'intent_id':booking.write_intent_id,'load_id':booking.load_id,
-                              'mc':booking.mc,'rate':booking.rate})
-        if raw is None:return None
-        receipt=classify_booking_reply(raw,booking.load_id)
-        return receipt if receipt.outcome in {BookingOutcome.ACK_PENDING,BookingOutcome.CONFIRMED} else None
+    def recover_receipt(self, booking):
+        if self.journal is None or not booking.write_intent_id:
+            return None
+        raw = self.journal.read(
+            {
+                "intent_id": booking.write_intent_id,
+                "load_id": booking.load_id,
+                "mc": booking.mc,
+                "rate": booking.rate,
+            }
+        )
+        if raw is None:
+            return None
+        receipt = classify_booking_reply(raw, booking.load_id)
+        return (
+            receipt
+            if receipt.outcome in {BookingOutcome.ACK_PENDING, BookingOutcome.CONFIRMED}
+            else None
+        )

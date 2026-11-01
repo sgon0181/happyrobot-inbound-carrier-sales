@@ -52,8 +52,10 @@ class ReadTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual([load.load_id for load in loads], ["LD1"])
         self.assertEqual(
             tms.requests,
-            ["CMD:LOAD_QUERY|AUTH:<token>|EQTYPE:DRY_VAN|ORIG_STATE:TX|DEST_STATE:GA"
-             "|ORIG_CITY:Dal|MAX_RESULTS:5"],
+            [
+                "CMD:LOAD_QUERY|AUTH:<token>|EQTYPE:DRY_VAN|ORIG_STATE:TX|DEST_STATE:GA"
+                "|ORIG_CITY:Dal|MAX_RESULTS:5"
+            ],
         )
 
     async def test_query_rejects_bad_input_before_connecting(self):
@@ -75,8 +77,9 @@ class ReadTests(unittest.IsolatedAsyncioTestCase):
         loads = [make_load("LD1"), make_load("LD2", STATUS="PENDING")]
         async with FakeTMS(loads) as tms:
             found = await client_for(tms).query(equipment="DRY_VAN")
-        self.assertEqual({load.load_id: load.status for load in found},
-                         {"LD1": "OPEN", "LD2": "PENDING"})
+        self.assertEqual(
+            {load.load_id: load.status for load in found}, {"LD1": "OPEN", "LD2": "PENDING"}
+        )
 
     async def test_a_multi_record_reply_may_exceed_one_frame(self):
         notes = "x" * 400
@@ -106,8 +109,15 @@ class ReadTests(unittest.IsolatedAsyncioTestCase):
 
 class ReadFaultTests(unittest.IsolatedAsyncioTestCase):
     async def test_recovers_from_each_fault_on_retry(self):
-        for fault in (faults.SILENT, faults.LOST, faults.PARTIAL, faults.CUT_AT_LINE,
-                      faults.MALFORMED, faults.TRAILING, faults.SERVER_ERROR):
+        for fault in (
+            faults.SILENT,
+            faults.LOST,
+            faults.PARTIAL,
+            faults.CUT_AT_LINE,
+            faults.MALFORMED,
+            faults.TRAILING,
+            faults.SERVER_ERROR,
+        ):
             with self.subTest(fault=fault):
                 async with FakeTMS([make_load("LD1")]) as tms:
                     tms.inject(fault)
@@ -155,8 +165,9 @@ class ReadFaultTests(unittest.IsolatedAsyncioTestCase):
     async def test_a_closed_port_is_unavailable(self):
         async with FakeTMS([]) as tms:
             port = tms.port
-        client = TmsClient(TmsSettings("127.0.0.1", port, "t", read_budget_seconds=0.5,
-                                       attempt_seconds=0.1))
+        client = TmsClient(
+            TmsSettings("127.0.0.1", port, "t", read_budget_seconds=0.5, attempt_seconds=0.1)
+        )
         with self.assertRaises(TmsUnavailable):
             await client.get("LD1")
 
@@ -183,15 +194,28 @@ class BookingTests(unittest.IsolatedAsyncioTestCase):
     async def test_rejects_bad_input_before_connecting(self):
         async with FakeTMS([make_load("LD1")]) as tms:
             client = client_for(tms)
-            for mc, rate in (("138328", 0), ("138328", -1), ("138328", 1324.5),
-                             ("138328", "2000"), ("MC138328", 2000), ("1|2", 2000)):
+            for mc, rate in (
+                ("138328", 0),
+                ("138328", -1),
+                ("138328", 1324.5),
+                ("138328", "2000"),
+                ("MC138328", 2000),
+                ("1|2", 2000),
+            ):
                 with self.subTest(mc=mc, rate=rate), self.assertRaises(ValueError):
                     await client.book("LD1", mc, rate)
         self.assertEqual(tms.requests, [])
 
     async def test_a_lost_or_unclear_reply_is_unknown_and_never_retried(self):
-        for fault in (faults.SILENT, faults.LOST, faults.PARTIAL, faults.CUT_AT_LINE,
-                      faults.MALFORMED, faults.TRAILING, faults.SERVER_ERROR):
+        for fault in (
+            faults.SILENT,
+            faults.LOST,
+            faults.PARTIAL,
+            faults.CUT_AT_LINE,
+            faults.MALFORMED,
+            faults.TRAILING,
+            faults.SERVER_ERROR,
+        ):
             with self.subTest(fault=fault):
                 async with FakeTMS([make_load("LD1")]) as tms:
                     tms.inject(fault)

@@ -20,70 +20,7 @@ from service.adapters.twin.repository import TwinRepository
 from service.core.calls import Runtime
 from service.core.booking import agent_view
 from service.adapters.confirmation import NativeConfirmation
-
-
-def redact_transcript(messages):
-    """Redact literal and spoken six-digit codes, including failed attempts."""
-    lines = []
-    tools = []
-    submitted = []
-    # Coalesce adjacent speaker fragments before redaction. ASR may split one
-    # six-digit attempt into two messages containing three digits each.
-    joined = []
-    for message in messages:
-        if isinstance(message.get("content"), str) and message["content"].startswith("<Thoughts>"):
-            continue
-        if (
-            joined
-            and message.get("role") in ("user", "assistant")
-            and joined[-1].get("role") == message.get("role")
-            and isinstance(message.get("content"), str)
-            and isinstance(joined[-1].get("content"), str)
-        ):
-            joined[-1]["content"] += " " + message["content"]
-            joined[-1]["tool_calls"] = (joined[-1].get("tool_calls") or []) + (
-                message.get("tool_calls") or []
-            )
-        else:
-            joined.append(dict(message))
-    for message in joined:
-        for tool in message.get("tool_calls") or []:
-            function = tool.get("function") or {}
-            name = tool.get("name") or function.get("name")
-            if name != "verify_code":
-                continue
-            arguments = tool.get("arguments", function.get("arguments", tool.get("args", {})))
-            if isinstance(arguments, str):
-                try:
-                    arguments = json.loads(arguments)
-                except ValueError:
-                    continue
-            code = arguments.get("code") if isinstance(arguments, dict) else None
-            if isinstance(code, (str, int)) and re.fullmatch(r"[0-9]{6}", str(code)):
-                submitted.append(str(code))
-    words = r"(?:zero|oh|one|two|three|four|five|six|seven|eight|nine)"
-    for message in joined:
-        for tool in message.get("tool_calls") or []:
-            name = tool.get("name") or (tool.get("function") or {}).get("name")
-            if name:
-                tools.append(name)
-        if message.get("role") not in ("user", "assistant"):
-            continue
-        text = message.get("content")
-        if not isinstance(text, str) or not text or text.startswith("<Thoughts>"):
-            continue
-        for code in submitted:
-            text = re.sub(r"(?<!\d)" + r"[\s,.-]*".join(code) + r"(?!\d)", "[code redacted]", text)
-        text = re.sub(r"\b[0-9]{6}\b", "[code redacted]", text)
-        text = re.sub(
-            r"\b" + words + r"(?:[\s,-]+" + words + r"){5}\b",
-            "[spoken code redacted]",
-            text,
-            flags=re.I,
-        )
-        text = re.sub(r"(?<!\d)(?:\d[ ,.-]){5}\d(?!\d)", "[code redacted]", text)
-        lines.append(message["role"] + ": " + text)
-    return "\n".join(lines), tools
+from service.adapters.transcripts import redact_transcript
 
 
 def make_app(runtime, values, platform=None):
@@ -97,7 +34,7 @@ def make_app(runtime, values, platform=None):
             if (
                 not call.get("closed_at")
                 or call["cohort"] != "real"
-                or (previous or {}).get("redaction_version") == 2
+                or (previous or {}).get("redaction_version") == 3
             ):
                 continue
             try:
@@ -126,7 +63,7 @@ def make_app(runtime, values, platform=None):
                         page += 1
                     else:
                         complete = False
-                text, tools = redact_transcript(all_messages)
+                text, tools = redact_transcript(all_messages, mc=call.get("mc"))
                 if text:
                     collected[cid] = {
                         "call_id": cid,
@@ -138,7 +75,7 @@ def make_app(runtime, values, platform=None):
                         "notes": "Live platform transcript, codes redacted.",
                         "sentiment": "not_assessed",
                         "source": "LIVE_PLATFORM_TRANSCRIPT",
-                        "redaction_version": 2,
+                        "redaction_version": 3,
                     }
             except Exception:
                 continue

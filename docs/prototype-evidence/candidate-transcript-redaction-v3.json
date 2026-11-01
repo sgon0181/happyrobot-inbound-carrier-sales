@@ -1,0 +1,50 @@
+{
+  "label": "LIVE_RECORDS_AND_PERSISTENCE",
+  "processing": "Deployed service redaction version 3",
+  "health": {
+    "status": "ok",
+    "store": "LIVE",
+    "booking_mode": "off"
+  },
+  "records": [
+    {
+      "run_id": "94ad9f38-1cc8-4f87-8bb7-af945c6b9563",
+      "redaction_version": 3,
+      "complete": true,
+      "mc_visible": true,
+      "submitted_code_attempts": 2,
+      "literal_attempts_absent": true,
+      "redaction_markers": 3,
+      "previous_version": 2,
+      "previous_sha256": "5ed5532f6aeb3e1fe79f354d906f1a3f7b4d24a739bbd55b0dadd1c72191aaa5",
+      "new_sha256": "b696bf273a52771f884444b51cfea750e3d990ad2567d7d91ca07a2302af5878"
+    },
+    {
+      "run_id": "043af7ce-ecb6-42f8-b8f4-162143ce9d20",
+      "redaction_version": 3,
+      "complete": true,
+      "mc_visible": true,
+      "submitted_code_attempts": 1,
+      "literal_attempts_absent": true,
+      "redaction_markers": 1,
+      "previous_version": 2,
+      "previous_sha256": "c540ea9578b07026cc70c6f5da7cf21fcbf8fe431aa0e9065b58f18e9ae1f7b7",
+      "new_sha256": "e0c0652dbe4729032438210f28f600f1f3822e4b8eafb218b7abf0069527f44b"
+    },
+    {
+      "run_id": "112f1a4a-84f3-420f-bce4-d7f374b381d1",
+      "redaction_version": 3,
+      "complete": true,
+      "mc_visible": true,
+      "submitted_code_attempts": 1,
+      "literal_attempts_absent": true,
+      "redaction_markers": 1,
+      "previous_version": 2,
+      "previous_sha256": "19ea3c5329f1214b0511af7c581f637d076ed2a2b06f129624cc2b5a4f9b8a4d",
+      "new_sha256": "db1219a7e28e8916732805051a57bef357444a7174fa7c3c6540bf83cb0b507e"
+    }
+  ],
+  "raw_codes_in_this_artifact": false,
+  "previous_projections_backed_up_privately": true,
+  "new_bookings": 0
+}

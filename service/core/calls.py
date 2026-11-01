@@ -15,8 +15,8 @@ from service.core.loads import select_offers
 from service.core.negotiation import respond, Action
 from service.core.pricing import PricingPolicy, price_load
 from service.core.ports import TmsUnavailable
-from service.adapters.twin.bookings import TwinBookingStore, PROTECTED, decode
-from service.core.campaign import permission
+from service.adapters.twin.bookings import TwinBookingStore, decode
+from service.core.inventory import BLOCKED_LOADS
 
 
 class Runtime:
@@ -31,6 +31,9 @@ class Runtime:
         )
         self.values, self.clock = values, clock
         self.confirmation = confirmation
+        self.booking_mode = values.get("BOOKING_MODE", "off")
+        if self.booking_mode not in {"off", "rehearse", "live"}:
+            raise ValueError("BOOKING_MODE must be off, rehearse or live")
         self.policy = PricingPolicy.load()
         self.locks = {}
         self.booking_store = TwinBookingStore(
@@ -245,7 +248,7 @@ class Runtime:
             )
 
         await self.repository.mutate("otp_challenges", challenge, delivered)
-        safe = {"status": status, "channel": "email", "destination": "configured demo inbox"}
+        safe = {"status": status, "channel": "email", "destination": "email on file"}
 
         def finish(data, call):
             for op in call["operations"].values():
@@ -374,7 +377,7 @@ class Runtime:
             selected = select_offers(
                 summaries,
                 datetime.now(timezone.utc),
-                blocked | PROTECTED,
+                blocked | BLOCKED_LOADS,
                 **{k: criteria.get(k) for k in ("equipment", "origin_state", "dest_state")},
             )
             loads = await asyncio.gather(
@@ -387,7 +390,7 @@ class Runtime:
         for load in loads:
             if isinstance(load, Exception) or load is None:
                 continue
-            if not select_offers([load], datetime.now(timezone.utc), blocked | PROTECTED):
+            if not select_offers([load], datetime.now(timezone.utc), blocked | BLOCKED_LOADS):
                 continue
             terms = self.terms(load)
             if terms:
@@ -439,7 +442,7 @@ class Runtime:
             load = await self.tms.get(load_id)
         except TmsUnavailable:
             return await self.set_outcome(cid, "tms_unavailable")
-        if load is None or not select_offers([load], datetime.now(timezone.utc), PROTECTED):
+        if load is None or not select_offers([load], datetime.now(timezone.utc), BLOCKED_LOADS):
             return {"status": "load_gone"}
         if load_id in await self.booking_store.blocked_load_ids([load_id]):
             return {"status": "load_gone"}
@@ -516,7 +519,9 @@ class Runtime:
             return {"status": "negotiation_failed"}
         # Price agreement is not booking consent. Live calls need a fresh, platform-owned
         # affirmative answer to a completed question containing the exact total.
-        if self.repository.label == "LIVE" and self.tms.booking_enabled:
+        if self.booking_mode == "off":
+            return {"status": "not_booked", "reason": "booking_disabled"}
+        if self.booking_mode in {"rehearse", "live"}:
             try:
                 if self.confirmation is None:
                     raise ValueError("No trusted dialogue source")
@@ -570,10 +575,11 @@ class Runtime:
                         f"May I book load {agreement['load_id']} " f"at ${agreement['rate']} total?"
                     ),
                 }
-            if call.get("cohort") != "real":
+            if self.booking_mode == "rehearse":
+                await self.set_outcome(cid, "rehearsal_complete")
                 return {"status": "consent_verified", "booking_submitted": False}
-            if permission(data, cid, agreement["load_id"]) is None:
-                return {"status": "live_campaign_complete"}
+            if call.get("cohort") != "real":
+                return {"status": "not_booked", "reason": "synthetic_call"}
         try:
             booking = await self.bookings.request(
                 call_id=cid,

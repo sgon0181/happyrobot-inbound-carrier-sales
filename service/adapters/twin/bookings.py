@@ -12,19 +12,7 @@ from service.core.booking import (
     OperationConflict,
 )
 
-PROTECTED = frozenset(
-    {
-        "LD01086",
-        "LD01082",
-        "LD01081",
-        "LD01075",
-        "LD01077",
-        "LD01023",
-        "LD01032",
-        "LD01036",
-        "LD01069",
-    }
-)
+from service.core.inventory import BLOCKED_LOADS
 
 
 def encode(booking):
@@ -82,8 +70,8 @@ class TwinBookingStore:
             ):
                 raise OperationConflict("Changed booking operation")
             return decode(existing), False
-        if self.live and (booking.mc != "138328" or booking.load_id in PROTECTED):
-            raise BookingConflict("Outside prototype live authorization")
+        if booking.load_id in BLOCKED_LOADS:
+            raise BookingConflict("Load is excluded by inventory policy")
         # A past intent remains blocking even if its state later becomes FAILED.
         if booking.load_id in await self.blocked_load_ids([booking.load_id]):
             raise BookingConflict("Load already claimed")
@@ -167,6 +155,22 @@ class TwinBookingStore:
                 await self.repository.mutate("booking_claims", key, clear)
 
     async def update(self, booking_id, expected, **changes):
+        if self.live and changes.get("state") is State.SUBMITTING:
+            booking = await self.get(booking_id)
+            _, call = await self.repository.get("calls", booking.call_id)
+            agreement = (call or {}).get("agreement") or {}
+            if (
+                not call
+                or call.get("cohort") != "real"
+                or call.get("booking_id") != booking.id
+                or not call.get("eligible")
+                or call.get("verified_until", 0) <= self.clock()
+                or call.get("closed_at")
+                or not agreement.get("booking_consent")
+                or agreement.get("version") != booking.agreement_version
+            ):
+                raise BookingConflict("Current verified call and consent required before intent")
+
         def change(row):
             booking = decode(row)
             if booking.state not in expected:
@@ -181,8 +185,7 @@ class TwinBookingStore:
                 and booking.reason == "caller_confirmation_review"
             ):
                 raise ValueError("Caller consent requires review.")
-            if self.live and changes.get("state") is State.SUBMITTING:
-                raise BookingConflict("Live sending is disabled during storage cutover")
+
             updated = replace(booking, **changes)
             row.update(encode(updated), updated_at=time.time())
             return updated

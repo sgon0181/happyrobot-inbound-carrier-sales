@@ -24,7 +24,6 @@ class Platform:
     def __init__(self, values):
         self.values, self.key = values, values["HAPPYROBOT_API_KEY"]
         self.latencies = []
-        self.notification_lock = asyncio.Lock()
         self.sql_slots = asyncio.Semaphore(4)
         self.sql_starts = asyncio.Lock()
         self.next_sql_start = 0.0
@@ -37,9 +36,7 @@ class Platform:
             headers={
                 "Authorization": "Bearer " + self.key,
                 "Content-Type": "application/json",
-                "x-organization-id": self.values.get(
-                    "HAPPYROBOT_ORG_ID", "01a17a99-0856-7f88-b09f-4b787e20413c"
-                ),
+                "x-organization-id": self.values["HAPPYROBOT_ORG_ID"],
                 "x-twin-environment": "production",
             },
         )

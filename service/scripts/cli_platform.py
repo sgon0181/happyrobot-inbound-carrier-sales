@@ -11,9 +11,7 @@ class CliPlatform(Platform):
             headers = {
                 "Authorization": "Bearer " + self.key,
                 "Content-Type": "application/json",
-                "x-organization-id": self.values.get(
-                    "HAPPYROBOT_ORG_ID", "01a17a99-0856-7f88-b09f-4b787e20413c"
-                ),
+                "x-organization-id": self.values["HAPPYROBOT_ORG_ID"],
                 "x-twin-environment": "production",
             }
             async with httpx.AsyncClient(base_url=self.base, headers=headers, timeout=8) as client:

@@ -153,13 +153,16 @@ The historical seven sends plus these two calls total nine sends across seven
 load IDs, with zero observed BOOKED responses. Both prototype permissions are
 spent; no new send, repeat booking or MC probe is authorized.
 
-All statuses below are historical 2026-10-31 snapshots, not current availability. These IDs are sandbox test inventory, not credentials.
+Inventory policy updated 2026-11-01. These are exclusion and evidence records,
+not a claim of current availability. The tracked policy separates spent,
+protected and voided inventory; durable claims also block every past intent.
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
-| Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
+| Voided control | LD01069 | Never offer or book. |
+| Protected, historical `OPEN` snapshot | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
 The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
 

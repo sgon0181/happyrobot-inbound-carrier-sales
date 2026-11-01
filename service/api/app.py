@@ -257,7 +257,6 @@ def make_app(runtime, values, platform=None):
                     "pricing_review_required",
                     "tms_unavailable",
                     "confirmation_unavailable",
-                    "live_campaign_complete",
                     "not_booked",
                     "booking_failed",
                     "senior_review",
@@ -277,7 +276,7 @@ def make_app(runtime, values, platform=None):
             return {
                 "status": "ok",
                 "store": runtime.repository.label,
-                "booking_enabled": runtime.tms.booking_enabled,
+                "booking_mode": runtime.booking_mode,
             }
         except Exception:
             return {"status": "tms_unavailable"}
@@ -385,8 +384,9 @@ def make_app(runtime, values, platform=None):
     @app.post("/ops/fmcsa-probe")
     async def authority(request: Request):
         data = await body(request)
+        mc = data["mc"]
         try:
-            return await runtime.authority(str(data.get("mc", "138328")))
+            return await runtime.authority(str(mc))
         except Exception:
             return {"status": "fmcsa_unavailable"}
 
@@ -420,6 +420,9 @@ def configured_app():
     for key in ("AGENT_API_KEY", "OPS_API_KEY", "OTP_HASH_SECRET", "PRICING_SECRET"):
         if len(values.get(key, "")) < 24:
             raise RuntimeError("Private service configuration required")
+    for key in ("HAPPYROBOT_ORG_ID", "FMCSA_API_KEY", "OTP_EMAIL_CREDENTIAL", "DEMO_OTP_EMAIL"):
+        if not values.get(key):
+            raise RuntimeError("Private configuration required: " + key)
     platform = Platform(values)
     repository = TwinRepository(platform, values.get("TWIN_TABLE_PREFIX", "proto_"))
     tms = TmsClient(
@@ -427,7 +430,7 @@ def configured_app():
             values["TMS_HOST"],
             int(values["TMS_PORT"]),
             values["TMS_TOKEN"],
-            booking_enabled=values.get("BOOKING_ENABLED") == "true",
+            booking_enabled=values.get("BOOKING_MODE", "off") == "live",
         ),
         ReceiptJournal(values.get("RECEIPT_JOURNAL_DIR", "/tmp/carrier-receipts")),
     )

@@ -138,3 +138,12 @@ class EntityStorageTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(created)
         self.assertEqual(again.id, "b")
         self.assertIs(again.state, State.FAILED)
+
+    async def test_spent_protected_and_void_policy_blocks_all_carriers(self):
+        from service.core.inventory import BLOCKED_LOADS
+
+        self.assertTrue({"LD01094", "LD01085", "LD01077", "LD01023", "LD01069"} <= BLOCKED_LOADS)
+        store = TwinBookingStore(MemoryRepository())
+        for load in BLOCKED_LOADS:
+            with self.assertRaises(BookingConflict):
+                await store.create(Booking("b", "call", load, "456789", 1000, "a"), "op", "fp")

@@ -20,6 +20,7 @@ VALUES = {
     for key in ("AGENT_API_KEY", "OPS_API_KEY", "OTP_HASH_SECRET", "PRICING_SECRET")
 }
 VALUES["DEMO_OTP_EMAIL"] = "demo@example.invalid"
+VALUES["BOOKING_MODE"] = "live"
 
 
 class RuntimeTests(unittest.IsolatedAsyncioTestCase):
@@ -41,6 +42,15 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             self.sent.append((code, cid))
             return {"sent": True, "source": "SIMULATED"}
 
+        async def synthetic_consent(cid, load_id, rate, anchor):
+            return {
+                "approved": True,
+                "anchor": "answer",
+                "question_id": "question",
+                "answer_id": "answer",
+                "session_id": "synthetic-session",
+            }
+
         self.runtime = Runtime(
             self.repository,
             client_for(self.server),
@@ -48,6 +58,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             notify,
             VALUES,
             clock=lambda: self.now,
+            confirmation=synthetic_consent,
         )
         self.cid = str(uuid.uuid4())
         self.http = httpx.AsyncClient(
@@ -65,6 +76,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await self.runtime.verify_carrier(self.cid, "138328")
         await self.runtime.send_code(self.cid)
         await self.runtime.verify_code(self.cid, self.sent[-1][0])
+        self.repository.data["calls"][self.cid]["cohort"] = "real"
         return await self.runtime.search(self.cid, {"equipment": "DRY_VAN"})
 
     async def test_reservation_in_flight_does_not_claim_handoff_or_reset_verification(self):
@@ -97,6 +109,66 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.repository.data["bookings"]["failed"] = encode(booking)
         result = await self.runtime.book(self.cid, None)
         self.assertEqual(result, {"status": "not_booked", "reason": "rejected"})
+
+    async def test_off_mode_creates_no_booking_or_intent(self):
+        result = await self.ready()
+        await self.runtime.negotiate(self.cid, "LD1", str(result["loads"][0]["offer"]))
+        self.runtime.booking_mode = "off"
+        result = await self.runtime.book(self.cid, None)
+        self.assertEqual(result["reason"], "booking_disabled")
+        self.assertEqual(self.repository.data["bookings"], {})
+        self.assertEqual(self.server.book_requests, [])
+
+    async def test_rehearsal_checks_consent_but_never_creates_intent(self):
+        result = await self.ready()
+        await self.runtime.negotiate(self.cid, "LD1", str(result["loads"][0]["offer"]))
+        self.runtime.booking_mode = "rehearse"
+        self.runtime.confirmation = None
+        self.assertEqual(
+            (await self.runtime.book(self.cid, None))["status"], "confirmation_unavailable"
+        )
+
+        async def approve(*args):
+            return {"approved": True, "question_id": "q", "answer_id": "a", "session_id": "s"}
+
+        self.runtime.confirmation = approve
+        self.assertEqual(
+            await self.runtime.book(self.cid, None),
+            {"status": "consent_verified", "booking_submitted": False},
+        )
+        self.assertEqual(self.repository.data["bookings"], {})
+        self.assertEqual(self.server.book_requests, [])
+        self.assertTrue(self.repository.data["calls"][self.cid]["agreement"]["booking_consent"])
+
+    async def test_any_eligible_mc_can_use_the_live_path(self):
+        async def eligible(mc):
+            return {"eligible": True, "reason": "active", "carrier": {"legalName": "Synthetic"}}
+
+        self.runtime.authority = eligible
+        await self.runtime.verify_carrier(self.cid, "456789")
+        await self.runtime.send_code(self.cid)
+        await self.runtime.verify_code(self.cid, self.sent[-1][0])
+        self.repository.data["calls"][self.cid]["cohort"] = "real"
+        result = await self.runtime.search(self.cid, {"equipment": "DRY_VAN"})
+        await self.runtime.negotiate(self.cid, "LD1", str(result["loads"][0]["offer"]))
+        self.assertEqual((await self.runtime.book(self.cid, None))["status"], "senior_review")
+        self.assertEqual(len(self.server.book_requests), 1)
+        self.assertEqual(self.server.book_requests[0]["MC_NUM"], "456789")
+
+    async def test_default_mode_is_off_and_unknown_mode_is_rejected(self):
+        values = {k: v for k, v in VALUES.items() if k != "BOOKING_MODE"}
+        runtime = Runtime(
+            self.repository, self.runtime.tms, self.runtime.authority, self.runtime.notifier, values
+        )
+        self.assertEqual(runtime.booking_mode, "off")
+        with self.assertRaises(ValueError):
+            Runtime(
+                self.repository,
+                self.runtime.tms,
+                self.runtime.authority,
+                self.runtime.notifier,
+                {**values, "BOOKING_MODE": "typo"},
+            )
 
     async def test_all_routes_require_auth_and_roles_are_separate(self):
         for method, path in [

@@ -6,7 +6,7 @@ from service.config import settings, ROOT
 from service.scripts.cli_platform import CliPlatform as Platform
 
 WORKFLOW = "01a19476-5384-704b-9c5e-569fd96f9adf"
-VERSION = "01a195f7-d2e8-79da-a553-ddbeed310f4d"
+VERSION = "01a1961c-9e0b-7d40-aea5-957e4d6e1453"
 HOST = "https://codex-e2e-lab-sg-20261031.fly.dev"
 BASE = "/versions/" + VERSION
 HANDOFF_LINE = (
@@ -245,7 +245,9 @@ def main():
                 "and What is the most you can pay are information questions: answer from the "
                 "current offer without any tool. On counter or ask_again state the returned offer, ask if it "
                 "works, then wait. Say final only when final is true. On agreed confirm that total "
-                "and prepare booking permission with request_booking. Never infer acceptance."
+                "and prepare booking permission with request_booking. Never infer acceptance. "
+                "For composite spoken totals such as 3600 and25, clarify the full3625 total "
+                "and wait before calling. Never send only the first part3600."
             ),
             "request_booking": (
                 "Prepare permission after price agreement. On confirmation_required clearly say "

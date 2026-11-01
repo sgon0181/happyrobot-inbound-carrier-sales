@@ -1,0 +1,12 @@
+{
+  "label": "HYBRID_PROMPT_PROBE_WITH_AUTH_REJECTION",
+  "custom_eval_id": "01a19608-4c0a-7c90-b512-60df0953db73",
+  "run_id": "9367f3ba-d569-47c6-9ea8-9902af386ea8",
+  "version_id": "01a195f7-d2e8-79da-a553-ddbeed310f4d",
+  "manual_pass": false,
+  "grader": "passed",
+  "finding": "The model selected3600 for3600 and25, reproducing the dropped increment. The custom-eval runner attempted the tool HTTP action, which was rejected by service authentication. The grader still passed and is not accepted as proof.",
+  "business_writes": 0,
+  "tms_sends": 0,
+  "decision": "Use the fully mocked native conversation runner for subsequent segmented pricing probes."
+}

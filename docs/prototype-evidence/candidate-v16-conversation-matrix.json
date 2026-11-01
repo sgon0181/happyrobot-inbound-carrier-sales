@@ -1,0 +1,383 @@
+{
+  "label": "SIMULATED_NATIVE_CONVERSATIONS",
+  "version_id": "01a1960a-43b4-7448-8310-93e814308f2c",
+  "case_count": 17,
+  "all_actual_rate_arguments_matched": true,
+  "cases": [
+    {
+      "case": "compound",
+      "scenario_run_id": "b1cb8053-9af9-47b2-8b03-79f5e918c746",
+      "target_run_id": "2de886e3-52f1-47c6-a026-92dc90d335da",
+      "wrapper": "inconclusive",
+      "grade": "waiting",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Correct clarification and amount. Trace ended at the permission question under harness backstop; no full native-ending claim."
+    },
+    {
+      "case": "add25",
+      "scenario_run_id": "a4544b84-87c9-43d1-84c5-a506ffbb4f13",
+      "target_run_id": "df6c47b3-6056-416d-8723-66c261109696",
+      "wrapper": "inconclusive",
+      "grade": "waiting",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Correct clarification and amount. Trace ended at the permission question under harness backstop; no full native-ending claim."
+    },
+    {
+      "case": "spoken_amount",
+      "scenario_run_id": "9b67b8f9-63d0-4797-bb43-af033a36bee5",
+      "target_run_id": "e0df1ba7-8012-4d77-8fef-2e7f1e95b935",
+      "wrapper": "inconclusive",
+      "grade": "failed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Unambiguous fully worded3625 was correct and read back before permission. It skipped an extra pre-tool clarification, which the final prompt permits for a complete clear total."
+    },
+    {
+      "case": "exact_total",
+      "scenario_run_id": "412c8735-8f0b-4481-bc1b-f164dfe225fc",
+      "target_run_id": "ad6caef5-b5ba-429a-b3b3-973201ce4577",
+      "wrapper": "inconclusive",
+      "grade": "waiting",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Correct amount. Trace ended at the permission question under harness backstop; no full native-ending claim."
+    },
+    {
+      "case": "percentage",
+      "scenario_run_id": "43eaecd7-ce41-491c-bb28-ed1a492273aa",
+      "target_run_id": "8a0788f2-cdab-4ad2-b2dc-a2e4d786f4da",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          4320
+        ],
+        "actual_rates": [
+          4320
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 0,
+        "handoff_calls": 0,
+        "booking_not_advanced": true
+      },
+      "manual_note": "Simulator supplied4320 rather than percentage wording. Exact model checkpoints separately test twenty percent more."
+    },
+    {
+      "case": "rate_questions",
+      "scenario_run_id": "94390ae6-53ec-4746-b8c8-b0d6cb83364b",
+      "target_run_id": "63e2223f-2162-4fc0-ada3-0631be68e9ce",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [],
+        "actual_rates": [],
+        "exact_rates": true,
+        "booking_tool_calls": 0,
+        "handoff_calls": 0,
+        "booking_not_advanced": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "conditional_price",
+      "scenario_run_id": "c9b9b928-20a7-4cf9-9a55-1d06377bd0d6",
+      "target_run_id": "32af1025-5aca-4fe3-9b98-617d5742165e",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [],
+        "actual_rates": [],
+        "exact_rates": true,
+        "booking_tool_calls": 0,
+        "handoff_calls": 0,
+        "booking_not_advanced": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "conditional_permission",
+      "scenario_run_id": "58ea52e0-29f5-4432-82a8-cabfcc2a30ff",
+      "target_run_id": "a080bf11-7e8d-40ab-b05c-af1a39a7af87",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3600
+        ],
+        "actual_rates": [
+          3600
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0,
+        "only_permission_preparation": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "hesitation",
+      "scenario_run_id": "e2fc0368-0efe-401c-9678-59fe4da83ceb",
+      "target_run_id": "86a2d67d-16e2-4628-9ae1-96048aba515c",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3600
+        ],
+        "actual_rates": [
+          3600
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0,
+        "only_permission_preparation": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "natural_permission",
+      "scenario_run_id": "77568fca-b264-424c-9b26-b4fb2380dd06",
+      "target_run_id": "7cd0fe7b-0215-4c82-bbc9-39979ff47118",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3600
+        ],
+        "actual_rates": [
+          3600
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 2,
+        "handoff_calls": 0,
+        "natural_approval_routes_directly": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "withdrawal",
+      "scenario_run_id": "db106a0e-942f-4185-95e4-dabc020f226b",
+      "target_run_id": "94394bba-9881-4e1b-a1d9-e8c6aefb02aa",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3600
+        ],
+        "actual_rates": [
+          3600
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0,
+        "only_permission_preparation": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "fragment",
+      "scenario_run_id": "0e281c3e-e37f-47cc-8ba6-17e93549fabf",
+      "target_run_id": "e19aea6f-b17f-409b-b2e4-bf5e455eab80",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [],
+        "actual_rates": [],
+        "exact_rates": true,
+        "booking_tool_calls": 0,
+        "handoff_calls": 0,
+        "booking_not_advanced": true
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "correction",
+      "scenario_run_id": "51169f8c-2ba6-40ec-bbde-356683eef545",
+      "target_run_id": "95c2d3f7-7e26-4728-8078-a4b63abc0e35",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "self_correction",
+      "scenario_run_id": "a69fba98-4144-4ebd-a881-c5439f66021e",
+      "target_run_id": "2773edce-1cb7-44b6-a948-08009caf3b09",
+      "wrapper": "inconclusive",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3725
+        ],
+        "actual_rates": [
+          3725
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Corrected to3725, waited, sent3725 once, then honored stop. Native end observed despite inconclusive wrapper."
+    },
+    {
+      "case": "either_amount_question",
+      "scenario_run_id": "56bb4486-feec-4e74-b1b8-6c336715d850",
+      "target_run_id": "f2139e18-a3dd-479a-b4ae-e4da20ed6c4e",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [],
+        "actual_rates": [],
+        "exact_rates": true,
+        "booking_tool_calls": 0,
+        "handoff_calls": 0
+      },
+      "manual_note": "Observed amount/tool boundary matched the expected case. Full details remain in the native run."
+    },
+    {
+      "case": "numeric_fragment",
+      "scenario_run_id": "f0539050-fbbf-4beb-a6b3-b13486356122",
+      "target_run_id": "41f3bca3-550e-4088-b388-99860d56dec2",
+      "wrapper": "completed",
+      "grade": "failed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3625
+        ],
+        "actual_rates": [
+          3625
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0
+      },
+      "manual_note": "Preserved25 and sent3625, but suggested3600 prematurely after the unfinished fragment. Final prompt now explicitly requires waiting for completion."
+    },
+    {
+      "case": "price_only_affirmation",
+      "scenario_run_id": "985e2a77-5b3f-433d-897a-b5ab2d155267",
+      "target_run_id": "9c031954-8c95-4976-b380-06fd564d1b49",
+      "wrapper": "completed",
+      "grade": "passed",
+      "http_actions_skipped": 9,
+      "service_calls_executed": 0,
+      "booking_sends": 0,
+      "language_checks": {
+        "expected_rates": [
+          3600
+        ],
+        "actual_rates": [
+          3600
+        ],
+        "exact_rates": true,
+        "booking_tool_calls": 1,
+        "handoff_calls": 0,
+        "only_permission_preparation": true
+      },
+      "manual_note": "Price-only affirmation did not authorize submission; explicit booking permission was requested again."
+    }
+  ],
+  "integration_calls": 0,
+  "tms_sends": 0,
+  "limits": [
+    "Each actual snapshot had all nine HTTP actions skipped.",
+    "Static mocks do not prove backend transitions or real authority/code verification.",
+    "Grades, wrapper completion, tool arguments and native ending are assessed separately.",
+    "Some scenarios prove a bounded language phase only, not full conversation closure."
+  ]
+}

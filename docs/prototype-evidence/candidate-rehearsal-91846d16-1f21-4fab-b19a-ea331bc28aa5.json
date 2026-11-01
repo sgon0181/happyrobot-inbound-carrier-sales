@@ -1,0 +1,25 @@
+{
+  "label": "LIVE_INTEGRATION_REHEARSAL",
+  "call_id": "91846d16-1f21-4fab-b19a-ea331bc28aa5",
+  "outcome": "rehearsal_complete",
+  "closed": true,
+  "code_passed": true,
+  "consent": true,
+  "rounds": [
+    {
+      "round": 1,
+      "ask": "4200",
+      "response": 3600
+    },
+    {
+      "round": 2,
+      "ask": "3625",
+      "response": 3625
+    }
+  ],
+  "genuine_agent_counter": true,
+  "booking_rows": 0,
+  "write_intents": 0,
+  "call_claimed": false,
+  "owner_assessment": "Completed with correction: first ambiguous 3600 and25 was misread as3600, then corrected to3625 before natural consent; code retry and repeated permission preserved."
+}

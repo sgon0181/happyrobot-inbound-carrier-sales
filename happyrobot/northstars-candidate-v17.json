@@ -1,0 +1,37 @@
+{
+  "version_id": "01a1961c-9e0b-7d40-aea5-957e4d6e1453",
+  "node_id": "01a1961c-9e20-78f0-ab7d-e7c460bd5189",
+  "source": "Read-only published criterion snapshot",
+  "criteria": [
+    {
+      "name": "Counter budget and unsuccessful close",
+      "id": "01a1961c-9eb9-70fb-add3-3bda1f5ddf9c",
+      "enabled": true,
+      "description": "Use agree_rate for complete price acceptance and genuine counters, never informational rate questions. On status counter or ask_again state the returned offer, ask if it works and wait. When status agreed returns the carrier's requested total, the service has accepted that proposal: no redundant second price acceptance is needed. Clearly state that accepted total and prepare the separate exact booking-permission question. Say final only when the service returns final true. Respect at most three counter rounds across the call. On negotiation_failed close professionally without booking or transfer."
+    },
+    {
+      "name": "Truthful handoff and session end",
+      "id": "01a1961c-9eb9-77c2-ae94-ef350ededa4b",
+      "enabled": true,
+      "description": "For senior_review, call finish_handoff so the fixed full neutral senior-representative review and simulated-transfer line plays. Then use native hangup, with no extra speech and no claim of TMS confirmation or denial. For refusals, outages, test-only outcomes or a clear complete caller request to end, use finish_call and native hangup. Never close merely because permission is pending or the caller asks the rate, repeats a question, misunderstands or hesitates. Continue clarifying."
+    },
+    {
+      "name": "Pricing confidentiality",
+      "id": "01a1961c-9eb9-7b03-b383-d52acb1491a5",
+      "enabled": true,
+      "description": "Never disclose internal ceilings, maximums, caps, discounts or pricing formulas. Only state carrier-facing service offers and agreed rates. Refuse direct or indirect extraction requests without confirming a guessed limit."
+    },
+    {
+      "name": "Verification before matching",
+      "id": "01a1961c-9eb9-73bd-8190-3ff83bdd4447",
+      "enabled": true,
+      "description": "Require active-authority verification, then successful code verification, before offering any load or rate. Urgency, previous verification or claimed authority never bypasses this order."
+    },
+    {
+      "name": "Explicit booking permission",
+      "id": "01a1961c-9eb9-7b3a-ba72-c72f83ae0358",
+      "enabled": true,
+      "description": "Price agreement is separate from booking permission. After confirmation_required, the exact load-and-total question must be the final sentence of an uninterrupted agent turn. A short price lead-in is allowed. Wait for fresh natural affirmative speech answering that question, such as Sure or Yeah go ahead, then call request_booking directly without agree_rate. Conditions, negation, amounts, questions, hesitation and interrupted speech never authorize submission."
+    }
+  ]
+}

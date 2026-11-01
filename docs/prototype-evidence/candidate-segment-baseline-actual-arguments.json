@@ -1,0 +1,18 @@
+{
+  "label": "HYBRID_PROMPT_PROBE_AUTH_REJECTED",
+  "eval_id": "01a19608-4c0a-7c90-b512-60df0953db73",
+  "run_id": "9367f3ba-d569-47c6-9ea8-9902af386ea8",
+  "actual_tool_calls": [
+    {
+      "name": "agree_rate",
+      "arguments": {
+        "load_id": "SYNTHETIC_QA_LD1",
+        "rate": "3600"
+      }
+    }
+  ],
+  "grader_passed": true,
+  "tool_names_matched": true,
+  "manual_pass": false,
+  "note": "The actual model argument3600 contradicts the complete proposed3625 amount. The service rejected authentication. The grade is not used as evidence of correct amount handling."
+}

@@ -1,0 +1,94 @@
+{
+  "label": "HYBRID_DETERMINISTIC_MODEL_CHECKPOINTS",
+  "cases": [
+    {
+      "case": "completed_fragment",
+      "id": "01a19619-dad6-74a1-84ba-3370f68f4383",
+      "run_id": "7590dd15-c875-4433-a020-c2af39674a98",
+      "error": false,
+      "actual_tools": [],
+      "assistant_messages": [
+        {
+          "role": "assistant",
+          "content": "Just checking, do you mean 3,625 dollars total?"
+        }
+      ],
+      "grader_passed": true,
+      "explicit_invalid_credential_override": true
+    },
+    {
+      "case": "fragmented_amount",
+      "id": "01a19619-d7a8-7bda-a6ab-e3e7634316c2",
+      "run_id": "fcca5a8f-df76-46d5-8dab-3e48e9923fcd",
+      "error": false,
+      "actual_tools": [],
+      "assistant_messages": [
+        {
+          "role": "assistant",
+          "content": "Please finish the amount,what total are you proposing?"
+        }
+      ],
+      "grader_passed": true,
+      "explicit_invalid_credential_override": true
+    },
+    {
+      "case": "okay_question",
+      "id": "01a19619-d503-79e8-8014-daeb836f8152",
+      "run_id": "d3ae8d7c-403c-4cbc-835e-05b4b725654f",
+      "error": false,
+      "actual_tools": [],
+      "assistant_messages": [
+        {
+          "role": "assistant",
+          "content": "Yes, the current offer is 3,600 dollars total."
+        }
+      ],
+      "grader_passed": true,
+      "explicit_invalid_credential_override": true
+    },
+    {
+      "case": "percentage_confirmed",
+      "id": "01a19619-d1c7-725f-a77c-052565a5bb46",
+      "run_id": "993b185d-cd1a-4e31-9d6a-27f647a22475",
+      "error": false,
+      "actual_tools": [
+        {
+          "name": "agree_rate",
+          "arguments": {
+            "load_id": "SYNTHETIC_QA_LD1",
+            "rate": "4320"
+          }
+        }
+      ],
+      "assistant_messages": [
+        {
+          "role": "assistant",
+          "content": "I\u2019m unable to process the rate request right now. Goodbye."
+        }
+      ],
+      "grader_passed": true,
+      "explicit_invalid_credential_override": true
+    },
+    {
+      "case": "percentage_question",
+      "id": "01a19619-ce30-72bb-8229-58ce426a7288",
+      "run_id": "8352cb6f-5458-4505-be53-09d65780ac72",
+      "error": false,
+      "actual_tools": [],
+      "assistant_messages": [
+        {
+          "role": "assistant",
+          "content": "Twenty percent more than 3,600 dollars is 4,320 dollars total. Is that your proposed total?"
+        }
+      ],
+      "grader_passed": true,
+      "explicit_invalid_credential_override": true
+    }
+  ],
+  "service_business_writes": 0,
+  "tms_sends": 0,
+  "notes": [
+    "Tool calls use an explicit invalid credential and are denied before business logic.",
+    "No dummy-call row was created. Grades are secondary; inspect exact model arguments and clarification text."
+  ]
+}

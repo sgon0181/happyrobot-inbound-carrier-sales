@@ -1,0 +1,25 @@
+{
+  "label": "LIVE_INTEGRATION_REHEARSAL",
+  "call_id": "55ca1956-a601-4ad6-9600-b6771942dbbd",
+  "outcome": "rehearsal_complete",
+  "closed": true,
+  "code_passed": true,
+  "consent": true,
+  "rounds": [
+    {
+      "round": 1,
+      "ask": "4200",
+      "response": 3600
+    },
+    {
+      "round": 2,
+      "ask": "3625",
+      "response": 3625
+    }
+  ],
+  "genuine_agent_counter": true,
+  "booking_rows": 0,
+  "write_intents": 0,
+  "call_claimed": false,
+  "owner_assessment": "Completed, but counter and acceptance wording felt unclear. Revised before next call."
+}

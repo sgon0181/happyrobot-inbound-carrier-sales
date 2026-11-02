@@ -19,4 +19,4 @@ The Python service that decides what the voice agent may do. Slice 1 is built: m
 
 Dependencies point one way: `api` to `calls`, `bookings` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
 
-Production Python stays at or under 1,500 lines ([D-28](../docs/decisions.md)).
+Every commit reports its production line count. Size is watched, not capped ([D-28](../docs/decisions.md)).

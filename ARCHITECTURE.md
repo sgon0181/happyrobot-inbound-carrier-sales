@@ -194,7 +194,7 @@ Tests must prove these regardless of what the model does.
 
 ## 6. The service
 
-One Python 3.12 FastAPI program. It keeps no database of its own and runs no background jobs. Target size is 1,500 production lines at most ([D-28](docs/decisions.md)).
+One Python 3.12 FastAPI program. It keeps no database of its own and runs no background jobs. Its size is reported with every commit and kept small, but not capped ([D-28](docs/decisions.md)).
 
 ```text
 service/
@@ -466,7 +466,6 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 
 | Gate | Target |
 |---|---|
-| Production Python | At most 1,500 lines |
 | Size | Functions at most 50 lines, modules at most 300 |
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |

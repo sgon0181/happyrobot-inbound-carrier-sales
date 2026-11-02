@@ -4,7 +4,7 @@ Every design decision, why it was made and what it costs. [ARCHITECTURE.md](../A
 
 ## Decisions made on 2026-11-02
 
-The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02. They follow from a prototype that worked but ran to 4,501 production lines, and the owner's requirement to understand every file handed in.
+The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02, and later that day changed D-28 from a cap to a guideline. They follow from a prototype that worked but ran to 4,501 production lines, and the owner's requirement to understand every file handed in.
 
 ### D-22: `LOAD_BOOK` is sent at the rep's Confirm, not during the call
 
@@ -50,9 +50,12 @@ Replaces D-17. Each operation checks whether its effect already happened, so a r
 
 Stale calls and stuck bookings are detected when read, and a rep resolves them. This removes the sweep loop, its silent failures and every shutdown question it raised.
 
-### D-28: A size budget
+### D-28: Size is watched, not capped
 
-Production Python stays at or under 1,500 lines, with the limits in [architecture section 14](../ARCHITECTURE.md#14-quality). The owner must be able to read and defend all of it. Exceeding the budget requires a recorded reason here.
+- **Was:** a hard cap of 1,500 production lines, so the owner could read every line.
+- **Changed on 2026-11-02:** line count is a weak measure of quality. The owner now prioritises code that works, passes its tests and is understood at the level of what each part does, over reading every line.
+- **What is enforced instead:** the gates in [architecture section 14](../ARCHITECTURE.md#14-quality), which are complexity, strict types, lint, branch coverage, one-way dependencies, and functions and modules kept short.
+- **What stays:** every commit reports its production line count, so growth stays visible. Less code is still better when it is equally clear. Slice 1 used 646 lines.
 
 ### D-29: Rebuild small on `main`, porting what is proven
 

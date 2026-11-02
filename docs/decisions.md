@@ -56,8 +56,9 @@ Production Python stays at or under 1,500 lines, with the limits in [architectur
 
 ### D-29: Rebuild small on `main`, porting what is proven
 
-- **Why:** both audits judged the sound parts worth keeping, and 423 lines port unchanged. Most of the remainder exists because of D-8 and the multi-table design, so changing those decisions removes it instead of restructuring it.
+- **Why:** both audits judged the sound parts worth keeping. Most of the remainder exists because of D-8 and the multi-table design, so changing those decisions removes it instead of restructuring it.
 - **Changes an earlier view:** both audits said refactor, not rewrite, and the Claude audit said to fast-forward `main`. Those verdicts assumed the same design. Two things are new: the design changes above, and the owner's requirement to read every file on a same-day deadline.
+- **What carries over is behaviour, not code:** measured against [architecture section 14](../ARCHITECTURE.md#14-quality), none of the prototype's slice 1 code passes as written. No function has type hints, and the files show 115 lint issues and 95 strict type errors. So each piece is rewritten small, with the prototype's tests and recorded TMS replies as the check, and compared with the prototype on the same inputs before it is committed.
 - **Not a fresh start:** the TMS findings, spent-load list, prompt, workflow, dashboard and evidence all carry over. `prototype/e2e` stays on the remote as reference and fallback.
 - **Cost:** the prototype's live proof does not transfer. The new code needs its own real call, and at least one load.
 
@@ -100,7 +101,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 | D-17 | Retries recognized by request fingerprint | **Replaced by D-26** |
 | D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The agent takes no part in the send, so it never has to describe `UNKNOWN`, and Confirm applies only to `RESERVED`. |
 | D-19 | `service/` on `main` is the only production code | Active, with D-29 |
-| D-20 | No standalone test bookings | Active |
+| D-20 | No standalone test bookings | Active. The owner authorized one exception on 2026-11-02: two probe sends, recorded in [tms-contract.md](tms-contract.md). |
 | D-21 | Real and synthetic calls kept apart | Active |
 
 Each original decision's full reasoning is in [architecture v2.5](https://github.com/sgon0181/happyrobot-inbound-carrier-sales/blob/prototype/e2e/ARCHITECTURE.md#12-decisions-and-open-questions).

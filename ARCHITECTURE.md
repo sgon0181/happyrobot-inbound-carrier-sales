@@ -397,7 +397,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
 | Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, the receipt is logged and shown on the rep's screen. |
 
-**`PENDING`.** The handbook shows `BOOKED`, but all seven complete live receipts returned `PENDING` and stayed there. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
+**`PENDING`.** The handbook shows `BOOKED`, but all nine complete live receipts returned `PENDING`, including one sent deliberately above the ceiling, and none has moved on. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
 
 **Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because each send spends a load permanently.
 
@@ -486,10 +486,10 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 | Slice | Delivers | Ends with |
 |---|---|---|
 | **0. Skeleton** | Docs, decisions, tooling, folders. No logic. | This commit |
-| **1. Foundations** | TMS protocol, mapping and client; pricing, negotiation, money, loads, models. Ported from the prototype with their tests. | `make check` passes offline |
+| **1. Foundations** | Money, models, pricing, negotiation, loads; TMS protocol, mapping and read-only client. Rewritten in six small pieces, with the prototype's tests and recorded TMS replies as the check. | `make check` passes offline |
 | **2. Verify** | Service, config, Twin adapter, FMCSA, email, Docker, deployment. Real workflow wired for verify, send and check. | A real call passes MC and code |
 | **3. Sell** | Search, negotiation, reservation, close, mocked handoff. | A real call ends in a reservation |
-| **4. Operate** | Dashboard, rep queue, Confirm with `LIVE_BOOKING` on. | A rep click returns a TMS reference, spending one load |
+| **4. Operate** | Dashboard, rep queue, `LOAD_BOOK` in the TMS client, Confirm with `LIVE_BOOKING` on. | A rep click returns a TMS reference, spending one load |
 | **5. Deliver** | QA suites, KPIs, build description, email, video. | Submission |
 
 **Definition of done** is one real run showing: an active MC, an emailed code, at least one counter, a spoken mocked transfer, the agent ending the session, complete Twin rows, and a rep Confirm that returns a TMS reference.

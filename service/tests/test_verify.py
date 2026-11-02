@@ -178,7 +178,7 @@ def test_the_right_code_verifies_the_call_and_only_its_hash_is_stored() -> None:
     assert code not in json.dumps(r.row())
     assert r.post("/otp/verify", code=f"{code[:3]} {code[3:]}")["status"] == "verified"
     assert is_verified(r.row())
-    assert code not in json.dumps(r.row())  # events hold the agent's replies, never a code
+    assert code not in json.dumps(r.row())  # events hold step results, never a code
     assert r.post("/otp/verify", code=code)["status"] == "verified"  # a repeat is safe
 
 

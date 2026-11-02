@@ -297,7 +297,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 
 **Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. There are no in-process locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
 
-**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step and the reply the agent was given, which never holds a code.
+**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step and the step's result with its details, such as the carrier name, an ineligibility reason or tries left, and never a code. Some results are internal, such as `checking` before an FMCSA lookup and `code_issued` before the email, and a successful email adds no event, so events are not a record of what the agent heard.
 
 **Outcome is computed, not stored twice.** A booking row is the only record of a booking. The dashboard derives each call's outcome when it reads:
 

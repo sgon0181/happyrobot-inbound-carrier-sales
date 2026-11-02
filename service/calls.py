@@ -105,8 +105,9 @@ class Calls:
     async def _step(self, run_id: str, action: str, decide: Decide) -> Reply:
         """Apply one decision and its event to the call's row, in one version-checked write.
 
-        The event keeps the call's MC after the step and the reply the agent was given,
-        which never holds a code.
+        The event keeps the call's MC after the step and the step's result, which never
+        holds a code. Some results are internal, such as checking and code_issued, and a
+        successful email adds no event, so events are not a record of what the agent heard.
         """
         now = self.now()
 

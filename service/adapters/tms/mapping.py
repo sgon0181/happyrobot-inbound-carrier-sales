@@ -10,6 +10,7 @@ from service.core.models import Load, LoadSummary, Place
 from service.core.money import parse_tms_amount
 
 _FEET = re.compile(r"\s*([0-9]{1,4})ft\s*x\s*([0-9]{1,4})ft\s*x\s*([0-9]{1,4})ft\s*", re.I)
+_TIMESTAMP = re.compile(r"[0-9]{14}")
 
 
 def to_summary(record: Mapping[str, str]) -> LoadSummary:
@@ -32,10 +33,13 @@ def to_load(record: Mapping[str, str]) -> Load:
 
 
 def parse_timestamp(text: str | None) -> datetime | None:
-    """Read YYYYMMDDhhmmss. The TMS timezone is unconfirmed, so UTC is an assumption."""
+    """Read exactly YYYYMMDDhhmmss. The TMS timezone is unconfirmed, so UTC is an assumption."""
+    # strptime alone accepts short fields, so a truncated value could become a valid future date.
+    if text is None or not _TIMESTAMP.fullmatch(text):
+        return None
     try:
-        return datetime.strptime(text or "", "%Y%m%d%H%M%S").replace(tzinfo=UTC)
-    except ValueError:
+        return datetime.strptime(text, "%Y%m%d%H%M%S").replace(tzinfo=UTC)
+    except ValueError:  # 14 digits that are not a real date, such as month 13
         return None
 
 

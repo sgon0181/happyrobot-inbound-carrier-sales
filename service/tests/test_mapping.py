@@ -49,11 +49,25 @@ def test_a_missing_ceiling_becomes_none() -> None:
     assert to_load(record).max_rate is None
 
 
-def test_timestamps_are_read_as_utc_and_bad_ones_become_none() -> None:
+def test_timestamps_are_read_as_utc() -> None:
     pickup = to_load(make_load(PICKUP_DT="20261031030801")).pickup_datetime
     assert pickup is not None
     assert (pickup.utcoffset(), pickup.hour) == (timedelta(0), 3)
-    assert to_load(make_load(PICKUP_DT="2026-10-31")).pickup_datetime is None
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "2026112190000",  # 2026-11-02 19:00 with one zero lost would read as 21 November
+        "202611021900000",  # one digit too many
+        "20261399000000",  # month 13
+        " 20261102190000",
+        "2026-10-31",
+        "",
+    ],
+)
+def test_a_malformed_timestamp_becomes_none(text: str) -> None:
+    assert to_load(make_load(PICKUP_DT=text)).pickup_datetime is None
 
 
 def test_blank_notes_stay_blank() -> None:

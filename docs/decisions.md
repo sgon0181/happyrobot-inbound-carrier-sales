@@ -62,7 +62,7 @@ Stale calls and stuck bookings are detected when read, and a rep resolves them. 
 - **Why:** both audits judged the sound parts worth keeping. Most of the remainder exists because of D-8 and the multi-table design, so changing those decisions removes it instead of restructuring it.
 - **Changes an earlier view:** both audits said refactor, not rewrite, and the Claude audit said to fast-forward `main`. Those verdicts assumed the same design. Two things are new: the design changes above, and the owner's requirement to read every file on a same-day deadline.
 - **What carries over is behaviour, not code:** measured against [architecture section 14](../ARCHITECTURE.md#14-quality), none of the prototype's slice 1 code passes as written. No function has type hints, and the files show 115 lint issues and 95 strict type errors. So each piece is rewritten small, with the prototype's tests and recorded TMS replies as the check, and compared with the prototype on the same inputs before it is committed.
-- **Not a fresh start:** the TMS findings, spent-load list, prompt, workflow, dashboard and evidence all carry over. `prototype/e2e` stays on the remote as reference and fallback.
+- **Not a fresh start:** the TMS findings, spent-load list, prompt, workflow, dashboard and evidence all carry over. `prototype/e2e` stays on the remote as reference.
 - **Cost:** the prototype's live proof does not transfer. The new code needs its own real call, and at least one load.
 
 ### D-30: The dashboard reads through the service
@@ -80,6 +80,15 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **Why:** the earlier wording, "nothing irreversible happens during a call", did not match the design. A reservation exists before the call ends, nothing makes Confirm wait for it, and the code email is also sent during a call. What protects the TMS is that the voice agent has no route to `LOAD_BOOK`.
 - **Cost:** a rep can confirm while the carrier is still on the line. That is harmless, because the send runs outside the voice request and touches only the booking row.
 - **Also changed:** INV-1 now covers what the service returns and accepts, because the service cannot control what the model says.
+
+## Decisions made on 2026-11-03
+
+### D-33: No fallback to the prototype
+
+- **Was:** if slice 4 was not working 4 hours before the upload, submit `prototype/e2e` with its limits disclosed.
+- **Changed on 2026-11-03:** the owner chose to finish the rebuild, aiming for working software by 16:00 and recording the demo video that evening.
+- **Why:** the owner would rather hand in code they stand behind than a prototype they never reviewed.
+- **Cost:** if slice 4 runs late there is no finished fallback, and the owner would bring in Codex to help finish.
 
 ## Earlier decisions
 

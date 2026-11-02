@@ -18,7 +18,7 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 | Area | State |
 |---|---|
 | `main` | Skeleton: docs, tooling and policy files. No service code yet. |
-| `prototype/e2e` | Working system at `4b5ef3a`. Reference and fallback. Not merged. See [lessons](lessons-from-prototype.md). |
+| `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
 | Who does what | One writer at a time on `main`, normally Claude Code, with Codex reviewing. The owner approves every push. |
 | Spent loads | Listed in [`tms-contract.md`](tms-contract.md#booking-test-inventory) and [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json). The TMS has no reset. |

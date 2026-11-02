@@ -4,7 +4,7 @@
 
 Read `docs/onboarding.md` for access setup, current state and platform resources. For TMS work, read `docs/tms/README.md` before implementing or testing the integration, then `docs/tms-contract.md` for sanitized observations, fixtures and blocked/protected inventory. These tracked references are shared by Codex and Claude Code; ignored local packets are optional evidence, not required onboarding.
 
-Production code lives in `service/` on `main`. Branch `prototype/e2e` is reference and fallback: port from it deliberately, one reviewed piece at a time, and never merge it. Meet the engineering gates in `ARCHITECTURE.md` section 14, and report the production line count in each commit.
+Production code lives in `service/` on `main`. Branch `prototype/e2e` is reference only: port from it deliberately, one reviewed piece at a time, and never merge it. Meet the engineering gates in `ARCHITECTURE.md` section 14, and report the production line count in each commit.
 
 # Writing
 

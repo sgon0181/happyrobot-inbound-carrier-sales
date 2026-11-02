@@ -4,7 +4,7 @@
 |---|---|
 | **Version** | 3.0, 2026-11-02 |
 | **Status** | Design for the real build. `main` holds no service code yet; it arrives through the [build plan](#15-build-plan). |
-| **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference and fallback. See [what it proved](docs/lessons-from-prototype.md). |
+| **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
 
@@ -497,7 +497,7 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 
 **Definition of done** is one real run showing: an active MC, an emailed code, at least one counter, a spoken mocked transfer, the agent ending the session, complete Twin rows, and a rep Confirm that returns a TMS reference.
 
-**Fallback.** `prototype/e2e` already passed a real run. If slice 4 is not working 4 hours before the deadline, stop and submit that branch with its limits disclosed.
+**Target.** Working software by 16:00 on 2026-11-03, with the demo video recorded that evening. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
 
 ---
 

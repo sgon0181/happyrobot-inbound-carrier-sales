@@ -16,9 +16,9 @@ A carrier opens a HappyRobot web call. A voice agent takes their MC number, the 
 
 Two rules shape everything else:
 
-> **1. The model talks; the service decides.** The voice agent can ask for any action. The service decides whether it is allowed, using state it stores itself. The model never receives the rate ceiling or the expected code.
+> **1. The model talks; the service decides.** The model can only request actions. The service allows or refuses each one using its own records and the TMS, never the model's word. It never gives the model the rate ceiling or the expected code.
 >
-> **2. Nothing irreversible happens during a call.** The TMS has no cancel, so `LOAD_BOOK` is sent only when a person clicks Confirm. A call can end, drop or go wrong at any moment and the worst result is a reservation the rep declines.
+> **2. Only a rep can send a booking.** The TMS has no cancel, so the voice agent has no way to send `LOAD_BOOK`. A carrier's agreement only creates a reservation, so a mistake on the call reaches a person, not the TMS. A signed-in rep confirms that exact reservation at its recorded rate. It is sent at most once: if the result is unclear, the load stays blocked and the booking is never resent.
 
 Four parts, each with one job:
 
@@ -136,7 +136,8 @@ sequenceDiagram
     participant D as Twin
 
     R->>P: Clicks Confirm
-    P->>S: confirm(load_id, signed-in rep)
+    P->>S: confirm(load_id, version seen, signed-in rep)
+    S->>D: Read the row: still the version the rep saw?
     S->>T: LOAD_GET: still OPEN, ceiling covers the rate?
     S->>D: Version-checked write: RESERVED to SUBMITTING
     S->>T: LOAD_BOOK, exactly once
@@ -145,7 +146,7 @@ sequenceDiagram
     S-->>P: Result shown to the rep
 ```
 
-`LOAD_BOOK` is reached only by winning that version-checked write, so a double click or two reps cannot send twice.
+`LOAD_BOOK` is reached only by winning that version-checked write, so a double click or two reps cannot send twice. The request carries the version the rep saw, so a rep can only confirm the reservation on their screen.
 
 ---
 
@@ -155,16 +156,18 @@ Tests must prove these regardless of what the model does.
 
 | ID | Invariant |
 |---|---|
-| **INV-1** | No rate above `max_rate` is offered or agreed. Confirm re-reads the ceiling before sending. |
+| **INV-1** | The service never returns or accepts a rate above `max_rate`. Confirm re-reads the ceiling before sending. |
 | **INV-2** | `max_rate` never reaches anything the voice agent can see. Load fields reach the agent through an explicit allowlist, so a new field stays private by default. |
 | **INV-3** | No load details until the service's own record shows FMCSA eligibility and a verified code for that call. |
 | **INV-4** | At most 3 counter rounds per call, counted across every load discussed. |
 | **INV-5** | The expected code never reaches the workflow. It goes only to the configured inbox, never to an address the caller gives. |
 | **INV-6** | A load has at most one active reservation. A call has at most one agreement. |
-| **INV-7** | `LOAD_BOOK` is sent only after a rep's Confirm, at most once per reservation, and is never resent. A timeout is `UNKNOWN`, because a timeout does not say whether the request landed. |
+| **INV-7** | `LOAD_BOOK` is sent only after a rep's Confirm of the reservation version they saw, at most once per reservation, and is never resent. A timeout is `UNKNOWN`, because a timeout does not say whether the request landed. |
 | **INV-8** | Every endpoint requires authentication, including health. No public API docs. |
 | **INV-9** | Every state change and its audit event commit in the same write. Neither can exist without the other. |
 | **INV-10** | `LOAD_BOOK` evidence is never discarded: the step reached, the error type and every byte received. |
+
+**What these cannot cover.** The service cannot control what the model says. A wrong number can be spoken, and a misheard rate inside the limits can reach a reservation. That is why a rep reviews every reservation before anything is sent. Conversation tests measure how often this happens.
 
 ---
 
@@ -220,9 +223,9 @@ The dependency direction is one way: `api` calls `calls`, `bookings` and `dashbo
 | `POST /loads/search` | Agent | `LOAD_QUERY`, then `LOAD_GET` on up to 3 candidates. Returns allowed fields and our opening offer. |
 | `POST /negotiate` | Agent | Applies the negotiation policy. On agreement, reserves the load. |
 | `POST /calls/{id}/close` | Agent | Records closing time and summary. Safe to repeat. |
-| `GET /ops/snapshot` | Ops | Calls, bookings and KPIs for the app. Cached for 5 seconds. |
-| `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` ([§10](#10-reservation-and-confirm)). |
-| `POST /bookings/{load_id}/decline` | Ops | Releases a reservation. Nothing was sent, so the load is free. |
+| `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds. |
+| `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` for the version the rep saw ([§10](#10-reservation-and-confirm)). |
+| `POST /bookings/{load_id}/decline` | Ops | Releases the version the rep saw. Nothing was sent, so the load is free. |
 | `POST /bookings/{load_id}/reconcile` | Ops | Read-only TMS check on a stuck or sent booking. Never sends. |
 | `GET /health` | Either | Liveness and TMS reachability. |
 
@@ -340,9 +343,9 @@ Both draws use an HMAC of the policy version, load ID and purpose under a server
 
 ## 10. Reservation and Confirm
 
-**On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation that the rep declines.
+**On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
 
-**In the app.** Confirm re-reads the load, wins a version-checked write to `SUBMITTING`, sends `LOAD_BOOK` once and saves the reply.
+**In the app.** Confirm checks the row is still the version the rep saw, re-reads the load, wins a version-checked write to `SUBMITTING`, sends `LOAD_BOOK` once and saves the reply. Decline makes the same version check.
 
 ```mermaid
 stateDiagram-v2
@@ -384,6 +387,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 
 | Event | Result |
 |---|---|
+| The rep's screen is out of date | The row is no longer the version the rep saw. Nothing is sent or changed, and the rep is told to refresh. |
 | TMS read fails before sending | Stays `RESERVED`. The rep is told to retry. |
 | Load no longer `OPEN`, pickup passed or ceiling fell | `FAILED`, nothing sent. The rep calls the carrier back. |
 | Two clicks or two reps | The version check lets one win. The other is told it is already handled. |
@@ -425,7 +429,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 ## 13. Reliability and capacity
 
 - **Timeouts.** A timeout does not tell us whether a request landed. For reads we retry. For `LOAD_BOOK` we record `UNKNOWN` and stop.
-- **Voice deadline.** Every voice request stops at 12 seconds and returns `temporarily_unavailable`. That is safe because no voice request has an irreversible side effect.
+- **Voice deadline.** Every voice request stops at 12 seconds and returns `temporarily_unavailable`. That is safe because no voice request can send a booking. An interrupted code email counts against the send limit and is not retried.
 - **Confirm runs to completion.** It has no voice deadline, and a dashboard disconnecting does not cancel it.
 - **Twin rate limit.** All statements pass through one pacer at 4 per second, retrying only on HTTP 429. A timed-out write may still have landed, so the next read decides. Conditional writes make that safe.
 - **One instance.** One service instance for simplicity. The version check protects against restarts and deployment overlap, without in-process locks.
@@ -477,7 +481,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 
 ## 15. Build plan
 
-Each slice is a small set of commits on `main`, read by the owner. Each ends in something the owner can run or call. Nothing irreversible happens before slice 4.
+Each slice is a small set of commits on `main`, read by the owner. Each ends in something the owner can run or call. No booking is sent before slice 4.
 
 | Slice | Delivers | Ends with |
 |---|---|---|

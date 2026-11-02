@@ -4,7 +4,7 @@ Every design decision, why it was made and what it costs. [ARCHITECTURE.md](../A
 
 ## Decisions made on 2026-11-02
 
-The owner approved D-22 to D-25 and D-29 on 2026-11-02. They follow from a prototype that worked but ran to 4,501 production lines, and the owner's requirement to understand every file handed in.
+The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02. They follow from a prototype that worked but ran to 4,501 production lines, and the owner's requirement to understand every file handed in.
 
 ### D-22: `LOAD_BOOK` is sent at the rep's Confirm, not during the call
 
@@ -65,6 +65,18 @@ Production Python stays at or under 1,500 lines, with the limits in [architectur
 
 The fallback for T-7 is now the design. The Apps gateway to Twin has been failing, and one path keeps every rule in one place. The ops key stays server-side.
 
+### D-31: Rep actions carry the version the rep saw
+
+- **Why:** a booking row is keyed by load ID, and a freed load can be reserved again by another call. Without this check, a rep on an out-of-date screen could confirm or release a reservation they never reviewed.
+- **How:** the snapshot returns each booking's version. Confirm and decline send it back, and the service refuses if the row has moved on.
+- **Cost:** a rep on an out-of-date screen is refused and has to refresh.
+
+### D-32: The second rule limits who can send, not when
+
+- **Why:** the earlier wording, "nothing irreversible happens during a call", did not match the design. A reservation exists before the call ends, nothing makes Confirm wait for it, and the code email is also sent during a call. What protects the TMS is that the voice agent has no route to `LOAD_BOOK`.
+- **Cost:** a rep can confirm while the carrier is still on the line. That is harmless, because the send runs outside the voice request and touches only the booking row.
+- **Also changed:** INV-1 now covers what the service returns and accepts, because the service cannot control what the model says.
+
 ## Earlier decisions
 
 | ID | Decision | Status |
@@ -86,7 +98,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 | D-15 | Northstar is a handoff per verified call | Changed: reserved handoffs per code-passed call |
 | D-16 | `run_id` is the only call identity, in a hidden field | Active |
 | D-17 | Retries recognized by request fingerprint | **Replaced by D-26** |
-| D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The carrier is gone before any send, and Confirm applies only to `RESERVED`. |
+| D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The agent takes no part in the send, so it never has to describe `UNKNOWN`, and Confirm applies only to `RESERVED`. |
 | D-19 | `service/` on `main` is the only production code | Active, with D-29 |
 | D-20 | No standalone test bookings | Active |
 | D-21 | Real and synthetic calls kept apart | Active |

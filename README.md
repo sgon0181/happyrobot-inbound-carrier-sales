@@ -24,7 +24,7 @@ Senior rep --> Operations app -------+        +--> Twin (calls and bookings)
 4. **Reserve.** On agreement the load is reserved in Twin, and the agent speaks a mocked transfer to a senior rep.
 5. **Confirm.** The rep clicks Confirm in the operations app, which sends the booking to the TMS.
 
-Two rules shape the design: the model talks and the service decides, and nothing irreversible happens during a call. [ARCHITECTURE.md](ARCHITECTURE.md) explains how it all fits together.
+Two rules shape the design: the model talks and the service decides, and only a rep can send a booking. [ARCHITECTURE.md](ARCHITECTURE.md) explains how it all fits together.
 
 ## Repository
 

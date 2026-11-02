@@ -17,7 +17,7 @@ max-complexity = 10
 [tool.mypy]
 python_version = "3.12"
 strict = true
-files = ["service"]
+files = ["service", "tools"]
 
 [tool.pytest.ini_options]
 testpaths = ["service/tests"]
@@ -28,5 +28,7 @@ source = ["service"]
 omit = ["service/tests/*"]
 
 [tool.coverage.report]
+# A floor on statements and branches combined. Branch coverage on the business
+# rules is checked on its own by tools/check_branch_coverage.py.
 fail_under = 90
 show_missing = true

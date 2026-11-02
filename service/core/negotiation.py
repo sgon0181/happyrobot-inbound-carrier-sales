@@ -10,9 +10,7 @@ from dataclasses import dataclass
 from enum import Enum
 
 from service.core.money import parse_ask
-from service.core.pricing import Terms
-
-MAX_ROUNDS = 3
+from service.core.pricing import MAX_ROUNDS, Terms
 
 
 class Action(Enum):

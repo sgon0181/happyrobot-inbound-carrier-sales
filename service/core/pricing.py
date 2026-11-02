@@ -14,6 +14,7 @@ import json
 from dataclasses import dataclass
 
 BPS = 10_000  # basis points in 100%
+MAX_ROUNDS = 3  # counter rounds per call (PDF p.5, INV-4), so the policy has three targets
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -28,10 +29,14 @@ class PricingPolicy:
     def __post_init__(self) -> None:
         bands = (self.ceiling_gap_bps, self.opening_spread_bps)
         targets = self.round_target_bps
+        numbers = (self.rounding_step, self.opening_discount_bps, *bands[0], *bands[1], *targets)
+        if not all(type(number) is int for number in numbers):  # refuses floats and booleans
+            raise ValueError(f"Invalid pricing policy {self.version!r}: numbers must be whole.")
         checks = (
             self.rounding_step > 0,
             all(len(band) == 2 and 0 <= band[0] <= band[1] < BPS for band in bands),
             0 <= self.opening_discount_bps < BPS,
+            len(targets) == MAX_ROUNDS,
             all(0 <= bps <= BPS for bps in targets) and list(targets) == sorted(targets),
             targets[-1:] == (BPS,),  # the last round reaches the cap
         )

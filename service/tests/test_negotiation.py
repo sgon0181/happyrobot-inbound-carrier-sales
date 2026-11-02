@@ -4,8 +4,8 @@ import random
 
 import pytest
 
-from service.core.negotiation import MAX_ROUNDS, Action, Step, respond
-from service.core.pricing import Terms, price_load
+from service.core.negotiation import Action, Step, respond
+from service.core.pricing import MAX_ROUNDS, Terms, price_load
 from service.tests.test_pricing import POLICY, SECRET
 
 TERMS = Terms(

@@ -27,6 +27,12 @@ def test_the_policy_file_loads() -> None:
         ("round_target_bps", [3500, 6500, 9000]),  # never reaches the cap
         ("round_target_bps", [6500, 3500, 10000]),  # out of order
         ("round_target_bps", [3500, 6500, 12000]),  # past the cap
+        ("round_target_bps", [10000]),  # one target, but there are three rounds
+        ("round_target_bps", [2500, 5000, 7500, 10000]),  # four targets
+        ("rounding_step", 25.5),  # would produce fractional offers
+        ("rounding_step", True),
+        ("opening_discount_bps", 500.0),
+        ("ceiling_gap_bps", [200, "600"]),
     ],
 )
 def test_a_broken_policy_is_refused(field: str, value: object) -> None:

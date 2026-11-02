@@ -468,7 +468,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 |---|---|
 | Production Python | At most 1,500 lines |
 | Size | Functions at most 50 lines, modules at most 300 |
-| Complexity | Radon rank B or better; `parse_reply` is the one named exception |
+| Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
 | Coverage | At least 90% branch coverage on `core/`, `calls.py` and `bookings.py` |

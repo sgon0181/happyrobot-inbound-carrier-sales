@@ -2,7 +2,7 @@
 
 PDF: [challenge brief](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
 
-Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d). Questions 1-3 are intentionally ambiguous: choose and document assumptions. They were not given definitive technical answers. Project assumptions are recorded in `ARCHITECTURE.md`.
+Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d). Questions 1-3 are intentionally ambiguous: choose and document assumptions. They were not given definitive technical answers. Project assumptions are recorded in [`decisions.md`](decisions.md).
 
 1. **Q:** When should I actually call `LOAD_BOOK`? The PDF says the load is tentatively reserved before the senior rep confirms, but `LOAD_BOOK` commits the booking and I couldn't find a cancellation operation in the handbook. Should I book as soon as the carrier agrees to the rate, or save the pending agreement in Twin and only call `LOAD_BOOK` once the simulated senior rep approves it through the Apps dashboard?
 
@@ -10,7 +10,7 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **A:** Luke: intentionally ambiguous; choose and document an assumption. He did not specify booking timing.
 
-   **Our assumption (D-8):** Send `LOAD_BOOK` once at rate agreement, then hand off; the rep confirms afterwards. See [`ARCHITECTURE.md`](ARCHITECTURE.md) §6.6.
+   **Our assumption (D-22, replacing D-8):** Reserve the load in Twin at rate agreement, then send `LOAD_BOOK` once when the senior rep confirms. See [`decisions.md`](decisions.md) and [the architecture](../ARCHITECTURE.md#10-reservation-and-confirm).
 
 2. **Q:** Do I need to verify the OTP on every call, even if the carrier has called before?
 
@@ -24,7 +24,7 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **A:** Luke: intentionally ambiguous; investigate and document assumptions. Rate format, bounds and the `MAX_BUY` mapping were not confirmed.
 
-   **Live read-only evidence, 2026-10-30 (Australia/Sydney):** A study of 302 full `LOAD_GET` records found `MAX_BUY` on every one with our token, always above `RATE`, unlike the handbook examples. This confirms field availability, but does not prove the mapping to the assignment's `max_rate`, currency units, or booking validation rules. That read-only study performed no booking tests. Later [2026-10-31 booking experiments](docs/tms-contract.md#booking-experiments-2026-10-31) support whole-value initial acceptance and record pending acknowledgements, but not currency/scale, full bounds or finalization. The handbook leaves accepted bounds undocumented. The summary and its limits are in [`docs/tms-contract.md`](docs/tms-contract.md). `python3 scripts/query_loads.py --load-id LD01023` re-checks that one load; it does not reproduce the study.
+   **Live read-only evidence, 2026-10-30 (Australia/Sydney):** A study of 302 full `LOAD_GET` records found `MAX_BUY` on every one with our token, always above `RATE`, unlike the handbook examples. This confirms field availability, but does not prove the mapping to the assignment's `max_rate`, currency units, or booking validation rules. That read-only study performed no booking tests. Later [2026-10-31 booking experiments](tms-contract.md#booking-experiments-2026-10-31) support whole-value initial acceptance and record pending acknowledgements, but not currency/scale, full bounds or finalization. The handbook leaves accepted bounds undocumented. The summary and its limits are in [`docs/tms-contract.md`](tms-contract.md). `python3 scripts/query_loads.py --load-id LD01023` re-checks that one load; it does not reproduce the study.
 
 4. **Q:** Who is the demo actually directed to? Should I present it like I'm showing the solution to the brokerage's business and operations team, their IT team, or directly to you guys as technical reviewers? Basically, should I focus on showing the customer how it solves their problem, or walk you through how I built it?
 
@@ -54,10 +54,10 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **Status:** Sent to Luke by email; awaiting Luke's reply.
 
-   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. All used MC 872144, which FMCSA showed as inactive on 2026-10-31. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed. Since that email, one `LOAD_BOOK` on a real call with active MC 138328 lost its reply and ended `UNKNOWN`. LD01077 then read `PENDING` for about 23 minutes with no reference, and seven sends have produced no `BOOKED` ([evidence](docs/tms-contract.md#active-mc-attempt-on-a-real-call)).
+   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. All used MC 872144, which FMCSA showed as inactive on 2026-10-31. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed. Since that email, one `LOAD_BOOK` on a real call with active MC 138328 lost its reply and ended `UNKNOWN`. LD01077 then read `PENDING` for about 23 minutes with no reference, and seven sends have produced no `BOOKED` ([evidence](tms-contract.md#active-mc-attempt-on-a-real-call)).
 
    **Reference:** Owner's follow-up email to Luke; PDF pp. 1-3, first-layer scope and process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
 
-   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, an acknowledged tentative booking request and mocked senior-rep handoff. Final confirmation remains the senior rep's responsibility. Treating `PENDING` as the tentative stage is our documented interpretation, not a behavior confirmed by Luke. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. Architecture D-8 records the candidate policy: send `LOAD_BOOK` once at rate agreement, preserve the actual acknowledgement, then hand off. The rep's confirmation is recorded locally and is not a claimed external finalization mechanism; timing remains revisable candidate policy, not Luke-confirmed behavior.
+   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, a tentative reservation and mocked senior-rep handoff. Under D-22 the rep's Confirm sends `LOAD_BOOK` once and preserves the actual reply. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. No external finalization mechanism is claimed. The timing is our documented choice, not Luke-confirmed behavior, and can be revisited if he answers.
 
    **Review before final submission:** Check for Luke's reply, record his answer here, and assess any impact on the implementation, architecture and demo wording. If no reply is available, keep this question open and explicitly review and disclose the remaining assumption. This clarification does not block the build and must not be marked answered without a response.

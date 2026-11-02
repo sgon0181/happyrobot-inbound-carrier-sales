@@ -2,15 +2,15 @@
 
 Internal reference for authorized contributors, including Claude Code and Codex. Handbook checked 2026-10-31 (Australia/Sydney). Keep it in the private project repository; it contains no credentials.
 
-Start with [agent onboarding](../agent-onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../../PROJECT_GUIDE.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../../Questions.Md) identify token-specific differences. Keep assumptions explicit.
+Start with [onboarding](../onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../assignment.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../questions.md) identify token-specific differences. Keep assumptions explicit.
 
-**Current tracked implementation:** a read-only diagnostic, seven offline reader checks and sanitized reply fixtures. [`service/`](../../service/README.md) holds the phase 1 adapter, booking and pricing core and a fake TMS, with live `LOAD_BOOK` off by default. Endpoints, OTP gates and UI remain planned; the ignored SQLite/fake-TMS lab is historical prototype evidence.
+**Current tracked implementation:** sanitized reply fixtures only. The TMS adapter arrives in slice 1 of the [build plan](../../ARCHITECTURE.md#15-build-plan), ported from branch `prototype/e2e`.
 
 ## 1. Setup and safe inspection
 
-The portal supplies `TMS_HOST`, `TMS_PORT` and `TMS_TOKEN`. The reader loads them from the root, Git-ignored `.env`. Production credentials belong in a secret store, never documentation, prompts, logs or commits. The tracked [`.env.example`](../../.env.example) lists blank names only; [onboarding](../agent-onboarding.md#access-without-committing-secrets) explains separate handbook-password and other integration access.
+The portal supplies `TMS_HOST`, `TMS_PORT` and `TMS_TOKEN`. The reader loads them from the root, Git-ignored `.env`. Production credentials belong in a secret store, never documentation, prompts, logs or commits. The tracked [`.env.example`](../../.env.example) lists blank names only; [onboarding](../onboarding.md#access-without-committing-secrets) explains separate handbook-password and other integration access.
 
-From the repository root:
+The read-only reader is on branch `prototype/e2e`. From the root of a checkout of that branch:
 
 ```bash
 python3 scripts/query_loads.py --help
@@ -132,8 +132,8 @@ Codes are non-exhaustive. Branch on `CODE`, keep a fallback for unfamiliar codes
 1. The service verifies FMCSA eligibility and a fresh OTP for the trusted call before returning any load details. Coding-agent access to this reference does not bypass runtime verification.
 2. Normalize lane/equipment, query, then fetch full details for candidates. Check filters, schedule, availability and our own active bookings; offer at most three ranked candidates through an allowlisted response.
 3. The backend applies the versioned pricing policy, with no missing-ceiling fallback. At most three counter rounds total per call; failed negotiation ends without handoff. The runtime agent receives only permitted details and the approved offer.
-4. Record the agreed carrier, load and exact rate durably. **Candidate timing policy D-8:** send `LOAD_BOOK` once at rate agreement, then hand off; the rep confirms afterwards. This is an explicit decision, not Luke's mandate or a proven experiment winner. `ACK_PENDING` represents the interpreted tentative first-layer milestone; the rep's local decision remains separate from external finality. No TMS hold/finalization command is inferred. See [architecture section 6.6](../../ARCHITECTURE.md#66-booking-and-handoff).
-5. Claim one durable attempt, re-read the load and ceiling, validate the agreement, then send `LOAD_BOOK` once. Persist the actual receipt as `ACK_PENDING`, authoritative `CONFIRMED` or transport-`UNKNOWN`. Keep pending/unknown blocked from new offers, release and expiry. Operator annotations alone do not unblock them; require authoritative resolution. Complete mocked handoff/audit without overstating finality.
+4. Reserve the agreed carrier, load and exact rate by inserting the booking row, then hand off. **D-22:** `LOAD_BOOK` is sent when the senior rep confirms, never during the call. This is an explicit decision, not Luke's mandate. No TMS hold or finalization command is inferred. See [architecture section 10](../../ARCHITECTURE.md#10-reservation-and-confirm).
+5. At Confirm, re-read the load and ceiling, win the version-checked write to `SUBMITTING`, then send `LOAD_BOOK` once. Persist the actual receipt as `ACK_PENDING`, authoritative `CONFIRMED` or transport-`UNKNOWN`. Keep pending and unknown loads blocked from new offers. Operator annotations alone do not unblock them. Never overstate finality.
 
 Fault injection can accept a request then stay silent, truncate a response, corrupt framing/fields, or delay closing a complete connection. Faults have no reliable marker and may vary. A complete `DEBUG_ECHO` does not rule them out.
 
@@ -153,6 +153,6 @@ Private documentation is not access control. `.gitignore` prevents normal commit
 
 Primary handbook: [protocol](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/), [LOAD_QUERY](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-query/), [LOAD_GET](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-get/), [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/), [DEBUG_ECHO](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/debug-echo/), [faults](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/faults/). Access is restricted to authorized candidates.
 
-Local sources: [study and reproducibility limits](../tms-contract.md), [recruiter/owner clarifications including Q8](../../Questions.Md), [architecture decisions and T-1 to T-7 checks](../../ARCHITECTURE.md), [read-only reader](../../scripts/query_loads.py), [offline framing tests](../../scripts/test_query_loads.py).
+Local sources: [study and reproducibility limits](../tms-contract.md), [recruiter/owner clarifications including Q8](../questions.md), [decisions and open checks](../decisions.md). The read-only reader and its offline framing tests are `scripts/query_loads.py` and `scripts/test_query_loads.py` on branch `prototype/e2e`.
 
 Still unproven: full filter/equipment/status enums, query caps/order, pickup/delivery timezone, currency/scale, complete booking grammar/bounds and server ceiling enforcement, ownership evidence, the `PENDING` to confirmed lifecycle, and a supported reset/cancellation mechanism. Record new evidence with date, token scope, sanitized request/response and limits; keep unresolved behavior explicit.

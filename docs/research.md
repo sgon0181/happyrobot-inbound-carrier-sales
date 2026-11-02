@@ -1,6 +1,6 @@
 # Research and design decisions
 
-I used Perplexity for deep research into US freight brokerage workflows and spoke with Gian Clerici about operational needs. Luke's [answers](Questions.Md) establish the challenge expectations; the research below explains my design choices.
+I used Perplexity for deep research into US freight brokerage workflows and spoke with Gian Clerici about operational needs. Luke's [answers](questions.md) establish the challenge expectations; the research below explains my design choices.
 
 ## Industry input: Gian Clerici
 
@@ -20,13 +20,13 @@ Carrier history and reasons for no agreement are included as a view in the opera
 
 ## Perplexity research: questions 1-3
 
-**Source:** [Full research output](Archive/Perplexity_Questions_1-3_Research_2026-10-30.md), 2026-10-30. Key recommendations were checked against primary sources and the handbook. These examples do not establish majority industry practice.
+**Source:** [Full research output](archive/Perplexity_Questions_1-3_Research_2026-10-30.md), 2026-10-30. Key recommendations were checked against primary sources and the handbook. These examples do not establish majority industry practice.
 
 ### 1. When should the load be booked?
 
 [C.H. Robinson](https://www.chrobinson.com/en-us/carriers/carrier-support/support-book-loads/) distinguishes making an offer from booking. This supports separating agreement from commitment, but does not establish mandatory senior approval.
 
-**Decision (D-6 to D-8):** Submit once at rate agreement as explicit candidate policy D-8, and keep the rep's confirmation as a separate step. This replaced an earlier plan to submit after rep approval, once real receipts came back `PENDING`: read as the tentative stage, that reply belongs before the rep. Separate `ACK_PENDING`, `CONFIRMED` and `UNKNOWN`; the rep's decision does not finalize the external TMS. Persist intent/receipt, and keep pending/unknown blocked across restarts. The [2026-10-31 evidence](docs/tms-contract.md#booking-experiments-2026-10-31) and offline comparison do not prove a finalization operation or superior business timing. [AWS's retry guidance](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) explains why local request IDs alone cannot make external bookings safe to retry.
+**Decision (D-6, D-22):** Reserve in Twin at rate agreement, and send `LOAD_BOOK` once at the rep's Confirm. Earlier versions sent at agreement (D-8); the prototype measured the cost of that choice, and [D-22](decisions.md) replaced it. Separate `ACK_PENDING`, `CONFIRMED` and `UNKNOWN`. Persist intent and receipt, and keep pending and unknown loads blocked. The [2026-10-31 evidence](tms-contract.md#booking-experiments-2026-10-31) and offline comparison do not prove a finalization operation or superior business timing. [AWS's retry guidance](https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/) explains why local request IDs alone cannot make external bookings safe to retry.
 
 ### 2. Should returning carriers repeat OTP?
 
@@ -42,4 +42,4 @@ The [TMS handbook](https://fde-challenge-candidate-handbook-production.up.railwa
 
 ## Design impact
 
-The four components in [ARCHITECTURE.md](ARCHITECTURE.md) remain. The research tightens booking recovery, OTP lifecycle and pricing rules. Production implementation remains pending. Bounded live read/booking evidence and historical offline lab results are now summarized in the [contract](docs/tms-contract.md), with sanitized reply fixtures available in Git. Twin, FMCSA, OTP, trusted identity and finalization remain separate integration checks.
+The four components in [ARCHITECTURE.md](../ARCHITECTURE.md) remain. The research tightens booking recovery, OTP lifecycle and pricing rules. Production implementation remains pending. Bounded live read/booking evidence and historical offline lab results are now summarized in the [contract](tms-contract.md), with sanitized reply fixtures available in Git. Twin, FMCSA, OTP, trusted identity and finalization remain separate integration checks.

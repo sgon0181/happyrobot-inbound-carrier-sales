@@ -7,7 +7,7 @@ There are two kinds of evidence here, and they are not interchangeable:
 | | [2026-10-30 study](#study-2026-10-30) | [One lookup](#one-lookup) |
 |---|---|---|
 | **Covers** | 302 full load records, plus search and error behaviour | One load, at the moment it runs |
-| **Re-run from this repo?** | No. Raw replies and study code are kept locally in the Git-ignored `secrets/tms-assessment-20261030/` | Yes, with the command below |
+| **Re-run from this repo?** | No. Raw replies and study code are kept locally in the Git-ignored `secrets/tms-assessment-20261030/` | With the read-only reader, on branch `prototype/e2e` until slice 1 |
 | **Use it for** | Design decisions | Confirming that the field and our token still work |
 
 ## Study: 2026-10-30
@@ -26,11 +26,13 @@ It retrieved 302 unique full records: 50 open and 252 expired. Searches by all 5
 | **Result limits** | Tested `MAX_RESULTS` values from 1 to 1000 were accepted; zero, negative and non-numeric values were rejected. The largest reply held 32 records. The server's own cap is unknown. | Do not rely on a fixed maximum. Search order was not established, so sort deliberately. |
 | **Error codes** | An unknown load returned `NOT_FOUND`; the handbook shows `UNKNOWN_LOAD`. | Handle both, and keep a fallback for unlisted codes. |
 | **Reply size** | Whole replies reached 7,941 bytes. The longest line was 526 bytes. | The handbook's 4096-byte frame limit cannot mean the whole reply. Check it per line, bound the whole reply separately, and stop reading at the `END` line. |
-| **Faults** | 76 of 537 attempts (14.15%) had detectable timeouts, partial replies or malformed replies. With up to 3 attempts, all 461 cases ended in a valid reply. Replaying all 537 stored replies through the exact `END` rule changed none of these results. | A reply is complete only if it is one CRLF-terminated `ERR` line or finishes with a whole CRLF-terminated line equal to `END`. A suffix check is not enough: `NOTES:WEEKEND\r\n` must fail. `python3 scripts/test_query_loads.py` covers this offline. Bounded read retries are required. Never auto-retry a write. |
+| **Faults** | 76 of 537 attempts (14.15%) had detectable timeouts, partial replies or malformed replies. With up to 3 attempts, all 461 cases ended in a valid reply. Replaying all 537 stored replies through the exact `END` rule changed none of these results. | A reply is complete only if it is one CRLF-terminated `ERR` line or finishes with a whole CRLF-terminated line equal to `END`. A suffix check is not enough: `NOTES:WEEKEND\r\n` must fail. Bounded read retries are required. Never auto-retry a write. |
 | **Latency** | Good attempts took about 0.96 s (median) and 1.04 s (95th percentile) from a local machine. 33 cases used more than 6 s of attempt time, with a 5 s receive timeout. | The ~6 s read budget needs shorter per-attempt timeouts. Fly.io latency is untested. |
 | **Load data** | 212 records have blank notes. 10 contradict themselves on driver assist and no-touch, including LD01023. 10 mention $75/h detention. All `DIMS` values use feet, while the PDF specifies inches. No schedule was invalid or backwards. | Show contradictory notes as written and flag them for the rep. Convert dimensions deliberately. |
 
 ## One lookup
+
+From a checkout of `prototype/e2e`:
 
 ```bash
 python3 scripts/query_loads.py --load-id LD01023
@@ -85,7 +87,7 @@ On 2026-10-31 a real browser call through Codex's lab sent one `LOAD_BOOK` for L
 
 Later reads returned `PENDING` at roughly 54, 320 and 1,408 seconds, never with a reference. One read-only reconcile kept the booking `UNKNOWN`. Nothing was resent. The planned control, LD01069 with MC 872144, was not sent, because the first unknown outcome stops the campaign. Replaying the six earlier replies through the lab's parser found no framing failures, so that does not explain this result.
 
-All together: **seven write sends, five load IDs, zero observed `BOOKED` responses**. This does not establish a cause. The read makes a carrier-specific cause less likely, but the reply is gone and reads show no ownership. No further standalone booking test is planned ([architecture D-20](../ARCHITECTURE.md#12-decisions-and-open-questions)).
+At that point: **seven write sends, five load IDs, zero observed `BOOKED` responses**. This does not establish a cause. The read makes a carrier-specific cause less likely, but the reply is gone and reads show no ownership. No further standalone booking test is planned ([D-20](decisions.md)).
 
 ### Sanitized evidence and reproduction limits
 
@@ -97,27 +99,44 @@ Original study sources remain Git-ignored: `secrets/tms-booking-test-20261031/su
 
 The separate ignored architecture lab records **37 passing behavioral tests**, five simulated lifecycle traces and the six captured replies above. It exercises pending/confirmed/unknown separation, durable write intent, duplicate actions, concurrent approvals, restart ambiguity, blocked expiry and late-result guards. These are historical recorded results, not new tests run by this documentation change or a shipped production test suite.
 
-The lab uses SQLite and fake TMS services. Its back-office finalization and enriched ownership fields are simulator fixtures, not real server capabilities. It does not validate Twin transactions/latency, FMCSA, OTP delivery, trusted call identity, the deployed voice workflow, Apps or pricing confidentiality. Booking timing is decided separately as candidate policy D-8 in the architecture: submit at rate agreement. Only one of the 37 tests exercises that timing, so the lab is reference material, not coverage of the chosen path. No further live booking probe is required to start the read adapter and policy/storage interfaces.
+The lab uses SQLite and fake TMS services. Its back-office finalization and enriched ownership fields are simulator fixtures, not real server capabilities. It does not validate Twin transactions/latency, FMCSA, OTP delivery, trusted call identity, the deployed voice workflow, Apps or pricing confidentiality. Booking timing is now [D-22](decisions.md): send at the rep's Confirm. The lab is reference material, not coverage of that path. No further live booking probe is required to start the read adapter and policy/storage interfaces.
+
+### Prototype sends, 2026-11-01
+
+The prototype sent three more `LOAD_BOOK` requests on real owner calls, all with active MC 138328. Full detail, receipts and hashes are in `docs/tms-contract.md` and `docs/prototype-evidence/` on branch `prototype/e2e`.
+
+| Load | Rate | Result | Note |
+|---|---|---|---|
+| LD01094 | 1075 | Complete `PENDING` receipt | Sent before the caller clearly agreed. Flagged for consent review, and never to be confirmed. |
+| LD01085 | 2950 | Complete `PENDING` receipt | Clear permission. Shortened spoken handoff. |
+| LD01062 | 3625 | Complete `PENDING` receipt | The clean run, `5783608f-d54b-4a5d-b028-89db98ae10ec`. |
+
+- An active MC also returned `PENDING`, so inactive authority cannot explain every acknowledgement. It does not establish what causes finalization, or prove that `PENDING` is a reservation.
+- A rep's approval in the app left the TMS status at `PENDING`.
+- The container's receipt journal was lost after an automatic stop and start. The reply survived in Twin and the local export.
+
+All together: **ten write sends across eight load IDs: seven complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.**
 
 ## Booking test inventory
 
-All statuses below are historical 2026-10-31 snapshots, not current availability. These IDs are sandbox test inventory, not credentials.
+All statuses below are historical snapshots, not current availability. These IDs are sandbox test inventory, not credentials. The service reads the same list from [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json).
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Disposable, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
-| Protected for demo, last observed `OPEN` | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
+| Voided control | LD01069 | Never offer or book. |
+| Protected, historical `OPEN` snapshot | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
 
 The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load IDs left, 8 new ones appeared, and search still returned 50 records. That is one day's observation, not a guarantee. No reset/cancellation mechanism or pending lock across tokens was established. The original acknowledgement references stay in the private journal; synthetic fixture references cannot be used for live reconciliation. Before any newly authorized booking experiment, record its inventory and one-shot intent separately from demo loads.
 
 ## Still unproven
 
 - **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The handbook's own sample books `AGREED_RATE:2200` on a load with `MAX_BUY` 1950, which hints the server may not enforce the ceiling. A sample is not proof.
-- **Cause of `PENDING`:** every acknowledged booking used one token and MC 872144, which FMCSA shows as inactive. The one active-MC attempt lost its reply while the load read `PENDING`, which makes a carrier-specific cause less likely without ruling it out, and a token-specific cause is still open. Later calls add observations; only an authoritative answer would establish the cause.
+- **Cause of `PENDING`:** the first acknowledgements used MC 872144, which FMCSA shows as inactive, but later ones used active MC 138328, so inactive authority cannot explain them all. Every send used one candidate token, so a token-specific cause is still open.
 - **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.
 - **Pricing bands:** running `pricing-v1` offline over the 50 saved open loads with 200 random secrets sent none to pricing review. A median of 2 loads (at most 5) got a working cap at or below `RATE`, and a median of 1 (at most 3) had round targets collapse after $25 rounding. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.
 
-[Questions.Md, Q8](../Questions.Md) retains the unanswered owner clarification. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.
+[questions.md, Q8](questions.md) retains the unanswered owner clarification. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.

@@ -1,6 +1,6 @@
 # Platform Checks
 
-Sanitized results from Codex's controlled experiment against architecture v2.4, 2026-10-31 (Australia/Sydney): harness commit `0e0451d`, design pinned to `51f8d80`. The harness lives in a separate Codex worktree, outside this repository, so this file is the tracked record. It is a lab, not the production application. [Architecture v2.5](../ARCHITECTURE.md) records what the product takes from it.
+Sanitized results from Codex's controlled experiment against architecture v2.4, 2026-10-31 (Australia/Sydney): harness commit `0e0451d`, design pinned to `51f8d80`. The harness lives in a separate Codex worktree, outside this repository, so this file is the tracked record. It is a lab, not the production application, and a historical record: where it says "still to prove", the later prototype may have proved it. Current state is in [open checks](decisions.md#open-checks) and [lessons from the prototype](lessons-from-prototype.md).
 
 **LIVE** means the named real integration ran. **HYBRID** mixed real and synthetic parts. **SIMULATED** used fixtures or fakes. A native text test is synthetic even when its workflow and HTTP tools ran live.
 
@@ -12,7 +12,7 @@ Sanitized results from Codex's controlled experiment against architecture v2.4, 
 | **T-4:** trusted call identity | Identity answered | LIVE: `current.run_id` reached the service outside model arguments. No native stable operation ID was found. The lab's request fingerprint froze repeated identical counters, and its private call token made a retried first tool or an MC correction fail with HTTP 403. | D-16 and D-17 replace those lab choices. Prove both in a native call. |
 | **T-5:** FMCSA access | Answered | LIVE: a direct lookup from a Fly `iad` machine returned MC 138328 as eligible in about 3.6 s. The local machine still gets HTTP 403, which is an egress difference. | Recheck from the final host. |
 | **T-6:** ending a session | Answered in text | HYBRID: the built-in `hr_builtin_tool__end_conversation` ended a native text session in 9 s, and its grader passed. An earlier 14 s session closed but its wrapper was inconclusive, so it does not count. | The agent hanging up in voice, and a spoken mocked transfer. Scenarios are cancelled at 1m30s, so full calls need testing by hand. |
-| **T-7:** Twin API gateway | Blocked | LIVE: Twin Settings shows Database Available and API gateway Failed. An authenticated app read returned HTTP 503 with an HTML body. One Retry deploy also failed, and creating a deployment key did not help. Normal app reads use the signed-in user's token. | HappyRobot needs to restore it. The fallback is in [architecture section 12](../ARCHITECTURE.md#12-decisions-and-open-questions). |
+| **T-7:** Twin API gateway | Blocked | LIVE: Twin Settings shows Database Available and API gateway Failed. An authenticated app read returned HTTP 503 with an HTML body. One Retry deploy also failed, and creating a deployment key did not help. Normal app reads use the signed-in user's token. | HappyRobot needs to restore it. The fallback is now the design ([D-30](decisions.md)). |
 
 ## The live call
 

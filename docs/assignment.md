@@ -1,14 +1,14 @@
 # HappyRobot challenge context
 
-Assignment/platform summaries reviewed 2026-10-28; shared onboarding and TMS evidence updated 2026-10-31. Summary of the local assignment PDF and official documentation, without prescribing architecture or a technology stack.
+Assignment/platform summaries reviewed 2026-10-28; TMS evidence updated 2026-11-02. Summary of the local assignment PDF and official documentation, without prescribing architecture or a technology stack.
 
-Start with [`docs/agent-onboarding.md`](docs/agent-onboarding.md) for access, current external workflow state, implementation status and safe build steps. For TMS implementation, read [`docs/tms/README.md`](docs/tms/README.md): command usage, codes, parsing, visibility rules and known differences between handbook examples and this candidate token. Read [`docs/tms-contract.md`](docs/tms-contract.md) for measured evidence. These are shared context for both coding agents; the runtime voice agent receives only approved tool results.
+Start with [`onboarding.md`](onboarding.md) for access, current external workflow state and setup steps. For TMS implementation, read [`tms/README.md`](tms/README.md): command usage, codes, parsing, visibility rules and known differences between handbook examples and this candidate token. Read [`tms-contract.md`](tms-contract.md) for measured evidence. These are shared context for both coding agents; the runtime voice agent receives only approved tool results.
 
 ## Recruiter clarification, 2026-10-30 (Australia/Sydney)
 
-Source: [Luke's reply](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d), recorded in `Questions.Md`.
+Source: [Luke's reply](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d), recorded in [`questions.md`](questions.md).
 
-- Booking timing, returning-carrier OTP policy, and TMS rate semantics are intentionally ambiguous. Luke asks us to choose and document assumptions, rather than wait for definitive answers. `ARCHITECTURE.md` records the current assumptions; they are not recruiter-confirmed technical facts.
+- Booking timing, returning-carrier OTP policy, and TMS rate semantics are intentionally ambiguous. Luke asks us to choose and document assumptions, rather than wait for definitive answers. [`decisions.md`](decisions.md) records the current assumptions; they are not recruiter-confirmed technical facts.
 - Present the walkthrough to the brokerage's business team, suitable for a business review.
 - Creative additions are optional and should provide client value while following the rubric and guide.
 - Fly.io is acceptable; any cloud environment works.
@@ -16,7 +16,7 @@ Source: [Luke's reply](https://mail.google.com/mail/u/?authuser=santiagog11999%4
 
 ## Assignment
 
-Source: `FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf` in this folder.
+Source: [the assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
 
 Automate a freight brokerage's inbound carrier calls: collect MC number, verify active FMCSA authority, verify an SMS/email OTP, match available loads by lane and equipment, negotiate, reserve/book, and mock a senior-representative handoff. Log carrier MC, load ID, agreed rate, outcome, and notes.
 
@@ -61,5 +61,5 @@ Deliverables: prospect summary email, IT/business build description, repository 
 - `RATE` is posted price; `MAX_BUY` is internal pricing, present only for enabled tokens. Sample posted rates exceed sample `MAX_BUY` values. `LOAD_GET` also returns booked/past-pickup loads.
 - Booking state is token-scoped; repeated attempts can return `ALREADY_BOOKED`. Exact rate-validation rules are not fully documented.
 - Source discrepancy: PDF describes tentative reservation before senior-rep confirmation; handbook describes `LOAD_BOOK` as committing a booking.
-- Luke delegated the booking and rate ambiguities to the candidate on 2026-10-30. Sending `LOAD_BOOK` at rate agreement (D-8) and the provisional `MAX_BUY` mapping (D-10) are documented assumptions, not confirmed TMS capabilities.
-- Newer owner-recorded evidence in [`Questions.Md`, Q8](Questions.Md) reports booking acknowledgements with `STATUS:PENDING`, rather than the handbook's `BOOKED`. Final confirmation behavior is unresolved. The contract now records the bounded live experiments and sanitized fixtures; architecture D-8 submits at rate agreement and keeps the rep's local decision separate from actual TMS pending/final status. No finalization operation is invented.
+- Luke delegated the booking and rate ambiguities to the candidate on 2026-10-30. Sending `LOAD_BOOK` at the rep's Confirm (D-22) and the provisional `MAX_BUY` mapping (D-10) are documented assumptions, not confirmed TMS capabilities.
+- Newer owner-recorded evidence in [`questions.md`, Q8](questions.md) reports booking acknowledgements with `STATUS:PENDING`, rather than the handbook's `BOOKED`. Final confirmation behavior is unresolved. The contract now records the bounded live experiments and sanitized fixtures; D-22 reserves at rate agreement, sends at the rep's Confirm, and shows the actual TMS status. No finalization operation is invented.

@@ -14,6 +14,12 @@ __pycache__/
 *.pyc
 .pytest_cache/
 .ruff_cache/
+.mypy_cache/
+.coverage
+
+# Node
+node_modules/
+.next/
 
 # Downloaded learning materials and installer bundles
 REFERENCES/

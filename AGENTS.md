@@ -1,8 +1,10 @@
 # Project context
 
-`PROJECT_GUIDE.md` summarizes the assignment and relevant official documentation for this project. It is the starting reference for agents; source links are included for details. The local assignment PDF is the source of challenge requirements.
+`README.md` is the map of this repository. `ARCHITECTURE.md` explains how the system works, and `docs/decisions.md` records why, along with open checks. The assignment PDF in `docs/` is the source of challenge requirements, summarized in `docs/assignment.md`.
 
-Read `docs/agent-onboarding.md` for access setup, current implementation/platform state, source precedence and safe next steps. For TMS work, read `docs/tms/README.md` before implementing or testing the integration, then `docs/tms-contract.md` for sanitized observations, fixtures and blocked/protected inventory. `ARCHITECTURE.md` records current candidate design decisions and pending/confirmed/unknown handling. These tracked references are shared by Codex and Claude Code; ignored local packets are optional evidence, not required onboarding.
+Read `docs/onboarding.md` for access setup, current state and platform resources. For TMS work, read `docs/tms/README.md` before implementing or testing the integration, then `docs/tms-contract.md` for sanitized observations, fixtures and blocked/protected inventory. These tracked references are shared by Codex and Claude Code; ignored local packets are optional evidence, not required onboarding.
+
+Production code lives in `service/` on `main`. Branch `prototype/e2e` is reference and fallback: port from it deliberately, one reviewed piece at a time, and never merge it. Stay within the size budget and engineering gates in `ARCHITECTURE.md` section 14.
 
 # Writing
 

@@ -136,3 +136,40 @@ def test_a_new_mc_clears_the_offers() -> None:
     search(r)
     r.post("/carriers/verify", mc="1515")
     assert r.row()["offers"] == {}
+
+
+def test_a_kept_offer_never_exceeds_a_lowered_ceiling() -> None:
+    r = selling(make_load())
+    assert search(r)["loads"][0]["offer"] == 1900
+    r.board.records = [make_load(MAX_BUY="1800", RATE="1500")]
+    offer = search(r)["loads"][0]["offer"]
+    assert offer < 1800 and r.row()["offers"]["LD09001"] == offer
+
+
+def test_details_that_differ_from_the_search_result_are_rechecked() -> None:
+    r = selling(make_load())
+    summary = make_load()
+    r.board.records = [summary]
+    detail = make_load(EQTYPE="REEFER", ORIG_STATE="CA")
+    r.board.details = {"LD09001": detail}
+    assert search(r)["status"] == "no_match"
+
+
+def test_a_failed_search_on_a_call_that_lost_verification_changes_nothing() -> None:
+    r = selling(make_load())
+
+    def caller_gives_another_mc() -> None:
+        version, data = r.twin.tables["calls"][RUN]
+        update = {"mc": "1515", "eligible": False, "outcome": "carrier_ineligible"}
+        r.twin.tables["calls"][RUN] = (version + 1, data | update)
+
+    r.board.during, r.board.unreadable = caller_gives_another_mc, {"LD09001"}
+    assert search(r)["status"] == "not_verified"
+    assert r.row()["outcome"] == "carrier_ineligible"
+
+
+def test_a_tms_outage_records_what_was_asked() -> None:
+    r = selling()
+    r.board.down = True
+    search(r)
+    assert r.row()["search"]["origin_state"] == "TX"

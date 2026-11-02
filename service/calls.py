@@ -65,12 +65,13 @@ class Calls:
         mc = normalize_mc(mc_text)
         if mc is None:
             return await self.rows.step(run_id, "verify_carrier", answer("invalid_mc"))
-        await self.rows.step(run_id, "verify_carrier", _select(mc))  # saved before FMCSA answers
+        selected = await self.rows.step(run_id, "verify_carrier", _select(mc))  # before FMCSA
+        lookup = selected["lookup"]
         try:
             authority = assess(await self.fmcsa.carriers(mc))
         except FmcsaUnavailable:
             unavailable = set_outcome("fmcsa_unavailable")
-            return await self.rows.step(run_id, "verify_carrier", _for_mc(mc, unavailable))
+            return await self.rows.step(run_id, "verify_carrier", _latest(lookup, unavailable))
 
         def decide(data: Data, now: datetime) -> Reply:
             data["carrier_name"], data["eligible"] = authority.carrier_name, authority.eligible
@@ -82,7 +83,7 @@ class Calls:
                 return {"status": "not_found"}
             return {"status": "ineligible", "reason": authority.reason}
 
-        return await self.rows.step(run_id, "verify_carrier", _for_mc(mc, decide))
+        return await self.rows.step(run_id, "verify_carrier", _latest(lookup, decide))
 
     async def send_code(self, run_id: str) -> Reply:
         code = codes.new_code()  # made before the write, which may be retried
@@ -139,6 +140,7 @@ def new_call(cohort: str, now: datetime) -> Data:
         "authority": None,
         "otp": _code_fields(codes.CodeState()),
         "verified_at": None,
+        "lookup": 0,  # counts MC lookups, so only the latest one's result is applied
         "search": None,
         "offers": {},  # load ID to the last offer we said
         "rounds": 0,
@@ -183,15 +185,18 @@ def _select(mc: str) -> Decide:
         if data["mc"] != mc:
             _store_code(data, codes.for_new_mc(_code_state(data)))
             data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
-            data["offers"] = {}
-        return {"status": "checking"}
+            data.update(offers={}, outcome=None)  # the earlier carrier's outcome is not this one's
+        data["lookup"] += 1
+        return {"status": "checking", "lookup": data["lookup"]}
 
     return decide
 
 
-def _for_mc(mc: str, decide: Decide) -> Decide:
-    """Apply a lookup's result only if the caller has not given another MC meanwhile."""
-    return lambda data, now: decide(data, now) if data["mc"] == mc else {"status": "superseded"}
+def _latest(lookup: int, decide: Decide) -> Decide:
+    """Apply a lookup's result only if no later lookup started, even for the same MC."""
+    return lambda data, now: (
+        decide(data, now) if data["lookup"] == lookup else {"status": "superseded"}
+    )
 
 
 def _code_state(data: Data) -> codes.CodeState:

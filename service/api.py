@@ -142,7 +142,10 @@ def _limit_body(app: ASGIApp) -> ASGIApp:
         if scope["type"] != "http":
             await app(scope, receive, send)
             return
-        body = await _read_body(receive)
+        try:
+            body = await _read_body(receive)
+        except _Disconnected:
+            return  # the caller left mid-upload, so the request never happened
         if body is None:
             await JSONResponse({"status": "request_too_large"}, 413)(scope, receive, send)
             return
@@ -156,11 +159,17 @@ def _limit_body(app: ASGIApp) -> ASGIApp:
     return limited
 
 
+class _Disconnected(Exception):
+    pass
+
+
 async def _read_body(receive: Receive) -> bytes | None:
     """The whole body, or None as soon as it passes MAX_BODY_BYTES."""
     body, more = b"", True
     while more:
         message = await receive()
+        if message["type"] == "http.disconnect":
+            raise _Disconnected
         body += message.get("body", b"")
         if len(body) > MAX_BODY_BYTES:
             return None

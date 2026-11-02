@@ -45,7 +45,7 @@ def test_an_eligible_carrier_is_saved_on_a_new_call_row() -> None:
     )
     event = {"at": START.isoformat(), "action": "verify_carrier", "mc": "138328"}
     assert row["events"] == [
-        {"seq": 1, **event, "status": "checking"},
+        {"seq": 1, **event, "status": "checking", "lookup": 1},
         {"seq": 2, **event, "status": "eligible", "carrier_name": "WERNER ENTERPRISES INC"},
     ]
     assert r.fmcsa.seen == ["/qc/services/carriers/docket-number/138328/"]
@@ -233,12 +233,12 @@ def test_each_lookup_records_its_mc_and_result() -> None:
     ]
 
 
-def test_a_late_lookup_never_overwrites_a_newer_mc() -> None:
+def test_a_late_lookup_never_overwrites_a_newer_one() -> None:
     r = rig()
 
-    def caller_gives_another_mc() -> None:
+    def caller_gives_another_mc() -> None:  # a newer lookup started, as in A, then B, then A
         version, data = r.twin.tables["calls"][RUN]
-        r.twin.tables["calls"][RUN] = (version + 1, {**data, "mc": "1515"})
+        r.twin.tables["calls"][RUN] = (version + 1, {**data, "mc": "1515", "lookup": 2})
 
     r.fmcsa.during = caller_gives_another_mc
     assert r.post("/carriers/verify", mc="138328")["status"] == "superseded"
@@ -284,3 +284,34 @@ def test_the_body_is_handed_on_once_then_later_messages_pass_through() -> None:
     asyncio.run(request())
     body = {"type": "http.request", "body": b"abc", "more_body": False}
     assert seen == [body, {"type": "http.disconnect"}]
+
+
+def test_a_corrected_mc_does_not_inherit_the_earlier_outcome() -> None:
+    r = rig([INACTIVE], deadline=0.2)
+    assert r.post("/carriers/verify", mc="134652")["status"] == "ineligible"
+    r.fmcsa.delay = 0.5  # the correction's lookup is cut off by the deadline
+    assert r.post("/carriers/verify", mc="1515")["status"] == "temporarily_unavailable"
+    assert (r.row()["mc"], r.row()["authority"], r.row()["outcome"]) == ("1515", None, None)
+
+
+def test_a_disconnect_mid_upload_never_reaches_the_app() -> None:
+    arriving: list[Message] = [
+        {"type": "http.request", "body": b"{}", "more_body": True},
+        {"type": "http.disconnect"},
+    ]
+    called: list[bool] = []
+
+    async def inner(scope: Scope, receive: Receive, send: Send) -> None:
+        called.append(True)
+
+    async def receive() -> Message:
+        return arriving.pop(0)
+
+    async def send(message: Message) -> None:
+        raise AssertionError("nothing is sent")
+
+    async def request() -> None:
+        await _limit_body(inner)({"type": "http"}, receive, send)
+
+    asyncio.run(request())
+    assert called == []

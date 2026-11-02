@@ -11,8 +11,8 @@ from typing import Protocol
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import Data
 from service.bookings import Bookings
-from service.calls import CallRows, Reply, answer, is_verified, set_outcome
-from service.core.loads import Search, is_offerable, public_view, search_terms, select_offers
+from service.calls import CallRows, Decide, Reply, answer, is_verified, set_outcome
+from service.core.loads import Search, public_view, search_terms, select_offers
 from service.core.models import Load, LoadSummary
 from service.core.pricing import PricingPolicy, Terms, price_load
 
@@ -59,23 +59,22 @@ class Sales:
         try:
             loads = await self._open_loads(search)
         except TmsUnavailable:
-            return await self.rows.step(run_id, "find_loads", set_outcome("tms_unavailable"))
+            failed = _searched(search, set_outcome("tms_unavailable"))
+            return await self.rows.step(run_id, "find_loads", failed)
         priced = [(load, terms) for load in loads if (terms := self._terms(load))]
 
         def decide(data: Data, now: datetime) -> Reply:
-            if not is_verified(data):
-                return {"status": "not_verified"}
-            data["search"] = dict(search)
             if not priced:  # a load we cannot price is never offered (D-11)
                 data["outcome"] = "pricing_review_required" if loads else "no_match"
                 return {"status": data["outcome"]}
             data["outcome"], data["policy_version"] = None, self.pricing.version
-            for load, terms in priced:
-                data["offers"].setdefault(load.load_id, terms.opening)  # a repeat keeps our offer
+            for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
+                kept = data["offers"].get(load.load_id, terms.opening)
+                data["offers"][load.load_id] = min(max(kept, terms.opening), terms.cap)
             offered = {load.load_id: data["offers"][load.load_id] for load, _ in priced}
             return {"status": "found", "offers": offered}
 
-        reply = await self.rows.step(run_id, "find_loads", decide)
+        reply = await self.rows.step(run_id, "find_loads", _searched(search, decide))
         if reply["status"] != "found":
             return reply
         views = [public_view(load, reply["offers"][load.load_id]) for load, _ in priced]
@@ -95,9 +94,8 @@ class Sales:
         reads = await asyncio.gather(*(self._read(load.load_id) for load in picked))
         if picked and all(isinstance(read, TmsUnavailable) for read in reads):
             raise TmsUnavailable("No load details could be read.")
-        return [
-            read for read in reads if isinstance(read, Load) and is_offerable(read, now, excluded)
-        ]
+        details = [read for read in reads if isinstance(read, Load)]
+        return select_offers(details, self.rows.now(), excluded, **search)  # rechecked as read
 
     async def _read(self, load_id: str) -> Load | TmsUnavailable | None:
         """One load's details. One failed read skips that load rather than the search."""
@@ -109,3 +107,15 @@ class Sales:
     def _terms(self, load: Load) -> Terms | None:
         policy, secret = self.pricing, self.pricing_secret
         return price_load(load.load_id, load.loadboard_rate, load.max_rate, policy, secret)
+
+
+def _searched(search: Search, decide: Decide) -> Decide:
+    """Record what was asked, but only on a call that is still verified when it is written."""
+
+    def guarded(data: Data, now: datetime) -> Reply:
+        if not is_verified(data):
+            return {"status": "not_verified"}
+        data["search"] = dict(search)
+        return decide(data, now)
+
+    return guarded

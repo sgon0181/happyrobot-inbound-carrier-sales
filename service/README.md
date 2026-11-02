@@ -10,8 +10,8 @@ The Python service that decides what the voice agent may do. Slices 1 and 2's co
 | `config.py` | Typed settings, validated at startup | The only code that reads the environment | Built |
 | `api.py` | Routes, keys, request models | No business rules | Built |
 | `calls.py` | The call row, and the verify and code flows | Calls `core` and `adapters`; no SQL or sockets | Built |
-| `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets | Search built; negotiation and close in slice 3 |
-| `bookings.py` | Reservation and rep actions | The only code that can reach `LOAD_BOOK` | Slices 3 and 4 |
+| `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets | Search and negotiation built; close in slice 3 |
+| `bookings.py` | Reservation and rep actions | The only code that can reach `LOAD_BOOK` | Reservation built; rep actions in slice 4 |
 | `dashboard.py` | Snapshot and KPIs | Read only | Slice 4 |
 | `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment | Built |
 | `adapters/` | Twin, TMS, FMCSA, email | Talks to outside systems, holds no business rules | Built |

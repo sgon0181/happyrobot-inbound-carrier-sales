@@ -173,3 +173,95 @@ def test_a_tms_outage_records_what_was_asked() -> None:
     r.board.down = True
     search(r)
     assert r.row()["search"]["origin_state"] == "TX"
+
+
+def offered(*records: dict[str, str]) -> Rig:
+    r = selling(*(records or (make_load(),)))
+    assert search(r)["status"] == "found"
+    return r
+
+
+def counter(r: Rig, rate: Any, load_id: str = "LD09001") -> Any:
+    return r.post("/negotiate", load_id=load_id, rate=rate)
+
+
+def test_an_ask_at_or_below_our_offer_reserves_the_load_at_that_rate() -> None:
+    r = offered()
+    assert counter(r, 1850) == {"status": "agreed", "load_id": "LD09001", "rate": 1850, "http": 200}
+    booking = r.twin.data("bookings", "LD09001")
+    assert (booking["state"], booking["call_id"], booking["rate"]) == ("RESERVED", RUN, 1850)
+    assert r.row()["agreement"] == {"load_id": "LD09001", "rate": 1850}
+    assert counter(r, 1850)["status"] == "agreed"  # a repeat finds its own reservation
+
+
+def test_three_rounds_at_most_then_the_call_fails_without_a_handoff() -> None:
+    r = offered()
+    replies = [counter(r, 9000 + n) for n in range(4)]
+    assert [x["status"] for x in replies] == [
+        "counter",
+        "counter",
+        "final_offer",
+        "negotiation_failed",
+    ]
+    offers = [x["offer"] for x in replies[:3]]
+    assert offers == sorted(offers) and offers[-1] < 2300  # rising, never past the ceiling
+    assert (r.row()["rounds"], r.row()["outcome"]) == (3, "negotiation_failed")
+    assert counter(r, 1000)["status"] == "negotiation_failed"
+    assert "LD09001" not in r.twin.tables["bookings"]
+
+
+def test_the_same_ask_twice_uses_one_round() -> None:
+    r = offered()
+    first = counter(r, 9000)
+    assert counter(r, "9000.00") == first | {"http": 200}
+    assert r.row()["rounds"] == 1
+
+
+def test_rounds_count_across_loads() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    counter(r, 9000, "LD09001")
+    counter(r, 9001, "LD09001")
+    assert counter(r, 9000, "LD09002")["status"] == "final_offer"
+
+
+def test_a_load_another_call_reserved_is_gone() -> None:
+    r = offered()
+    r.booking("LD09001", "RESERVED")
+    assert counter(r, 1800)["status"] == "load_gone"
+    assert r.row()["offers"] == {} and r.row()["agreement"] is None
+
+
+def test_negotiation_needs_a_verified_call_and_an_offered_load() -> None:
+    r = selling(make_load(), verified=False)
+    assert counter(r, 1800)["status"] == "not_verified"
+    r = offered()
+    assert counter(r, 1800, "LD09999")["status"] == "search_required"
+
+
+def test_a_load_that_closed_or_lost_its_ceiling_is_dropped() -> None:
+    r = offered()
+    r.board.records = [make_load(STATUS="PENDING")]
+    assert counter(r, 1800)["status"] == "load_gone"
+    r = offered()
+    r.board.down = True
+    assert counter(r, 1800)["status"] == "tms_unavailable"
+
+
+def test_one_agreement_per_call_and_an_unclear_ask_uses_no_round() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    assert counter(r, "about two grand")["status"] == "ask_again"
+    assert r.row()["rounds"] == 0
+    counter(r, 1800, "LD09001")
+    assert counter(r, 1800, "LD09002")["status"] == "already_agreed"
+    assert "LD09002" not in r.twin.tables["bookings"]
+
+
+def test_a_freed_load_can_be_reserved_again_keeping_its_history() -> None:
+    r = offered()
+    r.twin.tables["bookings"]["LD09001"] = (
+        1,
+        {"state": "RELEASED", "call_id": "old", "events": [{"seq": 1, "action": "reserved"}]},
+    )
+    assert counter(r, 1800)["status"] == "agreed"
+    events: Any = r.twin.data("bookings", "LD09001")["events"]
+    assert [e["seq"] for e in events] == [1, 2]

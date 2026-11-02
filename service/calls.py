@@ -158,9 +158,9 @@ def is_verified(data: Data) -> bool:
     return bool(data["eligible"] and data["verified_at"])
 
 
-def answer(status: str) -> Decide:
+def answer(status: str, reply: Reply | None = None) -> Decide:
     """A decision that changes nothing but the event."""
-    return lambda data, now: {"status": status}
+    return lambda data, now: dict(reply or {"status": status})
 
 
 def set_outcome(outcome: str) -> Decide:

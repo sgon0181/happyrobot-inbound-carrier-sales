@@ -202,7 +202,7 @@ service/                                                                   Statu
   config.py          Typed settings; the only code that reads the env      built
   api.py             Routes, keys, request models; no business rules       built
   calls.py           The call row, and the verify and code flows           built
-  selling.py         Voice flows: search, negotiate, close                 search built; rest slice 3
+  selling.py         Voice flows: search, negotiate, close                 close in slice 3
   bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
   dashboard.py       The snapshot and KPIs for the operations app          slice 4
   core/              Pure rules: no network, no files, no clock

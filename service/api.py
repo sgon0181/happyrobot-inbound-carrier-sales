@@ -61,6 +61,11 @@ class FindLoads(Voice):
     dest_state: str | None = Field(default=None, max_length=32)
 
 
+class Negotiate(Voice):
+    load_id: str = Field(max_length=32)
+    rate: str = Field(max_length=32)  # the carrier's ask, as the agent heard it
+
+
 def create_app(
     *,
     calls: Calls,
@@ -97,6 +102,10 @@ def create_app(
     async def find_loads(body: FindLoads) -> Reply:
         terms = (body.equipment, body.origin_state, body.dest_state)
         return await voice(sales.find_loads(body.run_id, *terms))
+
+    @app.post("/negotiate", dependencies=[agent])
+    async def negotiate(body: Negotiate) -> Reply:
+        return await voice(sales.negotiate(body.run_id, body.load_id, body.rate))
 
     @app.get("/health", dependencies=[either])
     async def health() -> Reply:

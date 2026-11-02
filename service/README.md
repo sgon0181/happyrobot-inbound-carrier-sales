@@ -1,6 +1,6 @@
 # Carrier Sales Service
 
-The Python service that decides what the voice agent may do. Nothing is built here yet: the [build plan](../ARCHITECTURE.md#15-build-plan) adds it in small commits, each read by the owner.
+The Python service that decides what the voice agent may do. Slice 1 is built: money, load types, pricing, negotiation, load selection and the read-only TMS adapter, all tested offline. The rest arrives through the [build plan](../ARCHITECTURE.md#15-build-plan) in small commits, each read by the owner.
 
 ## Layout
 

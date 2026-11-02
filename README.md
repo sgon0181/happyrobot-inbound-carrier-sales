@@ -6,7 +6,7 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Skeleton.** The design and tooling are in place, and the service is being built in small steps. See the [build plan](ARCHITECTURE.md#15-build-plan).
+**Slice 1 of 5 done.** The business rules and the read-only TMS adapter are built and tested offline. The running service, deployment and real calls come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
 
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference and fallback.
 

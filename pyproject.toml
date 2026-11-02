@@ -11,7 +11,8 @@ select = ["E", "F", "W", "I", "B", "C90", "UP", "S", "BLE", "ANN", "SIM", "RUF"]
 max-complexity = 10
 
 [tool.ruff.lint.per-file-ignores]
-"service/tests/*" = ["S101", "S311", "ANN"]  # asserts, seeded test randomness, annotations
+# Tests may assert, use seeded randomness and fake tokens, and skip annotations.
+"service/tests/*" = ["S101", "S105", "S106", "S311", "ANN"]
 
 [tool.mypy]
 python_version = "3.12"

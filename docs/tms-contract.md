@@ -87,7 +87,7 @@ On 2026-10-31 a real browser call through Codex's lab sent one `LOAD_BOOK` for L
 
 Later reads returned `PENDING` at roughly 54, 320 and 1,408 seconds, never with a reference. One read-only reconcile kept the booking `UNKNOWN`. Nothing was resent. The planned control, LD01069 with MC 872144, was not sent, because the first unknown outcome stops the campaign. Replaying the six earlier replies through the lab's parser found no framing failures, so that does not explain this result.
 
-At that point: **seven write sends, five load IDs, zero observed `BOOKED` responses**. This does not establish a cause. The read makes a carrier-specific cause less likely, but the reply is gone and reads show no ownership. No further standalone booking test is planned ([D-20](decisions.md)).
+At that point: **seven write sends, five load IDs, zero observed `BOOKED` responses**. This does not establish a cause. The read makes a carrier-specific cause less likely, but the reply is gone and reads show no ownership. As of 2026-10-31, no further standalone booking test was planned ([D-20](decisions.md)). The owner subsequently authorized the [2026-11-02 sandbox probes](#owner-authorized-sandbox-characterization-2026-11-02), recorded below.
 
 ### Sanitized evidence and reproduction limits
 
@@ -182,7 +182,13 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 ## Still unproven
 
 - **Booking contract (T-2):** currency/scale, full format and bounds, final ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The 2026-11-02 sandbox probe obtained a reference-bearing `PENDING` reply at `MAX_BUY + 1`, establishing no immediate ceiling rejection for that request, not final acceptance or the complete rate rule.
-- **Cause of `PENDING`:** the first acknowledgements used MC 872144, which FMCSA shows as inactive, but later ones used active MC 138328, so inactive authority cannot explain them all. Every send used one candidate token, so a token-specific cause is still open.
+- **Cause of `PENDING`:** the handbook's successful `BOOKED` example uses MC 872144 and the same three payload fields, in the same order, as our inspected request construction: `LOAD_ID`, `MC_NUM`, `AGREED_RATE`. Some of our sends using MC 872144 and that request shape returned `PENDING`. Missing documented payload fields or a different field order therefore do not explain the observed difference; this does not rule out validation based on the field values.
+
+  The handbook's [LOAD_BOOK page](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/) explicitly says the same load can resolve to different booking states for different tokens, intentionally. Captured `PENDING` values occupy the normal padded `STATUS` field, as `OPEN` and `BOOKED` do, and subsequent reads also reported `PENDING`. This supports a normal server status rather than a truncated or malformed injected reply. Padding alone cannot exclude every possible injected fault.
+
+  Across twelve sends, we varied the load, carrier (inactive MC 872144 and active MC 138328) and rate, including `1`, equality with `MAX_BUY` and `MAX_BUY + 1`. Results were nine complete `PENDING` acknowledgements, two explicit errors and one `UNKNOWN`, with no observed `BOOKED`. Inactive authority cannot explain all the pending acknowledgements, and none of these tested variations established a `BOOKED` trigger.
+
+  Token-specific or server-side configuration is the leading working hypothesis, not an established diagnosis. All sends used one candidate token, which cannot isolate a token effect or distinguish configuration from undocumented server logic. [Q8](questions.md) asks Luke for clarification. A controlled comparison with a second authorized token could demonstrate token-dependent behavior if outcomes differ; matching outcomes would not by themselves settle the cause or establish what triggers `BOOKED`.
 - **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.
 - **Pickup times:** which timezone `PICKUP_DT` uses.

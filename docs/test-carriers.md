@@ -12,6 +12,8 @@ Status 2026-10-31 (Australia/Sydney): five public records were checked through a
 | Out of service | Not selected | | Not checked | | Needed before claiming this case |
 | Broker-only authority | Not selected | | Not checked | | Needed for the conversation test |
 
+Rechecked 2026-11-03 from the deployed service on Fly `iad`, with `core/carrier_policy.py`: 138328 eligible (`active_carrier_authority_verified`), 134652 refused (`registration_not_active`), 99999999 `not_found`. All three match the table.
+
 Inactive carriers still show `allowedToOperate` Y, so that field alone proves nothing. A timeout or HTTP 403 is `fmcsa_unavailable`, not a not-found or inactive result. Passing this check does not prove who owns an MC or whether the carrier suits the freight, and it says nothing about OTP ownership.
 
 When adding a case, record the timestamp and timezone, the source endpoint without `webKey`, the relevant fields and the eligibility decision. Keep only the minimum sanitized fields, with no contacts or credentials.

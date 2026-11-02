@@ -58,7 +58,7 @@ The private candidate portal link is in Luke's original "HappyRobot | FDE Techni
 | FMCSA | Use the portal-issued key. Direct requests work from Fly.io and return HTTP 403 from the local machine. |
 | Twin | External SQL needs an organization API key. A Viewer key cannot write. The Apps gateway to Twin has been failing (T-7), so the app reads through the service. |
 | OTP email | Luke approved email to the candidate's demo inbox. `DEMO_OTP_EMAIL` is configuration, never caller input, and is not proof of carrier identity. |
-| Fly.io | The CLI is installed and authenticated. |
+| Fly.io | The CLI is installed and authenticated. The service runs as `happyrobot-carrier-sales-sg` at `https://happyrobot-carrier-sales-sg.fly.dev`, one machine in `iad`, deployed 2026-11-03. |
 
 The main `.env` holds only TMS and handbook values. Newer credentials are in the ignored `.env` of Codex's prototype worktree. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
 

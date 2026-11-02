@@ -115,7 +115,56 @@ The prototype sent three more `LOAD_BOOK` requests on real owner calls, all with
 - A rep's approval in the app left the TMS status at `PENDING`.
 - The container's receipt journal was lost after an automatic stop and start. The reply survived in Twin and the local export.
 
-All together: **ten write sends across eight load IDs: seven complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.**
+At the end of those prototype runs: **ten write sends across eight load IDs: seven complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.**
+
+### Owner-authorized sandbox characterization, 2026-11-02
+
+The owner explicitly authorized two initial sends, with at most two further sends only if either initial request returned a complete `BOOKED` receipt. This campaign was standalone sandbox characterization, including one deliberately above-ceiling request. It was an exception to the earlier no-standalone-booking-test decision, not a change to the application's rate ceiling or booking authorization rules. No service implementation, Twin data, `LIVE_BOOKING` setting or voice workflow was changed.
+
+The script and private evidence live in the Git-ignored folder `secrets/tms-status-characterization-20261102-xmh28ezh/`. Configuration came from the existing private TMS configuration. The token was neither printed nor committed. Only the established `LOAD_QUERY`, `LOAD_GET` and `LOAD_BOOK` commands and their documented fields were used. Spent, protected and void IDs from the policy and this inventory were excluded.
+
+**Method.** Both requests used MC 138328, the active MC specified by the owner. There was no new FMCSA or OTP call flow: these were protocol probes, not carrier-facing bookings. Before each send, a fresh full `LOAD_GET` returned the exact load with `STATUS:OPEN`, usable whole-number prices and a future pickup. That detail response finished approximately 2 ms and 5 ms before the respective booking exchange began. A durable exclusive intent was saved before opening the booking connection. Each booking used one request on one fresh TCP connection, with no retry. Received bytes were saved in full as private binary files with transport metadata and SHA-256 hashes. Unclear outcomes would remain consumed attempts and would never be resent.
+
+**Results.** Times below are UTC on 2026-11-02. Pickup intervals assume UTC for the TMS pickup field; its timezone remains unconfirmed.
+
+| Case | Load | Equipment and notes | Pickup | Fresh `RATE` | Fresh `MAX_BUY` | `AGREED_RATE` | Complete direct receipt |
+|---|---|---|---|---:|---:|---:|---|
+| 1: about 2% above posted, within ceiling | LD01090 | `DRY_VAN`; live unload and detention notes | 2026-11-08 02:11, about 5.781 days away | 4745 | 5862 | 4840 | Reference with `PENDING`, timestamp `20261102072633` |
+| 2: ceiling plus one | LD01108 | `DRY_VAN`; hazmat-not-required and CDL notes | 2026-11-12 16:25, about 10.373 days away | 529 | 557 | 558 | Reference with `PENDING`, timestamp `20261102072814` |
+
+For case 1, 4840 is 2.002% above 4745 and remains below 5862. LD01090 was the only non-excluded open dry van with nonempty notes found in the chosen approximately-seven-day window (4 to 10 days); its pickup was about 5.8 days away. Case 2 used a distinct fresh load. Its later pickup was not constrained by the owner's second-case instruction and is a confounding difference, not an independently isolated variable.
+
+The redacted requests were:
+
+```text
+CMD:LOAD_BOOK|AUTH:<redacted>|LOAD_ID:LD01090|MC_NUM:138328|AGREED_RATE:4840\r\n
+CMD:LOAD_BOOK|AUTH:<redacted>|LOAD_ID:LD01108|MC_NUM:138328|AGREED_RATE:558\r\n
+```
+
+The direct wire receipts were complete and reference-bearing. These copies replace only the real opaque booking references with synthetic identifiers; CRLF is shown escaped. The complete original bytes remain in the ignored evidence folder.
+
+```text
+LOAD_ID:LD01090     |BOOKING_REF:SYNTHETIC_PROBE_01|STATUS:PENDING |TIMESTAMP:20261102072633\r\nEND\r\n
+LOAD_ID:LD01108     |BOOKING_REF:SYNTHETIC_PROBE_02|STATUS:PENDING |TIMESTAMP:20261102072814\r\nEND\r\n
+```
+
+| Private raw file | Bytes | SHA-256 of original receipt |
+|---|---:|---|
+| `attempt-initial1.reply.bin` | 97 | `6cc03e5c0c987fc784915c4047c3e49ec9a12dc1a7418dd02ff6cf0230042fb3` |
+| `attempt-initial2.reply.bin` | 97 | `b65602720dc7898bc91bd2177f6a24d79ca468a8f299d52d27f2b170152b6541` |
+
+Both exchanges completed without a transport exception. Subsequent read-only `LOAD_GET` checks at approximately 07:28:56 returned `PENDING` for both loads. They retained posted `RATE` and `MAX_BUY`, not the submitted rate or booking ownership. These short readback intervals do not establish a permanent pending state.
+
+**What the results establish, and what they do not:**
+
+- **Case 1:** the combination of active MC 138328, a dry van with notes, a future pickup around six days away and a rate about 2% above posted but below the reported ceiling was not sufficient to produce immediate `BOOKED` on this token/load. This does not isolate which feature matters or rule out other rates, timings or load properties.
+- **Case 2 and `MAX_BUY` enforcement:** a request for 558 against a freshly read `MAX_BUY` of 557 received a matching booking reference and `PENDING`, not `INVALID_RATE`. Therefore the server did not enforce the reported ceiling as an unconditional immediate rejection boundary for this request. This disproves a universal claim that every rate above `MAX_BUY` is immediately rejected. It does not prove eventual above-ceiling settlement, unrestricted accepted rates or the complete validation rule, because no `BOOKED` receipt or identifying final readback exists.
+- **No discovered `BOOKED` trigger:** neither initial request returned `BOOKED`, so the condition for further sends was not met. Exactly two new loads received one booking request each; no follow-up or repeat booking request was made.
+- **Limits:** both requests used the same candidate token and carrier but different loads, notes, prices and pickup times. Token-specific configuration, undocumented validation and deferred processing remain unresolved. A reference proves acknowledgement, not final ownership or fulfillment. The application's independent ceiling enforcement remains required; no production policy was relaxed.
+
+**Validation.** Twelve offline safety tests passed for exact framing, rejected command/injection input, preflight eligibility, both rate rules, exclusions, persistent no-reuse and four-stage limits, the conditional `BOOKED` follow-up gate, intent-before-send ordering, no booking retry, partial-byte retention, cleanup-error handling and token-safe output. Exactly two `LOAD_BOOK` request records and two intents exist, and both raw receipt hashes match the table. The standalone script imports no service code.
+
+After this campaign, the recorded cumulative evidence is **twelve booking sends across ten load IDs: nine complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.** These historical counts are not a provider quota or a claim that sandbox inventory is finite.
 
 ## Booking test inventory
 
@@ -123,7 +172,7 @@ All statuses below are historical snapshots, not current availability. These IDs
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062, LD01090, LD01108 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
 | Voided control | LD01069 | Never offer or book. |
 | Protected, historical `OPEN` snapshot | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
@@ -132,7 +181,7 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 
 ## Still unproven
 
-- **Booking contract (T-2):** currency/scale, full format and bounds, server ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The handbook's own sample books `AGREED_RATE:2200` on a load with `MAX_BUY` 1950, which hints the server may not enforce the ceiling. A sample is not proof.
+- **Booking contract (T-2):** currency/scale, full format and bounds, final ceiling enforcement, finalization/rejection/expiry, cancellation/reset and authoritative ownership recovery after a lost acknowledgement. The 2026-11-02 sandbox probe obtained a reference-bearing `PENDING` reply at `MAX_BUY + 1`, establishing no immediate ceiling rejection for that request, not final acceptance or the complete rate rule.
 - **Cause of `PENDING`:** the first acknowledgements used MC 872144, which FMCSA shows as inactive, but later ones used active MC 138328, so inactive authority cannot explain them all. Every send used one candidate token, so a token-specific cause is still open.
 - **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.
 - **Extra charges:** how detention and similar terms relate to `RATE` and the ceiling.

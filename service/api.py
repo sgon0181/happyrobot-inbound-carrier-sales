@@ -34,9 +34,12 @@ class Reachable(Protocol):
 
 
 class Voice(BaseModel):
-    """Every voice request names its call. Unknown fields, such as 'verified', are refused."""
+    """Every voice request names its call. Unknown fields, such as 'verified', are refused.
 
-    model_config = ConfigDict(extra="forbid")
+    The agent may send an MC or code as a JSON number, so numbers are read as text.
+    """
+
+    model_config = ConfigDict(extra="forbid", coerce_numbers_to_str=True)
     run_id: str = Field(pattern=RUN_ID)
 
 

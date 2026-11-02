@@ -277,3 +277,12 @@ def test_health_reports_a_reachable_tms() -> None:
         "/health", headers={"Authorization": f"Bearer {OPS}"}
     )
     assert response.json() == {"status": "ok", "tms": "reachable"}
+
+
+def test_an_mc_or_code_sent_as_a_json_number_is_read_as_text() -> None:
+    r = rig()
+    assert r.post("/carriers/verify", mc=138328)["status"] == "eligible"
+    assert r.post("/otp/send")["status"] == "sent"
+    code = r.mailer.codes[-1]
+    expected = "verified" if not code.startswith("0") else "invalid_code"  # a number loses zeros
+    assert r.post("/otp/verify", code=int(code))["status"] == expected

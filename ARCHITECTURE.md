@@ -198,18 +198,18 @@ One Python 3.12 FastAPI program. It keeps no database of its own and runs no bac
 
 ```text
 service/                                                                   Status
-  main.py            Builds the dependencies and the app                   slice 2
-  config.py          Typed settings; the only code that reads the env      slice 2
-  api.py             Routes, keys, request models; no business rules       slice 2
-  calls.py           Voice flows: verify, code, search, negotiate, close   slices 2 and 3
+  main.py            Builds the dependencies and the app                   built
+  config.py          Typed settings; the only code that reads the env      built
+  api.py             Routes, keys, request models; no business rules       built
+  calls.py           Voice flows: verify, code, search, negotiate, close   verify built; rest slice 3
   bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
   dashboard.py       The snapshot and KPIs for the operations app          slice 4
   core/              Pure rules: no network, no files, no clock
     models.py  money.py  pricing.py  negotiation.py  loads.py              built
-    carrier_policy.py                                                      slice 2
+    carrier_policy.py  codes.py                                            built
   adapters/          Talks to the outside world, holds no business rules
     tms/  protocol.py  mapping.py  client.py                               built
-    twin.py  fmcsa.py  email.py                                            slice 2
+    twin.py  fmcsa.py  email.py                                            built
   policy/            Versioned pricing policy, blocked-load list           built
   tests/             Tests, the fake TMS, a guard against outside network  built
 tools/               The branch coverage check that make check runs        built
@@ -269,7 +269,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
   "mc": "138328", "carrier_name": "...", "eligible": true,
   "authority": { "reason": "active_carrier_authority_verified", "checked_at": "..." },
   "otp": { "hash": "...", "expires_at": "...", "sends": 1, "failed": 0, "consumed_at": null },
-  "verified_until": "...",
+  "verified_at": "...",
   "search": { "equipment": "DRY_VAN", "origin_state": "CA", "dest_state": "KY" },
   "offers": { "LD01234": 3400 },
   "rounds": 1,

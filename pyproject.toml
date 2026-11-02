@@ -22,6 +22,8 @@ files = ["service", "tools"]
 
 [tool.pytest.ini_options]
 testpaths = ["service/tests"]
+# Starlette 1.10 recommends httpx2 for its test client; httpx is what is pinned.
+filterwarnings = ["ignore:Using `httpx` with `starlette.testclient` is deprecated"]
 
 [tool.coverage.run]
 branch = true

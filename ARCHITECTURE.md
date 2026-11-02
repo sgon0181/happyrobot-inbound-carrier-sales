@@ -254,7 +254,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 |---|---|---|
 | `id` | text, primary key | `run_id` for `calls`, load ID for `bookings` |
 | `version` | int | Rises by one on every write |
-| `data` | json | The row's fields, shown below |
+| `data` | jsonb | The row's fields, shown below. Not `json`: the SQL casts values to `::jsonb`, as on the prototype |
 
 **`calls`, one row per call.**
 

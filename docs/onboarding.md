@@ -32,6 +32,7 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 | Prototype app | `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Deployed. Older than the `ops-app/` source on the branch. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
+| Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Being created by the owner in the Twin UI on 2026-11-02. Check the schema before relying on them. |
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 
@@ -39,7 +40,7 @@ Refresh this before relying on it. Do not edit a published workflow version, or 
 
 Owner steps, needed by slice 2. Everything else can be done by the writing agent.
 
-1. **Twin tables.** In the Twin UI, create `calls` and `bookings`, each with `id` (text, primary key), `version` (int) and `data` (json). The API cannot create tables.
+1. **Twin tables.** In the Twin UI, create `calls` and `bookings`, each with `id` (text, primary key), `version` (int) and `data` (jsonb, not json). The API cannot create tables. Leave the `proto_*` tables alone.
 2. **Twin key.** Create an Editor API key for the service. Do not reuse a lab key. Editor applies workspace-wide while tag scopes are off.
 3. **Fly app.** Create the app and put a payment method on it, because the trial stops machines after about 5 minutes.
 4. **Secrets.** Generate `AGENT_API_KEY`, `OPS_API_KEY`, `OTP_HASH_SECRET` and `PRICING_SECRET`, at least 24 characters each. Set them and the provider credentials with `fly secrets set`.

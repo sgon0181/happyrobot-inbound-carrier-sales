@@ -197,21 +197,25 @@ Tests must prove these regardless of what the model does.
 One Python 3.12 FastAPI program. It keeps no database of its own and runs no background jobs. Its size is reported with every commit and kept small, but not capped ([D-28](docs/decisions.md)).
 
 ```text
-service/
-  main.py            Builds the dependencies and the app
-  config.py          Typed settings; the only code that reads the environment
-  api.py             Routes, keys, request models; no business rules
-  calls.py           Voice flows: verify carrier, code, search, negotiate, close
-  bookings.py        Reservation and rep actions: confirm, decline, reconcile
-  dashboard.py       The snapshot and KPIs for the operations app
-  core/              Pure rules, no network, no files, no clock
-    models.py  money.py  pricing.py  negotiation.py  loads.py  carrier_policy.py
+service/                                                                   Status
+  main.py            Builds the dependencies and the app                   slice 2
+  config.py          Typed settings; the only code that reads the env      slice 2
+  api.py             Routes, keys, request models; no business rules       slice 2
+  calls.py           Voice flows: verify, code, search, negotiate, close   slices 2 and 3
+  bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
+  dashboard.py       The snapshot and KPIs for the operations app          slice 4
+  core/              Pure rules: no network, no files, no clock
+    models.py  money.py  pricing.py  negotiation.py  loads.py              built
+    carrier_policy.py                                                      slice 2
   adapters/          Talks to the outside world, holds no business rules
-    twin.py  fmcsa.py  email.py
-    tms/  protocol.py  mapping.py  client.py
-  policy/            Versioned pricing policy, blocked-load list
-  tests/
+    tms/  protocol.py  mapping.py  client.py                               built
+    twin.py  fmcsa.py  email.py                                            slice 2
+  policy/            Versioned pricing policy, blocked-load list           built
+  tests/             Tests, the fake TMS, a guard against outside network  built
+tools/               The branch coverage check that make check runs        built
 ```
+
+*Built* means on `main` now; the rest arrives in the slice shown. `tools/` sits outside `service/` because it checks the build and never runs in production. Where each prototype file went, and why, is in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
 
 The dependency direction is one way: `api` calls `calls`, `bookings` and `dashboard`, which call `core` and `adapters`. `core` imports nothing from the others.
 

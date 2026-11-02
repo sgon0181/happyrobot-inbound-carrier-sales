@@ -40,6 +40,7 @@ Two rules shape the design: the model talks and the service decides, and only a 
 | [docs/platform-checks.md](docs/platform-checks.md), [docs/test-carriers.md](docs/test-carriers.md), [docs/research.md](docs/research.md) | Supporting evidence |
 | [docs/audits/](docs/audits/) | The two independent code audits of the prototype |
 | [service/](service/README.md) | The Python service |
+| [tools/](tools/check_branch_coverage.py) | Build checks: the branch coverage gate that `make check` runs |
 | [happyrobot/](happyrobot/README.md) | Voice workflow export, prompt and test suites |
 | [ops-app/](ops-app/README.md) | Operations dashboard source |
 

@@ -30,21 +30,36 @@ On owner run `5783608f-d54b-4a5d-b028-89db98ae10ec`, one call passed every step:
 | Container files do not survive a stop and start | Nothing depends on the local disk |
 | A state's name proves nothing: the refused connection became `FAILED`, yet the load stayed blocked | Tests assert the load is actually free |
 
-## What ports unchanged
+## What slice 1 kept, and how
 
-Both audits judged these sound. They come across in slice 1 with their tests.
+Both audits judged these files sound, but none passed the gates in [architecture section 14](../ARCHITECTURE.md#14-quality) as written: no function had type hints, and the files showed 115 lint issues and 95 strict type errors. So slice 1 rewrote each one with the prototype's tests and recorded TMS replies as the check, then compared old and new on the same inputs (D-29).
 
-| File on `prototype/e2e` | Lines |
-|---|---:|
-| `service/adapters/tms/protocol.py` | 120 |
-| `service/adapters/tms/mapping.py` | 78 |
-| `service/core/money.py` | 20 |
-| `service/core/negotiation.py` | 41 |
-| `service/core/pricing.py` | 88 |
-| `service/core/loads.py` | 28 |
-| `service/core/models.py` | 48 |
+| Prototype file, lines | Now, lines | Checked by |
+|---|---:|---|
+| `core/money.py`, 20 | 26 | Identical on 200,000 random inputs |
+| `core/models.py`, 48 | 39 | Used by every other test |
+| `core/pricing.py`, 88 | 121 | Identical on 300,000 random loads |
+| `core/negotiation.py`, 41, and `core/loads.py`, 28 | 58 and 48 | Identical on 159,632 counter-offers and 5,000 searches |
+| `adapters/tms/protocol.py`, 120 | 134 | Identical on 500,000 fuzzed replies and requests |
+| `adapters/tms/mapping.py`, 78 | 76 | Identical on 120,000 random records, before the timestamp fix |
+| `adapters/tms/client.py`, 289 | 151 | The prototype's read tests, ported |
 
-`pricing.py` loses its file loader, which moves to `config.py` with validation. `negotiation.py` gains precondition checks. Tests worth porting are `test_protocol.py`, `test_pricing.py`, the fault-injection cases in `test_client.py`, and `adapters/tms/fake.py` as a test fixture.
+Deliberate differences: negotiation refuses impossible states, the pricing policy must have three whole-number targets to load, timestamps must be exactly 14 digits (a prototype bug that Codex's review found), the reply parser needs no complexity exception, and the booking path waits for slice 4.
+
+## Where the prototype's files went
+
+| On `prototype/e2e` | On `main` | Why |
+|---|---|---|
+| `core/calls.py`, `core/booking.py` | `calls.py`, `bookings.py` at the top of `service/` | They call Twin, the TMS and email, so they are not pure rules. `core/` has no network or clock. |
+| `api/app.py` | `api.py` | A folder holding one file adds nothing |
+| `adapters/twin/`, three files | `adapters/twin.py` | Two tables instead of nine (D-23) |
+| `adapters/fmcsa/`, `adapters/notify/` | `adapters/fmcsa.py`, `adapters/email.py` | One file each |
+| `adapters/tms/fake.py` | `tests/fake_tms.py` | Test doubles live with the tests |
+| `adapters/transcripts.py`, `adapters/confirmation.py`, `adapters/tms/evidence.py` | Removed | The consent check, redaction and receipt journal were dropped (D-25) |
+| `core/ports.py` | Removed | `TmsUnavailable` sits in the TMS client that raises it. The booking outcome and receipt types return with `LOAD_BOOK` in slice 4. The TMS interface is unneeded, because tests run the real client against a real local fake server. |
+| `core/inventory.py` | Removed | It read the blocked-load file from inside `core/` at import. `config.py` will load it at startup in slice 2 and pass it to load selection. |
+| `scripts/`, nine scripts | Removed | Deployment becomes `make deploy`, and Twin tables are created in the Twin UI |
+| None | `core/carrier_policy.py`, slice 2 | The FMCSA eligibility rule becomes a pure, testable rule instead of living in network code |
 
 ## Useful reference
 

@@ -42,8 +42,8 @@ Owner steps, needed by slice 2. Everything else can be done by the writing agent
 
 1. **Twin tables.** In the Twin UI, create `calls` and `bookings`, each with `id` (text, primary key), `version` (int) and `data` (jsonb, not json). The API cannot create tables. Leave the `proto_*` tables alone.
 2. **Twin key.** Create an Editor API key for the service. Do not reuse a lab key. Editor applies workspace-wide while tag scopes are off.
-3. **Fly app.** Create the app and put a payment method on it, because the trial stops machines after about 5 minutes.
-4. **Secrets.** Generate `AGENT_API_KEY`, `OPS_API_KEY`, `OTP_HASH_SECRET` and `PRICING_SECRET`, at least 24 characters each. Set them and the provider credentials with `fly secrets set`.
+3. **Fly app.** Put a payment method on the Fly account, because the trial stops machines after about 5 minutes. The app is `happyrobot-carrier-sales-sg` in `fly.toml`, created with `fly apps create`.
+4. **Secrets.** `AGENT_API_KEY`, `OPS_API_KEY`, `OTP_HASH_SECRET` and `PRICING_SECRET` are generated into the ignored `.env`, at least 24 characters each. `make secrets` copies exactly the settings `config.py` reads into Fly secrets without printing them, and `make deploy` deploys. `make run` runs the same image locally.
 5. **Gmail.** Create an app password for the demo inbox.
 
 ## Access without committing secrets

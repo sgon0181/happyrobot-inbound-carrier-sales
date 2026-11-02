@@ -1,0 +1,9 @@
+# Only the runtime code and its pinned packages go into the image: no tests, secrets or docs.
+*
+!Dockerfile
+!requirements.txt
+!service/
+!service/**
+service/tests/
+service/**/__pycache__
+service/**/*.pyc

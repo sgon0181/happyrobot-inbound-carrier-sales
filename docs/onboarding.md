@@ -27,12 +27,12 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 
 | Platform resource | Identity | State |
 |---|---|---|
-| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Web call, Prompt and Inbound Voice Agent nodes only. Unpublished at last check. |
+| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 1 live in production since 2026-11-03, with the verification prompt and the `verify_carrier`, `send_code` and `verify_code` tools. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Production v17 passed the owner run. |
 | Prototype app | `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Deployed. Older than the `ops-app/` source on the branch. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
-| Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Being created by the owner in the Twin UI on 2026-11-02. Check the schema before relying on them. |
+| Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 

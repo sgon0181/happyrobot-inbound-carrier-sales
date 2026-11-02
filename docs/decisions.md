@@ -116,9 +116,9 @@ Each original decision's full reasoning is in [architecture v2.5](https://github
 | T-1 | Do Twin version checks and primary keys hold? | Proven on probes and real tables, and on the new `calls` table from Fly on 2026-11-03: insert, version-checked update, and a stale update refused. `id` is the primary key of both tables. | Small Postgres for coordination, justified under PDF p.4 |
 | T-2 | What do `PENDING`, currency and bounds mean? | Open. Asked as [Q8](questions.md). | Show the actual status and disclose the assumption |
 | T-3 | Can the service deliver codes? | Proven: Gmail SMTP from Fly | |
-| T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype. Confirm on the real workflow. | |
+| T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype, and on the real workflow on 2026-11-03: the model's tool arguments held only the MC and code, and the Twin row is keyed by the run's ID. | |
 | T-5 | Can the service reach FMCSA? | Proven from Fly `iad`, again by the new service on 2026-11-03. The local machine gets HTTP 403. | Native HTTP node passes the raw result |
-| T-6 | Can the agent end a voice session and speak the handoff? | Proven on the prototype's owner run. One ineligible-call simulation failed to close, so closing remains a QA item. | |
+| T-6 | Can the agent end a voice session and speak the handoff? | Proven on the prototype's owner run. One ineligible-call simulation failed to close, so closing remains a QA item. The slice 2 call on 2026-11-03 was ended by the agent, but one exchange later than the prompt asked. | |
 | T-7 | Why does the Apps gateway to Twin fail? | Open, and designed around by D-30 | |
 | T-8 | Can a native post-call node produce a summary for the close request? | Not tested in this workspace. Documentation shows AI nodes that accept transcripts. | A deterministic summary from events, as on the prototype |
 | T-9 | Should workflow run dumps store full transcripts in Twin natively? | Not tested. They would add spoken codes to Twin. | Transcripts stay on the platform |

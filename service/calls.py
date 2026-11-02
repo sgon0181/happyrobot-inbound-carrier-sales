@@ -42,17 +42,15 @@ class Calls:
         mc = normalize_mc(mc_text)
         if mc is None:
             return await self._step(run_id, "verify_carrier", _answer("invalid_mc"))
+        await self._step(run_id, "verify_carrier", _select(mc))  # saved before FMCSA answers
         try:
             authority = assess(await self.fmcsa.carriers(mc))
         except FmcsaUnavailable:
-            return await self._step(run_id, "verify_carrier", _outcome("fmcsa_unavailable"))
+            unavailable = _outcome("fmcsa_unavailable")
+            return await self._step(run_id, "verify_carrier", _for_mc(mc, unavailable))
 
         def decide(data: Data, now: datetime) -> Reply:
-            if data["mc"] != mc:  # a different MC starts verification again (section 8)
-                _store_code(data, codes.for_new_mc(_code_state(data)))
-                data["verified_at"] = None
-            data["mc"], data["carrier_name"] = mc, authority.carrier_name
-            data["eligible"] = authority.eligible
+            data["carrier_name"], data["eligible"] = authority.carrier_name, authority.eligible
             data["authority"] = {"reason": authority.reason, "checked_at": now.isoformat()}
             data["outcome"] = None if authority.eligible else "carrier_ineligible"
             if authority.eligible:
@@ -61,7 +59,7 @@ class Calls:
                 return {"status": "not_found"}
             return {"status": "ineligible", "reason": authority.reason}
 
-        return await self._step(run_id, "verify_carrier", decide)
+        return await self._step(run_id, "verify_carrier", _for_mc(mc, decide))
 
     async def send_code(self, run_id: str) -> Reply:
         code = codes.new_code()  # made before the write, which may be retried
@@ -105,14 +103,18 @@ class Calls:
         return await self._step(run_id, "verify_code", decide)
 
     async def _step(self, run_id: str, action: str, decide: Decide) -> Reply:
-        """Apply one decision and its event to the call's row, in one version-checked write."""
+        """Apply one decision and its event to the call's row, in one version-checked write.
+
+        The event keeps the call's MC after the step and the reply the agent was given,
+        which never holds a code.
+        """
         now = self.now()
 
         def edit(current: Data | None) -> tuple[Data, Reply]:
             data = copy.deepcopy(current) if current else new_call(self.cohort, now)
             reply = decide(data, now)
             data["last_activity"] = now.isoformat()
-            event = {"at": now.isoformat(), "action": action, "status": reply["status"]}
+            event = {"at": now.isoformat(), "action": action, "mc": data["mc"], **reply}
             data["events"].append({"seq": len(data["events"]) + 1, **event})
             return data, reply
 
@@ -144,6 +146,25 @@ def is_verified(data: Data) -> bool:
 
 def _answer(status: str) -> Decide:
     return lambda data, now: {"status": status}
+
+
+def _select(mc: str) -> Decide:
+    """A different MC starts verification again, keeping the budgets (section 8). It is
+    saved before the lookup, so a failed or slow lookup cannot leave an earlier MC verified.
+    """
+
+    def decide(data: Data, now: datetime) -> Reply:
+        if data["mc"] != mc:
+            _store_code(data, codes.for_new_mc(_code_state(data)))
+            data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
+        return {"status": "checking"}
+
+    return decide
+
+
+def _for_mc(mc: str, decide: Decide) -> Decide:
+    """Apply a lookup's result only if the caller has not given another MC meanwhile."""
+    return lambda data, now: decide(data, now) if data["mc"] == mc else {"status": "superseded"}
 
 
 def _outcome(outcome: str) -> Decide:

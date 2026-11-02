@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass, field
 from datetime import UTC, datetime, timedelta
 from typing import Any
@@ -9,12 +10,14 @@ from typing import Any
 import httpx
 import pytest
 from fastapi.testclient import TestClient
+from starlette.types import Message, Receive, Scope, Send
 
 from service.adapters.email import EmailFailed
 from service.adapters.fmcsa import Fmcsa, FmcsaSettings
 from service.adapters.tms.client import TmsClient, TmsSettings
-from service.api import Reachable, create_app
+from service.api import Reachable, _limit_body, create_app
 from service.calls import Calls, is_verified
+from service.core.carrier_policy import assess
 from service.tests.fake_twin import FakeTwin
 from service.tests.test_carrier_policy import ACTIVE, INACTIVE
 
@@ -43,12 +46,28 @@ class Clock:
 
 
 @dataclass
+class FakeFmcsa:
+    carriers: list[dict[str, Any]]
+    status: int = 200
+    delay: float = 0.0
+    during: Callable[[], None] = lambda: None  # runs while a lookup is in flight
+    seen: list[str] = field(default_factory=list)
+
+    async def reply(self, request: httpx.Request) -> httpx.Response:
+        self.seen.append(request.url.path)
+        await asyncio.sleep(self.delay)
+        self.during()
+        content = [{"carrier": c} for c in self.carriers]
+        return httpx.Response(self.status, json={"content": content})
+
+
+@dataclass
 class Rig:
     client: TestClient
     twin: FakeTwin
     mailer: FakeMailer
     clock: Clock
-    fmcsa_calls: list[str] = field(default_factory=list)
+    fmcsa: FakeFmcsa
 
     def post(self, path: str, key: str = AGENT, **body: Any) -> Any:
         response = self.client.post(
@@ -75,18 +94,11 @@ def rig(
     tms: Reachable | None = None,
 ) -> Rig:
     found = [ACTIVE] if carriers is None else carriers
-    seen: list[str] = []
-
-    async def fmcsa_reply(request: httpx.Request) -> httpx.Response:
-        seen.append(request.url.path)
-        await asyncio.sleep(fmcsa_delay)
-        return httpx.Response(fmcsa_status, json={"content": [{"carrier": c} for c in found]})
-
+    fake = FakeFmcsa(found, status=fmcsa_status, delay=fmcsa_delay)
     twin, mailer, clock = FakeTwin(), FakeMailer(fail=mail_fails), Clock()
-    fmcsa = Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fmcsa_reply))
     calls = Calls(
         twin=twin.twin(),
-        fmcsa=fmcsa,
+        fmcsa=Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fake.reply)),
         mailer=mailer,
         code_secret=b"s" * 24,
         cohort="real",
@@ -97,7 +109,7 @@ def rig(
     )
     tms = tms or TmsClient(closed_port)
     app = create_app(calls=calls, tms=tms, agent_key=AGENT, ops_key=OPS, deadline_seconds=deadline)
-    return Rig(TestClient(app), twin, mailer, clock, seen)
+    return Rig(TestClient(app), twin, mailer, clock, fake)
 
 
 def test_every_route_needs_its_key_and_the_docs_are_off() -> None:
@@ -127,16 +139,18 @@ def test_an_eligible_carrier_is_saved_on_a_new_call_row() -> None:
         True,
         None,
     )
+    event = {"at": START.isoformat(), "action": "verify_carrier", "mc": "138328"}
     assert row["events"] == [
-        {"seq": 1, "at": START.isoformat(), "action": "verify_carrier", "status": "eligible"}
+        {"seq": 1, **event, "status": "checking"},
+        {"seq": 2, **event, "status": "eligible", "carrier_name": "WERNER ENTERPRISES INC"},
     ]
-    assert r.fmcsa_calls == ["/qc/services/carriers/docket-number/138328/"]
+    assert r.fmcsa.seen == ["/qc/services/carriers/docket-number/138328/"]
 
 
 def test_a_malformed_mc_is_refused_without_asking_fmcsa() -> None:
     r = rig()
     assert r.post("/carriers/verify", mc="one two three")["status"] == "invalid_mc"
-    assert r.fmcsa_calls == []
+    assert r.fmcsa.seen == []
 
 
 def test_an_inactive_carrier_cannot_get_a_code() -> None:
@@ -164,6 +178,7 @@ def test_the_right_code_verifies_the_call_and_only_its_hash_is_stored() -> None:
     assert code not in json.dumps(r.row())
     assert r.post("/otp/verify", code=f"{code[:3]} {code[3:]}")["status"] == "verified"
     assert is_verified(r.row())
+    assert code not in json.dumps(r.row())  # events hold the agent's replies, never a code
     assert r.post("/otp/verify", code=code)["status"] == "verified"  # a repeat is safe
 
 
@@ -201,7 +216,8 @@ def test_a_failed_email_still_counts_as_a_send() -> None:
     r.post("/carriers/verify", mc="138328")
     assert r.post("/otp/send")["status"] == "send_failed"
     assert r.row()["otp"]["sends"] == 1
-    assert [e["status"] for e in r.row()["events"]] == ["eligible", "code_issued", "send_failed"]
+    statuses = [e["status"] for e in r.row()["events"]]
+    assert statuses == ["checking", "eligible", "code_issued", "send_failed"]
 
 
 def test_a_new_mc_needs_a_new_code_but_keeps_the_budgets() -> None:
@@ -251,6 +267,8 @@ def test_twin_failure_is_temporarily_unavailable() -> None:
 def test_a_request_past_the_deadline_stops_and_says_so() -> None:
     r = rig(fmcsa_delay=0.5, deadline=0.1)
     assert r.post("/carriers/verify", mc="138328")["status"] == "temporarily_unavailable"
+    events = r.row()["events"]  # the call and its MC were saved before FMCSA was asked
+    assert [(e["mc"], e["status"]) for e in events] == [("138328", "checking")]
 
 
 def test_rechecking_the_same_mc_keeps_the_code_already_sent() -> None:
@@ -286,3 +304,79 @@ def test_an_mc_or_code_sent_as_a_json_number_is_read_as_text() -> None:
     code = r.mailer.codes[-1]
     expected = "verified" if not code.startswith("0") else "invalid_code"  # a number loses zeros
     assert r.post("/otp/verify", code=int(code))["status"] == expected
+
+
+def test_a_failed_lookup_for_a_new_mc_drops_the_earlier_verification() -> None:
+    r = rig()
+    r.post("/otp/verify", code=r.verified_with_code())
+    r.fmcsa.status = 403
+    assert r.post("/carriers/verify", mc="1515")["status"] == "fmcsa_unavailable"
+    row = r.row()
+    assert (row["mc"], row["carrier_name"], is_verified(row)) == ("1515", None, False)
+    assert row["otp"]["sends"] == 1
+
+
+def test_each_lookup_records_its_mc_and_result() -> None:
+    r = rig()
+    r.post("/carriers/verify", mc="138328")
+    r.fmcsa.carriers = [INACTIVE]
+    r.post("/carriers/verify", mc="134652")
+    assert [(e["mc"], e["status"], e.get("reason")) for e in r.row()["events"]] == [
+        ("138328", "checking", None),
+        ("138328", "eligible", None),
+        ("134652", "checking", None),
+        ("134652", "ineligible", assess([INACTIVE]).reason),
+    ]
+
+
+def test_a_late_lookup_never_overwrites_a_newer_mc() -> None:
+    r = rig()
+
+    def caller_gives_another_mc() -> None:
+        version, data = r.twin.tables["calls"][RUN]
+        r.twin.tables["calls"][RUN] = (version + 1, {**data, "mc": "1515"})
+
+    r.fmcsa.during = caller_gives_another_mc
+    assert r.post("/carriers/verify", mc="138328")["status"] == "superseded"
+    row = r.row()
+    assert (row["mc"], row["carrier_name"], row["eligible"]) == ("1515", None, False)
+
+
+def chunks(*sizes: int) -> Iterator[bytes]:
+    yield b'{"run_id": "' + RUN.encode() + b'"}'
+    for size in sizes:
+        yield b" " * size  # whitespace keeps the JSON valid
+
+
+def test_a_chunked_body_is_limited_by_the_bytes_received() -> None:
+    r = rig()
+    headers = {"Authorization": f"Bearer {AGENT}", "Content-Type": "application/json"}
+    small = r.client.post("/otp/send", content=chunks(10), headers=headers)
+    assert (small.status_code, small.json()["status"]) == (200, "not_eligible")
+    large = r.client.post("/otp/send", content=chunks(10_000, 10_000), headers=headers)
+    assert (large.status_code, large.json()) == (413, {"status": "request_too_large"})
+
+
+def test_the_body_is_handed_on_once_then_later_messages_pass_through() -> None:
+    arriving: list[Message] = [
+        {"type": "http.request", "body": b"ab", "more_body": True},
+        {"type": "http.request", "body": b"c", "more_body": False},
+        {"type": "http.disconnect"},
+    ]
+    seen: list[Message] = []
+
+    async def inner(scope: Scope, receive: Receive, send: Send) -> None:
+        seen.extend([await receive(), await receive()])
+
+    async def receive() -> Message:
+        return arriving.pop(0)
+
+    async def send(message: Message) -> None:
+        raise AssertionError("nothing is sent")
+
+    async def request() -> None:
+        await _limit_body(inner)({"type": "http"}, receive, send)
+
+    asyncio.run(request())
+    body = {"type": "http.request", "body": b"abc", "more_body": False}
+    assert seen == [body, {"type": "http.disconnect"}]

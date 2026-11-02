@@ -16,6 +16,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
+from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import TwinUnavailable
@@ -62,7 +63,8 @@ def create_app(
 ) -> FastAPI:
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.add_exception_handler(RequestValidationError, _invalid)
-    app.middleware("http")(_limit_size)
+    app.middleware("http")(_no_store)
+    app.add_middleware(_limit_body)  # added last, so it runs first
     agent = Depends(_bearer(agent_key))
     either = Depends(_bearer(agent_key, ops_key))
 
@@ -106,15 +108,49 @@ async def _invalid(request: Request, error: Exception) -> JSONResponse:
     return JSONResponse({"status": "invalid_request"}, 400)  # never echoes the input back
 
 
-async def _limit_size(
+async def _no_store(
     request: Request, call_next: Callable[[Request], Awaitable[Response]]
 ) -> Response:
-    length = request.headers.get("content-length", "0")
-    if not length.isdigit() or int(length) > MAX_BODY_BYTES:
-        return JSONResponse({"status": "request_too_large"}, 413)
     response = await call_next(request)
     response.headers["Cache-Control"] = "no-store"
     return response
+
+
+def _limit_body(app: ASGIApp) -> ASGIApp:
+    """Read the body before anything else, and refuse it past MAX_BODY_BYTES.
+
+    The bytes received are counted, so a chunked request without a Content-Length is
+    limited too, and an oversized body is never held whole in memory.
+    """
+
+    async def limited(scope: Scope, receive: Receive, send: Send) -> None:
+        if scope["type"] != "http":
+            await app(scope, receive, send)
+            return
+        body = await _read_body(receive)
+        if body is None:
+            await JSONResponse({"status": "request_too_large"}, 413)(scope, receive, send)
+            return
+        pending: list[Message] = [{"type": "http.request", "body": body, "more_body": False}]
+
+        async def replay() -> Message:
+            return pending.pop() if pending else await receive()
+
+        await app(scope, replay, send)
+
+    return limited
+
+
+async def _read_body(receive: Receive) -> bytes | None:
+    """The whole body, or None as soon as it passes MAX_BODY_BYTES."""
+    body, more = b"", True
+    while more:
+        message = await receive()
+        body += message.get("body", b"")
+        if len(body) > MAX_BODY_BYTES:
+            return None
+        more = message.get("more_body", False)
+    return body
 
 
 def _bearer(*keys: str) -> Callable[[str], None]:

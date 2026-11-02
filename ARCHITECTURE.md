@@ -278,7 +278,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
   "outcome": null,
   "summary": "...",
   "policy_version": "pricing-v1",
-  "events": [ { "seq": 1, "at": "...", "action": "verify_carrier", "status": "ok" } ]
+  "events": [ { "seq": 1, "at": "...", "action": "verify_carrier", "mc": "138328", "status": "checking" } ]
 }
 ```
 
@@ -297,7 +297,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 
 **Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. There are no in-process locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
 
-**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay.
+**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step and the reply the agent was given, which never holds a code.
 
 **Outcome is computed, not stored twice.** A booking row is the only record of a booking. The dashboard derives each call's outcome when it reads:
 
@@ -321,7 +321,7 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 3. **Check.** The carrier reads the code aloud, which is unavoidable. The service compares it against the hash in constant time. Consuming the code and marking the call verified are one write, so a crash cannot leave a used code and an unverified call.
 4. **Destination.** Codes go to one configured demo inbox (D-12), as Luke approved. This proves access to that inbox, not who owns an MC, so records say *code passed*, never *identity verified*.
 5. **Every call.** A fresh code is required on every call before matching (D-9).
-6. **MC changes.** Changing the MC clears authority, code and offers. It keeps the round, send and failure budgets, so a new MC cannot reset them.
+6. **MC changes.** Changing the MC clears authority, code and offers. It keeps the round, send and failure budgets, so a new MC cannot reset them. The new MC is saved before FMCSA is asked, so a failed or slow lookup cannot leave the earlier MC verified, and a late result for an MC the caller has since replaced is not applied.
 
 ---
 

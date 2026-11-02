@@ -1,4 +1,4 @@
-"""The voice flows. Each request reads the call's row, applies the core rules and writes back.
+"""The call's row, and the verify flows that write it.
 
 The model only asks; every decision uses the call's own stored state (rule 1). A call
 is identified by the workflow's run_id, which the model cannot choose (D-16). Every
@@ -24,30 +24,53 @@ class Mailer(Protocol):
     async def send(self, code: str) -> None: ...
 
 
-class Calls:
+class CallRows:
+    """Reads and writes call rows. Every write is one decision and its event."""
+
     def __init__(
-        self,
-        *,
-        twin: Twin,
-        fmcsa: Fmcsa,
-        mailer: Mailer,
-        code_secret: bytes,
-        cohort: str,
-        now: Callable[[], datetime] = lambda: datetime.now(UTC),
+        self, *, twin: Twin, cohort: str, now: Callable[[], datetime] = lambda: datetime.now(UTC)
     ) -> None:
-        self.twin, self.fmcsa, self.mailer = twin, fmcsa, mailer
-        self.code_secret, self.cohort, self.now = code_secret, cohort, now
+        self.twin, self.cohort, self.now = twin, cohort, now
+
+    async def read(self, run_id: str) -> Data:
+        """The call as stored, or a new call if it has no row yet. Nothing is written."""
+        row = await self.twin.get("calls", run_id)
+        return _complete(row.data if row else None, self.cohort, self.now())
+
+    async def step(self, run_id: str, action: str, decide: Decide) -> Reply:
+        """Apply one decision and its event to the call's row, in one version-checked write.
+
+        The event keeps the call's MC after the step and the step's result, which never
+        holds a code. Some results are internal, such as checking and code_issued, and a
+        successful email adds no event, so events are not a record of what the agent heard.
+        """
+        now = self.now()
+
+        def edit(current: Data | None) -> tuple[Data, Reply]:
+            data = _complete(current, self.cohort, now)
+            reply = decide(data, now)
+            data["last_activity"] = now.isoformat()
+            event = {"at": now.isoformat(), "action": action, "mc": data["mc"], **reply}
+            data["events"].append({"seq": len(data["events"]) + 1, **event})
+            return data, reply
+
+        return await self.twin.change("calls", run_id, edit)
+
+
+class Calls:
+    def __init__(self, *, rows: CallRows, fmcsa: Fmcsa, mailer: Mailer, code_secret: bytes) -> None:
+        self.rows, self.fmcsa, self.mailer, self.code_secret = rows, fmcsa, mailer, code_secret
 
     async def verify_carrier(self, run_id: str, mc_text: str) -> Reply:
         mc = normalize_mc(mc_text)
         if mc is None:
-            return await self._step(run_id, "verify_carrier", _answer("invalid_mc"))
-        await self._step(run_id, "verify_carrier", _select(mc))  # saved before FMCSA answers
+            return await self.rows.step(run_id, "verify_carrier", answer("invalid_mc"))
+        await self.rows.step(run_id, "verify_carrier", _select(mc))  # saved before FMCSA answers
         try:
             authority = assess(await self.fmcsa.carriers(mc))
         except FmcsaUnavailable:
-            unavailable = _outcome("fmcsa_unavailable")
-            return await self._step(run_id, "verify_carrier", _for_mc(mc, unavailable))
+            unavailable = set_outcome("fmcsa_unavailable")
+            return await self.rows.step(run_id, "verify_carrier", _for_mc(mc, unavailable))
 
         def decide(data: Data, now: datetime) -> Reply:
             data["carrier_name"], data["eligible"] = authority.carrier_name, authority.eligible
@@ -59,7 +82,7 @@ class Calls:
                 return {"status": "not_found"}
             return {"status": "ineligible", "reason": authority.reason}
 
-        return await self._step(run_id, "verify_carrier", _for_mc(mc, decide))
+        return await self.rows.step(run_id, "verify_carrier", _for_mc(mc, decide))
 
     async def send_code(self, run_id: str) -> Reply:
         code = codes.new_code()  # made before the write, which may be retried
@@ -72,19 +95,19 @@ class Calls:
             _store_code(data, state)
             return {"status": "code_issued" if result is codes.Issued.ISSUED else result.value}
 
-        reply = await self._step(run_id, "send_code", decide)
+        reply = await self.rows.step(run_id, "send_code", decide)
         if reply["status"] != "code_issued":
             return reply
         try:  # the send is already counted, so a failure is never silently retried
             await self.mailer.send(code)
         except EmailFailed:
-            return await self._step(run_id, "send_code", _answer("send_failed"))
+            return await self.rows.step(run_id, "send_code", answer("send_failed"))
         return {"status": "sent"}
 
     async def verify_code(self, run_id: str, code_text: str) -> Reply:
         code = codes.normalize_code(code_text)
         if code is None:
-            return await self._step(run_id, "verify_code", _answer("invalid_code"))
+            return await self.rows.step(run_id, "verify_code", answer("invalid_code"))
         hashed = codes.code_hash(self.code_secret, run_id, code)
 
         def decide(data: Data, now: datetime) -> Reply:
@@ -100,26 +123,7 @@ class Calls:
                 return {"status": result.value, "tries_left": codes.tries_left(state)}
             return {"status": result.value}
 
-        return await self._step(run_id, "verify_code", decide)
-
-    async def _step(self, run_id: str, action: str, decide: Decide) -> Reply:
-        """Apply one decision and its event to the call's row, in one version-checked write.
-
-        The event keeps the call's MC after the step and the step's result, which never
-        holds a code. Some results are internal, such as checking and code_issued, and a
-        successful email adds no event, so events are not a record of what the agent heard.
-        """
-        now = self.now()
-
-        def edit(current: Data | None) -> tuple[Data, Reply]:
-            data = copy.deepcopy(current) if current else new_call(self.cohort, now)
-            reply = decide(data, now)
-            data["last_activity"] = now.isoformat()
-            event = {"at": now.isoformat(), "action": action, "mc": data["mc"], **reply}
-            data["events"].append({"seq": len(data["events"]) + 1, **event})
-            return data, reply
-
-        return await self.twin.change("calls", run_id, edit)
+        return await self.rows.step(run_id, "verify_code", decide)
 
 
 def new_call(cohort: str, now: datetime) -> Data:
@@ -135,7 +139,14 @@ def new_call(cohort: str, now: datetime) -> Data:
         "authority": None,
         "otp": _code_fields(codes.CodeState()),
         "verified_at": None,
+        "search": None,
+        "offers": {},  # load ID to the last offer we said
+        "rounds": 0,
+        "last_counter": None,
+        "agreement": None,
+        "policy_version": None,
         "outcome": None,
+        "summary": None,
         "events": [],
     }
 
@@ -145,8 +156,22 @@ def is_verified(data: Data) -> bool:
     return bool(data["eligible"] and data["verified_at"])
 
 
-def _answer(status: str) -> Decide:
+def answer(status: str) -> Decide:
+    """A decision that changes nothing but the event."""
     return lambda data, now: {"status": status}
+
+
+def set_outcome(outcome: str) -> Decide:
+    def decide(data: Data, now: datetime) -> Reply:
+        data["outcome"] = outcome
+        return {"status": outcome}
+
+    return decide
+
+
+def _complete(current: Data | None, cohort: str, now: datetime) -> Data:
+    """A copy of the row to edit, with any field added since it was written."""
+    return new_call(cohort, now) | copy.deepcopy(current or {})
 
 
 def _select(mc: str) -> Decide:
@@ -158,6 +183,7 @@ def _select(mc: str) -> Decide:
         if data["mc"] != mc:
             _store_code(data, codes.for_new_mc(_code_state(data)))
             data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
+            data["offers"] = {}
         return {"status": "checking"}
 
     return decide
@@ -166,14 +192,6 @@ def _select(mc: str) -> Decide:
 def _for_mc(mc: str, decide: Decide) -> Decide:
     """Apply a lookup's result only if the caller has not given another MC meanwhile."""
     return lambda data, now: decide(data, now) if data["mc"] == mc else {"status": "superseded"}
-
-
-def _outcome(outcome: str) -> Decide:
-    def decide(data: Data, now: datetime) -> Reply:
-        data["outcome"] = outcome
-        return {"status": outcome}
-
-    return decide
 
 
 def _code_state(data: Data) -> codes.CodeState:

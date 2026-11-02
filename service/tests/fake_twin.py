@@ -15,6 +15,9 @@ from service.adapters.twin import Twin, TwinSettings
 API_KEY = "fake-twin-key"
 _LITERAL = r"'((?:[^']|'')*)'"
 _SELECT = re.compile(rf"SELECT version, data FROM (\w+) WHERE id = {_LITERAL}")
+_SELECT_MANY = re.compile(
+    rf"SELECT id, version, data FROM (\w+) WHERE id IN \(({_LITERAL}(?:, {_LITERAL})*)\)"
+)
 _INSERT = re.compile(
     rf"INSERT INTO (\w+) \(id, version, data\) VALUES \({_LITERAL}, 1, {_LITERAL}::jsonb\) "
     r"ON CONFLICT \(id\) DO NOTHING RETURNING id"
@@ -66,6 +69,12 @@ class FakeTwin:
             if row and self.interfere:
                 self.tables[table][key] = (row[0] + 1, row[1])
             return [{"version": row[0], "data": row[1]}] if row else []
+        if match := _SELECT_MANY.fullmatch(sql):
+            table = self.tables[match[1]]
+            keys = [_text(key) for key in re.findall(_LITERAL, match[2])]
+            return [
+                {"id": k, "version": table[k][0], "data": table[k][1]} for k in keys if k in table
+            ]
         if match := _INSERT.fullmatch(sql):
             table, key, data = match[1], _text(match[2]), json.loads(_text(match[3]))
             if key in self.tables[table]:

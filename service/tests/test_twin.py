@@ -44,6 +44,22 @@ def test_rows_are_created_once_and_updated_only_at_their_version() -> None:
     assert (row.version, row.data) == (2, {"mc": "1515"})
 
 
+def test_many_rows_are_read_in_one_statement() -> None:
+    fake = FakeTwin()
+
+    async def scenario() -> tuple[dict[str, Any], dict[str, Any]]:
+        twin = fake.twin()
+        await twin.insert("bookings", "LD1", {"state": "RESERVED"})
+        await twin.insert("bookings", "o'k", {"state": "RELEASED"})
+        found = await twin.get_many("bookings", ["LD1", "o'k", "LD9", "LD1"])
+        return {key: row.data for key, row in found.items()}, await twin.get_many("bookings", [])
+
+    found, nothing = asyncio.run(scenario())
+    assert found == {"LD1": {"state": "RESERVED"}, "o'k": {"state": "RELEASED"}}
+    assert nothing == {}
+    assert len(fake.statements) == 3  # two inserts and one read; no keys means no statement
+
+
 def test_a_quote_in_a_value_is_stored_exactly() -> None:
     fake = FakeTwin()
     asyncio.run(fake.twin().insert("calls", "o'brien", {"note": "it's here"}))
@@ -100,6 +116,7 @@ def test_rate_limit_refusals_are_retried_and_nothing_else_is() -> None:
         httpx.Response(200, text="not json"),
         httpx.Response(200, json={"rows": "nope"}),
         httpx.Response(200, json={"rows": [{"version": 1, "data": "not an object"}]}),
+        httpx.Response(200, json={"rows": [{"version": 1, "data": {}}] * 2}),  # one key, two rows
     ],
 )
 def test_an_unreadable_reply_means_unavailable(reply: httpx.Response) -> None:

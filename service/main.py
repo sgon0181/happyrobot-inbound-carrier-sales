@@ -14,8 +14,10 @@ from service.adapters.fmcsa import Fmcsa, FmcsaSettings
 from service.adapters.tms.client import TmsClient, TmsSettings
 from service.adapters.twin import Twin, TwinSettings
 from service.api import create_app
-from service.calls import Calls
+from service.bookings import Bookings
+from service.calls import CallRows, Calls
 from service.config import Settings, load_settings
+from service.selling import Sales
 
 # httpx logs each request URL at INFO level, and FMCSA's URL carries the webKey.
 logging.getLogger("httpx").setLevel(logging.WARNING)
@@ -30,12 +32,17 @@ def build(settings: Settings) -> FastAPI:
     tms = TmsClient(
         TmsSettings(host=settings.tms_host, port=settings.tms_port, token=settings.tms_token)
     )
+    rows = CallRows(twin=twin, cohort=settings.cohort)
     calls = Calls(
-        twin=twin,
-        fmcsa=fmcsa,
-        mailer=CodeMailer(email),
-        code_secret=settings.otp_hash_secret,
-        cohort=settings.cohort,
+        rows=rows, fmcsa=fmcsa, mailer=CodeMailer(email), code_secret=settings.otp_hash_secret
+    )
+    sales = Sales(
+        rows=rows,
+        board=tms,
+        bookings=Bookings(twin),
+        pricing=settings.pricing,
+        pricing_secret=settings.pricing_secret,
+        blocked=settings.blocked_loads,
     )
 
     @asynccontextmanager
@@ -46,6 +53,7 @@ def build(settings: Settings) -> FastAPI:
 
     return create_app(
         calls=calls,
+        sales=sales,
         tms=tms,
         agent_key=settings.agent_api_key,
         ops_key=settings.ops_api_key,

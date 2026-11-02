@@ -10,7 +10,7 @@ from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-GATED = ("service/core/", "service/calls.py", "service/bookings.py")
+GATED = ("service/core/", "service/calls.py", "service/selling.py", "service/bookings.py")
 MINIMUM = 90.0
 
 

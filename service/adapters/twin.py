@@ -7,7 +7,7 @@ one row, and every write is compare-and-set. Statements are paced to about 4 a s
 
 import asyncio
 import json
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -64,9 +64,17 @@ class Twin:
         rows = await self._sql(sql)
         if not rows:
             return None
-        if len(rows) != 1 or not isinstance(rows[0].get("data"), dict):
+        if len(rows) != 1:
             raise TwinUnavailable("Twin returned an invalid row.")
-        return Row(int(rows[0]["version"]), rows[0]["data"])
+        return _row(rows[0])
+
+    async def get_many(self, table: str, keys: Iterable[str]) -> dict[str, Row]:
+        """The rows that exist among these keys, read in one statement."""
+        listed = ", ".join(quote(key) for key in dict.fromkeys(keys))
+        if not listed:
+            return {}
+        sql = f"SELECT id, version, data FROM {_table(table)} WHERE id IN ({listed})"  # noqa: S608
+        return {str(row.get("id")): _row(row) for row in await self._sql(sql)}
 
     async def insert(self, table: str, key: str, data: Data) -> bool:
         """Create the row at version 1. False if the key already exists."""
@@ -139,6 +147,12 @@ def _table(name: str) -> str:
     if name not in TABLES:
         raise ValueError(f"Unknown table {name!r}.")
     return name
+
+
+def _row(row: Data) -> Row:
+    if not isinstance(row.get("data"), dict):
+        raise TwinUnavailable("Twin returned an invalid row.")
+    return Row(int(row["version"]), row["data"])
 
 
 def _jsonb(data: Data) -> str:

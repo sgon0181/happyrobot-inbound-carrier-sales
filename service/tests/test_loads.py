@@ -2,8 +2,10 @@
 
 from datetime import UTC, datetime, timedelta
 
-from service.core.loads import MAX_OFFERS, is_offerable, select_offers
+from service.adapters.tms.mapping import to_load
+from service.core.loads import MAX_OFFERS, is_offerable, public_view, search_terms, select_offers
 from service.core.models import LoadSummary, Place
+from service.tests.fake_tms import make_load
 
 NOW = datetime(2026, 11, 2, 12, tzinfo=UTC)
 
@@ -58,3 +60,30 @@ def test_unset_criteria_match_anything_and_at_most_three_are_offered() -> None:
     picked = select_offers(loads, NOW)
     assert len(picked) == MAX_OFFERS
     assert [load.load_id for load in picked] == ["LD1", "LD2", "LD3"]
+
+
+def test_search_terms_are_normalized_and_blank_means_unset() -> None:
+    assert search_terms(" Dry-Van ", "tx", "") == {
+        "equipment": "DRY_VAN",
+        "origin_state": "TX",
+        "dest_state": None,
+    }
+    assert search_terms("refrigerated", None, None) == {
+        "equipment": "REEFER",
+        "origin_state": None,
+        "dest_state": None,
+    }
+
+
+def test_unreadable_or_missing_search_terms_are_refused() -> None:
+    for terms in (("boat", "TX", None), (None, "Texas", None), (None, None, "G"), ("", " ", None)):
+        assert search_terms(*terms) is None
+
+
+def test_the_public_view_is_an_allowlist_without_the_rates() -> None:
+    load = to_load(make_load(MAX_BUY="2345", RATE="2000"))
+    view = public_view(load, 1900)
+    assert view["offer"] == 1900
+    assert (view["origin"], view["destination"]) == ("Dallas, TX", "Atlanta, GA")
+    assert view["pickup_datetime"] == "2099-12-31T08:00:00+00:00"
+    assert not {"max_rate", "loadboard_rate", "status"} & set(view)

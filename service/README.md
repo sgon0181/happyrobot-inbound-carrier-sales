@@ -9,7 +9,8 @@ The Python service that decides what the voice agent may do. Slices 1 and 2's co
 | `main.py` | Builds dependencies and the app | The only place that connects the parts | Built |
 | `config.py` | Typed settings, validated at startup | The only code that reads the environment | Built |
 | `api.py` | Routes, keys, request models | No business rules | Built |
-| `calls.py` | Voice flows | Calls `core` and `adapters`; no SQL or sockets | Verify built; search, negotiation and close in slice 3 |
+| `calls.py` | The call row, and the verify and code flows | Calls `core` and `adapters`; no SQL or sockets | Built |
+| `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets | Search built; negotiation and close in slice 3 |
 | `bookings.py` | Reservation and rep actions | The only code that can reach `LOAD_BOOK` | Slices 3 and 4 |
 | `dashboard.py` | Snapshot and KPIs | Read only | Slice 4 |
 | `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment | Built |
@@ -17,6 +18,6 @@ The Python service that decides what the voice agent may do. Slices 1 and 2's co
 | `policy/` | Versioned pricing policy and blocked loads | Data, loaded once at startup | Built |
 | `tests/` | Tests, the fake TMS, the network guard | Test doubles live here, never in production folders | Built |
 
-Dependencies point one way: `api` to `calls`, `bookings` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
+Dependencies point one way: `api` to `calls`, `selling`, `bookings` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
 
 Every commit reports its production line count. Size is watched, not capped ([D-28](../docs/decisions.md)).

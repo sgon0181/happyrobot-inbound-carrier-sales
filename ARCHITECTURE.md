@@ -201,7 +201,8 @@ service/                                                                   Statu
   main.py            Builds the dependencies and the app                   built
   config.py          Typed settings; the only code that reads the env      built
   api.py             Routes, keys, request models; no business rules       built
-  calls.py           Voice flows: verify, code, search, negotiate, close   verify built; rest slice 3
+  calls.py           The call row, and the verify and code flows           built
+  selling.py         Voice flows: search, negotiate, close                 search built; rest slice 3
   bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
   dashboard.py       The snapshot and KPIs for the operations app          slice 4
   core/              Pure rules: no network, no files, no clock
@@ -217,7 +218,7 @@ tools/               The branch coverage check that make check runs        built
 
 *Built* means on `main` now; the rest arrives in the slice shown. `tools/` sits outside `service/` because it checks the build and never runs in production. Where each prototype file went, and why, is in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
 
-The dependency direction is one way: `api` calls `calls`, `bookings` and `dashboard`, which call `core` and `adapters`. `core` imports nothing from the others.
+The dependency direction is one way: `api` calls `calls`, `selling`, `bookings` and `dashboard`, which call `core` and `adapters`. `selling` writes call rows through `calls`. `core` imports nothing from the others.
 
 | Endpoint | Key | Does |
 |---|---|---|
@@ -474,7 +475,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
-| Coverage | At least 90% branch coverage on `core/`, `calls.py` and `bookings.py` |
+| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py` and `bookings.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
 | Capacity | 12 calls of about 4 minutes within 4 minutes, plus one rep action a minute, all reach a reservation with no response over 12 seconds |

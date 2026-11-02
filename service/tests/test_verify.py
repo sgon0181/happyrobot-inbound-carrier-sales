@@ -2,114 +2,18 @@
 
 import asyncio
 import json
-from collections.abc import Callable, Iterator
-from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from collections.abc import Iterator
+from datetime import timedelta
 from typing import Any
 
-import httpx
 import pytest
-from fastapi.testclient import TestClient
 from starlette.types import Message, Receive, Scope, Send
 
-from service.adapters.email import EmailFailed
-from service.adapters.fmcsa import Fmcsa, FmcsaSettings
-from service.adapters.tms.client import TmsClient, TmsSettings
-from service.api import Reachable, _limit_body, create_app
-from service.calls import Calls, is_verified
+from service.api import _limit_body
+from service.calls import is_verified
 from service.core.carrier_policy import assess
-from service.tests.fake_twin import FakeTwin
-from service.tests.test_carrier_policy import ACTIVE, INACTIVE
-
-RUN = "3f2b8c1e-0d4a-4c1b-9a6e-2f1d5e7c9b10"
-AGENT, OPS = "agent-key-" + "a" * 20, "ops-key-" + "o" * 20
-START = datetime(2026, 11, 2, 12, tzinfo=UTC)
-
-
-class FakeMailer:
-    def __init__(self, *, fail: bool = False) -> None:
-        self.codes: list[str] = []
-        self.fail = fail
-
-    async def send(self, code: str) -> None:
-        if self.fail:
-            raise EmailFailed("down")
-        self.codes.append(code)
-
-
-@dataclass
-class Clock:
-    now: datetime = START
-
-    def __call__(self) -> datetime:
-        return self.now
-
-
-@dataclass
-class FakeFmcsa:
-    carriers: list[dict[str, Any]]
-    status: int = 200
-    delay: float = 0.0
-    during: Callable[[], None] = lambda: None  # runs while a lookup is in flight
-    seen: list[str] = field(default_factory=list)
-
-    async def reply(self, request: httpx.Request) -> httpx.Response:
-        self.seen.append(request.url.path)
-        await asyncio.sleep(self.delay)
-        self.during()
-        content = [{"carrier": c} for c in self.carriers]
-        return httpx.Response(self.status, json={"content": content})
-
-
-@dataclass
-class Rig:
-    client: TestClient
-    twin: FakeTwin
-    mailer: FakeMailer
-    clock: Clock
-    fmcsa: FakeFmcsa
-
-    def post(self, path: str, key: str = AGENT, **body: Any) -> Any:
-        response = self.client.post(
-            path, json={"run_id": RUN, **body}, headers={"Authorization": f"Bearer {key}"}
-        )
-        return response.json() | {"http": response.status_code}
-
-    def row(self) -> dict[str, Any]:
-        return self.twin.data("calls", RUN)
-
-    def verified_with_code(self) -> str:
-        assert self.post("/carriers/verify", mc="MC-138328")["status"] == "eligible"
-        assert self.post("/otp/send")["status"] == "sent"
-        return self.mailer.codes[-1]
-
-
-def rig(
-    carriers: list[dict[str, Any]] | None = None,
-    *,
-    fmcsa_status: int = 200,
-    fmcsa_delay: float = 0.0,
-    mail_fails: bool = False,
-    deadline: float = 12.0,
-    tms: Reachable | None = None,
-) -> Rig:
-    found = [ACTIVE] if carriers is None else carriers
-    fake = FakeFmcsa(found, status=fmcsa_status, delay=fmcsa_delay)
-    twin, mailer, clock = FakeTwin(), FakeMailer(fail=mail_fails), Clock()
-    calls = Calls(
-        twin=twin.twin(),
-        fmcsa=Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fake.reply)),
-        mailer=mailer,
-        code_secret=b"s" * 24,
-        cohort="real",
-        now=clock,
-    )
-    closed_port = TmsSettings(
-        host="127.0.0.1", port=9, token="t", read_budget_seconds=0.2, attempt_seconds=0.1
-    )
-    tms = tms or TmsClient(closed_port)
-    app = create_app(calls=calls, tms=tms, agent_key=AGENT, ops_key=OPS, deadline_seconds=deadline)
-    return Rig(TestClient(app), twin, mailer, clock, fake)
+from service.tests.rig import AGENT, OPS, RUN, START, rig
+from service.tests.test_carrier_policy import INACTIVE
 
 
 def test_every_route_needs_its_key_and_the_docs_are_off() -> None:

@@ -21,6 +21,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import TwinUnavailable
 from service.calls import Calls, Reply
+from service.selling import Sales
 
 VOICE_DEADLINE_SECONDS = 12.0
 MAX_BODY_BYTES = 16_384
@@ -52,9 +53,18 @@ class VerifyCode(Voice):
     code: str = Field(max_length=32)
 
 
+class FindLoads(Voice):
+    """Any term may be left out or blank, but at least one is needed."""
+
+    equipment: str | None = Field(default=None, max_length=32)
+    origin_state: str | None = Field(default=None, max_length=32)
+    dest_state: str | None = Field(default=None, max_length=32)
+
+
 def create_app(
     *,
     calls: Calls,
+    sales: Sales,
     tms: Reachable,
     agent_key: str,
     ops_key: str,
@@ -82,6 +92,11 @@ def create_app(
     @app.post("/otp/verify", dependencies=[agent])
     async def verify_code(body: VerifyCode) -> Reply:
         return await voice(calls.verify_code(body.run_id, body.code))
+
+    @app.post("/loads/search", dependencies=[agent])
+    async def find_loads(body: FindLoads) -> Reply:
+        terms = (body.equipment, body.origin_state, body.dest_state)
+        return await voice(sales.find_loads(body.run_id, *terms))
 
     @app.get("/health", dependencies=[either])
     async def health() -> Reply:

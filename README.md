@@ -57,4 +57,4 @@ make install
 make check
 ```
 
-`make check` runs lint, format, strict type checks and tests, and it is what CI runs. Secrets never enter this repository; `.env.example` lists the names.
+`make check` runs lint, format, strict type checks, tests and a 90% branch coverage gate, and it is what CI runs. Secrets never enter this repository; `.env.example` lists the names.

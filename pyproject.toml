@@ -25,3 +25,7 @@ testpaths = ["service/tests"]
 branch = true
 source = ["service"]
 omit = ["service/tests/*"]
+
+[tool.coverage.report]
+fail_under = 90
+show_missing = true

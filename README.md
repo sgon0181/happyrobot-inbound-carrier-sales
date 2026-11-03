@@ -33,7 +33,7 @@ Two rules shape the design: the model talks and the service decides, and only a 
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the system works. Start here. |
 | [docs/decisions.md](docs/decisions.md) | Every decision, its reason and its cost, plus open checks |
 | [docs/build-description.md](docs/build-description.md), [docs/qa-results.md](docs/qa-results.md) | The build description for the business and IT teams, and what was measured |
-| [docs/prospect-email.md](docs/prospect-email.md), [docs/demo-script.md](docs/demo-script.md) | Submission drafts: the email and the video run sheet |
+| [docs/submission.md](docs/submission.md) | What goes into each field of the submission form: the summary email and the reviewer notes |
 | [docs/lessons-from-prototype.md](docs/lessons-from-prototype.md) | What the prototype proved and what carries over |
 | [docs/onboarding.md](docs/onboarding.md) | Access, setup steps and current platform state |
 | [docs/assignment.md](docs/assignment.md) | Summary of the assignment and platform |

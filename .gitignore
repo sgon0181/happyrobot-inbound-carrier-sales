@@ -24,3 +24,6 @@ node_modules/
 
 # Downloaded learning materials and installer bundles
 REFERENCES/
+
+# Submission outputs built from the repository (the .zip and PDFs)
+submission/

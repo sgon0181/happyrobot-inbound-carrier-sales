@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { getPublicEnv } from "@/lib/env";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
-const { appName, appDescription } = getPublicEnv();
-const metadataTitle = appName || "HappyRobot Custom App";
-const metadataDescription =
-  appDescription || "Custom app built with HappyRobot.";
+const metadataTitle = "Carrier Sales";
+const metadataDescription = "Carrier sales operations: reservations, call activity and rep review.";
 
 export const metadata: Metadata = {
   title: metadataTitle,

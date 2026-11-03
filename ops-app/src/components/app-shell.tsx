@@ -20,12 +20,12 @@ export function AppShell({
     <TooltipProvider>
       <SidebarProvider>
         <AppSidebar />
-        <SidebarInset>
+        <SidebarInset className="min-w-0">
           <header className="sticky top-0 z-10 flex h-16 shrink-0 items-center gap-3 border-b bg-background px-4">
             <SidebarTrigger />
             <h1 className="text-base font-semibold">{title}</h1>
           </header>
-          <div className="flex flex-1 flex-col gap-6 p-6">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col gap-6 p-4 lg:p-6">{children}</div>
         </SidebarInset>
       </SidebarProvider>
       <Toaster />

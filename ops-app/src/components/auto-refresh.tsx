@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { IconRefresh } from "@tabler/icons-react";
 
 import { Button } from "@/components/ui/button";
+import { fmtTime } from "@/lib/format";
 
 const EVERY_MS = 15_000; // the service caches its snapshot for 5 seconds, so this costs little
 
@@ -22,8 +23,7 @@ export function AutoRefresh({ generatedAt }: { generatedAt: string | null }) {
     return () => window.clearInterval(timer);
   }, [paused, router]);
 
-  const at = generatedAt ? new Date(generatedAt) : null;
-  const shown = at && !Number.isNaN(at.getTime()) ? `Snapshot ${at.toISOString().slice(11, 19)} UTC` : "No snapshot";
+  const shown = generatedAt ? `Snapshot ${fmtTime(generatedAt)}` : "No snapshot";
   return (
     <div className="flex items-center gap-2 text-xs text-muted-foreground">
       <span>{shown}, {paused ? "auto-refresh paused" : "refreshing every 15 s"}</span>

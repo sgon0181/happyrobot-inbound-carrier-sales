@@ -1,8 +1,10 @@
 """Load search over HTTP: verified calls only, open loads only, our offer and never the ceiling."""
 
+import asyncio
 import json
 from typing import Any
 
+from service.bookings import Bookings
 from service.selling import _abandon, _settle
 from service.tests.fake_tms import make_load
 from service.tests.rig import RUN, START, Rig, rig
@@ -301,7 +303,8 @@ def test_a_repeated_ask_is_answered_within_todays_ceiling() -> None:
     assert r.row()["rounds"] == 1
 
 
-CLAIM = {"id": "a1", "load_id": "LD09001", "rate": 1850, "mc": "138328"}
+CLAIM_TERMS = {"rate": 1850, "mc": "138328"}
+CLAIM = {"id": "a1", "load_id": "LD09001", **CLAIM_TERMS}
 
 
 def stranded(r: Rig, *, booked: bool) -> None:
@@ -309,7 +312,13 @@ def stranded(r: Rig, *, booked: bool) -> None:
     version, data = r.twin.tables["calls"][RUN]
     r.twin.tables["calls"][RUN] = (version + 1, data | {"accepting": CLAIM})
     if booked:
-        booking = {"state": "RESERVED", "call_id": RUN, "rate": 1850, "mc": "138328"}
+        booking = {
+            "state": "RESERVED",
+            "call_id": RUN,
+            "claim_id": "a1",
+            "rate": 1850,
+            "mc": "138328",
+        }
         r.twin.tables["bookings"]["LD09001"] = (1, booking)
 
 
@@ -326,7 +335,37 @@ def test_a_claim_without_a_booking_is_dropped_and_priced_afresh() -> None:
     stranded(r, booked=False)
     r.board.records = [make_load(MAX_BUY="1800", RATE="1500")]
     assert counter(r, 1850)["status"] == "counter"  # 1850 is above today's cap
-    assert r.twin.tables["bookings"] == {} and r.row()["accepting"] is None
+    booking = r.twin.data("bookings", "LD09001")
+    assert (booking["state"], booking["void_claims"]) == ("UNCLAIMED", ["a1"])
+    assert r.row()["accepting"] is None
+
+
+def test_a_paused_first_request_cannot_reserve_after_its_claim_is_voided() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    stranded(r, booked=False)  # request A claimed LD09001 and paused before reserving
+    r.board.records = [make_load("LD09001", MAX_BUY="1800", RATE="1500"), make_load("LD09002")]
+    assert counter(r, 1850)["status"] == "counter"  # a retry voids A's claim
+    assert counter(r, 1800, "LD09002")["status"] == "agreed"  # then B is accepted
+    resumed = asyncio.run(
+        Bookings(r.twin.twin()).reserve(
+            "LD09001", claim_id="a1", call_id=RUN, mc="138328", rate=1850, cohort="real", now=START
+        )
+    )
+    assert resumed is None  # A resumes, and the booking row refuses it
+    held = [k for k, (_, row) in r.twin.tables["bookings"].items() if row["state"] == "RESERVED"]
+    assert held == ["LD09002"] and r.row()["agreement"]["load_id"] == "LD09002"
+
+
+def test_voiding_a_claim_that_already_reserved_returns_its_booking() -> None:
+    r = offered()
+    stranded(r, booked=True)
+    bookings = Bookings(r.twin.twin())
+    held = asyncio.run(bookings.void("LD09001", claim_id="a1", call_id=RUN, now=START))
+    assert held is not None and held["rate"] == 1850
+    assert asyncio.run(bookings.void("LD09009", claim_id="z", call_id=RUN, now=START)) is None
+    again = asyncio.run(bookings.void("LD09009", claim_id="z", call_id=RUN, now=START))
+    events: Any = r.twin.data("bookings", "LD09009")["events"]
+    assert again is None and len(events) == 1  # voided once
 
 
 def test_a_late_settlement_never_clears_a_newer_claim() -> None:

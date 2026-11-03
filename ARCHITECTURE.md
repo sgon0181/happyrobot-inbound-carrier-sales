@@ -385,6 +385,7 @@ stateDiagram-v2
 | `UNKNOWN` | The write may have landed and we cannot tell. | Yes | Reconcile |
 | `FAILED` | The TMS refused, or we can prove nothing was sent. | No | None |
 | `RELEASED` | The rep declined. Nothing was sent. | No | None |
+| `UNCLAIMED` | A retry voided a claim before it reserved, so that claim can never reserve. Nothing held or sent. | No | None |
 
 A later reservation on a freed load carries the earlier attempt's events forward, so no evidence is lost.
 

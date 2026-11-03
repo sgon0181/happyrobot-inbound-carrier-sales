@@ -94,16 +94,18 @@ class Sales:
         ceiling. Each answer is computed inside the call row's version-checked write, so
         concurrent requests cannot share a round. An acceptance is first claimed on the
         call row, which allows one per call; then the booking row decides who holds the
-        load (D-24). A claim left by an earlier attempt is resolved first: settled from
-        its booking row if one exists, otherwise dropped, so the counter is priced afresh.
+        load (D-24). A claim left by an earlier attempt is resolved first, through the
+        booking row: settled if it reserved, otherwise voided there and dropped, so its
+        first request can never reserve later and the counter is priced afresh.
         """
         data = await self.rows.read(run_id)
         early = _refusal(data, load_id)
         if early is not None:
             return await self.rows.step(run_id, "negotiate", answer(early["status"], early))
         claim = data["accepting"]
-        if claim is not None:
-            held = await self.bookings.held_by(load_id, run_id)
+        if claim is not None:  # voided on the booking row, so its first request cannot reserve
+            now = self.rows.now()
+            held = await self.bookings.void(load_id, claim_id=claim["id"], call_id=run_id, now=now)
             if held is not None:
                 return await self.rows.step(run_id, "negotiate", _settle(claim["id"], held))
             await self.rows.step(run_id, "negotiate", _abandon(claim["id"]))
@@ -118,6 +120,7 @@ class Sales:
             return reply
         held = await self.bookings.reserve(
             load_id,
+            claim_id=reply["id"],
             call_id=run_id,
             mc=reply["mc"],
             rate=reply["rate"],

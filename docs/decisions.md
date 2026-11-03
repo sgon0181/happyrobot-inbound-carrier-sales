@@ -90,6 +90,14 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **Why:** the owner would rather hand in code they stand behind than a prototype they never reviewed.
 - **Cost:** if slice 4 runs late there is no finished fallback, and the owner would bring in Codex to help finish.
 
+## Decisions made on 2026-11-04
+
+### D-34: Voice and App use explicit Central Time displays
+
+- **Why:** owner test calls read UTC clock values without a timezone, while the App displays America/Chicago. A date can change between those displays.
+- **How:** the service adds Central Time speech strings to its public allowlist, retaining the original ISO timestamps. Each string names CST or CDT; absent times remain null. The voice reads the supplied display rather than converting a timestamp itself.
+- **Limits:** this does not validate the TMS source timezone. UTC remains an adapter assumption. The service change must be deployed before publishing the voice draft that depends on these fields; neither release is authorized by this local implementation task.
+
 ## Earlier decisions
 
 | ID | Decision | Status |

@@ -17,6 +17,8 @@ PUBLIC = {
     "destination",
     "pickup_datetime",
     "delivery_datetime",
+    "pickup_time_display",
+    "delivery_time_display",
     "equipment_type",
     "miles",
     "weight",

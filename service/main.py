@@ -6,6 +6,7 @@ Run with `uvicorn --factory service.main:create`, so settings load at startup, n
 import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from zoneinfo import ZoneInfo
 
 from fastapi import FastAPI
 
@@ -45,6 +46,7 @@ def build(settings: Settings) -> FastAPI:
         pricing=settings.pricing,
         pricing_secret=settings.pricing_secret,
         blocked=settings.blocked_loads,
+        display_timezone=ZoneInfo("America/Chicago"),
     )
 
     @asynccontextmanager

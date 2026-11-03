@@ -342,6 +342,8 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 **Search** normalizes lane and equipment, then requires explicit `OPEN`, a future pickup and no active reservation. `LOAD_QUERY` also returns `PENDING` loads, so returned matches are checked locally. Loads on the [blocked list](service/policy/blocked-loads-v1.json) are never offered. Results are ranked by pickup time, and at most three are offered, one at a time. The agent reads notes as written. When nothing matches, the search is recorded on the call.
 
+**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. Missing times stay null. The voice prompt reads these supplied strings instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. This additive service change needs deployment before the corresponding voice draft is published.
+
 **Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. Luke did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
 
 **Pricing policy (D-4).** A versioned file, [`pricing-v1`](service/policy/pricing-v1.json), turns each load's posted rate and ceiling into three numbers, all rounded down to 25:

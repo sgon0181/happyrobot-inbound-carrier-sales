@@ -5,6 +5,7 @@ from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import httpx
 from fastapi.testclient import TestClient
@@ -182,6 +183,7 @@ def rig(
         pricing=PRICING,
         pricing_secret=b"p" * 24,
         blocked=BLOCKED,
+        display_timezone=ZoneInfo("America/Chicago"),
     )
     dashboard = Dashboard(rows.twin, live_booking=live_booking, now=clock)
     desk = RepActions(

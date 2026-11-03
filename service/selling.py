@@ -6,7 +6,7 @@ call's own row shows an eligible MC and a passed code (INV-2, INV-3).
 
 import asyncio
 from collections.abc import Awaitable
-from datetime import datetime
+from datetime import datetime, tzinfo
 from typing import Protocol
 
 from service.adapters.tms.client import TmsUnavailable
@@ -47,9 +47,11 @@ class Sales:
         pricing: PricingPolicy,
         pricing_secret: bytes,
         blocked: frozenset[str],
+        display_timezone: tzinfo,
     ) -> None:
         self.rows, self.board, self.bookings = rows, board, bookings
         self.pricing, self.pricing_secret, self.blocked = pricing, pricing_secret, blocked
+        self.display_timezone = display_timezone
 
     async def find_loads(
         self, run_id: str, equipment: str | None, origin_state: str | None, dest_state: str | None
@@ -78,7 +80,12 @@ class Sales:
             for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
                 kept = data["offers"].get(load.load_id, terms.opening)
                 data["offers"][load.load_id] = min(max(kept, terms.opening), terms.cap)
-            views = [public_view(load, data["offers"][load.load_id]) for load, _ in priced]
+            views = [
+                public_view(
+                    load, data["offers"][load.load_id], display_timezone=self.display_timezone
+                )
+                for load, _ in priced
+            ]
             return {"status": "found", "loads": views}  # its event keeps what was pitched
 
         return await self.rows.step(

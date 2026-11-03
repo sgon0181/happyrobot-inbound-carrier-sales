@@ -5,7 +5,7 @@ TMS search also returns PENDING loads, so each match is rechecked.
 
 import re
 from collections.abc import Iterable
-from datetime import datetime
+from datetime import datetime, tzinfo
 from typing import TypedDict
 
 from service.core.models import Load, LoadSummary, Place
@@ -51,7 +51,7 @@ def search_terms(
     return terms if any(terms.values()) else None
 
 
-def public_view(load: Load, offer: int) -> dict[str, object]:
+def public_view(load: Load, offer: int, *, display_timezone: tzinfo) -> dict[str, object]:
     """What the agent may say about a load, as an explicit allowlist (INV-2).
 
     max_rate and any field added later stay private by default. The posted rate is left
@@ -63,6 +63,8 @@ def public_view(load: Load, offer: int) -> dict[str, object]:
         "destination": _place(load.destination),
         "pickup_datetime": load.pickup_datetime and load.pickup_datetime.isoformat(),
         "delivery_datetime": load.delivery_datetime and load.delivery_datetime.isoformat(),
+        "pickup_time_display": _speech_time(load.pickup_datetime, display_timezone),
+        "delivery_time_display": _speech_time(load.delivery_datetime, display_timezone),
         "equipment_type": load.equipment_type,
         "miles": load.miles,
         "weight": load.weight,
@@ -72,6 +74,13 @@ def public_view(load: Load, offer: int) -> dict[str, object]:
         "notes": load.notes,
         "offer": offer,
     }
+
+
+def _speech_time(value: datetime | None, display_timezone: tzinfo) -> str | None:
+    """The App's Central Time policy; the adapter's source-UTC assumption still applies."""
+    if value is None:
+        return None
+    return value.astimezone(display_timezone).strftime("%B %d, %Y at %I:%M %p Central Time (%Z)")
 
 
 def is_offerable(load: LoadSummary, now: datetime, excluded: frozenset[str] = frozenset()) -> bool:

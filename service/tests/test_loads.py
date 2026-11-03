@@ -1,6 +1,9 @@
 """Load selection: only open, future, unblocked loads on the asked lane, earliest first."""
 
 from datetime import UTC, datetime, timedelta
+from zoneinfo import ZoneInfo
+
+import pytest
 
 from service.adapters.tms.mapping import to_load
 from service.core.loads import MAX_OFFERS, is_offerable, public_view, search_terms, select_offers
@@ -8,6 +11,7 @@ from service.core.models import LoadSummary, Place
 from service.tests.fake_tms import make_load
 
 NOW = datetime(2026, 11, 2, 12, tzinfo=UTC)
+CENTRAL = ZoneInfo("America/Chicago")
 
 
 def a_load(
@@ -82,8 +86,38 @@ def test_unreadable_or_missing_search_terms_are_refused() -> None:
 
 def test_the_public_view_is_an_allowlist_without_the_rates() -> None:
     load = to_load(make_load(MAX_BUY="2345", RATE="2000"))
-    view = public_view(load, 1900)
+    view = public_view(load, 1900, display_timezone=CENTRAL)
     assert view["offer"] == 1900
     assert (view["origin"], view["destination"]) == ("Dallas, TX", "Atlanta, GA")
     assert view["pickup_datetime"] == "2099-12-31T08:00:00+00:00"
     assert not {"max_rate", "loadboard_rate", "status"} & set(view)
+
+
+@pytest.mark.parametrize(
+    ("pickup", "display"),
+    [
+        ("20261115231400", "November 15, 2026 at 05:14 PM Central Time (CST)"),
+        ("20260715231400", "July 15, 2026 at 06:14 PM Central Time (CDT)"),
+        ("20261108050400", "November 07, 2026 at 11:04 PM Central Time (CST)"),
+        ("20261101063000", "November 01, 2026 at 01:30 AM Central Time (CDT)"),
+        ("20261101073000", "November 01, 2026 at 01:30 AM Central Time (CST)"),
+    ],
+)
+def test_voice_times_match_central_display_including_day_and_dst_changes(
+    pickup: str, display: str
+) -> None:
+    view = public_view(
+        to_load(make_load(PICKUP_DT=pickup, DELIVERY_DT=pickup)), 1900, display_timezone=CENTRAL
+    )
+    assert view["pickup_time_display"] == display
+    assert view["delivery_time_display"] == display
+    assert str(view["pickup_datetime"]).endswith("+00:00")  # source instant is retained
+    assert not {"max_rate", "loadboard_rate"} & set(view)
+
+
+def test_missing_load_times_have_no_invented_speech_time() -> None:
+    view = public_view(
+        to_load(make_load(PICKUP_DT="", DELIVERY_DT="")), 1900, display_timezone=CENTRAL
+    )
+    assert view["pickup_time_display"] is None
+    assert view["delivery_time_display"] is None

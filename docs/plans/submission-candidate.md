@@ -64,6 +64,6 @@ The table above is retained as the before-implementation mapping, not today's op
 | Layered QA and reproducible inputs | Existing seed 7/11 checks documented rather than rebuilt; 438 service tests, nine HTTP journeys, six current checkpoints and two native full text runs kept separate from owner voice evidence. Historical failures/reruns retained; Version 3 table corrected 50/54 |
 | KPI definitions and claims | Complete locally, including missing data, clocks, reservations versus handoffs and approvals versus pending/final booking. No exact voice latency, profit, capacity or legal identity claim |
 | Handover and five tailored steps | Compliance, email, business/IT description/PDF, links, access instructions and five-minute outline ready for review. Video, reviewer access, releases and submission remain owner actions |
-| Optional A to C | Separate value/placement analysis follows R6. No implementation authorized |
+| Optional A to C | Value/placement analysis completed in optional-improvements.md after R6. No implementation authorized |
 
 Full state and approval checklist: docs/submission.md. Failure/coverage limits: docs/qa-results.md. The baseline's randomized-check item is resolved by existing seeded tests, not new random-call claims. The exact call-start KPI replacement is superseded by the honest tool-to-offer metric until a trusted start timestamp exists. The native AI summary assumption is superseded by structured activity plus explicit missing notes.

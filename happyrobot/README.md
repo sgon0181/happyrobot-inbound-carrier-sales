@@ -8,6 +8,7 @@ Inbound Carrier Sales lives in the HappyRobot workspace, workflow 01a18119-67a1-
 | [prompt-v4.md](prompt-v4.md) | Exact unpublished Version 4 continuation candidate |
 | [qa-evals.json](qa-evals.json) | Historical 22 checkpoint definitions and as-run fixtures, not current-contract fixtures |
 | [e7-candidate.json](e7-candidate.json), [e7-results.json](e7-results.json) | Six current candidate checkpoints, locks and 18/18 results |
+| [qa-v4-full.json](qa-v4-full.json), [qa-v4-results.json](qa-v4-results.json) | Current full 22 suite, corrected contract fixtures, 66 pinned Version 4 runs: 58 pass, 8 fail, with failure observations |
 | [simulations.json](simulations.json) | Two fully mocked full-workflow text simulations, criteria, setup error and manual limits |
 
 Results and failures are in [QA results](../docs/qa-results.md). The workflow has a web-call trigger, an inbound voice agent and six tools. Version 4 adds an end-report webhook after the agent, including calls with no earlier tool. This is not a guaranteed post-call summary or universal hangup capture. Publication requires owner approval after service deployment.

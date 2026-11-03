@@ -67,3 +67,7 @@ The table above is retained as the before-implementation mapping, not today's op
 | Optional A to C | Value/placement analysis completed in optional-improvements.md after R6. No implementation authorized |
 
 Full state and approval checklist: docs/submission.md. Failure/coverage limits: docs/qa-results.md. The baseline's randomized-check item is resolved by existing seeded tests, not new random-call claims. The exact call-start KPI replacement is superseded by the honest tool-to-offer metric until a trusted start timestamp exists. The native AI summary assumption is superseded by structured activity plus explicit missing notes.
+
+## Owner-requested full Version 4 rerun
+
+The later full 22 suite has 58/66 passing runs (three per case), with 18/22 cases passing every run. Reopen S6 wrong-name recovery and E1/E2 closing-note paths for conversation work before release. S5 has a narrower explicit-load-ID omission. E7 and all adversarial cases pass 3/3, but the full suite does not pass. Historical results and the new batch remain separate; no prompt fix or publication was made. The current evidence is in happyrobot/qa-v4-full.json and qa-v4-results.json, with findings in docs/qa-results.md.

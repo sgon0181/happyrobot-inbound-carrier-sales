@@ -12,7 +12,7 @@ from typing import Protocol
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import Data
 from service.bookings import Bookings
-from service.calls import CallRows, Decide, Reply, answer, is_verified, set_outcome
+from service.calls import CallRows, Decide, Reply, Unchanged, answer, is_verified, set_outcome
 from service.core.loads import Search, public_view, search_terms, select_offers
 from service.core.models import Load, LoadSummary
 from service.core.money import parse_ask
@@ -129,9 +129,10 @@ class Sales:
     async def close(self, run_id: str, summary: str | None) -> Reply:
         """Record that the call ended. A repeat changes nothing, so the first close stands."""
 
-        def decide(data: Data, now: datetime) -> Reply:
-            if data["closed_at"] is None:
-                data["closed_at"], data["summary"] = now.isoformat(), summary
+        def decide(data: Data, now: datetime) -> Reply | Unchanged:
+            if data["closed_at"] is not None:
+                return Unchanged({"status": "closed"})
+            data["closed_at"], data["summary"] = now.isoformat(), summary
             return {"status": "closed"}
 
         return await self.rows.step(run_id, "close", decide)
@@ -175,7 +176,7 @@ class Sales:
 def _searched(search: Search, decide: Decide) -> Decide:
     """Record what was asked, but only on a call that is still verified when it is written."""
 
-    def guarded(data: Data, now: datetime) -> Reply:
+    def guarded(data: Data, now: datetime) -> Reply | Unchanged:
         if not is_verified(data):
             return {"status": "not_verified"}
         data["search"] = dict(search)

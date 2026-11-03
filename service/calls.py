@@ -7,6 +7,7 @@ request leaves an event on the row in the same write as its change (INV-9).
 
 import copy
 from collections.abc import Callable
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
@@ -17,8 +18,17 @@ from service.core import codes
 from service.core.carrier_policy import assess, normalize_mc
 
 Reply = dict[str, Any]
+
+
+@dataclass(frozen=True)
+class Unchanged:
+    """A decision's reply when nothing happened, so the row is not written at all."""
+
+    reply: Reply
+
+
 FAILED = "negotiation_failed"  # terminal: no route may clear it
-Decide = Callable[[Data, datetime], Reply]
+Decide = Callable[[Data, datetime], Reply | Unchanged]
 
 
 class Mailer(Protocol):
@@ -47,9 +57,11 @@ class CallRows:
         """
         now = self.now()
 
-        def edit(current: Data | None) -> tuple[Data, Reply]:
+        def edit(current: Data | None) -> tuple[Data | None, Reply]:
             data = _complete(current, self.cohort, now)
             reply = decide(data, now)
+            if isinstance(reply, Unchanged):
+                return None, reply.reply
             if (current or {}).get("outcome") == FAILED:  # a failed negotiation stays failed
                 data["outcome"] = FAILED
             data["last_activity"] = now.isoformat()

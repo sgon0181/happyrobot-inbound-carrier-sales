@@ -334,7 +334,7 @@ def test_a_late_settlement_never_clears_a_newer_claim() -> None:
     data: dict[str, Any] = {"accepting": newer, "offers": {}}
     assert _settle("a1", None)(data, START) == {"status": "superseded"}
     assert data["accepting"] == newer
-    assert _abandon("a1")(data, START)["status"] == "claim_dropped"
+    assert _abandon("a1")(data, START) == {"status": "claim_dropped"}
     assert data["accepting"] == newer
 
 
@@ -381,11 +381,12 @@ def test_close_records_the_end_once_and_a_repeat_changes_nothing() -> None:
     r = offered()
     counter(r, 1850)
     assert r.post("/calls/close", summary="Agreed LD09001 at 1850.")["status"] == "closed"
-    first = r.row()["closed_at"]
+    before = r.twin.tables["calls"][RUN]
     r.clock.now = r.clock.now.replace(hour=13)
     assert r.post("/calls/close", summary="other")["status"] == "closed"
+    assert r.twin.tables["calls"][RUN] == before  # same version, events and activity time
     row = r.row()
-    assert (row["closed_at"], row["summary"]) == (first, "Agreed LD09001 at 1850.")
+    assert row["summary"] == "Agreed LD09001 at 1850."
     assert row["agreement"]["rate"] == 1850  # closing never touches the reservation
 
 

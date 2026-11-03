@@ -1,7 +1,11 @@
-.PHONY: install check lint types test audit run secrets deploy
+.PHONY: install hooks check lint types test audit run secrets deploy
 
 install:
 	pip install -r requirements-dev.txt
+
+# Run make check before every commit, as CI does on every push.
+hooks:
+	git config core.hooksPath .githooks
 
 check: lint types test
 

@@ -52,10 +52,11 @@ Requires Python 3.12.
 python3.12 -m venv .venv
 source .venv/bin/activate
 make install
+make hooks
 ```
 
 ```bash
 make check
 ```
 
-`make check` runs lint, format, strict type checks, tests, a 90% overall coverage floor and a 90% branch coverage gate on the business rules, and it is what CI runs. Secrets never enter this repository; `.env.example` lists the names.
+`make check` runs lint, format, strict type checks, tests, a 90% overall coverage floor and a 90% branch coverage gate on the business rules, and it is what CI runs. `make hooks` makes git run it before every commit, so a failing commit is refused locally too. Secrets never enter this repository; `.env.example` lists the names.

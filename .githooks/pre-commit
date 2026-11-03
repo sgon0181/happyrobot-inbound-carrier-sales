@@ -1,0 +1,11 @@
+#!/bin/sh
+# Refuse a commit that fails make check, the same gate CI runs on every push.
+# Install once per clone with `make hooks`. Skip only knowingly: git commit --no-verify.
+[ -f .venv/bin/activate ] && . .venv/bin/activate
+make check >/tmp/make-check-$$.log 2>&1 || {
+    tail -30 /tmp/make-check-$$.log
+    echo "pre-commit: make check failed, commit refused."
+    rm -f /tmp/make-check-$$.log
+    exit 1
+}
+rm -f /tmp/make-check-$$.log

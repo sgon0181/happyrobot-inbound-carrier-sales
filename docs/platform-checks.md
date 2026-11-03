@@ -81,4 +81,4 @@ Before this experiment, a first harness ran 60 offline tests, live TMS reads, th
 
 ## Lab resources
 
-These remain for owner review: Fly app `codex-e2e-lab-sg-20261031` (no machines), Twin table `public.codex_lab_20261031_state` with labelled synthetic records, Apps app `codex-lab-carrier-sales-v24`, and the `[CODEX LAB ONLY]` deployment key. All three lab workflows are unpublished. None of these is the production workflow or app.
+These lab resources remain for owner review: Fly app `codex-e2e-lab-sg-20261031` (no machines), Twin table `public.codex_lab_20261031_state` with labelled synthetic records, and the labelled lab deployment key. All three original lab workflows are unpublished. The prototype workflow (`yhcdrf4kne4j`) and Handoff speech check (`uowlgrnsmx1s`) were also unpublished on 2026-11-04. The existing App slug `codex-lab-carrier-sales-v24` was reused for production; it is now Carrier Sales, Build 18, and is not a disposable lab App.

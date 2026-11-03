@@ -2,7 +2,7 @@
 
 Audience: the brokerage's business team, with enough evidence for IT review. Use the customer's repetitive call handling, consistent pricing and reviewable deals as the narrative. Harsha's example is inspiration for clarity, not an architecture to copy.
 
-Record after the reviewed service, Version 4 and App are approved, published and checked. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
+Record the reviewed release: service 16 from `8b0e483`, live workflow Version 5 and Carrier Sales App Build 18. Complete the owner voice checklist before recording. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
 
 | Time | Show | Say accurately |
 |---|---|---|

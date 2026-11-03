@@ -34,4 +34,4 @@ Each action posts the booking version the rep saw ([D-31](../docs/decisions.md))
 
 ## Checks
 
-Use Node 22 and `npm ci`, then `npm run build` (which generates `next-env.d.ts`) and `npm run typecheck`. Both pass in a `node:22` container on 2026-11-03, and `npm audit --omit=dev` finds no vulnerabilities. The template's lint configuration has a known circular failure, carried over from the prototype.
+Use Node 22 and `npm ci --include=dev`, then lint, production build, typecheck and `npm test`. The released source at `8b0e483` passes all 35 tests and those checks, with three existing lint warnings. The most recent production dependency audit reported zero vulnerabilities. Carrier Sales Build 18 was published and visually checked on 2026-11-04; see [QA results](../docs/qa-results.md).

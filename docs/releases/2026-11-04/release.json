@@ -1,0 +1,120 @@
+{
+  "recorded_date_sydney": "2026-11-04",
+  "project_source_commit": "8b0e4831fd69acf4072a82f232e2899624e1dcef",
+  "service": {
+    "fly_release": 16,
+    "app": "happyrobot-carrier-sales-sg",
+    "machine": "185d26da3644d8",
+    "healthy_and_missing_key_401": "Reported by Claude in owner-approved release handover",
+    "live_booking": false,
+    "call_cohort": "synthetic",
+    "changed_by_this_task": false
+  },
+  "workflow": {
+    "version": 5,
+    "slug": "zad4fuknryd8",
+    "id": "01a1a34d-6974-734a-8375-e4740d5807cd",
+    "prompt_sha256": "db0ae5ad27f4682296471a335e432f747da53727534e4ebc8f9769656da5ecae",
+    "production_live": "Read back through HappyRobot MCP during this task",
+    "published_by_this_task": false
+  },
+  "app": {
+    "name": "Carrier Sales",
+    "build": 18,
+    "slug": "codex-lab-carrier-sales-v24",
+    "url": "https://carrier-sales-santiago.happyrobot.dev",
+    "import_commit": "13f7dc1687188ee085c1a2cfa67ab20d9fe3ae35",
+    "managed_production_commit": "e96e1c31e8c93c7ac471d1060d2c1e631e5568c4",
+    "managed_production_commit_url": "https://github.com/happyrobot-custom-apps/codex-lab-carrier-sales-v24/commit/e96e1c31e8c93c7ac471d1060d2c1e631e5568c4",
+    "source_default_service_url": "https://happyrobot-carrier-sales-sg.fly.dev",
+    "publication_method": "Existing Apps sandbox, reviewed exact-file import, native Production control; no Tech-Challenge git push",
+    "source_files_verified": 72,
+    "extra_preserved_tracked_file": ".env.example (platform template, not inspected or changed)",
+    "source_archive_sha256": "89447ca05c72461b030ce8ab1896913c668cda90257f5e287d7581ab370b7667"
+  },
+  "frontend_validation": {
+    "node": "22.23.4",
+    "npm": "10.9.9",
+    "npm_ci_include_dev": "passed in clean temporary copy and in App directory after exact import commit",
+    "lint": {
+      "errors": 0,
+      "warnings": 3
+    },
+    "build": "passed (Next.js 16.4.4)",
+    "typecheck": "passed",
+    "tests": {
+      "passed": 35,
+      "failed": 0
+    },
+    "manifest_checks": "72 matched, zero mismatched in ZIP, temporary copy, committed App source and working tree after checks",
+    "setup_issue": "First App-directory npm ci encountered a sandbox reset to the old lockfile. Exact source passed in a clean copy; committing the exact import stopped the reset, and every check then passed in the App directory. No dependency regeneration."
+  },
+  "visual": {
+    "viewport_css": [
+      1280,
+      900
+    ],
+    "page_scroll_width": 1280,
+    "lab_branding_in_product": false,
+    "booking_send_mode": "off",
+    "confirm_buttons": {
+      "count": 1,
+      "disabled": 1,
+      "clicked": 0
+    },
+    "ld01080": "Sent, TMS pending; awaits finalization. Detail says Acknowledged, pending, reference J410C24QELD2D7P0. No final booking claim.",
+    "cleanup_history": "All six earlier test rows show Rep declined / RELEASED on 2026-11-03 15:12 CT (2026-11-04 Sydney).",
+    "current_test_states": {
+      "RELEASED": [
+        "LD01120",
+        "LD01093",
+        "LD01089",
+        "LD01121",
+        "LD01088"
+      ],
+      "RESERVED": [
+        "LD01100"
+      ]
+    },
+    "ld01100": "A later synthetic call f00eaae5-5c64-4dc9-8ec8-93007e1e4d5a reserved the released row again at 2026-11-03 16:13 CT. Prior decline preserved; current reservation untouched.",
+    "manual_refresh": {
+      "before": "Snapshot 2026-11-03 16:15 CT, auto-refresh paused",
+      "after": "Snapshot 2026-11-03 16:17 CT, auto-refresh paused"
+    },
+    "layout": "Rep tables fit the demo width. Long tables have contained scrolling; wider call logs require horizontal scrolling to reach all columns. No page-level horizontal overflow.",
+    "limits": "No live Confirm, Decline or Reconcile clicked. No new booking or recovery fault injected. Receipt recovery is component-tested. Human voice acceptance and reviewer-account access remain open."
+  },
+  "screenshots": [
+    {
+      "file": "app18-build.jpg",
+      "width": 1344,
+      "height": 80,
+      "sha256": "a21930f2914f8f7fef928cfcf86811c1e8500eb8d1f5bf355eed5b9491191bf8"
+    },
+    {
+      "file": "app18-overview.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "db916d6c39d0541518700eb628e0ec5bce0eecadd72fe254e94536b8f9f30655"
+    },
+    {
+      "file": "app18-pending.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "cbffa9b9ca1b70446d123adf38df3f124fb5122330b63e05dcd1e482994d4e11"
+    },
+    {
+      "file": "app18-released.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "ad898f26ba2384ff6acff3306d02189286d8c50b9dfb646c3c0b3723375ab922"
+    },
+    {
+      "file": "app18-reservation.jpg",
+      "width": 1280,
+      "height": 900,
+      "sha256": "70922e6b1cf7d7d5dc1d693f45ba0fd326661aeafa8c9e5626bb1e362ca2620e"
+    }
+  ],
+  "credentials": "No credential values read, printed or changed; OPS_API_KEY remains server-side."
+}

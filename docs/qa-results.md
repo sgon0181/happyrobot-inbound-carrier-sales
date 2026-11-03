@@ -1,19 +1,19 @@
 # QA results
 
-Updated on 2026-11-04 (Sydney). Current local service and App measurements are separate from historical deployed observations. Version 4 has been live since 2026-11-04 with the prompt tested in "Version 4 closing and wait fixes". App Build 17 does not yet include the local App changes. No new live booking was sent for this package.
+Updated on 2026-11-04 (Sydney). Workflow Version 5 (`zad4fuknryd8`), Fly release 16 from `8b0e483`, and Carrier Sales App Build 18 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below; current-version human voice acceptance remains open. No new live booking was sent.
 
-## Current candidate summary
+## Released candidate summary
 
 | Layer | Result | Boundary |
 |---|---|---|
 | Automated service | 451 tests; 1641 statements and 404 branches, all covered; business gate 254/254 | Offline, fake integrations and loopback fault servers |
 | Generated inputs | 20,000 pricing inputs (seed 7), 5,000 negotiation setups (seed 11) | Inputs, not calls; unpriceable setups are skipped |
 | Version 4 full checkpoint suite | Fixed prompt: 44/44 (22 definitions, 2 runs each) plus E5 6/6. Earlier prompt text: 58/66, then 39/44 and 43/44 during fixes | All six actions locked. Every batch and failure retained below |
-| Final draft Version 5 checkpoints | 46/46 (23 definitions, 2 runs each), including E11 carrier change after agreement | Exactly one prompt line added; all six actions locked; unpublished |
+| Live Version 5 checkpoints | 46/46 (23 definitions, 2 runs each), including E11 carrier change after agreement | Exactly one prompt line added; six actions locked; tested as draft and subsequently published with owner approval |
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
 | Native full text simulations | Standard agreement: both criteria passed. Pressure: gate passed, deal criterion not applicable | Two executions completed; pressure ended by idle timeout with no close_call. Setup error retained |
-| Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 4 voice checklist is still open |
-| Frontend | 35 tests, lint, typecheck and production build pass; production dependency audit 0 | Node 22 container. Three existing lint warnings; published visual review pending |
+| Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 5 human voice checklist remains open |
+| Frontend | 35 tests, lint, typecheck and production build pass; production dependency audit 0 | Carrier Sales Build 18 published and checked at 1280x900; three existing lint warnings |
 
 Historical Version 2 checkpoints were 16/19 first-round cases passing, with failures retained below. The retained Version 3 round table totals 50/54 across prompt edits, not 51/54 and not a single immutable snapshot. Do not add these layers into a combined call count.
 
@@ -23,13 +23,13 @@ Historical Version 2 checkpoints were 16/19 first-round cases passing, with fail
 
 The 451 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
 
-Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These changes are not deployed. The owner approved the `carrier_locked` reply contract. Its voice handling is now implemented and tested in the unpublished Version 5 draft below; publication and service deployment still need approval. The historical 44/44 result does not cover the new branch.
+Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These fixes are deployed in service release 16. The owner-approved `carrier_locked` voice contract is implemented in live Version 5, which was tested as the draft recorded below. The historical 44/44 result does not cover the new branch.
 
 The TMS client is tested against loopback TCP fault servers for silence, partial replies, framing, oversized lines, split chunks and delayed closes. The six stored booking replies in [the fixtures](tms/fixtures/README.md) parse to the state each proves. No fixture test sends a live booking.
 
 Frontend commands in a clean temporary copy, with no .env: `npm ci --include=dev`, `npm run lint`, `npm run build`, `npm run typecheck`, `npm test`, `npm audit --omit=dev`. These run in `node:22` because local Node is broken. Lint reports three existing warnings (two template image elements and an unused destructured field). React's test renderer is a dev-only deprecated dependency. Production audit reports zero vulnerabilities; the full development dependency audit reports 21 (2 low, 19 moderate), no high or critical.
 
-The 22 new rep-feedback cases click the actual component handler with mocked HTTP replies. Fifteen reproduced misleading feedback before the change; seven preserve existing branches. Messages distinguish no send, TMS refusal, unknown outcome, pending acknowledgement and final confirmation. Receipt-save failures remain errors even after `BOOKED`, preserve the returned evidence, and show the recovery copy. Failed preflight checks and local release never assert external load availability. Version forwarding, refresh, disabled sends and existing recovery tests pass. Production TypeScript/TSX under `ops-app/src` totals 4089 physical lines, including the 138-line rep-actions module. No service reply field changed. This App change is local and has not received a published visual review.
+The 22 new rep-feedback cases click the actual component handler with mocked HTTP replies. Fifteen reproduced misleading feedback before the change; seven preserve existing branches. Messages distinguish no send, TMS refusal, unknown outcome, pending acknowledgement and final confirmation. Receipt-save failures remain errors even after `BOOKED`, preserve the returned evidence, and show the recovery copy. Failed preflight checks and local release never assert external load availability. Version forwarding, refresh, disabled sends and existing recovery tests pass. Production TypeScript/TSX under `ops-app/src` totals 4089 physical lines, including the 138-line rep-actions module. No service reply field changed. This App change is now published in Build 18; read-only visual findings are recorded below.
 
 ## Historical deployed observations
 
@@ -121,7 +121,7 @@ The last prompt edit only changed the no-match and load-gone lines, and only E4 
 
 **At the end of Round 3, E7 remained open.** After `load_gone` the agent sometimes closes the call without telling the caller the load was taken. It never claims a booking, and nothing is reserved, so the service stays correct; the cost is a confused caller and a lost chance to pitch another load. Rewording has not fixed it reliably. The later Version 4 continuation candidate and its bounded checkpoint results are recorded below.
 
-**Not covered here.** These evals grade one decision with mocked tools. Speech recognition, interruptions, timing and the opening line itself need real voice calls, which the owner runs on the tested version before it is published. This paragraph described the pre-publication test stage. The owner subsequently published Version 3; Version 4 is the current unpublished candidate.
+**Not covered here.** These evals grade one decision with mocked tools. Speech recognition, interruptions, timing and the opening line itself need real voice calls. This paragraph described an earlier pre-publication stage: Version 3 was subsequently published and Version 4 became its follow-up candidate. Version 5 is now live; its human voice acceptance remains open, as recorded in the release section below.
 
 ## R3 candidate verification (local, after b0d9cf5)
 
@@ -163,7 +163,7 @@ The native Passed label does not establish overall success. The pressure run sta
 
 Owner run8167bb06-9155-4c35-9903-3155a6f7b49c on live Version 3 had a 142-second inbound voice session. Platform transcript and tool outputs show SHALOM TRANS LLC confirmed before code delivery, code passed, two no-match searches, a step-deck match, acceptance at1225 through negotiate, mocked senior-rep handoff, caller goodbye and close_call before a courteous farewell. This is one owner test, not an additional real-cohort production outcome. The reviewer read the transcript and metadata, not the recording audio. No expected live code is reproduced.
 
-The owner's earlier Version 2 misheard-MC and silent-opening failures remain part of the evidence, not erased by the later run. Version 4 human acceptance still needs prompt greeting, MC correction, interruption/resumption, vague amount clarification, E7 continuation and professional failed close. The pressure simulation's idle timeout is disclosed rather than treated as proof of closing reliability. The exact deployed candidate and live workflow must be recorded with those tests.
+The owner's earlier Version 2 misheard-MC and silent-opening failures remain part of the evidence, not erased by the later run. The human checks carried forward to live Version 5 still need prompt greeting, MC correction, interruption/resumption, vague amount clarification, E7 continuation and professional failed close. The pressure simulation's idle timeout is disclosed rather than treated as proof of closing reliability. The exact deployed candidate and live workflow must be recorded with those tests.
 
 [The layered QA package](qa-package.md) supplies the scenario matrix and owner checklist. Exact voice-start-to-spoken-offer latency and production capacity remain unproven. Calls that reach neither a service action nor a successful end callback remain unrecorded. No model-graded or randomized result is called a proof.
 
@@ -208,7 +208,7 @@ Standard cases: 16/18. Edge cases: 24/30. Adversarial cases: 18/18. Do not pool 
 
 **Fixture and criterion corrections before the batch.** Historical qa-evals.json remains untouched. The separate current suite converts object lanes to actual public_view strings, adds missing round 2 history to E5 and round 2/final-round 3 history to E6, uses the current E7 message/consent contract, makes A5's repeat return its existing agreement, and explicitly rejects fabricated-code calls in A2 to A4. Terminal E1/E2/E10 criteria now require the prompt's close_call step; E4 must wait for a lane choice. Those stricter criteria expose omissions the historical summaries did not check. This is the same 22 scenario intents with current-contract fixtures, not a byte-identical score comparison to Version 3.
 
-The suite lives in the native folder QA Version 4 full 22, contract fixtures. One initial folder-creation transport error was resolved by reading back state before retrying; no eval launch was ambiguous or retried. The prompt, service and application behavior were not changed for this rerun. The next conversation work is S6 MC recovery and explicit closing paths; keep the 8 failed grades and this batch unchanged when checking a future fix. Version 4 remains unpublished, and human voice acceptance remains open.
+The suite lives in the native folder QA Version 4 full 22, contract fixtures. One initial folder-creation transport error was resolved by reading back state before retrying; no eval launch was ambiguous or retried. The prompt, service and application behavior were not changed for this rerun. At that point, S6 MC recovery and explicit closing paths needed fixes, and Version 4 was unpublished. The 8 failed grades and this batch remain unchanged; later fixes and publication are recorded below. Current-version human voice acceptance remains open.
 
 ## Version 4 closing and wait fixes
 
@@ -226,7 +226,7 @@ The Version 4 fixed prompt SHA-256 is `9fa44a8724373e6909009b027b4668e3a7caefb41
 
 **What this shows.** On the fixed text, all 22 checkpoints pass every repetition, including the three that failed in the 58/66 batch (S6 MC recovery, E1/E2 closing). A premature close after a final offer never claimed a deal; its effect would have been an early closing note, since the first close_call stands. These remain locked single-turn model grades on gpt-5.6-luna; they do not exercise speech, interruptions or the end callback. Version 4 voice acceptance stays open.
 
-## Final carrier-lock prompt, unpublished Version 5
+## Final carrier-lock prompt, Version 5 draft checkpoint batch
 
 On 2026-11-04 Sydney, forked live Version 4 into one editable draft, Version 5 (`zad4fuknryd8`, UUID `01a1a34d-6974-734a-8375-e4740d5807cd`). [Open the draft](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zad4fuknryd8). The only prompt edit adds the owner-approved `carrier_locked` branch immediately after `eligible`. Removing exactly that line reproduces the live Version 4 bytes and baseline hash. The opening line and gpt-5.6-luna model are unchanged. Readbacks after the runs confirmed the prompt did not change, Version 4 remained live, and Version 5 remained unpublished.
 
@@ -264,6 +264,27 @@ Ran all 23 checkpoints twice, from 2026-11-03 21:26:50 to 21:28:24 UTC: **46/46 
 
 [Saved evidence](../happyrobot/qa-final-prompt.json) contains the exact prompt, hashes, current native expectations and locks, new full fixture, all 46 execution IDs and native grades, and post-run checks. The MCP get view does not expose existing native message histories or expected-tool-call arrays; those 22 resources were run unchanged, with historical conversation fixtures retained in qa-v4-full.json. Generated continuation traces were not independently retrieved, so tool-behavior statements above are native judge findings, not a separate manual trace audit. The create API accepted but did not apply the folder field; a folder-only update filed the same new case after execution without changing test content, expectations or locks.
 
-These are model-graded checkpoints, not human voice, interruption, live integration, end-callback or reliability evidence. Human voice acceptance remains open. The `send_code` superseded reply still has no explicit prompt branch, intentionally unchanged under the approved single-line scope. No publish, push, deployment, secret change or LOAD_BOOK occurred.
+These are model-graded checkpoints, not human voice, interruption, live integration, end-callback or reliability evidence. Human voice acceptance remains open. The `send_code` superseded reply still has no explicit prompt branch, intentionally unchanged under the approved single-line scope. No publish, push, deployment, secret change or LOAD_BOOK occurred during this checkpoint task. The later owner-approved release is recorded below.
 
 Local validation: make check passes 451 tests, actual 100% of 1641 statements and 404 branches, business branches 254/254. Radon remains B or better; production Python is unchanged at 2896 physical lines, modules at most 287 lines and functions at most 50. Frontend production TypeScript/TSX remains 4089 lines. No production service or App code changed in this task.
+
+## Owner-approved release and published App check, 2026-11-04
+
+Claude pushed reviewed source `8b0e483`, published workflow Version 5 (`zad4fuknryd8`) in place of Version 4, and deployed Fly release 16. The release handover reports machine `185d26da3644d8` healthy, snapshot reads successful and missing-key `/calls/ended` returning 401. Codex independently read back Version 5 as production live. No Fly deployment, workflow publication, secret change or cohort flip was performed by Codex in this App task. Sends remain off and the cohort remains synthetic.
+
+Codex renamed the existing App to **Carrier Sales** and published **Build 18** at [the existing alias](https://carrier-sales-santiago.happyrobot.dev). A ZIP of all 72 tracked `ops-app/` files from `8b0e483` was checked against a SHA-256 manifest, imported exactly and verified in both the sandbox commit and working files. The App import commit is `13f7dc1687188ee085c1a2cfa67ab20d9fe3ae35`; the native production publication is `e96e1c31e8c93c7ac471d1060d2c1e631e5568c4`. The platform environment template was preserved; no credential values were inspected. Old source ZIPs were moved outside the App repository and removed from its tracked source. The service URL default remains `https://happyrobot-carrier-sales-sg.fly.dev`.
+
+On Node 22.23.4, npm 10.9.9, clean install, lint, build, typecheck and all 35 tests passed in a clean copy and again in the App directory after the exact import commit. Both copies still matched all 72 hashes after checks. Lint retained three known warnings. The initial App-directory install failed when the sandbox reset the lockfile to an old commit; the exact supplied source passed unchanged in the clean copy, and committing it stopped that reset. No dependency regeneration was used to hide the setup failure.
+
+| Published check | Observed result |
+|---|---|
+| Product identity | Page title, heading and navigation say Carrier Sales; no lab branding in the product |
+| Booking send mode | Booking sends off; the actual Confirm button on LD01100 is disabled. It was not clicked |
+| LD01080 | Sent, TMS pending; next action awaits finalization. The section says PENDING is an acknowledgement, never a confirmation; details say Acknowledged, pending, with the historical reference and 97-byte receipt evidence |
+| Earlier test cleanup | All six rows retain Rep declined / RELEASED at 2026-11-03 15:12 CT, which is 2026-11-04 Sydney |
+| Current test states | Five remain Released: LD01120, LD01093, LD01089, LD01121 and LD01088. LD01100 was reserved again at 16:13 CT by synthetic call f00eaae5-5c64-4dc9-8ec8-93007e1e4d5a; its old decline is preserved. This new reservation was left untouched |
+| Manual refresh | With auto-refresh paused, Refresh advanced the displayed snapshot from 16:15 to 16:17 CT. This is a functional observation, not a latency benchmark |
+| Demo layout | Verified CSS viewport 1280x900 and document width 1280. Rep tables fit their cards. Long tables use contained vertical scrolling, and wider call logs require internal horizontal scrolling to reach every column |
+| Boundaries | No live Confirm, Decline or Reconcile was clicked, and no LOAD_BOOK was sent. Live receipt-recovery faults were not injected; recovery remains component-tested. Current-version voice acceptance and reviewer-account access remain open |
+
+[Screenshots and provenance](releases/2026-11-04/README.md) contain the Build 18 header, overview, pending receipt, disabled Confirm with retained decline history, and released-row continuation. The test-time `qa-final-prompt.json` remains unchanged, including its then-unpublished state. Production Python remains 2896 physical lines and App TypeScript/TSX remains 4089; this release record changes documentation and evidence only.

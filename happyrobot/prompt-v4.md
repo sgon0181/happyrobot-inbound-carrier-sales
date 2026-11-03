@@ -1,12 +1,12 @@
-# Final prompt candidate, Version 5
+# Live prompt, Version 5
 
-Unpublished draft `zad4fuknryd8`, version UUID `01a1a34d-6974-734a-8375-e4740d5807cd`, forked from live Version 4 (`l8x9v2kyt4mc`) on 2026-11-04 Sydney. [Open the draft](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zad4fuknryd8). Version 4 remains live and unchanged. The historical filename is retained so references and Git history stay intact.
+Live Version 5 `zad4fuknryd8`, UUID `01a1a34d-6974-734a-8375-e4740d5807cd`, published by Claude on 2026-11-04 Sydney after owner approval, replacing Version 4. [Open Version 5](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zad4fuknryd8). The historical filename is retained so references and Git history stay intact.
 
-The sole prompt change is the `carrier_locked` branch after `eligible`. Removing that one line reproduces live Version 4 byte for byte, SHA-256 `9fa44a8724373e6909009b027b4668e3a7caefb41fb0b002ce5b5f09eacb7c64`. The opening line, model, tools and post-agent end callback are unchanged.
+The sole prompt change is the `carrier_locked` branch after `eligible`. Removing that one line reproduces the Version 4 baseline byte for byte, SHA-256 `9fa44a8724373e6909009b027b4668e3a7caefb41fb0b002ce5b5f09eacb7c64`. The opening line, model, tools and post-agent end callback are unchanged.
 
 Opening line: HappyRobot Logistics, carrier sales. Can I get your MC number?
 
-Prompt SHA-256: `db0ae5ad27f4682296471a335e432f747da53727534e4ebc8f9769656da5ecae` (UTF-8 text inside the fence, without its surrounding newline). All 23 checkpoints passed twice, 46/46, on this exact draft prompt. [Definitions, locks, run IDs and grades](qa-final-prompt.json) retain the evidence; [QA results](../docs/qa-results.md) describes the boundary. All six service actions were locked in every case. These model-graded checkpoints do not test voice, real integrations or the end callback. Nothing was published.
+Prompt SHA-256: `db0ae5ad27f4682296471a335e432f747da53727534e4ebc8f9769656da5ecae` (UTF-8 text inside the fence, without its surrounding newline). All 23 checkpoints passed twice, 46/46, on this exact prompt while it was a draft. [Definitions, locks, run IDs and grades](qa-final-prompt.json) retain the evidence; [QA results](../docs/qa-results.md) describes the boundary. All six service actions were locked in every case. These model-graded checkpoints do not test voice, real integrations or the end callback. The test-time record remains unchanged; Version 5 was published later with owner approval.
 
 ```text
 You are carrier sales at HappyRobot Logistics. Speak briefly, clearly and naturally.

@@ -1,5 +1,6 @@
 import { EventList } from "@/components/ops-events";
-import { StateBadge } from "@/components/state-badge";
+import { DetailSheet, Facts, SheetSection } from "@/components/detail-sheet";
+import { StateBadge, StatusPill } from "@/components/state-badge";
 import {
   Card,
   CardContent,
@@ -16,81 +17,82 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { Call } from "@/lib/snapshot";
-import { fmtCount, fmtTime, fmtUsd, label, na } from "@/lib/format";
-const cell = "py-3 text-left align-top whitespace-normal";
+import { fmtCount, fmtShort, fmtTime, fmtUsd, label, na } from "@/lib/format";
+
+const COLUMNS: [string, string][] = [
+  ["Call", "w-[8.5rem]"],
+  ["Carrier", "w-[19%]"],
+  ["Lane asked", "w-[16%]"],
+  ["Outcome", "w-[11.5rem]"],
+  ["Agreement", "w-[7rem]"],
+  ["Closing notes", ""],
+];
+const cell = "py-3 align-top whitespace-normal";
+const sub = "truncate text-xs text-muted-foreground";
+
 export function CallLog({ title, calls }: { title: string; calls: Call[] }) {
   return (
-    <Card className="min-w-0">
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
+    <Card className="min-w-0 gap-0 py-0">
+      <CardHeader className="border-b py-4">
+        <CardTitle>
+          {title} <span className="ml-1 font-normal text-muted-foreground tabular-nums">{calls.length}</span>
+        </CardTitle>
         <CardDescription>
-          Stored service activity, not a verbatim conversation or proof of a
-          completed transfer.
+          Stored service activity, not a verbatim conversation or proof of a completed transfer. Open a call for its timeline.
         </CardDescription>
       </CardHeader>
-      <CardContent className="min-w-0">
-        <div className="max-h-[40rem] w-full min-w-0 overflow-auto">
-          <Table className="min-w-[1000px]">
-            <TableHeader className="sticky top-0 bg-card">
+      <CardContent className="min-w-0 px-0">
+        <div className="max-h-[42rem] overflow-y-auto">
+          <Table className="table-fixed">
+            <TableHeader className="sticky top-0 z-[1] bg-muted/70 backdrop-blur">
               <TableRow>
-                {[
-                  "First recorded (CT)",
-                  "Carrier",
-                  "Code passed",
-                  "Last search",
-                  "Rounds",
-                  "Outcome",
-                  "Agreement",
-                  "Notes and timeline",
-                ].map((h) => (
-                  <TableHead key={h}>{h}</TableHead>
+                {COLUMNS.map(([name, width]) => (
+                  <TableHead key={name} className={`${width} px-3 text-xs text-muted-foreground first:pl-6`}>
+                    {name}
+                  </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
             <TableBody>
               {!calls.length ? (
                 <TableRow>
-                  <TableCell colSpan={8}>
+                  <TableCell colSpan={COLUMNS.length} className="px-6 py-8 text-center text-muted-foreground">
                     No calls recorded in this view.
                   </TableCell>
                 </TableRow>
               ) : (
                 calls.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell className={cell}>
-                      {fmtTime(c.startedAt)}
+                  <TableRow key={c.id} className="hover:bg-muted/40">
+                    <TableCell className={`${cell} pl-6`}>
+                      <CallSheet call={c} />
                     </TableCell>
                     <TableCell className={cell}>
-                      {na(c.carrierName)}
-                      <p>MC {na(c.mc)}</p>
+                      <p className="line-clamp-2 font-medium">{na(c.carrierName)}</p>
+                      <p className={sub}>
+                        MC {na(c.mc)} · {c.codePassed ? "code passed" : "no code"}
+                      </p>
                     </TableCell>
                     <TableCell className={cell}>
-                      {c.verifiedAt
-                        ? fmtTime(c.verifiedAt)
-                        : "Not currently verified"}
+                      <p className="line-clamp-2">{lane(c.search)}</p>
                     </TableCell>
-                    <TableCell className={cell}>{na(c.search)}</TableCell>
-                    <TableCell className={cell}>{fmtCount(c.rounds)}</TableCell>
-                    <TableCell className={cell}>{label(c.outcome)}</TableCell>
+                    <TableCell className={cell}>
+                      <StatusPill code={c.outcome} />
+                      <p className="mt-1 text-xs text-muted-foreground">
+                        {fmtCount(c.rounds)} counter round{c.rounds === 1 ? "" : "s"}
+                      </p>
+                    </TableCell>
                     <TableCell className={cell}>
                       {c.bookingLoadId ? (
                         <>
-                          {c.bookingLoadId}
-                          <p>{fmtUsd(c.agreedRate)}</p>
-                          <StateBadge state={c.bookingState} />
+                          <p className="font-mono text-sm">{c.bookingLoadId}</p>
+                          <p className={sub}>{fmtUsd(c.agreedRate)}</p>
                         </>
                       ) : (
-                        "No agreement recorded"
+                        <span className="text-muted-foreground">None</span>
                       )}
                     </TableCell>
-                    <TableCell className={`${cell} min-w-72 max-w-md`}>
-                      <p>{c.summary || "No closing notes recorded"}</p>
-                      <details>
-                        <summary className="cursor-pointer underline">
-                          Activity ({c.events.length})
-                        </summary>
-                        <EventList events={c.events} />
-                      </details>
+                    <TableCell className={`${cell} pr-6`}>
+                      <p className="line-clamp-2 text-sm">{c.summary || <span className="text-muted-foreground">No closing notes recorded</span>}</p>
                     </TableCell>
                   </TableRow>
                 ))
@@ -100,5 +102,58 @@ export function CallLog({ title, calls }: { title: string; calls: Call[] }) {
         </div>
       </CardContent>
     </Card>
+  );
+}
+
+// "DRY_VAN / TX / GA" from the service, as a rep would say it.
+function lane(search: string | null): string {
+  if (!search) return "Not recorded";
+  const [equipment, from, to] = search.split(" / ");
+  return `${label(equipment)}, ${from ?? "any"} to ${to ?? "any"}`;
+}
+
+function CallSheet({ call: c }: { call: Call }) {
+  return (
+    <DetailSheet
+      trigger={<span className="font-sans font-medium tabular-nums">{fmtShort(c.startedAt)}</span>}
+      title={
+        <span className="flex items-center gap-3">
+          Call <StatusPill code={c.outcome} />
+        </span>
+      }
+      description={c.summary || "No closing notes recorded."}
+    >
+      <SheetSection title="Call">
+        <Facts
+          items={[
+            ["Started", fmtTime(c.startedAt)],
+            ["Closed", fmtTime(c.closedAt)],
+            ["Carrier", na(c.carrierName)],
+            ["MC", na(c.mc)],
+            ["Code passed", c.verifiedAt ? fmtTime(c.verifiedAt) : c.codePassed ? "Earlier in the call" : "No"],
+            ["Lane asked", lane(c.search)],
+            ["Counter rounds", fmtCount(c.rounds)],
+            ["Outcome", label(c.outcome)],
+            ["Call ID", <span key="id" className="font-mono text-xs">{c.id}</span>],
+          ]}
+        />
+      </SheetSection>
+      <SheetSection title="Agreement">
+        {c.bookingLoadId ? (
+          <Facts
+            items={[
+              ["Load", <span key="l" className="font-mono">{c.bookingLoadId}</span>],
+              ["Agreed rate", fmtUsd(c.agreedRate)],
+              ["Booking", <StateBadge key="s" state={c.bookingState} />],
+            ]}
+          />
+        ) : (
+          <p className="text-sm text-muted-foreground">No agreement recorded on this call.</p>
+        )}
+      </SheetSection>
+      <SheetSection title={`Activity (${c.events.length})`}>
+        <EventList events={c.events} />
+      </SheetSection>
+    </DetailSheet>
   );
 }

@@ -38,6 +38,7 @@ export type Call = {
   mc: string | null;
   carrierName: string | null;
   verifiedAt: string | null;
+  codePassed: boolean;
   rounds: number | null;
   outcome: string | null;
   bookingState: string | null;
@@ -145,6 +146,7 @@ function projectCall(raw: unknown): Call[] {
       mc: str(c.mc, 32),
       carrierName: str(c.carrier_name, 120),
       verifiedAt: str(c.verified_at, 40),
+      codePassed: c.code_passed === true,
       rounds: num(c.rounds),
       outcome: str(c.outcome, 60),
       bookingState: str(booking.state, 40),

@@ -32,7 +32,8 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
     '@/lib/ops-service': { ...realOps, getSnapshot: async () => snapshot },
     '@/components/app-shell': { AppShell: stub }, '@tabler/icons-react': icons,
   };
-  for (const name of ['alert', 'badge', 'card', 'table', 'spinner']) overrides[`@/components/ui/${name}`] = ui;
+  for (const name of ['alert', 'badge', 'card', 'table', 'spinner', 'sheet']) overrides[`@/components/ui/${name}`] = ui;
+  overrides['next/link'] = { __esModule: true, default: ({ href, children }) => React.createElement('a', { href }, children) };
   overrides['@/components/ui/button'] = { Button: button };
   const { default: HomePage } = loadTs('src/app/page.tsx', overrides);
   const booking = { loadId: 'LD09001', version: 1, state: 'RESERVED', cohort: 'real', mc: '138328', rate: 1900, load: null, events: [] };

@@ -18,7 +18,23 @@ export function fmtTime(value: string | null): string {
   );
   return `${parts.year}-${parts.month}-${parts.day} ${parts.hour}:${parts.minute} CT`;
 }
-export const fmtCount = (n: number | null) =>
+const centralShort = new Intl.DateTimeFormat("en-US", {
+  timeZone: "America/Chicago",
+  month: "short",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+// For dense table cells: "Nov 3, 16:50 CT". The full form stays in the side panel.
+export function fmtShort(value: string | null): string {
+  if (!value) return MISSING;
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return MISSING;
+  const parts = Object.fromEntries(centralShort.formatToParts(date).map((p) => [p.type, p.value]));
+  return `${parts.month} ${parts.day}, ${parts.hour}:${parts.minute} CT`;
+}
+export const fmtCount =(n: number | null) =>
   n === null ? MISSING : Math.round(n).toLocaleString("en-US");
 export const fmtUsd = (n: number | null) =>
   n === null ? MISSING : `$${Math.round(n).toLocaleString("en-US")}`;

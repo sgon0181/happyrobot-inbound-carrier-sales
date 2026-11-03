@@ -190,7 +190,7 @@ def test_an_ask_at_or_below_our_offer_reserves_the_load_at_that_rate() -> None:
     assert counter(r, 1850) == {"status": "agreed", "load_id": "LD09001", "rate": 1850, "http": 200}
     booking = r.twin.data("bookings", "LD09001")
     assert (booking["state"], booking["call_id"], booking["rate"]) == ("RESERVED", RUN, 1850)
-    assert r.row()["agreement"] == {"load_id": "LD09001", "rate": 1850}
+    assert r.row()["agreement"] == {"load_id": "LD09001", "rate": 1850, "mc": "138328"}
     assert counter(r, 1850)["status"] == "agreed"  # a repeat finds its own reservation
 
 
@@ -265,3 +265,74 @@ def test_a_freed_load_can_be_reserved_again_keeping_its_history() -> None:
     assert counter(r, 1800)["status"] == "agreed"
     events: Any = r.twin.data("bookings", "LD09001")["events"]
     assert [e["seq"] for e in events] == [1, 2]
+
+
+def meanwhile(r: Rig, **changes: Any) -> None:
+    """Change the call row while the TMS read is in flight, as a concurrent request would."""
+
+    def change(load_id: str) -> None:
+        version, data = r.twin.tables["calls"][RUN]
+        r.twin.tables["calls"][RUN] = (version + 1, data | changes)
+
+    r.board.reading = change
+
+
+def test_one_call_cannot_accept_two_loads_at_once() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    meanwhile(r, accepting={"load_id": "LD09001", "rate": 1800, "mc": "138328"})
+    assert counter(r, 1800, "LD09002")["status"] == "already_agreed"
+    assert "LD09002" not in r.twin.tables["bookings"]
+
+
+def test_an_acceptance_needs_verification_when_it_is_written() -> None:
+    r = offered()
+    meanwhile(r, mc="1515", eligible=False)
+    assert counter(r, 1800)["status"] == "not_verified"
+    assert r.twin.tables["bookings"] == {}
+
+
+def test_a_repeated_ask_is_answered_within_todays_ceiling() -> None:
+    r = offered()
+    first = counter(r, 9000)
+    r.board.records = [make_load(MAX_BUY="1800", RATE="1500")]
+    again = counter(r, 9000)
+    assert again["offer"] < min(first["offer"], 1800)  # repriced, not replayed
+    assert r.row()["rounds"] == 1
+
+
+def test_a_retry_finishes_the_first_attempt_at_its_own_rate() -> None:
+    r = offered()
+    claim = {"load_id": "LD09001", "rate": 1850, "mc": "138328"}
+    version, data = r.twin.tables["calls"][RUN]
+    r.twin.tables["calls"][RUN] = (version + 1, data | {"accepting": claim})
+    r.twin.tables["bookings"]["LD09001"] = (1, {"state": "RESERVED", "call_id": RUN, **claim})
+    assert counter(r, 1800)["rate"] == 1850
+    assert r.row()["agreement"]["rate"] == 1850 and r.row()["accepting"] is None
+
+
+def test_concurrent_counters_each_use_their_own_round() -> None:
+    r = offered()
+    meanwhile(r, rounds=1)  # another counter landed during this one's read
+    assert counter(r, 9000)["round"] == 2
+
+
+def test_a_new_search_does_not_reopen_a_failed_negotiation() -> None:
+    r = offered()
+    for n in range(4):
+        counter(r, 9000 + n)
+    search(r)
+    r.board.records = []
+    search(r)  # no match either
+    assert r.row()["outcome"] == "negotiation_failed"
+    assert counter(r, 1000)["status"] == "negotiation_failed"
+
+
+def test_each_reservation_event_names_its_call_mc_and_rate() -> None:
+    r = offered()
+    counter(r, 1850)
+    events: Any = r.twin.data("bookings", "LD09001")["events"]
+    assert {k: events[-1][k] for k in ("call_id", "mc", "rate")} == {
+        "call_id": RUN,
+        "mc": "138328",
+        "rate": 1850,
+    }

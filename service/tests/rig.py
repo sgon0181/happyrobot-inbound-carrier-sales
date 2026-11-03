@@ -74,6 +74,7 @@ class FakeBoard:
     unreadable: set[str] = field(default_factory=set)  # load IDs whose details fail to read
     queries: list[dict[str, Any]] = field(default_factory=list)
     during: Callable[[], None] = lambda: None  # runs while a search is in flight
+    reading: Callable[[str], None] = lambda load_id: None  # runs while details are read
     details: dict[str, dict[str, str]] = field(default_factory=dict)  # differ from the search
 
     async def query(
@@ -91,6 +92,7 @@ class FakeBoard:
         return [to_summary(record) for record in self.records][:limit]
 
     async def get(self, load_id: str) -> Load | None:
+        self.reading(load_id)
         if self.down or load_id in self.unreadable:
             raise TmsUnavailable("down")
         listed = next((r for r in self.records if r["LOAD_ID"] == load_id), None)

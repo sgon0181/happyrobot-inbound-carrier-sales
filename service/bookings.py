@@ -23,18 +23,21 @@ class Bookings:
 
     async def reserve(
         self, load_id: str, *, call_id: str, mc: str, rate: int, cohort: str, now: datetime
-    ) -> bool:
-        """Hold the load for this call. True if this call holds it, a repeat included.
+    ) -> Data | None:
+        """Hold the load for this call. Returns the row if this call holds it, as stored,
+        so a retry recovers the first attempt's rate and MC; None if another call holds it.
 
         A freed row is reused, carrying its earlier events forward (section 10).
         """
 
-        def edit(current: Data | None) -> tuple[Data | None, bool]:
+        def edit(current: Data | None) -> tuple[Data | None, Data | None]:
             if current is not None and current.get("state") not in FREE:
-                return None, current.get("call_id") == call_id
+                return None, current if current.get("call_id") == call_id else None
             events = list(current["events"]) if current else []
-            events.append({"seq": len(events) + 1, "at": now.isoformat(), "action": "reserved"})
-            return new_booking(call_id, mc, rate, cohort) | {"events": events}, True
+            attempt = {"call_id": call_id, "mc": mc, "rate": rate}
+            event = {"seq": len(events) + 1, "at": now.isoformat(), "action": "reserved"}
+            data = new_booking(call_id, mc, rate, cohort) | {"events": [*events, event | attempt]}
+            return data, data
 
         return await self.twin.change("bookings", load_id, edit)
 

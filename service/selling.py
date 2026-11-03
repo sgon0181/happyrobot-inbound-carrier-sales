@@ -67,9 +67,13 @@ class Sales:
 
         def decide(data: Data, now: datetime) -> Reply:
             if not priced:  # a load we cannot price is never offered (D-11)
-                data["outcome"] = "pricing_review_required" if loads else "no_match"
-                return {"status": data["outcome"]}
-            data["outcome"], data["policy_version"] = None, self.pricing.version
+                status = "pricing_review_required" if loads else "no_match"
+                if data["outcome"] != "negotiation_failed":
+                    data["outcome"] = status
+                return {"status": status}
+            data["policy_version"] = self.pricing.version
+            if data["outcome"] != "negotiation_failed":  # a failed negotiation stays failed
+                data["outcome"] = None
             for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
                 kept = data["offers"].get(load.load_id, terms.opening)
                 data["offers"][load.load_id] = min(max(kept, terms.opening), terms.cap)
@@ -85,11 +89,13 @@ class Sales:
     async def negotiate(self, run_id: str, load_id: str, ask: str) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).
 
-        The load is read again each time, so every number is checked against today's ceiling.
-        Who holds a load is settled only by the reservation write (D-24).
+        The load is read again each time, so every number is checked against today's
+        ceiling. Each answer is computed inside the call row's version-checked write, so
+        concurrent requests cannot share a round. An acceptance is first claimed on the
+        call row, which allows one per call; then the booking row decides who holds the
+        load (D-24). A retry after a partial failure finishes the stored claim.
         """
-        data = await self.rows.read(run_id)
-        early = _refusal(data, load_id) or _repeat(data, load_id, ask)
+        early = _refusal(await self.rows.read(run_id), load_id)
         if early is not None:
             return await self.rows.step(run_id, "negotiate", answer(early["status"], early))
         try:
@@ -98,10 +104,18 @@ class Sales:
             return await self.rows.step(run_id, "negotiate", set_outcome("tms_unavailable"))
         if terms is None:
             return await self.rows.step(run_id, "negotiate", _drop(load_id))
-        step = respond(terms, data["rounds"], _current(data, load_id, terms), ask)
-        if step.action is Action.ACCEPT and not await self._reserve(run_id, data, load_id, step):
-            return await self.rows.step(run_id, "negotiate", _drop(load_id))
-        return await self.rows.step(run_id, "negotiate", _apply(load_id, ask, step))
+        reply = await self.rows.step(run_id, "negotiate", _answer(load_id, ask, terms))
+        if reply["status"] != "accepting":
+            return reply
+        held = await self.bookings.reserve(
+            load_id,
+            call_id=run_id,
+            mc=reply["mc"],
+            rate=reply["rate"],
+            cohort=self.rows.cohort,
+            now=self.rows.now(),
+        )
+        return await self.rows.step(run_id, "negotiate", _settle(load_id, held))
 
     async def _fresh_terms(self, load_id: str) -> Terms | None:
         """Today's terms for the load, or None if it is gone, blocked or cannot be priced."""
@@ -109,13 +123,6 @@ class Sales:
         if load is None or not select_offers([load], self.rows.now(), self.blocked):
             return None
         return self._terms(load)
-
-    async def _reserve(self, run_id: str, data: Data, load_id: str, step: Step) -> bool:
-        rate, now = int(step.rate or 0), self.rows.now()
-        mc, cohort = data["mc"], data["cohort"]
-        return await self.bookings.reserve(
-            load_id, call_id=run_id, mc=mc, rate=rate, cohort=cohort, now=now
-        )
 
     async def _open_loads(self, search: Search) -> list[Load]:
         """Full details of up to three offerable loads on the lane, skipping held ones."""
@@ -159,33 +166,21 @@ def _searched(search: Search, decide: Decide) -> Decide:
 
 
 def _refusal(data: Data, load_id: str) -> Reply | None:
-    """Why this counter cannot be negotiated at all, from the call's own row."""
-    agreement = data["agreement"]
+    """Why this counter cannot be negotiated, from the call's own row."""
+    agreement, claim = data["agreement"], data["accepting"]
     if not is_verified(data):
         return {"status": "not_verified"}
     if agreement is not None:
         if agreement["load_id"] == load_id:  # a repeated accept finds its own reservation
-            return {"status": "agreed", **agreement}
+            return {"status": "agreed", "load_id": load_id, "rate": agreement["rate"]}
         return {"status": "already_agreed"}  # one agreement per call (INV-6)
+    if claim is not None and claim["load_id"] != load_id:
+        return {"status": "already_agreed"}
     if data["outcome"] == "negotiation_failed":
         return {"status": "negotiation_failed"}
     if load_id not in data["offers"]:
         return {"status": "search_required"}
     return None
-
-
-def _repeat(data: Data, load_id: str, ask: str) -> Reply | None:
-    """The same ask on the same load is answered as before, using no round (D-26)."""
-    last = data["last_counter"]
-    amount = parse_ask(ask)
-    if last and amount is not None and (last["load_id"], last["ask"]) == (load_id, amount):
-        return dict(last["reply"])
-    return None
-
-
-def _current(data: Data, load_id: str, terms: Terms) -> int:
-    """Our last offer on this load, held within today's terms (INV-1)."""
-    return min(max(int(data["offers"][load_id]), terms.opening), terms.cap)
 
 
 def _drop(load_id: str) -> Decide:
@@ -198,35 +193,58 @@ def _drop(load_id: str) -> Decide:
     return decide
 
 
-def _apply(load_id: str, ask: str, step: Step) -> Decide:
+def _answer(load_id: str, ask: str, terms: Terms) -> Decide:
+    """The counter's answer, from the row as it is at the moment of writing."""
+
     def decide(data: Data, now: datetime) -> Reply:
-        reply = _reply(load_id, step)
-        data["rounds"] = max(data["rounds"], step.rounds_used)
-        if step.action is Action.ACCEPT:
-            data["agreement"] = {"load_id": load_id, "rate": step.rate}
-            data["outcome"] = None
-        elif step.action is Action.FAILED:
-            data["outcome"] = "negotiation_failed"
-        elif step.rate is not None:
-            data["offers"][load_id] = step.rate
+        refused = _refusal(data, load_id)
+        if refused is not None:
+            return refused
+        if data["accepting"] is not None:  # a retry finishes the stored claim
+            return {"status": "accepting", **data["accepting"]}
         amount = parse_ask(ask)
-        if amount is not None:
+        offer = min(max(int(data["offers"][load_id]), terms.opening), terms.cap)  # INV-1
+        last = data["last_counter"]
+        if last and amount is not None and (last["load_id"], last["ask"]) == (load_id, amount):
+            data["offers"][load_id] = offer  # the same ask uses no round (D-26), at today's bound
+            return {**last["reply"], "offer": offer} if "offer" in last["reply"] else last["reply"]
+        step = respond(terms, data["rounds"], offer, ask)
+        data["rounds"] = step.rounds_used
+        reply = _apply(data, load_id, step)
+        if amount is not None and step.action is not Action.ACCEPT:
             data["last_counter"] = {"load_id": load_id, "ask": amount, "reply": reply}
         return reply
 
     return decide
 
 
-def _reply(load_id: str, step: Step) -> Reply:
+def _apply(data: Data, load_id: str, step: Step) -> Reply:
     if step.action is Action.ACCEPT:
-        return {"status": "agreed", "load_id": load_id, "rate": step.rate}
+        data["accepting"] = {"load_id": load_id, "rate": step.rate, "mc": data["mc"]}
+        return {"status": "accepting", **data["accepting"]}
     if step.action is Action.FAILED:
+        data["outcome"] = "negotiation_failed"
         return {"status": "negotiation_failed"}
     if step.action is Action.ASK_AGAIN:
         return {"status": "ask_again"}
+    data["offers"][load_id] = step.rate
     final = step.action is Action.FINAL_OFFER
     return {
         "status": "final_offer" if final else "counter",
         "offer": step.rate,
         "round": step.rounds_used,
     }
+
+
+def _settle(load_id: str, held: Data | None) -> Decide:
+    """Record the reservation as the booking row holds it, or drop a load that was lost."""
+
+    def decide(data: Data, now: datetime) -> Reply:
+        data["accepting"] = None
+        if held is None:
+            data["offers"].pop(load_id, None)
+            return {"status": "load_gone", "load_id": load_id}
+        data["agreement"] = {"load_id": load_id, "rate": held["rate"], "mc": held["mc"]}
+        return {"status": "agreed", "load_id": load_id, "rate": held["rate"]}
+
+    return decide

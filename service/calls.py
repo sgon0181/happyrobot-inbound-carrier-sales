@@ -145,6 +145,7 @@ def new_call(cohort: str, now: datetime) -> Data:
         "offers": {},  # load ID to the last offer we said
         "rounds": 0,
         "last_counter": None,
+        "accepting": None,  # an acceptance claimed before its booking row is written
         "agreement": None,
         "policy_version": None,
         "outcome": None,

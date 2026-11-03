@@ -1,0 +1,332 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188" role="img" aria-labelledby="title desc"><title id="title">The order behind what I hear</title><desc id="desc">Top-to-bottom sequence with service-owned decisions and explicit persistence boundaries.</desc>
+<rect x="0" y="0" width="1680" height="1188" rx="0" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
+<text x="44" y="48.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#14786B">2 / 3</text>
+<text x="123" y="50.0" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="bold" fill="#14283F">Sequence: from my words to a saved reservation</text>
+<text x="44" y="82.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#52647A">Solid arrows are requests/actions; dashed arrows are replies or the conditional post-agent callback. Boxes at right locate the code.</text>
+<rect x="44" y="100" width="1592" height="64" rx="8" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="60" y="124.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#14283F">IMPLEMENTED PATH: main 2678845. Successful call = Twin reservation + mocked handoff, not a TMS booking.</text>
+<text x="60" y="148.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#52647A">Local code / V4 draft shown; repo notes record V3 and an older App as live. Illustrative success path; mocked checkpoints do not establish voice reliability.</text>
+<rect x="44" y="176" width="1592" height="67" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="58" y="189" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="64" y="208.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C1</text>
+<text x="101" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">call moment</text>
+<polygon points="217,189 248,189 254,202 248,215 217,215 211,202" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="221" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="264" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">build slice</text>
+<polygon points="373,196 382,196 387,201 387,210 373,210" fill="#FFFFFF" stroke="#52647A" stroke-width="1"/>
+<line x1="382" y1="196" x2="382" y2="201" stroke="#52647A" stroke-width="1"/>
+<line x1="382" y1="201" x2="387" y2="201" stroke="#52647A" stroke-width="1"/>
+<text x="394" y="208.0" font-family="Courier New, monospace" font-size="13" font-weight="normal" fill="#14283F">file.py</text>
+<text x="466" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">= code</text>
+<rect x="546" y="187" width="125" height="28" rx="14" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="560" y="206.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#285EA6">Data object</text>
+<rect x="705" y="197" width="35" height="10" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="722.5" cy="197" rx="17.5" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="722.5" cy="207" rx="17.5" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="716" y="219.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#285EA6"></text>
+<text x="753" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#285EA6">Stored state</text>
+<rect x="918" y="189" width="14" height="14" rx="3" fill="#713EB5" stroke="#713EB5" stroke-width="1"/>
+<text x="940" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">HappyRobot</text>
+<rect x="1085" y="189" width="14" height="14" rx="3" fill="#14786B" stroke="#14786B" stroke-width="1"/>
+<text x="1107" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">Service</text>
+<rect x="1223" y="189" width="14" height="14" rx="3" fill="#9B6512" stroke="#9B6512" stroke-width="1"/>
+<text x="1245" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">External</text>
+<text x="1374" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">Border: solid = built;</text>
+<text x="1374" y="221.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">dashed = conditional</text>
+<text x="58" y="232.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#8B5F0A">B1 Foundations  |  B2 Verify + storage  |  B3 Sell + reserve + close  |  B4 Operate + submit  |  B5 QA + delivery. Build order is not call order.</text>
+<rect x="53" y="260" width="184" height="33" rx="7" fill="#F5F7FA" stroke="#14283F" stroke-width="1"/>
+<text x="64" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.6" font-weight="bold" fill="#14283F">ME</text>
+<line x1="145" y1="298" x2="145" y2="1081" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="303" y="260" width="184" height="33" rx="7" fill="#F5F0FC" stroke="#713EB5" stroke-width="1"/>
+<text x="314" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.6" font-weight="bold" fill="#713EB5">HAPPYROBOT</text>
+<line x1="395" y1="298" x2="395" y2="1081" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="633" y="260" width="184" height="33" rx="7" fill="#EDF8F4" stroke="#14786B" stroke-width="1"/>
+<text x="644" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.6" font-weight="bold" fill="#14786B">SERVICE</text>
+<line x1="725" y1="298" x2="725" y2="1081" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="963" y="260" width="184" height="33" rx="7" fill="#FFF6E4" stroke="#9B6512" stroke-width="1"/>
+<text x="974" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.6" font-weight="bold" fill="#9B6512">FMCSA / EMAIL / TMS</text>
+<line x1="1055" y1="298" x2="1055" y2="1081" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="1208" y="260" width="184" height="33" rx="7" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="1219" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.6" font-weight="bold" fill="#285EA6">TWIN</text>
+<line x1="1300" y1="298" x2="1300" y2="1081" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="1420" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#14786B">FILES / KEY FUNCTIONS</text>
+<rect x="44" y="296" width="1327" height="117" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="289" x2="145" y2="413" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="289" x2="395" y2="413" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="289" x2="725" y2="413" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="289" x2="1055" y2="413" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="289" x2="1300" y2="413" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="300" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="319.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C1</text>
+<rect x="1400" y="289" width="236" height="122" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,297 1447,297 1453,310 1447,323 1416,323 1410,310" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="315.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="1461" y="315.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Identify myself</text>
+<text x="1412" y="338" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">calls.py</text>
+<text x="1412" y="353" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">Calls.verify_carrier</text>
+<text x="1412" y="368" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/carrier_policy.py: assess</text>
+<text x="1412" y="383" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">adapters/fmcsa.py: carriers</text>
+<line x1="145" y1="307" x2="395" y2="307" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,307 389.5973173858839,309.60979320466737 389.5973173858839,304.39020679533263" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="303.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">MC 138328</text>
+<line x1="395" y1="321" x2="725" y2="321" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,321 719.5973173858839,323.60979320466737 719.5973173858839,318.39020679533263" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="317.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /carriers/verify {run_id, mc}</text>
+<line x1="725" y1="335" x2="1300" y2="335" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,335 1294.597317385884,337.60979320466737 1294.597317385884,332.39020679533263" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="331.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">save selected MC / lookup + checking event</text>
+<line x1="725" y1="349" x2="1055" y2="349" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,349 1049.597317385884,351.60979320466737 1049.597317385884,346.39020679533263" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="345.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">FMCSA HTTP: carriers(mc)</text>
+<line x1="1055" y1="363" x2="725" y2="363" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,363 730.4026826141161,360.39020679533263 730.4026826141161,365.60979320466737" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="359.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">FMCSA carrier records</text>
+<line x1="725" y1="377" x2="1300" y2="377" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,377 1294.597317385884,379.60979320466737 1294.597317385884,374.39020679533263" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">assess -&gt; save authority / eligible + event</text>
+<line x1="725" y1="391" x2="395" y2="391" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,391 400.4026826141161,388.39020679533263 400.4026826141161,393.60979320466737" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="387.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">eligible + carrier_name</text>
+<line x1="395" y1="405" x2="145" y2="405" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,405 150.40268261411606,402.39020679533263 150.40268261411606,407.60979320466737" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="401.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">&quot;Synthetic Carrier LLC, right?&quot;</text>
+<rect x="44" y="420" width="1327" height="117" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="413" x2="145" y2="537" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="413" x2="395" y2="537" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="413" x2="725" y2="537" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="413" x2="1055" y2="537" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="413" x2="1300" y2="537" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="424" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="443.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C2</text>
+<rect x="1400" y="413" width="236" height="122" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,421 1447,421 1453,434 1447,447 1416,447 1410,434" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="439.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="1461" y="439.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Confirm + get code</text>
+<text x="1412" y="462" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">calls.py: send_code</text>
+<text x="1412" y="477" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/codes.py: issue/hash</text>
+<text x="1412" y="492" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">adapters/email.py: send</text>
+<text x="1412" y="507" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">Name Yes is prompt-only</text>
+<line x1="145" y1="431" x2="395" y2="431" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,431 389.5973173858839,433.60979320466737 389.5973173858839,428.39020679533263" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="427.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">&quot;Yes.&quot;</text>
+<line x1="395" y1="445" x2="725" y2="445" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,445 719.5973173858839,447.60979320466737 719.5973173858839,442.39020679533263" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="441.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /otp/send {run_id}</text>
+<line x1="725" y1="459" x2="1300" y2="459" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,459 1294.597317385884,461.60979320466737 1294.597317385884,456.39020679533263" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="455.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">save hash, expiry, send budget + event</text>
+<line x1="725" y1="473" x2="1055" y2="473" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,473 1049.597317385884,475.60979320466737 1049.597317385884,470.39020679533263" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="469.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">Gmail SMTP -&gt; configured inbox [code]</text>
+<line x1="1055" y1="487" x2="725" y2="487" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,487 730.4026826141161,484.39020679533263 730.4026826141161,489.60979320466737" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="483.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">SMTP accepted</text>
+<line x1="725" y1="501" x2="1300" y2="501" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,501 1294.597317385884,503.60979320466737 1294.597317385884,498.39020679533263" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="497.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">save sent event (not a read receipt)</text>
+<line x1="725" y1="515" x2="395" y2="515" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,515 400.4026826141161,512.3902067953326 400.4026826141161,517.6097932046674" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="511.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">sent; expected code is not returned</text>
+<line x1="395" y1="529" x2="145" y2="529" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,529 150.40268261411606,526.3902067953326 150.40268261411606,531.6097932046674" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="525.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">&quot;Read the code from your inbox.&quot;</text>
+<rect x="44" y="544" width="1327" height="75" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="537" x2="145" y2="619" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="537" x2="395" y2="619" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="537" x2="725" y2="619" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="537" x2="1055" y2="619" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="537" x2="1300" y2="619" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="548" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="567.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C3</text>
+<rect x="1400" y="537" width="236" height="80" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,545 1447,545 1453,558 1447,571 1416,571 1410,558" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="563.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="1461" y="563.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Read back code</text>
+<text x="1412" y="586" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">calls.py: verify_code</text>
+<text x="1412" y="601" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/codes.py: check</text>
+<text x="1412" y="616" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">Consume + verify in one row</text>
+<line x1="145" y1="555" x2="395" y2="555" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,555 389.5973173858839,557.6097932046674 389.5973173858839,552.3902067953326" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="551.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">Speak [code]</text>
+<line x1="395" y1="569" x2="725" y2="569" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,569 719.5973173858839,571.6097932046674 719.5973173858839,566.3902067953326" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="565.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /otp/verify {run_id, code}</text>
+<line x1="725" y1="583" x2="1300" y2="583" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,583 1294.597317385884,585.6097932046674 1294.597317385884,580.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="579.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">check CodeState; consume + verified_at + event</text>
+<line x1="725" y1="597" x2="395" y2="597" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,597 400.4026826141161,594.3902067953326 400.4026826141161,599.6097932046674" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="593.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">verified</text>
+<line x1="395" y1="611" x2="145" y2="611" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,611 150.40268261411606,608.3902067953326 150.40268261411606,613.6097932046674" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="607.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">&quot;Equipment and lane?&quot;</text>
+<rect x="44" y="626" width="1327" height="145" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="619" x2="145" y2="771" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="619" x2="395" y2="771" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="619" x2="725" y2="771" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="619" x2="1055" y2="771" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="619" x2="1300" y2="771" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="630" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="649.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C4</text>
+<rect x="1400" y="619" width="236" height="150" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,627 1447,627 1453,640 1447,653 1416,653 1410,640" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="645.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1461" y="645.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Ask for a load</text>
+<text x="1412" y="668" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">selling.py: find_loads</text>
+<text x="1412" y="683" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">_open_loads</text>
+<text x="1412" y="698" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/loads.py</text>
+<text x="1412" y="713" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">select_offers, public_view</text>
+<text x="1412" y="728" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/pricing.py: price_load</text>
+<text x="1412" y="743" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">B1 rules + B3 flow</text>
+<line x1="145" y1="637" x2="395" y2="637" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,637 389.5973173858839,639.6097932046674 389.5973173858839,634.3902067953326" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="633.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">&quot;Dry van, TX to GA.&quot;</text>
+<line x1="395" y1="651" x2="725" y2="651" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,651 719.5973173858839,653.6097932046674 719.5973173858839,648.3902067953326" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="647.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /loads/search {run_id, terms}</text>
+<line x1="725" y1="665" x2="1055" y2="665" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,665 1049.597317385884,667.6097932046674 1049.597317385884,662.3902067953326" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="661.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">gate -&gt; TMS TCP: LOAD_QUERY</text>
+<line x1="1055" y1="679" x2="725" y2="679" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,679 730.4026826141161,676.3902067953326 730.4026826141161,681.6097932046674" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="675.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">LoadSummary records</text>
+<line x1="725" y1="693" x2="1300" y2="693" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,693 1294.597317385884,695.6097932046674 1294.597317385884,690.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="689.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">Bookings.held -&gt; get_many (one IN query)</text>
+<line x1="725" y1="707" x2="1055" y2="707" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,707 1049.597317385884,709.6097932046674 1049.597317385884,704.3902067953326" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="703.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">TMS TCP: LOAD_GET for selected loads</text>
+<line x1="1055" y1="721" x2="725" y2="721" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,721 730.4026826141161,718.3902067953326 730.4026826141161,723.6097932046674" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="717.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">raw load detail records</text>
+<line x1="725" y1="735" x2="1300" y2="735" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,735 1294.597317385884,737.6097932046674 1294.597317385884,732.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="731.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">filter + price -&gt; save search / offers / pitch event</text>
+<line x1="725" y1="749" x2="395" y2="749" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,749 400.4026826141161,746.3902067953326 400.4026826141161,751.6097932046674" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="745.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">found + public loads; no ceiling / posted rate</text>
+<line x1="395" y1="763" x2="145" y2="763" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,763 150.40268261411606,760.3902067953326 150.40268261411606,765.6097932046674" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="759.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">Pitch LD90001 and $1,800</text>
+<rect x="44" y="778" width="1327" height="103" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="771" x2="145" y2="881" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="771" x2="395" y2="881" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="771" x2="725" y2="881" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="771" x2="1055" y2="881" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="771" x2="1300" y2="881" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="782" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="801.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C5</text>
+<rect x="1400" y="771" width="236" height="108" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,779 1447,779 1453,792 1447,805 1416,805 1410,792" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="797.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1461" y="797.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Make a counter</text>
+<text x="1412" y="820" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">selling.py: negotiate</text>
+<text x="1412" y="835" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">_fresh_terms</text>
+<text x="1412" y="850" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">sale_decisions.py</text>
+<text x="1412" y="865" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">answer_counter</text>
+<text x="1412" y="880" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">core/negotiation.py: respond</text>
+<line x1="145" y1="789" x2="395" y2="789" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,789 389.5973173858839,791.6097932046674 389.5973173858839,786.3902067953326" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">&quot;I need $2,100.&quot;</text>
+<line x1="395" y1="803" x2="725" y2="803" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,803 719.5973173858839,805.6097932046674 719.5973173858839,800.3902067953326" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="799.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /negotiate {load_id, rate, run_id}</text>
+<line x1="725" y1="817" x2="1055" y2="817" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,817 1049.597317385884,819.6097932046674 1049.597317385884,814.3902067953326" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="813.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">TMS TCP: fresh LOAD_GET</text>
+<line x1="1055" y1="831" x2="725" y2="831" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,831 730.4026826141161,828.3902067953326 730.4026826141161,833.6097932046674" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="827.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">raw load detail</text>
+<line x1="725" y1="845" x2="1300" y2="845" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,845 1294.597317385884,847.6097932046674 1294.597317385884,842.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="841.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">price + atomic answer_counter; ask / round / offer + event</text>
+<line x1="725" y1="859" x2="395" y2="859" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,859 400.4026826141161,856.3902067953326 400.4026826141161,861.6097932046674" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="855.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">counter, offer=1900, round=1</text>
+<line x1="395" y1="873" x2="145" y2="873" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,873 150.40268261411606,870.3902067953326 150.40268261411606,875.6097932046674" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="869.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">&quot;I can do $1,900.&quot;</text>
+<rect x="44" y="888" width="1327" height="131" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="881" x2="145" y2="1019" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="881" x2="395" y2="1019" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="881" x2="725" y2="1019" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="881" x2="1055" y2="1019" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="881" x2="1300" y2="1019" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="892" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="911.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C6</text>
+<rect x="1400" y="881" width="236" height="136" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,889 1447,889 1453,902 1447,915 1416,915 1410,902" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="907.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1461" y="907.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Agree on the rate</text>
+<text x="1412" y="930" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">selling.py: negotiate</text>
+<text x="1412" y="945" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">sale_decisions._apply</text>
+<text x="1412" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">bookings.py: reserve</text>
+<text x="1412" y="975" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">sale_decisions.settle</text>
+<text x="1412" y="990" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">Rep snapshot: posted, no cap.</text>
+<text x="1412" y="1005" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">Three separate row writes.</text>
+<line x1="145" y1="899" x2="395" y2="899" stroke="#14283F" stroke-width="1.3"/>
+<polygon points="395,899 389.5973173858839,901.6097932046674 389.5973173858839,896.3902067953326" fill="#14283F" stroke="none" stroke-width="1"/>
+<text x="153" y="895.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14283F">&quot;Yes, $1,900 works.&quot;</text>
+<line x1="395" y1="913" x2="725" y2="913" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,913 719.5973173858839,915.6097932046674 719.5973173858839,910.3902067953326" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="909.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /negotiate {load_id, 1900, run_id}</text>
+<line x1="725" y1="927" x2="1055" y2="927" stroke="#9B6512" stroke-width="1.3"/>
+<polygon points="1055,927 1049.597317385884,929.6097932046674 1049.597317385884,924.3902067953326" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="923.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">TMS TCP: fresh LOAD_GET again</text>
+<line x1="1055" y1="941" x2="725" y2="941" stroke="#9B6512" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,941 730.4026826141161,938.3902067953326 730.4026826141161,943.6097932046674" fill="#9B6512" stroke="none" stroke-width="1"/>
+<text x="733" y="937.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#9B6512">raw load detail</text>
+<line x1="725" y1="955" x2="1300" y2="955" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,955 1294.597317385884,957.6097932046674 1294.597317385884,952.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="951.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">1. fresh price / ACCEPT -&gt; calls.accepting {id, load, MC, rate}</text>
+<line x1="725" y1="969" x2="1300" y2="969" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,969 1294.597317385884,971.6097932046674 1294.597317385884,966.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="965.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">2. bookings: RESERVED + terms snapshot + event</text>
+<line x1="725" y1="983" x2="1300" y2="983" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,983 1294.597317385884,985.6097932046674 1294.597317385884,980.3902067953326" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="979.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">3. calls: agreement + clear claim + event</text>
+<line x1="725" y1="997" x2="395" y2="997" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,997 400.4026826141161,994.3902067953326 400.4026826141161,999.6097932046674" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="993.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">agreed, load_id, rate=1900</text>
+<line x1="395" y1="1011" x2="145" y2="1011" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,1011 150.40268261411606,1008.3902067953326 150.40268261411606,1013.6097932046674" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="1007.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">Mocked handoff: &quot;A senior rep will confirm.&quot;</text>
+<rect x="44" y="1026" width="1327" height="89" rx="0" fill="#FFFFFF" stroke="none" stroke-width="1"/>
+<line x1="145" y1="1019" x2="145" y2="1115" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="395" y1="1019" x2="395" y2="1115" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="725" y1="1019" x2="725" y2="1115" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1055" y1="1019" x2="1055" y2="1115" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<line x1="1300" y1="1019" x2="1300" y2="1115" stroke="#CBD5E1" stroke-width="1" stroke-dasharray="5 4"/>
+<rect x="53" y="1030" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="59" y="1049.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C7</text>
+<rect x="1400" y="1019" width="236" height="94" rx="7" fill="#EDF8F4" stroke="#CBD5E1" stroke-width="1"/>
+<polygon points="1416,1027 1447,1027 1453,1040 1447,1053 1416,1053 1410,1040" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1420" y="1045.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1461" y="1045.0" font-family="Arial, Helvetica, sans-serif" font-size="12.6" font-weight="bold" fill="#14786B">Finish the call</text>
+<text x="1412" y="1068" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">selling.py: close</text>
+<text x="1412" y="1083" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">calls.py: end</text>
+<text x="1412" y="1098" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">CallRows.step</text>
+<text x="1412" y="1113" font-family="Arial, Helvetica, sans-serif" font-size="12.2" font-weight="normal" fill="#14786B">End: if delivered</text>
+<line x1="395" y1="1037" x2="725" y2="1037" stroke="#713EB5" stroke-width="1.3"/>
+<polygon points="725,1037 719.5973173858839,1039.6097932046673 719.5973173858839,1034.3902067953327" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="1033.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">POST /calls/close {run_id, summary}</text>
+<line x1="725" y1="1051" x2="1300" y2="1051" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,1051 1294.597317385884,1053.6097932046673 1294.597317385884,1048.3902067953327" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="1047.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">first closed_at + summary + event; hold unchanged</text>
+<line x1="725" y1="1065" x2="395" y2="1065" stroke="#14786B" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="395,1065 400.4026826141161,1062.3902067953327 400.4026826141161,1067.6097932046673" fill="#14786B" stroke="none" stroke-width="1"/>
+<text x="403" y="1061.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#14786B">closed</text>
+<line x1="395" y1="1079" x2="145" y2="1079" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="145,1079 150.40268261411606,1076.3902067953327 150.40268261411606,1081.6097932046673" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="153" y="1075.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">Farewell; voice session ends</text>
+<line x1="395" y1="1093" x2="725" y2="1093" stroke="#713EB5" stroke-width="1.3" stroke-dasharray="5 4"/>
+<polygon points="725,1093 719.5973173858839,1095.6097932046673 719.5973173858839,1090.3902067953327" fill="#713EB5" stroke="none" stroke-width="1"/>
+<text x="403" y="1089.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#713EB5">V4 /calls/ended {run_id, end data}</text>
+<line x1="725" y1="1107" x2="1300" y2="1107" stroke="#285EA6" stroke-width="1.3"/>
+<polygon points="1300,1107 1294.597317385884,1109.6097932046673 1294.597317385884,1104.3902067953327" fill="#285EA6" stroke="none" stroke-width="1"/>
+<text x="733" y="1103.0" font-family="Arial, Helvetica, sans-serif" font-size="12.1" font-weight="normal" fill="#285EA6">ended_at / ended_by / duration + event, if delivered</text>
+<rect x="44" y="1126" width="1592" height="27" rx="7" fill="#F5F7FA" stroke="#52647A" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="57" y="1145.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">SEPARATE REP PATH: App -&gt; service -&gt; Twin review. It may run while I am on the call. Only a rep Confirm may send LOAD_BOOK. No voice booking tool; no real transfer; RESERVED is not BOOKED.</text>
+<text x="44" y="1169.0" font-family="Arial, Helvetica, sans-serif" font-size="10.9" font-weight="normal" fill="#52647A">Source: main 2678845. File paths are relative to service/ unless marked. C1-C7 are call moments; B1-B5 are build slices. Money is illustrative, not a live trace.</text>
+<text x="44" y="1183.0" font-family="Arial, Helvetica, sans-serif" font-size="10.8" font-weight="normal" fill="#52647A">Shared I/O: api.py routes JSON; adapters/twin.py version-checks SQL writes. TMS [B1]: client.py query/get -&gt; protocol.py encode_request/parse_reply -&gt; mapping.py to_summary/to_load.</text>
+</svg>

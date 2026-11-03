@@ -1,0 +1,2 @@
+# Vector documents are binary artifacts, even when their PDF streams are ASCII-safe.
+*.pdf binary

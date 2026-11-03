@@ -1,0 +1,380 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1680" height="1188" viewBox="0 0 1680 1188" role="img" aria-labelledby="title desc"><title id="title">My call, end to end</title><desc id="desc">Seven call moments mapped to speech, decisions, data, files and saved state.</desc>
+<rect x="0" y="0" width="1680" height="1188" rx="0" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="1"/>
+<text x="44" y="48.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#14786B">1 / 3</text>
+<text x="123" y="50.0" font-family="Arial, Helvetica, sans-serif" font-size="29" font-weight="bold" fill="#14283F">Caller-centred blueprint</text>
+<text x="44" y="82.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="normal" fill="#52647A">Read left to right. The same synthetic example and call IDs appear in the other two views.</text>
+<rect x="44" y="100" width="1592" height="64" rx="8" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="60" y="124.0" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="bold" fill="#14283F">IMPLEMENTED PATH: main 2678845. Successful call = Twin reservation + mocked handoff, not a TMS booking.</text>
+<text x="60" y="148.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#52647A">Local code / V4 draft shown; repo notes record V3 and an older App as live. Illustrative success path; mocked checkpoints do not establish voice reliability.</text>
+<rect x="44" y="176" width="1592" height="67" rx="8" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="58" y="189" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="64" y="208.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C1</text>
+<text x="101" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">call moment</text>
+<polygon points="217,189 248,189 254,202 248,215 217,215 211,202" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="221" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="264" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">build slice</text>
+<polygon points="373,196 382,196 387,201 387,210 373,210" fill="#FFFFFF" stroke="#52647A" stroke-width="1"/>
+<line x1="382" y1="196" x2="382" y2="201" stroke="#52647A" stroke-width="1"/>
+<line x1="382" y1="201" x2="387" y2="201" stroke="#52647A" stroke-width="1"/>
+<text x="394" y="208.0" font-family="Courier New, monospace" font-size="13" font-weight="normal" fill="#14283F">file.py</text>
+<text x="466" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">= code</text>
+<rect x="546" y="187" width="125" height="28" rx="14" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="560" y="206.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#285EA6">Data object</text>
+<rect x="705" y="197" width="35" height="10" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="722.5" cy="197" rx="17.5" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="722.5" cy="207" rx="17.5" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="716" y="219.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#285EA6"></text>
+<text x="753" y="207.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#285EA6">Stored state</text>
+<rect x="918" y="189" width="14" height="14" rx="3" fill="#713EB5" stroke="#713EB5" stroke-width="1"/>
+<text x="940" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">HappyRobot</text>
+<rect x="1085" y="189" width="14" height="14" rx="3" fill="#14786B" stroke="#14786B" stroke-width="1"/>
+<text x="1107" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">Service</text>
+<rect x="1223" y="189" width="14" height="14" rx="3" fill="#9B6512" stroke="#9B6512" stroke-width="1"/>
+<text x="1245" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#14283F">External</text>
+<text x="1374" y="202.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">Border: solid = built;</text>
+<text x="1374" y="221.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">dashed = conditional</text>
+<text x="58" y="232.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#8B5F0A">B1 Foundations  |  B2 Verify + storage  |  B3 Sell + reserve + close  |  B4 Operate + submit  |  B5 QA + delivery. Build order is not call order.</text>
+<rect x="44" y="309" width="166" height="116" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="337.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#14283F">ME</text>
+<text x="57" y="361.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">What I do / hear</text>
+<rect x="44" y="425" width="166" height="110" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="453.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#713EB5">HAPPYROBOT</text>
+<text x="57" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">Managed conversation</text>
+<rect x="44" y="535" width="166" height="113" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="563.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#14786B">SERVICE</text>
+<text x="57" y="587.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">Decision and purpose</text>
+<rect x="44" y="648" width="166" height="98" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="676.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#285EA6">DATA / CONTACT</text>
+<text x="57" y="700.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">Temporary values + I/O</text>
+<rect x="44" y="746" width="166" height="158" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="774.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#285EA6">TWIN STATE</text>
+<text x="57" y="798.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">Saved, keyed records</text>
+<rect x="44" y="904" width="166" height="174" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<text x="57" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#14786B">CODE / BUILD</text>
+<text x="57" y="956.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="normal" fill="#52647A">Files + key functions</text>
+<rect x="210.0" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="219.0" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="225.0" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C1</text>
+<text x="259.0" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Identify myself</text>
+<rect x="210.0" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="210.0" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="210.0" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="210.0" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="210.0" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="210.0" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="221.0" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">Open web call.</text>
+<text x="221.0" y="347" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;MC 138328.&quot;</text>
+<text x="221.0" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: Greeting / MC</text>
+<text x="221.0" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">request; then: &quot;Synthetic</text>
+<text x="221.0" y="405.2" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">Carrier LLC, right?&quot;</text>
+<text x="221.0" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">verify_carrier(mc)</text>
+<text x="221.0" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Transcribe MC; choose</text>
+<text x="221.0" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">verify_carrier.</text>
+<text x="221.0" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Normalize MC; select it</text>
+<text x="221.0" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">before lookup; assess active</text>
+<text x="221.0" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">authority. Only latest lookup</text>
+<text x="221.0" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">can apply.</text>
+<rect x="218.0" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="225.0" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">{run_id, mc}</text>
+<text x="225.0" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">FMCSA records -&gt; Authority</text>
+<text x="225.0" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: eligible + name</text>
+<text x="221.0" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">FMCSA HTTP lookup</text>
+<rect x="219.0" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="311.8571428571429" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="311.8571428571429" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="230.0" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="230.0" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">new calls[run_id]</text>
+<text x="230.0" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">mc, lookup, carrier_name,</text>
+<text x="230.0" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">eligible, authority</text>
+<text x="230.0" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ checking/result events</text>
+<polygon points="227.0,914 258.0,914 264.0,927 258.0,940 227.0,940 221.0,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="231.0" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="273.0" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="221.0" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">calls.py: Calls.verify_carrier [B2]</text>
+<text x="221.0" y="978" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/carrier_policy.py:</text>
+<text x="221.0" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">normalize_mc, assess [B2]</text>
+<text x="221.0" y="1011" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">adapters/fmcsa.py:</text>
+<text x="221.0" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">Fmcsa.carriers [B2]</text>
+<rect x="413.7142857142857" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="422.7142857142857" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="428.7142857142857" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C2</text>
+<text x="462.7142857142857" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Confirm + get code</text>
+<rect x="413.7142857142857" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="413.7142857142857" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="413.7142857142857" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="413.7142857142857" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="413.7142857142857" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="413.7142857142857" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="424.7142857142857" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;Yes, that is us.&quot;</text>
+<text x="424.7142857142857" y="347" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">Open configured demo</text>
+<text x="424.7142857142857" y="364" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">inbox.</text>
+<text x="424.7142857142857" y="384.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: &quot;A six-digit code was</text>
+<text x="424.7142857142857" y="400.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">emailed. Please read it back.&quot;</text>
+<text x="424.7142857142857" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">send_code()</text>
+<text x="424.7142857142857" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Name Yes is prompt-only;</text>
+<text x="424.7142857142857" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">then send_code. No backend</text>
+<text x="424.7142857142857" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">confirmation flag.</text>
+<text x="424.7142857142857" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Require eligibility. Generate</text>
+<text x="424.7142857142857" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">code; save hash, expiry and</text>
+<text x="424.7142857142857" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">send budget before SMTP.</text>
+<text x="424.7142857142857" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Record SMTP result.</text>
+<rect x="421.7142857142857" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="428.7142857142857" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">{run_id}</text>
+<text x="428.7142857142857" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">code -&gt; CodeState(hash)</text>
+<text x="428.7142857142857" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: sent (SMTP accepted)</text>
+<text x="424.7142857142857" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">Gmail SMTP -&gt; demo inbox</text>
+<rect x="422.7142857142857" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="515.5714285714286" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="515.5714285714286" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="433.7142857142857" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="433.7142857142857" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">calls[run_id].otp</text>
+<text x="433.7142857142857" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">hash, expiry, sends, failed</text>
+<text x="433.7142857142857" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ code_issued / sent events</text>
+<polygon points="430.7142857142857,914 461.7142857142857,914 467.7142857142857,927 461.7142857142857,940 430.7142857142857,940 424.7142857142857,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="434.7142857142857" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="476.7142857142857" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="424.7142857142857" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">calls.py: Calls.send_code [B2]</text>
+<text x="424.7142857142857" y="978" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/codes.py: new_code,</text>
+<text x="424.7142857142857" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">code_hash, issue [B2]</text>
+<text x="424.7142857142857" y="1011" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">adapters/email.py:</text>
+<text x="424.7142857142857" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">CodeMailer.send [B2]</text>
+<rect x="617.4285714285714" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="626.4285714285714" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="632.4285714285714" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C3</text>
+<text x="666.4285714285714" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Read back code</text>
+<rect x="617.4285714285714" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="617.4285714285714" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="617.4285714285714" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="617.4285714285714" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="617.4285714285714" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="617.4285714285714" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="628.4285714285714" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">Read [code] from inbox.</text>
+<text x="628.4285714285714" y="347" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">Speak its digits.</text>
+<text x="628.4285714285714" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: &quot;You are verified.</text>
+<text x="628.4285714285714" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">What equipment and lane?&quot;</text>
+<text x="628.4285714285714" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">verify_code(code)</text>
+<text x="628.4285714285714" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Digits enter HR records /</text>
+<text x="628.4285714285714" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">request; verify_code returns</text>
+<text x="628.4285714285714" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">status only.</text>
+<text x="628.4285714285714" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Normalize digits; compare</text>
+<text x="628.4285714285714" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">keyed hash; check</text>
+<text x="628.4285714285714" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">expiry/limits. Consume code</text>
+<text x="628.4285714285714" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">and verify together.</text>
+<rect x="625.4285714285714" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="632.4285714285714" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">{run_id, code}</text>
+<text x="632.4285714285714" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">CodeState -&gt; verified</text>
+<text x="632.4285714285714" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: verified</text>
+<text x="628.4285714285714" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">Twin only; no FMCSA or TMS</text>
+<text x="628.4285714285714" y="742" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">read</text>
+<rect x="626.4285714285714" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="719.2857142857143" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="719.2857142857143" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="637.4285714285714" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="637.4285714285714" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">calls[run_id]</text>
+<text x="637.4285714285714" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">otp.consumed_at</text>
+<text x="637.4285714285714" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">verified_at + event</text>
+<text x="637.4285714285714" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">Code digits not in events</text>
+<polygon points="634.4285714285714,914 665.4285714285714,914 671.4285714285714,927 665.4285714285714,940 634.4285714285714,940 628.4285714285714,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="638.4285714285714" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B2</text>
+<text x="680.4285714285714" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="628.4285714285714" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">calls.py: Calls.verify_code [B2]</text>
+<text x="628.4285714285714" y="978" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/codes.py: normalize_code,</text>
+<text x="628.4285714285714" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">check [B2]</text>
+<text x="628.4285714285714" y="1011" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">calls.py: is_verified [B2]</text>
+<rect x="821.1428571428571" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="830.1428571428571" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="836.1428571428571" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C4</text>
+<text x="870.1428571428571" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Ask for a load</text>
+<rect x="821.1428571428571" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="821.1428571428571" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="821.1428571428571" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="821.1428571428571" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="821.1428571428571" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="821.1428571428571" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="832.1428571428571" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;Dry van, Texas to Georgia.&quot;</text>
+<text x="832.1428571428571" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: LD90001: Dallas to</text>
+<text x="832.1428571428571" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">Atlanta; pickup, cargo,</text>
+<text x="832.1428571428571" y="405.2" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">$1,800. Does that work?</text>
+<text x="832.1428571428571" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">find_loads(equipment,</text>
+<text x="832.1428571428571" y="461" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">lane)</text>
+<text x="832.1428571428571" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Extract equipment and state</text>
+<text x="832.1428571428571" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">codes; choose find_loads;</text>
+<text x="832.1428571428571" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">speak returned public fields.</text>
+<text x="832.1428571428571" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Gate before TMS. Exclude</text>
+<text x="832.1428571428571" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">held loads; pick up to 3</text>
+<text x="832.1428571428571" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">OPEN future loads. Price</text>
+<text x="832.1428571428571" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">safely; recheck gate at write.</text>
+<rect x="829.1428571428571" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="836.1428571428571" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Search -&gt; summaries / Load</text>
+<text x="836.1428571428571" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Load + offer -&gt; public dict</text>
+<text x="836.1428571428571" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: found + public loads</text>
+<text x="832.1428571428571" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">Twin holds; TMS QUERY +</text>
+<text x="832.1428571428571" y="742" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">GET</text>
+<rect x="830.1428571428571" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="923.0" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="923.0" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="841.1428571428571" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="841.1428571428571" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">calls[run_id]</text>
+<text x="841.1428571428571" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">search, offers,</text>
+<text x="841.1428571428571" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">policy_version</text>
+<text x="841.1428571428571" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ public pitch event</text>
+<text x="841.1428571428571" y="860.4159999999999" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">No ceiling or posted rate</text>
+<polygon points="838.1428571428571,914 869.1428571428571,914 875.1428571428571,927 869.1428571428571,940 838.1428571428571,940 832.1428571428571,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="842.1428571428571" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="884.1428571428571" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="832.1428571428571" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">selling.py: find_loads,</text>
+<text x="832.1428571428571" y="975" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">_open_loads [B3]</text>
+<text x="832.1428571428571" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/loads.py: select_offers,</text>
+<text x="832.1428571428571" y="1008" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">public_view [B1]</text>
+<text x="832.1428571428571" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/pricing.py: price_load [B1]</text>
+<rect x="1024.857142857143" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1033.857142857143" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="1039.857142857143" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C5</text>
+<text x="1073.857142857143" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Make a counter</text>
+<rect x="1024.857142857143" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1024.857142857143" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1024.857142857143" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1024.857142857143" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1024.857142857143" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1024.857142857143" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="1035.857142857143" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;I need $2,100.&quot;</text>
+<text x="1035.857142857143" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: &quot;I can do $1,900.</text>
+<text x="1035.857142857143" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">Does that work?&quot;</text>
+<text x="1035.857142857143" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">negotiate(load_id,</text>
+<text x="1035.857142857143" y="461" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">rate)</text>
+<text x="1035.857142857143" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Choose negotiate with the</text>
+<text x="1035.857142857143" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">exact ask. Quote only</text>
+<text x="1035.857142857143" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">service-approved counter.</text>
+<text x="1035.857142857143" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Fresh LOAD_GET + pricing.</text>
+<text x="1035.857142857143" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Decide in versioned call</text>
+<text x="1035.857142857143" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">write; &lt;=3 call-wide counters.</text>
+<text x="1035.857142857143" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Same last ask/load uses no</text>
+<text x="1035.857142857143" y="625.8" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">round.</text>
+<rect x="1032.857142857143" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="1039.857142857143" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">heard &quot;2100&quot; -&gt; ask 2100</text>
+<text x="1039.857142857143" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Load -&gt; Terms -&gt; Step</text>
+<text x="1039.857142857143" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: counter 1900, round 1</text>
+<text x="1035.857142857143" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">Fresh TMS GET; Twin decision</text>
+<rect x="1033.857142857143" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="1126.7142857142858" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="1126.7142857142858" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="1044.857142857143" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="1044.857142857143" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">calls[run_id]</text>
+<text x="1044.857142857143" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">offers, rounds=1,</text>
+<text x="1044.857142857143" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">last_counter</text>
+<text x="1044.857142857143" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ heard / ask / reply event</text>
+<text x="1044.857142857143" y="860.4159999999999" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">No agreement yet</text>
+<polygon points="1041.857142857143,914 1072.857142857143,914 1078.857142857143,927 1072.857142857143,940 1041.857142857143,940 1035.857142857143,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1045.857142857143" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1087.857142857143" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="1035.857142857143" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">selling.py: negotiate,</text>
+<text x="1035.857142857143" y="975" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">_fresh_terms [B3]</text>
+<text x="1035.857142857143" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">sale_decisions.py:</text>
+<text x="1035.857142857143" y="1008" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">answer_counter [B3]</text>
+<text x="1035.857142857143" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/negotiation.py: respond</text>
+<text x="1035.857142857143" y="1041" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">[B1]</text>
+<rect x="1228.5714285714287" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1237.5714285714287" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="1243.5714285714287" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C6</text>
+<text x="1277.5714285714287" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Agree on the rate</text>
+<rect x="1228.5714285714287" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1228.5714285714287" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1228.5714285714287" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1228.5714285714287" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1228.5714285714287" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1228.5714285714287" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="1239.5714285714287" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;Yes, $1,900 works.&quot;</text>
+<text x="1239.5714285714287" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: LD90001 agreed at</text>
+<text x="1239.5714285714287" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">$1,900. Senior rep will</text>
+<text x="1239.5714285714287" y="405.2" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">confirm (mocked handoff).</text>
+<text x="1239.5714285714287" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">negotiate(load_id,</text>
+<text x="1239.5714285714287" y="461" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">rate)</text>
+<text x="1239.5714285714287" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Send acceptance to negotiate</text>
+<text x="1239.5714285714287" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">first. Only agreed permits the</text>
+<text x="1239.5714285714287" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">spoken mocked handoff.</text>
+<text x="1239.5714285714287" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">Fresh terms again. Claim</text>
+<text x="1239.5714285714287" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">one agreement per call;</text>
+<text x="1239.5714285714287" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">booking row decides the load</text>
+<text x="1239.5714285714287" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">holder; settle claim before</text>
+<text x="1239.5714285714287" y="625.8" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">replying.</text>
+<rect x="1236.5714285714287" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="1243.5714285714287" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Step: ACCEPT -&gt; claim</text>
+<text x="1243.5714285714287" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">load snapshot -&gt; RESERVED</text>
+<text x="1243.5714285714287" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">Reply: agreed / 1900</text>
+<text x="1239.5714285714287" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">TMS GET; 3 Twin row</text>
+<text x="1239.5714285714287" y="742" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">decisions</text>
+<rect x="1237.5714285714287" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="1330.4285714285716" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="1330.4285714285716" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="1248.5714285714287" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="1248.5714285714287" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">1 calls: accepting claim</text>
+<text x="1248.5714285714287" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">2 bookings: RESERVED</text>
+<text x="1248.5714285714287" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ rep snapshot / event</text>
+<text x="1248.5714285714287" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">3 calls: agreement</text>
+<text x="1248.5714285714287" y="860.4159999999999" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ clear claim / event</text>
+<text x="1248.5714285714287" y="875.52" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">Not one transaction</text>
+<polygon points="1245.5714285714287,914 1276.5714285714287,914 1282.5714285714287,927 1276.5714285714287,940 1245.5714285714287,940 1239.5714285714287,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1249.5714285714287" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1291.5714285714287" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="1239.5714285714287" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">sale_decisions.py: _apply, settle</text>
+<text x="1239.5714285714287" y="975" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">[B3]</text>
+<text x="1239.5714285714287" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">bookings.py: Bookings.reserve</text>
+<text x="1239.5714285714287" y="1008" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">[B3]</text>
+<text x="1239.5714285714287" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">core/loads.py: reservation_view</text>
+<text x="1239.5714285714287" y="1041" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">[B4]</text>
+<text x="1239.5714285714287" y="1059" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">Rep: posted; no ceiling.</text>
+<rect x="1432.2857142857142" y="255" width="203.71428571428572" height="46" rx="0" fill="#F5F7FA" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1441.2857142857142" y="264" width="34" height="27" rx="13" fill="#14283F" stroke="#14283F" stroke-width="1"/>
+<text x="1447.2857142857142" y="283.0" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="bold" fill="#FFFFFF">C7</text>
+<text x="1481.2857142857142" y="282.0" font-family="Arial, Helvetica, sans-serif" font-size="13.8" font-weight="bold" fill="#14283F">Finish the call</text>
+<rect x="1432.2857142857142" y="309" width="203.71428571428572" height="116" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1432.2857142857142" y="425" width="203.71428571428572" height="110" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1432.2857142857142" y="535" width="203.71428571428572" height="113" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1432.2857142857142" y="648" width="203.71428571428572" height="98" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1432.2857142857142" y="746" width="203.71428571428572" height="158" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<rect x="1432.2857142857142" y="904" width="203.71428571428572" height="174" rx="0" fill="#FFFFFF" stroke="#CBD5E1" stroke-width="1"/>
+<text x="1443.2857142857142" y="330" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">&quot;Thank you. Goodbye.&quot;</text>
+<text x="1443.2857142857142" y="347" font-family="Arial, Helvetica, sans-serif" font-size="14.1" font-weight="normal" fill="#14283F">End voice session.</text>
+<text x="1443.2857142857142" y="373.0" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">HEAR: Courteous farewell.</text>
+<text x="1443.2857142857142" y="389.1" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">No live transfer or final TMS</text>
+<text x="1443.2857142857142" y="405.2" font-family="Arial, Helvetica, sans-serif" font-size="13.7" font-weight="normal" fill="#52647A">booking.</text>
+<text x="1443.2857142857142" y="446" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">close_call(summary) +</text>
+<text x="1443.2857142857142" y="461" font-family="Courier New, monospace" font-size="12.8" font-weight="normal" fill="#713EB5">callback</text>
+<text x="1443.2857142857142" y="477.0" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">Choose close_call. Then V4</text>
+<text x="1443.2857142857142" y="492.7" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">end webhook sends initiator /</text>
+<text x="1443.2857142857142" y="508.4" font-family="Arial, Helvetica, sans-serif" font-size="13.3" font-weight="normal" fill="#713EB5">duration.</text>
+<text x="1443.2857142857142" y="557.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">First model close/notes</text>
+<text x="1443.2857142857142" y="574.2" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">stand. Separate end report is</text>
+<text x="1443.2857142857142" y="591.4" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">idempotent. Neither releases</text>
+<text x="1443.2857142857142" y="608.6" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">reservation nor sends</text>
+<text x="1443.2857142857142" y="625.8" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="normal" fill="#14786B">booking.</text>
+<rect x="1440.2857142857142" y="657" width="187.71428571428572" height="53" rx="8" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<text x="1447.2857142857142" y="674.0" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">summary -&gt; closed</text>
+<text x="1447.2857142857142" y="688.4" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">initiator + duration</text>
+<text x="1447.2857142857142" y="702.8" font-family="Arial, Helvetica, sans-serif" font-size="12.3" font-weight="normal" fill="#285EA6">-&gt; ended (if delivered)</text>
+<text x="1443.2857142857142" y="727" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">Twin only; end capture if</text>
+<text x="1443.2857142857142" y="742" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#9B6512">delivered</text>
+<rect x="1441.2857142857142" y="763" width="185.71428571428572" height="124" rx="0" fill="#EFF5FF" stroke="#285EA6" stroke-width="1"/>
+<ellipse cx="1534.142857142857" cy="763" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<ellipse cx="1534.142857142857" cy="887" rx="92.85714285714286" ry="7" fill="#EFF5FF" stroke="#285EA6"/>
+<text x="1452.2857142857142" y="785.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="bold" fill="#285EA6">SAVED</text>
+<text x="1452.2857142857142" y="800.0" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">calls[run_id]</text>
+<text x="1452.2857142857142" y="815.104" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">closed_at, summary + event</text>
+<text x="1452.2857142857142" y="830.208" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">ended_at, ended_by</text>
+<text x="1452.2857142857142" y="845.312" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">duration_seconds</text>
+<text x="1452.2857142857142" y="860.4159999999999" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">+ end event if delivered</text>
+<text x="1452.2857142857142" y="875.52" font-family="Arial, Helvetica, sans-serif" font-size="12.8" font-weight="normal" fill="#14283F">Hold remains RESERVED</text>
+<polygon points="1449.2857142857142,914 1480.2857142857142,914 1486.2857142857142,927 1480.2857142857142,940 1449.2857142857142,940 1443.2857142857142,927" fill="#FFF4D3" stroke="#8B5F0A" stroke-width="1"/>
+<text x="1453.2857142857142" y="932.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="bold" fill="#8B5F0A">B3</text>
+<text x="1495.2857142857142" y="933.0" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="normal" fill="#52647A">owns this step</text>
+<text x="1443.2857142857142" y="960" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">selling.py: Sales.close [B3]</text>
+<text x="1443.2857142857142" y="978" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">calls.py: Calls.end [B2 module;</text>
+<text x="1443.2857142857142" y="993" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">later capture]</text>
+<text x="1443.2857142857142" y="1011" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">CallRows.step / Twin.change</text>
+<text x="1443.2857142857142" y="1026" font-family="Arial, Helvetica, sans-serif" font-size="12.5" font-weight="normal" fill="#14786B">write state + event [B2]</text>
+<rect x="44" y="1091" width="1592" height="65" rx="8" fill="#F5F7FA" stroke="#52647A" stroke-width="1" stroke-dasharray="6 4"/>
+<text x="60" y="1116.0" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="bold" fill="#14283F">SEPARATE REP PATH: B4 App reads Twin through Dashboard.snapshot(). A rep reviews the captured deal; Confirm is disabled while sends are off/unknown.</text>
+<text x="60" y="1139.0" font-family="Arial, Helvetica, sans-serif" font-size="13.5" font-weight="normal" fill="#52647A">Only RepActions.confirm() can send LOAD_BOOK, with mode/version/fresh-load checks. PENDING = ACK_PENDING, not BOOKED. No actual transfer is implemented.</text>
+<text x="44" y="1169.0" font-family="Arial, Helvetica, sans-serif" font-size="10.9" font-weight="normal" fill="#52647A">Source: main 2678845. File paths are relative to service/ unless marked. C1-C7 are call moments; B1-B5 are build slices. Money is illustrative, not a live trace.</text>
+<text x="44" y="1183.0" font-family="Arial, Helvetica, sans-serif" font-size="10.8" font-weight="normal" fill="#52647A">Shared I/O: api.py routes JSON; adapters/twin.py version-checks SQL writes. TMS [B1]: client.py query/get -&gt; protocol.py encode_request/parse_reply -&gt; mapping.py to_summary/to_load.</text>
+</svg>

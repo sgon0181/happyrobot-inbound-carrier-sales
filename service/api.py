@@ -14,6 +14,7 @@ from typing import Annotated, Protocol
 
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.exceptions import RequestValidationError
+from fastapi.params import Depends as Dependency
 from fastapi.responses import JSONResponse, Response
 from pydantic import BaseModel, ConfigDict, Field
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
@@ -21,6 +22,7 @@ from starlette.types import ASGIApp, Message, Receive, Scope, Send
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import TwinUnavailable
 from service.calls import Calls, Reply
+from service.dashboard import Dashboard
 from service.selling import Sales
 
 VOICE_DEADLINE_SECONDS = 12.0
@@ -74,6 +76,7 @@ def create_app(
     *,
     calls: Calls,
     sales: Sales,
+    dashboard: Dashboard,
     tms: Reachable,
     agent_key: str,
     ops_key: str,
@@ -82,13 +85,29 @@ def create_app(
 ) -> FastAPI:
     app = FastAPI(docs_url=None, redoc_url=None, openapi_url=None, lifespan=lifespan)
     app.add_exception_handler(RequestValidationError, _invalid)
+    app.add_exception_handler(TwinUnavailable, _unavailable)
     app.middleware("http")(_no_store)
     app.add_middleware(_limit_body)  # added last, so it runs first
-    agent = Depends(_bearer(agent_key))
     either = Depends(_bearer(agent_key, ops_key))
+    _voice_routes(app, calls, sales, Depends(_bearer(agent_key)), deadline_seconds)
+    _ops_routes(app, dashboard, Depends(_bearer(ops_key)))
 
+    @app.get("/health", dependencies=[either])
+    async def health() -> Reply:
+        try:
+            await tms.echo()
+        except TmsUnavailable:
+            return {"status": "ok", "tms": "unreachable"}
+        return {"status": "ok", "tms": "reachable"}
+
+    return app
+
+
+def _voice_routes(
+    app: FastAPI, calls: Calls, sales: Sales, agent: Dependency, deadline: float
+) -> None:
     def voice(work: Awaitable[Reply]) -> Awaitable[Reply]:
-        return _within_deadline(work, deadline_seconds)
+        return _within_deadline(work, deadline)
 
     @app.post("/carriers/verify", dependencies=[agent])
     async def verify_carrier(body: VerifyCarrier) -> Reply:
@@ -115,15 +134,11 @@ def create_app(
     async def close(body: Close) -> Reply:
         return await voice(sales.close(body.run_id, body.summary))
 
-    @app.get("/health", dependencies=[either])
-    async def health() -> Reply:
-        try:
-            await tms.echo()
-        except TmsUnavailable:
-            return {"status": "ok", "tms": "unreachable"}
-        return {"status": "ok", "tms": "reachable"}
 
-    return app
+def _ops_routes(app: FastAPI, dashboard: Dashboard, ops: Dependency) -> None:
+    @app.get("/ops/snapshot", dependencies=[ops])
+    async def snapshot() -> Reply:
+        return await dashboard.snapshot()
 
 
 async def _within_deadline(work: Awaitable[Reply], seconds: float) -> Reply:
@@ -138,6 +153,12 @@ async def _within_deadline(work: Awaitable[Reply], seconds: float) -> Reply:
 
 async def _invalid(request: Request, error: Exception) -> JSONResponse:
     return JSONResponse({"status": "invalid_request"}, 400)  # never echoes the input back
+
+
+async def _unavailable(request: Request, error: Exception) -> JSONResponse:
+    """An operations request that Twin failed. Voice requests answer within their deadline."""
+    log.warning("Operations request failed: %s", type(error).__name__)
+    return JSONResponse({"status": "temporarily_unavailable"}, 503)
 
 
 async def _no_store(

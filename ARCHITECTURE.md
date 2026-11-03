@@ -204,7 +204,7 @@ service/                                                                   Statu
   calls.py           The call row, and the verify and code flows           built
   selling.py         Voice flows: search, negotiate, close                 built
   bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
-  dashboard.py       The snapshot and KPIs for the operations app          slice 4
+  dashboard.py       The snapshot and KPIs for the operations app          built
   core/              Pure rules: no network, no files, no clock
     models.py  money.py  pricing.py  negotiation.py  loads.py              built
     carrier_policy.py  codes.py                                            built
@@ -476,7 +476,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
-| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py` and `bookings.py` |
+| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `bookings.py` and `dashboard.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
 | Capacity | 12 calls of about 4 minutes within 4 minutes, plus one rep action a minute, all reach a reservation with no response over 12 seconds |

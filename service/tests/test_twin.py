@@ -155,3 +155,24 @@ def test_statements_start_no_closer_than_the_pace() -> None:
     started = time.monotonic()
     asyncio.run(scenario())
     assert time.monotonic() - started >= 4 * 0.05
+
+
+def test_every_row_of_a_table_is_read_in_one_statement() -> None:
+    fake = FakeTwin()
+
+    async def scenario() -> tuple[dict[str, Any], dict[str, Any]]:
+        twin = fake.twin()
+        await twin.insert("bookings", "LD1", {"state": "RESERVED"})
+        await twin.insert("bookings", "o'k", {"state": "RELEASED"})
+        found = await twin.get_all("bookings")
+        return {key: (row.version, row.data) for key, row in found.items()}, await twin.get_all(
+            "calls"
+        )
+
+    found, empty = asyncio.run(scenario())
+    assert found == {"LD1": (1, {"state": "RESERVED"}), "o'k": (1, {"state": "RELEASED"})}
+    assert empty == {}
+    assert fake.statements[-2:] == [
+        "SELECT id, version, data FROM bookings",
+        "SELECT id, version, data FROM calls",
+    ]

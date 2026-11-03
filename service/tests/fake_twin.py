@@ -18,6 +18,7 @@ _SELECT = re.compile(rf"SELECT version, data FROM (\w+) WHERE id = {_LITERAL}")
 _SELECT_MANY = re.compile(
     rf"SELECT id, version, data FROM (\w+) WHERE id IN \(({_LITERAL}(?:, {_LITERAL})*)\)"
 )
+_SELECT_ALL = re.compile(r"SELECT id, version, data FROM (\w+)")
 _INSERT = re.compile(
     rf"INSERT INTO (\w+) \(id, version, data\) VALUES \({_LITERAL}, 1, {_LITERAL}::jsonb\) "
     r"ON CONFLICT \(id\) DO NOTHING RETURNING id"
@@ -75,6 +76,9 @@ class FakeTwin:
             return [
                 {"id": k, "version": table[k][0], "data": table[k][1]} for k in keys if k in table
             ]
+        if match := _SELECT_ALL.fullmatch(sql):
+            rows = self.tables[match[1]].items()
+            return [{"id": key, "version": row[0], "data": row[1]} for key, row in rows]
         if match := _INSERT.fullmatch(sql):
             table, key, data = match[1], _text(match[2]), json.loads(_text(match[3]))
             if key in self.tables[table]:

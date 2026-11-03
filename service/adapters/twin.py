@@ -76,6 +76,11 @@ class Twin:
         sql = f"SELECT id, version, data FROM {_table(table)} WHERE id IN ({listed})"  # noqa: S608
         return {str(row.get("id")): _row(row) for row in await self._sql(sql)}
 
+    async def get_all(self, table: str) -> dict[str, Row]:
+        """Every row in the table, read in one statement. For the operations snapshot."""
+        sql = f"SELECT id, version, data FROM {_table(table)}"  # noqa: S608
+        return {str(row.get("id")): _row(row) for row in await self._sql(sql)}
+
     async def insert(self, table: str, key: str, data: Data) -> bool:
         """Create the row at version 1. False if the key already exists."""
         sql = (

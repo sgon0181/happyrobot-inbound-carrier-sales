@@ -19,6 +19,7 @@ from service.calls import CallRows, Calls
 from service.config import POLICY_DIR
 from service.core.models import Load, LoadSummary
 from service.core.pricing import PricingPolicy
+from service.dashboard import Dashboard
 from service.selling import Sales
 from service.tests.fake_twin import FakeTwin
 from service.tests.test_carrier_policy import ACTIVE
@@ -108,11 +109,16 @@ class Rig:
     clock: Clock
     fmcsa: FakeFmcsa
     board: FakeBoard
+    dashboard: Dashboard
 
     def post(self, path: str, key: str = AGENT, **body: Any) -> Any:
         response = self.client.post(
             path, json={"run_id": RUN, **body}, headers={"Authorization": f"Bearer {key}"}
         )
+        return response.json() | {"http": response.status_code}
+
+    def get(self, path: str, key: str = OPS) -> Any:
+        response = self.client.get(path, headers={"Authorization": f"Bearer {key}"})
         return response.json() | {"http": response.status_code}
 
     def row(self) -> dict[str, Any]:
@@ -153,15 +159,17 @@ def rig(
         pricing_secret=b"p" * 24,
         blocked=BLOCKED,
     )
+    dashboard = Dashboard(rows.twin, now=clock)
     closed_port = TmsSettings(
         host="127.0.0.1", port=9, token="t", read_budget_seconds=0.2, attempt_seconds=0.1
     )
     app = create_app(
         calls=calls,
         sales=sales,
+        dashboard=dashboard,
         tms=tms or TmsClient(closed_port),
         agent_key=AGENT,
         ops_key=OPS,
         deadline_seconds=deadline,
     )
-    return Rig(TestClient(app), twin, mailer, clock, fake, board)
+    return Rig(TestClient(app), twin, mailer, clock, fake, board, dashboard)

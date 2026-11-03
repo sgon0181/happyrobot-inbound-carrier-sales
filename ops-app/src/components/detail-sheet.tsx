@@ -1,5 +1,7 @@
 "use client";
 
+import { useRef } from "react";
+
 import {
   Sheet,
   SheetContent,
@@ -21,13 +23,14 @@ export function DetailSheet({
   description?: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const top = useRef<HTMLDivElement>(null); // open at the top, not at the first button
   return (
     <Sheet>
       <SheetTrigger className="cursor-pointer text-left font-mono text-sm font-semibold underline decoration-muted-foreground/40 underline-offset-4 hover:decoration-foreground">
         {trigger}
       </SheetTrigger>
-      <SheetContent className="w-full overflow-y-auto data-[side=right]:w-full data-[side=right]:sm:max-w-xl">
-        <SheetHeader className="border-b">
+      <SheetContent initialFocus={top} className="w-full overflow-y-auto data-[side=right]:w-full data-[side=right]:sm:max-w-xl">
+        <SheetHeader ref={top} tabIndex={-1} className="border-b outline-none">
           <SheetTitle>{title}</SheetTitle>
           {description ? <SheetDescription>{description}</SheetDescription> : null}
         </SheetHeader>

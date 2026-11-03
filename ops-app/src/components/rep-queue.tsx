@@ -29,8 +29,8 @@ const COLUMNS: [string, string][] = [
   ["Lane", ""],
   ["Pickup", "w-[8rem]"],
   ["Rate", "w-[6.5rem]"],
-  ["Status", "w-[8.5rem]"],
-  ["Action", "w-[10.5rem]"],
+  ["Status", "w-[10.5rem]"],
+  ["Action", "w-[8rem]"],
 ];
 const cell = "py-3 align-top whitespace-normal";
 const sub = "truncate text-xs text-muted-foreground";
@@ -117,7 +117,7 @@ export function RepQueue({
                     </TableCell>
                     <TableCell className={cell} title={USD_NOTE}>
                       <p className="font-semibold tabular-nums">{fmtUsd(b.rate)}</p>
-                      <p className={sub}>Posted {fmtUsd(b.load?.postedRate ?? null)}</p>
+                      <p className="text-xs text-muted-foreground">Posted {fmtUsd(b.load?.postedRate ?? null)}</p>
                     </TableCell>
                     <TableCell className={cell}>
                       <StateBadge state={b.state} />

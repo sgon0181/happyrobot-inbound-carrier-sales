@@ -460,18 +460,18 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 
 ## 14. Quality
 
-**Northstar KPI: reserved handoffs per code-passed call** (D-15). Real calls that reached the rep with a reservation, divided by real calls that passed the code check. It measures the leg the AI owns. Rep-confirmed, TMS-acknowledged and TMS-confirmed are reported separately, and `PENDING` is never counted as confirmed.
+**Northstar KPI: recorded reservations per code-passed call** (D-15). Real call rows with a reservation event, divided by real call rows that ever passed the code check. It measures reservation creation, not proof of a spoken transfer or financial impact. Rep-approved submission, pending acknowledgement and final TMS confirmation remain separate; PENDING is never final confirmation. See [KPI definitions](docs/kpis.md) for clocks, denominators and missing data.
 
 **Cohorts (D-21).** Each call is real or synthetic, set by `CALL_COHORT` when the call begins. KPIs count real calls only.
 
 | Customer problem (PDF p.1) | KPI |
 |---|---|
-| Missed calls, long holds | Calls answered, time to first offer |
+| Missed calls, long holds | Recorded calls and tool-to-offer interval; actual answer rate and call-start latency unmeasured |
 | Inconsistent negotiation | Ceiling compliance, headroom, deals lost to the cap |
-| Manual FMCSA checks | Automatic verification rate, ineligible carriers stopped |
+| Manual FMCSA checks | Authority checked and emailed code passed, not proof of carrier identity |
 | No audit trail | Share of calls with a complete record |
 | Dispatcher burnout | Calls handled without a dispatcher |
-| Missed revenue | Turned-away demand |
+| Unmatched demand | Latest unmatched lanes, not measured revenue |
 
 **Guardrails, must stay at 0:** rate above ceiling, ceiling disclosed, verification bypassed, more than 3 counters, a booking sent twice.
 

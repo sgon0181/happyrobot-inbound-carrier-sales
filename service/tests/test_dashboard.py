@@ -116,7 +116,7 @@ def test_kpis_count_real_calls_and_test_data_is_shown_apart() -> None:
         0.5,
     )
     assert (kpis["rep_confirmed"], kpis["unknown"], kpis["tms_confirmed"]) == (1, 1, 0)
-    assert (kpis["synthetic_calls"], kpis["closed_with_summary"]) == (2, 1)
+    assert (kpis["synthetic_calls"], kpis["closed_with_summary"]) == (2, 0)
     assert kpis["median_seconds_to_first_offer"] is None
     assert snapshot["turned_away"] == [
         {"equipment": "REEFER", "origin_state": "CA", "dest_state": "KY", "calls": 2},
@@ -202,3 +202,18 @@ def test_send_mode_is_explicit_in_the_authenticated_snapshot() -> None:
         assert r.get("/ops/snapshot")["live_booking"] is enabled
         assert r.get("/ops/snapshot", key=AGENT)["http"] == 401
         assert r.board.sends == []
+
+
+def test_closing_notes_and_reported_ends_count_only_actual_evidence() -> None:
+    rows = {
+        "none": call("real", closed_at=START.isoformat()),
+        "blank": call("real", closed_at=START.isoformat(), summary="  "),
+        "notes": call(
+            "real", closed_at=START.isoformat(), summary="No match.", ended_at=START.isoformat()
+        ),
+        "test": call(
+            "synthetic", closed_at=START.isoformat(), summary="Fixture", ended_at=START.isoformat()
+        ),
+    }
+    kpis = build_snapshot(rows, {}, START)["kpis"]
+    assert (kpis["calls"], kpis["closed_with_summary"], kpis["ends_reported"]) == (3, 1, 1)

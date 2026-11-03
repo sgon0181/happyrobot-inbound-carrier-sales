@@ -71,6 +71,7 @@ export type Kpis = {
   outcomes: Record<string, number>;
   medianSecondsToFirstOffer: number | null;
   closedWithSummary: number | null;
+  endsReported: number | null;
   syntheticCalls: number | null;
 };
 
@@ -209,6 +210,7 @@ function projectKpis(v: unknown): Kpis {
     outcomes,
     medianSecondsToFirstOffer: num(k.median_seconds_to_first_offer),
     closedWithSummary: num(k.closed_with_summary),
+    endsReported: num(k.ends_reported),
     syntheticCalls: num(k.synthetic_calls),
   };
 }

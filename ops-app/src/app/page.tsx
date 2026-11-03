@@ -115,16 +115,17 @@ function Overview({ kpis }: { kpis: Kpis }) {
     <section className="flex flex-col gap-3">
       <h2 className="text-sm font-medium">Real calls</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatTile icon={<IconTarget />} label="Northstar" value={kpis.northstar === null ? "n/a" : `${Math.round(kpis.northstar * 100)}%`} description="Reserved handoffs per code-passed call: the leg the agent owns." />
-        <StatTile icon={<IconPhoneCall />} label="Calls answered" value={fmtCount(kpis.calls)} description="Real carrier calls, every one answered." />
-        <StatTile icon={<IconShieldCheck />} label="Code passed" value={fmtCount(kpis.codePassed)} description="Calls with an eligible MC and a passed emailed code." />
-        <StatTile icon={<IconHandStop />} label="Reserved handoffs" value={fmtCount(kpis.handoffs)} description="Calls that reached a rep with a reservation." />
-        <StatTile icon={<IconUserCheck />} label="Rep confirmed" value={fmtCount(kpis.repConfirmed)} description="Reservations a rep sent to the TMS." />
-        <StatTile icon={<IconTruckDelivery />} label="TMS acknowledged" value={fmtCount(kpis.tmsAcknowledged)} description={`Reference with PENDING. TMS confirmed (BOOKED): ${fmtCount(kpis.tmsConfirmed)}.`} />
+        <StatTile icon={<IconTarget />} label="Northstar" value={kpis.northstar === null ? "n/a" : `${Math.round(kpis.northstar * 100)}%`} description="Recorded reservations per call that ever passed its code." />
+        <StatTile icon={<IconPhoneCall />} label="Calls recorded" value={fmtCount(kpis.calls)} description="Real call rows saved by a service request or end report." />
+        <StatTile icon={<IconShieldCheck />} label="Code passed" value={fmtCount(kpis.codePassed)} description="Calls that passed a code at least once; not proof of carrier identity." />
+        <StatTile icon={<IconHandStop />} label="Reservations created" value={fmtCount(kpis.handoffs)} description="Calls with a saved reservation, not proof of a spoken handoff." />
+        <StatTile icon={<IconUserCheck />} label="Rep approved" value={fmtCount(kpis.repConfirmed)} description="Reservations approved for submission, not final TMS bookings." />
+        <StatTile icon={<IconTruckDelivery />} label="TMS pending" value={fmtCount(kpis.tmsAcknowledged)} description={`Reference with PENDING. TMS confirmed (BOOKED): ${fmtCount(kpis.tmsConfirmed)}.`} />
         <StatTile icon={<IconAlertTriangle />} label="Unknown" value={fmtCount(kpis.unknown)} description="Sends that may have landed. Reconcile; never resend." />
-        <StatTile icon={<IconClock />} label="Time to first offer" value={kpis.medianSecondsToFirstOffer === null ? "n/a" : `${Math.round(kpis.medianSecondsToFirstOffer)} s`} description="Median, from the call's first request to its first offer." />
+        <StatTile icon={<IconClock />} label="Tool-to-offer time" value={kpis.medianSecondsToFirstOffer === null ? "n/a" : `${Math.round(kpis.medianSecondsToFirstOffer)} s`} description="Median first service request to first matched search; excludes greeting and spoken delivery." />
       </div>
       <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+        <span>End reports: {fmtCount(kpis.endsReported)}. Closing notes: {fmtCount(kpis.closedWithSummary)}.</span>
         <span>Outcomes:</span>
         {outcomes.length === 0 ? <span>none yet</span> : outcomes.map(([name, n]) => <Badge key={name} variant="outline">{label(name)}: {n}</Badge>)}
         <span className="ml-2 flex items-center gap-1"><IconFlask className="size-3" /> Test calls, excluded: {fmtCount(kpis.syntheticCalls)}</span>

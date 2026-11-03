@@ -143,9 +143,14 @@ def kpis(calls: list[Data]) -> Data:
         **_handoff_kpis(handed, _count(real, "code_passed")),
         "outcomes": dict(Counter(call["outcome"] for call in real)),
         "median_seconds_to_first_offer": statistics.median(waits) if waits else None,
-        "closed_with_summary": _count(real, "closed_at"),
+        "closed_with_summary": sum(_has_closing_notes(call) for call in real),
+        "ends_reported": _count(real, "ended_at"),
         "synthetic_calls": len(calls) - len(real),
     }
+
+
+def _has_closing_notes(call: Data) -> bool:
+    return bool(call["closed_at"] and str(call.get("summary") or "").strip())
 
 
 def _handoff_kpis(handed: list[Data], passed: int) -> Data:
@@ -194,7 +199,7 @@ def _booking(key: str, row: Row, calls: dict[str, Row]) -> Data:
 
 
 def _first_offer_seconds(call: Data) -> float | None:
-    """Seconds from the call's start to its first search that found loads."""
+    """Seconds from first recorded service activity to the first matched search, not speech."""
     found = [
         event.get("at")
         for event in call["events"] or []

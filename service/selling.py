@@ -104,7 +104,7 @@ class Sales:
         data = await self.rows.read(run_id)
         early = refusal(data, load_id)
         if early is not None:
-            return await log(answer(early["status"], early))
+            return await log(lambda current, now: refusal(current, load_id) or {"status": "busy"})
         claim = data["accepting"]
         if claim is not None:  # voided on the booking row, so its first request cannot reserve
             now = self.rows.now()
@@ -128,7 +128,7 @@ class Sales:
             call_id=run_id,
             mc=reply["mc"],
             rate=reply["rate"],
-            cohort=self.rows.cohort,
+            cohort=reply["cohort"],
             now=self.rows.now(),
             load=reservation_view(load),
         )

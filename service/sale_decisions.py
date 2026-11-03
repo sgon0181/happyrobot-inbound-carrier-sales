@@ -19,6 +19,8 @@ def refusal(data: Data, load_id: str) -> Reply | None:
     if not is_verified(data):
         return {"status": "not_verified"}
     if agreement is not None:
+        if agreement["mc"] != data["mc"]:
+            return {"status": "not_verified"}  # do not replay a legacy, mismatched agreement
         if agreement["load_id"] == load_id:  # a repeated accept finds its own reservation
             return {"status": "agreed", "load_id": load_id, "rate": agreement["rate"]}
         return {"status": "already_agreed"}  # one agreement per call (INV-6)
@@ -69,6 +71,7 @@ def answer_counter(load_id: str, ask: str, terms: Terms) -> Decide:
 def _apply(data: Data, load_id: str, step: Step) -> Reply:
     if step.action is Action.ACCEPT:
         claim = {"id": uuid.uuid4().hex, "load_id": load_id, "rate": step.rate, "mc": data["mc"]}
+        claim["cohort"] = data["cohort"]
         data["accepting"] = claim
         return {"status": "accepting", **data["accepting"]}
     if step.action is Action.FAILED:
@@ -94,6 +97,10 @@ def settle(claim_id: str, held: Data | None) -> Decide:
         claim = data["accepting"]
         if claim is None or claim["id"] != claim_id:
             return {"status": "superseded"}
+        if held is not None and (
+            not is_verified(data) or data["mc"] != claim["mc"] or held["mc"] != claim["mc"]
+        ):
+            return {"status": "not_verified"}  # retain the claim; only a rep can free its booking
         load_id, data["accepting"] = claim["load_id"], None
         if held is None:
             data["offers"].pop(load_id, None)

@@ -1,8 +1,8 @@
 """The call's row, and the verify flows that write it.
 
 The model only asks; every decision uses the call's own stored state (rule 1). A call
-is identified by the workflow's run_id, which the model cannot choose (D-16). Every
-request leaves an event on the row in the same write as its change (INV-9).
+is identified by the workflow's run_id, which the model cannot choose (D-16). State
+changes share a write with their events (INV-9); refused carrier changes leave the row untouched.
 """
 
 import copy
@@ -85,6 +85,8 @@ class Calls:
         if mc is None:
             return await self.rows.step(run_id, "verify_carrier", answer("invalid_mc"))
         selected = await self.rows.step(run_id, "verify_carrier", _select(mc))  # before FMCSA
+        if selected["status"] == "carrier_locked":
+            return selected
         lookup = selected["lookup"]
         try:
             authority = assess(await self.fmcsa.carriers(mc))
@@ -113,16 +115,22 @@ class Calls:
                 return {"status": "not_eligible"}
             state, result = codes.issue(_code_state(data), hashed, now)
             _store_code(data, state)
-            return {"status": "code_issued" if result is codes.Issued.ISSUED else result.value}
+            if result is not codes.Issued.ISSUED:
+                return {"status": result.value}
+            return {"status": "code_issued", "mc": data["mc"], "send_number": state.sends}
 
         reply = await self.rows.step(run_id, "send_code", decide)
         if reply["status"] != "code_issued":
             return reply
+        status = "sent"
         try:  # the send is already counted, so a failure is never silently retried
             await self.mailer.send(code)
         except EmailFailed:
-            return await self.rows.step(run_id, "send_code", answer("send_failed"))
-        return await self.rows.step(run_id, "send_code", answer("sent"))  # delivery recorded too
+            status = "send_failed"
+        delivery = {"mc": reply["mc"], "send_number": reply["send_number"], "delivery": status}
+        return await self.rows.step(
+            run_id, "send_code", _delivery(hashed, reply["send_number"], status), delivery
+        )
 
     async def end(self, run_id: str, ended_by: str | None, seconds: float | None) -> Reply:
         """Record the call's end, from the workflow's request after the voice agent finishes.
@@ -219,13 +227,26 @@ def _select(mc: str) -> Decide:
     saved before the lookup, so a failed or slow lookup cannot leave an earlier MC verified.
     """
 
-    def decide(data: Data, now: datetime) -> Reply:
+    def decide(data: Data, now: datetime) -> Reply | Unchanged:
         if data["mc"] != mc:
+            if data["agreement"] is not None or data["accepting"] is not None:
+                return Unchanged({"status": "carrier_locked"})
             _store_code(data, codes.for_new_mc(_code_state(data)))
             data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
             data.update(offers={}, outcome=None)  # the earlier carrier's outcome is not this one's
         data["lookup"] += 1
         return {"status": "checking", "lookup": data["lookup"]}
+
+    return decide
+
+
+def _delivery(hashed: str, send_number: int, status: str) -> Decide:
+    """A mail completion belongs to its issuance, even if a newer code has the same digits."""
+
+    def decide(data: Data, now: datetime) -> Reply:
+        otp = data["otp"]
+        current = otp["hash"] == hashed and otp["sends"] == send_number
+        return {"status": status if current else "superseded"}
 
     return decide
 

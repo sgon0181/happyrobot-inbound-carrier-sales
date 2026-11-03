@@ -9,7 +9,7 @@ from service.adapters.tms.mapping import to_load
 from service.bookings import Bookings
 from service.core.loads import reservation_view
 from service.tests.fake_tms import make_load
-from service.tests.rig import START, Rig, rig
+from service.tests.rig import RUN, START, Rig, rig
 
 
 def reservation() -> Rig:
@@ -62,7 +62,9 @@ def test_reusing_a_freed_load_preserves_each_reservations_own_details() -> None:
 
 def test_legacy_rows_and_changed_mc_never_invent_reservation_details_or_names() -> None:
     r = reservation()
-    r.post("/carriers/verify", mc="1515")
+    # Legacy rows may predate the carrier lock; preserve the projection's defensive guard.
+    version, data = r.twin.tables["calls"][RUN]
+    r.twin.tables["calls"][RUN] = (version + 1, data | {"mc": "1515"})
     r.booking("LD09002", "RESERVED")
     shown = {b["load_id"]: b for b in r.get("/ops/snapshot")["bookings"]}
     assert shown["LD09001"]["carrier_name"] is None

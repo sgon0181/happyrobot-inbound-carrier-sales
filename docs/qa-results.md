@@ -1,12 +1,12 @@
 # QA results
 
-Updated on 2026-11-03 (Sydney). Current local service and App measurements are separate from historical deployed observations. Version 4 has been live since 2026-11-04 with the prompt tested in "Version 4 closing and wait fixes". App Build 17 does not yet include the local App changes. No new live booking was sent for this package.
+Updated on 2026-11-04 (Sydney). Current local service and App measurements are separate from historical deployed observations. Version 4 has been live since 2026-11-04 with the prompt tested in "Version 4 closing and wait fixes". App Build 17 does not yet include the local App changes. No new live booking was sent for this package.
 
 ## Current candidate summary
 
 | Layer | Result | Boundary |
 |---|---|---|
-| Automated service | 438 tests; 1622 statements and 394 branches, all covered; business gate 244/244 | Offline, fake integrations and loopback fault servers |
+| Automated service | 451 tests; 1641 statements and 404 branches, all covered; business gate 254/254 | Offline, fake integrations and loopback fault servers |
 | Generated inputs | 20,000 pricing inputs (seed 7), 5,000 negotiation setups (seed 11) | Inputs, not calls; unpriceable setups are skipped |
 | Version 4 full checkpoint suite | Fixed prompt: 44/44 (22 definitions, 2 runs each) plus E5 6/6. Earlier prompt text: 58/66, then 39/44 and 43/44 during fixes | All six actions locked. Every batch and failure retained below |
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
@@ -18,9 +18,11 @@ Historical Version 2 checkpoints were 16/19 first-round cases passing, with fail
 
 ## Current service validation
 
-`PATH="$PWD/.venv/bin:$PATH" make check` runs ruff, format checks, `mypy --strict`, tests and coverage. Current actual coverage is 100% statements and branches (1622 statements, 394 branches), with 244/244 gated business branches. The configured minimum remains 90%; actual 100% is the candidate requirement. `.venv/bin/radon cc service -s -n C -e 'service/tests/*'` returns no production function at C or worse. All production modules are at most 300 physical lines; production Python totals 2868 lines. The pre-commit hook tests exactly the staged tree.
+`PATH="$PWD/.venv/bin:$PATH" make check` runs ruff, format checks, `mypy --strict`, tests and coverage. Current actual coverage is 100% statements and branches (1641 statements, 404 branches), with 254/254 gated business branches. The configured minimum remains 90%; actual 100% is the candidate requirement. `.venv/bin/radon cc service -s -n C -e 'service/tests/*'` returns no production function at C or worse. All production modules are at most 300 physical lines; production Python totals 2896 lines. The pre-commit hook tests exactly the staged tree.
 
-The 438 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
+The 451 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
+
+Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These changes are not deployed. The owner approved the `carrier_locked` reply contract; Claude must add its voice handling before deployment. The workflow and prompt were not edited, and the historical 44/44 checkpoint result does not validate that new branch.
 
 The TMS client is tested against loopback TCP fault servers for silence, partial replies, framing, oversized lines, split chunks and delayed closes. The six stored booking replies in [the fixtures](tms/fixtures/README.md) parse to the state each proves. No fixture test sends a live booking.
 

@@ -157,13 +157,14 @@ def test_a_twin_failure_is_reported_as_unavailable() -> None:
 
 
 def test_a_call_that_changes_mc_after_passing_its_code_still_counts_as_code_passed() -> None:
-    r = reserved()
+    r = rig()
+    r.verified()  # a correction is still allowed before a claim or agreement
     assert r.post("/carriers/verify", mc="MC-1515")["status"] == "eligible"
     assert r.row()["verified_at"] is None
     snapshot = r.get("/ops/snapshot")
     assert snapshot["calls"][0]["code_passed"] is True
     kpis = snapshot["kpis"]
-    assert (kpis["code_passed"], kpis["handoffs"], kpis["northstar"]) == (1, 1, 1)
+    assert (kpis["code_passed"], kpis["handoffs"], kpis["northstar"]) == (1, 0, 0)
 
 
 def test_dashboards_asking_together_share_one_refresh() -> None:

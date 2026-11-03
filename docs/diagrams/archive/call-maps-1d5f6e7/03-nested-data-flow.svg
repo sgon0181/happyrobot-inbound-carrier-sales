@@ -1,0 +1,240 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="3000" height="2180" viewBox="0 0 3000 2180">
+<rect x="0" y="0" width="3000" height="2180" rx="0" fill="#f8fafb" stroke="#f8fafb" stroke-width="1.4" />
+<text x="45" y="55" font-size="42" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">03 / NESTED DATA-FLOW MAP</text>
+<text x="45" y="91.0" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#597080" text-anchor="start">YOU are the hub. Follow states 1 to 6 clockwise, then 7 below; each state opens into inputs, files and resulting objects.</text>
+<text x="45" y="137" font-size="19" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#597080" text-anchor="start">S1 = slice 1    S2 = slice 2    S3 = slice 3    |    Paths relative to service/. Every tool request includes trusted run_id and bearer key.</text>
+<rect x="45" y="168" width="16" height="16" rx="4" fill="#183b56" stroke="#183b56" stroke-width="1.4" />
+<text x="69" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#183b56" text-anchor="start">YOU / carrier</text>
+<rect x="240" y="168" width="16" height="16" rx="4" fill="#7353a0" stroke="#7353a0" stroke-width="1.4" />
+<text x="264" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#7353a0" text-anchor="start">HappyRobot</text>
+<rect x="405" y="168" width="16" height="16" rx="4" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="429" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#086c72" text-anchor="start">Flow + API files</text>
+<rect x="630" y="168" width="16" height="16" rx="4" fill="#33734c" stroke="#33734c" stroke-width="1.4" />
+<text x="654" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#33734c" text-anchor="start">Decision rules</text>
+<rect x="835" y="168" width="16" height="16" rx="4" fill="#2865a1" stroke="#2865a1" stroke-width="1.4" />
+<text x="859" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#2865a1" text-anchor="start">Twin memory</text>
+<rect x="1010" y="168" width="16" height="16" rx="4" fill="#a96819" stroke="#a96819" stroke-width="1.4" />
+<text x="1034" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#a96819" text-anchor="start">External provider</text>
+<rect x="1245" y="168" width="16" height="16" rx="4" fill="#ab4a48" stroke="#ab4a48" stroke-width="1.4" />
+<text x="1269" y="183" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#ab4a48" text-anchor="start">Private data</text>
+<path d="M1500,1120 L600,570" fill="none" stroke="#cbd8df" stroke-width="2" />
+<path d="M1500,1120 L2400,570" fill="none" stroke="#cbd8df" stroke-width="2" />
+<path d="M1500,1120 L2500,1120" fill="none" stroke="#cbd8df" stroke-width="2" />
+<path d="M1500,1120 L2400,1650" fill="none" stroke="#cbd8df" stroke-width="2" />
+<path d="M1500,1120 L600,1650" fill="none" stroke="#cbd8df" stroke-width="2" />
+<path d="M1500,1120 L500,1120" fill="none" stroke="#cbd8df" stroke-width="2" />
+<circle cx="1500" cy="1120" r="190" fill="#183b56" stroke="#183b56"/>
+<text x="1500" y="1055" font-size="55" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">YOU</text>
+<text x="1500" y="1096" font-size="25" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#ffffff" text-anchor="middle">the carrier on one call</text>
+<text x="1500" y="1140" font-size="25" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">Speak -&gt; hear -&gt; decide</text>
+<text x="1500" y="1187" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#d5e6ef" text-anchor="middle">Follow states 1 through 7</text>
+<text x="1500" y="1230" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#d5e6ef" text-anchor="middle">HappyRobot is your voice interface.</text>
+<path d="M1150,540 L1843,540" fill="none" stroke="#183b56" stroke-width="3" />
+<polygon points="1843,540 1831.0262070779625,545.0624384500125 1831.0262070779625,534.9375615499875" fill="#183b56"/>
+<path d="M2440,760 L2440,883" fill="none" stroke="#183b56" stroke-width="3" />
+<polygon points="2440,883 2434.9375615499875,871.0262070779625 2445.0624384500125,871.0262070779625" fill="#183b56"/>
+<path d="M2440,1330 L2440,1428" fill="none" stroke="#183b56" stroke-width="3" />
+<polygon points="2440,1428 2434.9375615499875,1416.0262070779625 2445.0624384500125,1416.0262070779625" fill="#183b56"/>
+<path d="M2400,1865 L2400,1886 L600,1886 L600,1872" fill="none" stroke="#183b56" stroke-width="3" />
+<polygon points="600,1872 605.0624384500125,1883.9737929220375 594.9375615499875,1883.9737929220375" fill="#183b56"/>
+<path d="M550,1435 L550,1337" fill="none" stroke="#183b56" stroke-width="3" />
+<polygon points="550,1337 555.0624384500125,1348.9737929220375 544.9375615499875,1348.9737929220375" fill="#183b56"/>
+<rect x="50" y="330" width="1100" height="430" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="84" cy="362" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="84" y="370" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+<text x="120" y="371" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">GIVE MY MC</text>
+<text x="75" y="407" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;My MC is 138328.&quot;</text>
+<rect x="70" y="428" width="1060" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="453" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /carriers/verify {mc:&quot;MC-138328&quot;}</text>
+<rect x="70" y="504" width="521.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="70" y="504" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="90" y="534" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="90" y="563.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S2] calls.py.verify_carrier</text>
+<text x="90" y="590.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Select MC; fence older lookups.</text>
+<rect x="609.0" y="504" width="521.0" height="137" rx="12" fill="#eef6ec" stroke="#33734c" stroke-width="1.4" />
+<rect x="609.0" y="504" width="7" height="137" rx="3" fill="#33734c" stroke="#33734c" stroke-width="1.4" />
+<text x="629.0" y="534" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#33734c" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="629.0" y="563.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#33734c" text-anchor="start">[S2] adapters/fmcsa.py -&gt; FMCSA</text>
+<text x="629.0" y="590.125" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#33734c" text-anchor="start">core/carrier_policy.py.assess</text>
+<text x="629.0" y="617.25" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">JSON records -&gt; Authority</text>
+<path d="M591.0,570 L603.0,570" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="603.0,570 592.4077985689668,574.4783109365495 592.4077985689668,565.5216890634505" fill="#086c72"/>
+<rect x="70" y="656" width="552.26" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="683" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">Authority -&gt; eligible</text>
+<text x="85" y="711.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">status=eligible; carrier_name returned</text>
+<rect x="640.26" y="666" width="489.74" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="885.13" cy="668.5" rx="244.87" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="656.26" y="698" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="656.26" y="726.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">mc + eligibility + authority + events</text>
+<rect x="1850" y="330" width="1100" height="430" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="1884" cy="362" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="1884" y="370" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+<text x="1920" y="371" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">RECEIVE MY CODE</text>
+<text x="1875" y="407" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;Send my verification code.&quot;</text>
+<rect x="1870" y="428" width="1060" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="1885" y="453" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /otp/send {run_id}</text>
+<rect x="1870" y="504" width="521.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="1870" y="504" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="1890" y="534" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="1890" y="563.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S2] calls.py.send_code</text>
+<text x="1890" y="590.125" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">core/codes.py: generate / hash / issue</text>
+<rect x="2409.0" y="504" width="521.0" height="137" rx="12" fill="#fff5e5" stroke="#a96819" stroke-width="1.4" />
+<rect x="2409.0" y="504" width="7" height="137" rx="3" fill="#a96819" stroke="#a96819" stroke-width="1.4" />
+<text x="2429.0" y="534" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#a96819" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="2429.0" y="563.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#a96819" text-anchor="start">[S2] adapters/email.py -&gt; Gmail</text>
+<text x="2429.0" y="590.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Generated plaintext goes by email, not a tool reply.</text>
+<path d="M2391.0,570 L2403.0,570" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="2403.0,570 2392.407798568967,574.4783109365495 2392.407798568967,565.5216890634505" fill="#086c72"/>
+<rect x="1870" y="656" width="552.26" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="1885" y="683" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">CodeState -&gt; sent</text>
+<text x="1885" y="711.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">status=sent; plaintext goes only to email</text>
+<rect x="2440.26" y="666" width="489.74" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="2685.13" cy="668.5" rx="244.87" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="2456.26" y="698" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="2456.26" y="726.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">OTP hash + expiry + send budget</text>
+<rect x="2010" y="890" width="940" height="440" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="2044" cy="922" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="2044" y="930" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">3</text>
+<text x="2080" y="931" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">READ MY CODE BACK</text>
+<text x="2035" y="967" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;Zero one two three four five.&quot;</text>
+<rect x="2030" y="988" width="900" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="2045" y="1013" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /otp/verify {run_id, code:&quot;012345&quot;}</text>
+<rect x="2030" y="1064" width="441.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="2030" y="1064" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="2050" y="1094" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="2050" y="1123.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S2] calls.py.verify_code</text>
+<text x="2050" y="1150.125" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">core/codes.py: normalize / hash /</text>
+<text x="2050" y="1173.25" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">check</text>
+<rect x="2489.0" y="1064" width="441.0" height="137" rx="12" fill="#eef6ec" stroke="#33734c" stroke-width="1.4" />
+<rect x="2489.0" y="1064" width="7" height="137" rx="3" fill="#33734c" stroke="#33734c" stroke-width="1.4" />
+<text x="2509.0" y="1094" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#33734c" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="2509.0" y="1123.0" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">CodeState + supplied hash -&gt; result</text>
+<text x="2509.0" y="1149.5" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Twin: consume + verify in one write.</text>
+<path d="M2471.0,1130 L2483.0,1130" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="2483.0,1130 2472.407798568967,1134.4783109365494 2472.407798568967,1125.5216890634506" fill="#086c72"/>
+<rect x="2030" y="1216" width="467.46000000000004" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="2045" y="1243" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">Checked -&gt; verified</text>
+<text x="2045" y="1271.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">status=verified; no expected code returned</text>
+<rect x="2515.46" y="1226" width="414.53999999999996" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="2722.73" cy="1228.5" rx="207.26999999999998" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="2531.46" y="1258" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="2531.46" y="1286.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">consumed_at + verified_at + event</text>
+<rect x="1850" y="1435" width="1100" height="430" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="1884" cy="1467" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="1884" y="1475" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">4</text>
+<text x="1920" y="1476" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">ASK FOR A LOAD</text>
+<text x="1875" y="1512" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;Dry van, Texas to Georgia.&quot;</text>
+<rect x="1870" y="1533" width="1060" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="1885" y="1558" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /loads/search {equipment:&quot;dry van&quot;, origin_state:&quot;TX&quot;, dest_state:&quot;GA&quot;}</text>
+<rect x="1870" y="1609" width="521.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="1870" y="1609" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="1890" y="1639" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="1890" y="1668.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S3] selling.py + bookings.py.held</text>
+<text x="1890" y="1695.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">[S1] adapters/tms/{client,protocol,mapping}.py</text>
+<text x="1890" y="1721.625" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Gate eligible + verified before TMS read.</text>
+<rect x="2409.0" y="1609" width="521.0" height="137" rx="12" fill="#eef6ec" stroke="#33734c" stroke-width="1.4" />
+<rect x="2409.0" y="1609" width="7" height="137" rx="3" fill="#33734c" stroke="#33734c" stroke-width="1.4" />
+<text x="2429.0" y="1639" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#33734c" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="2429.0" y="1668.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#33734c" text-anchor="start">[S1] core/{models,money,loads,pricing}.py</text>
+<text x="2429.0" y="1695.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Load -&gt; selected Load -&gt; private Terms</text>
+<text x="2429.0" y="1721.625" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">[S1+S3] loads.public_view -&gt; public JSON</text>
+<path d="M2391.0,1675 L2403.0,1675" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="2403.0,1675 2392.407798568967,1679.4783109365494 2392.407798568967,1670.5216890634506" fill="#086c72"/>
+<rect x="1870" y="1761" width="552.26" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="1885" y="1788" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">Public Load view -&gt; found</text>
+<text x="1885" y="1816.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">load_id=LD_DEMO; offer=1900</text>
+<rect x="2440.26" y="1771" width="489.74" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="2685.13" cy="1773.5" rx="244.87" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="2456.26" y="1803" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="2456.26" y="1831.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">search + offers; held IDs are read</text>
+<rect x="50" y="1435" width="1100" height="430" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="84" cy="1467" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="84" y="1475" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">5</text>
+<text x="120" y="1476" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">MAKE A COUNTER-OFFER</text>
+<text x="75" y="1512" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;I need 3000 for that load.&quot;</text>
+<rect x="70" y="1533" width="1060" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="1558" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /negotiate {load_id:&quot;LD_DEMO&quot;, rate:&quot;3000&quot;}</text>
+<rect x="70" y="1609" width="521.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="70" y="1609" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="90" y="1639" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="90" y="1668.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S3] selling.py.negotiate / _answer</text>
+<text x="90" y="1695.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Fresh Load -&gt; Terms; call-row write</text>
+<rect x="609.0" y="1609" width="521.0" height="137" rx="12" fill="#eef6ec" stroke="#33734c" stroke-width="1.4" />
+<rect x="609.0" y="1609" width="7" height="137" rx="3" fill="#33734c" stroke="#33734c" stroke-width="1.4" />
+<text x="629.0" y="1639" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#33734c" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="629.0" y="1668.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#33734c" text-anchor="start">[S1] core/money.py: parse_ask</text>
+<text x="629.0" y="1695.125" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#33734c" text-anchor="start">core/negotiation.py: respond -&gt; Step</text>
+<text x="629.0" y="1722.25" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">COUNTER 2000; round 1</text>
+<path d="M591.0,1675 L603.0,1675" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="603.0,1675 592.4077985689668,1679.4783109365494 592.4077985689668,1670.5216890634506" fill="#086c72"/>
+<rect x="70" y="1761" width="552.26" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="1788" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">Step(COUNTER) -&gt; counter</text>
+<text x="85" y="1816.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">offer=2000; round=1</text>
+<rect x="640.26" y="1771" width="489.74" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="885.13" cy="1773.5" rx="244.87" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="656.26" y="1803" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="656.26" y="1831.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">offer + rounds + last counter + event</text>
+<rect x="50" y="890" width="940" height="440" rx="22" fill="#eaf6f5" stroke="#9cc6c7" stroke-width="1.7" />
+<circle cx="84" cy="922" r="22" fill="#183b56" stroke="#183b56"/>
+<text x="84" y="930" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">6</text>
+<text x="120" y="931" font-size="27" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">ACCEPT THE RATE</text>
+<text x="75" y="967" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">&quot;I accept 2000.&quot;</text>
+<rect x="70" y="988" width="900" height="63" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="1013" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#536675" text-anchor="start">INPUT: POST /negotiate {load_id:&quot;LD_DEMO&quot;, rate:&quot;2000&quot;}</text>
+<rect x="70" y="1064" width="441.0" height="137" rx="12" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<rect x="70" y="1064" width="7" height="137" rx="3" fill="#086c72" stroke="#086c72" stroke-width="1.4" />
+<text x="90" y="1094" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#086c72" text-anchor="start">COORDINATE</text>
+<text x="90" y="1123.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S3] selling.py._answer / _apply</text>
+<text x="90" y="1150.125" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">ACCEPT -&gt; calls.accepting claim</text>
+<rect x="529.0" y="1064" width="441.0" height="137" rx="12" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<rect x="529.0" y="1064" width="7" height="137" rx="3" fill="#2865a1" stroke="#2865a1" stroke-width="1.4" />
+<text x="549.0" y="1094" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">TRANSFORM / EFFECT</text>
+<text x="549.0" y="1123.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#2865a1" text-anchor="start">[S3] bookings.py + selling.py</text>
+<text x="549.0" y="1150.125" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#2865a1" text-anchor="start">[S2] adapters/twin.py</text>
+<text x="549.0" y="1177.25" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Then reservation; then agreement.</text>
+<path d="M511.0,1130 L523.0,1130" fill="none" stroke="#086c72" stroke-width="1.5" />
+<polygon points="523.0,1130 512.4077985689668,1134.4783109365494 512.4077985689668,1125.5216890634506" fill="#086c72"/>
+<rect x="70" y="1216" width="467.46000000000004" height="87" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="85" y="1243" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">Step(ACCEPT) -&gt; agreed</text>
+<text x="85" y="1271.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">load_id=LD_DEMO; rate=2000</text>
+<rect x="555.46" y="1226" width="414.53999999999996" height="69" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="762.73" cy="1228.5" rx="207.26999999999998" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="571.46" y="1258" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Saved in Twin</text>
+<text x="571.46" y="1286.0" font-size="16" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">1. claim; 2. RESERVED; 3. agreement</text>
+<rect x="1190" y="280" width="620" height="152" rx="12" fill="#f1edf8" stroke="#7353a0" stroke-width="1.4" />
+<rect x="1190" y="280" width="7" height="152" rx="3" fill="#7353a0" stroke="#7353a0" stroke-width="1.4" />
+<text x="1210" y="310" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#7353a0" text-anchor="start">SHARED REQUEST BOUNDARY</text>
+<text x="1210" y="339.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#7353a0" text-anchor="start">[S2] api.py: key + schema + deadline</text>
+<text x="1210" y="366.125" font-size="21" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">HappyRobot sends JSON; the backend returns safe JSON.</text>
+<path d="M990,1110 L1170,1110 L1170,1460 L1500,1460 L1500,1483" fill="none" stroke="#183b56" stroke-width="2" />
+<polygon points="1500,1483 1495.326979892296,1471.9472680719655 1504.673020107704,1471.9472680719655" fill="#183b56"/>
+<rect x="1190" y="1490" width="620" height="255" rx="22" fill="#eaf6f5" stroke="#086c72" stroke-width="1.4" />
+<circle cx="1225" cy="1522" r="21" fill="#183b56" stroke="#183b56"/>
+<text x="1225" y="1530" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ffffff" text-anchor="middle">7</text>
+<text x="1260" y="1531" font-size="26" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">END MY CALL</text>
+<rect x="1210" y="1544" width="580" height="50" rx="4" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<text x="1225" y="1571" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">INPUT: POST /calls/close {summary:...}</text>
+<text x="1210" y="1620" font-size="19" font-family="Courier, monospace" font-weight="400" fill="#086c72" text-anchor="start">[S3] selling.py: Sales.close -&gt; CallRows.step</text>
+<rect x="1210" y="1640" width="580" height="67" rx="2" fill="#eaf2fc" stroke="#2865a1" stroke-width="1.4" />
+<ellipse cx="1500.0" cy="1642.5" rx="290.0" ry="12.5" fill="#eaf2fc" stroke="#2865a1"/>
+<text x="1226" y="1672" font-size="22" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#2865a1" text-anchor="start">Twin: calls.closed_at + optional summary</text>
+<text x="1226" y="1700.0" font-size="17" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">First close values stand; booking stays RESERVED.</text>
+<text x="1210" y="1730" font-size="19" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#7353a0" text-anchor="start">OUTPUT: {status:&quot;closed&quot;} -&gt; HappyRobot goodbye</text>
+<rect x="1190" y="1760" width="620" height="109" rx="4" fill="#fff0ee" stroke="#ab4a48" stroke-width="1.4" />
+<text x="1205" y="1787" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#ab4a48" text-anchor="start">PRIVATE BACKEND OBJECTS</text>
+<text x="1205" y="1815.0" font-size="19" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Load.max_rate=2400; Terms.cap=2250</text>
+<text x="1205" y="1841.75" font-size="19" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Public tool results exclude these fields.</text>
+<rect x="40" y="1905" width="1460" height="112" rx="12" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<rect x="40" y="1905" width="7" height="112" rx="3" fill="#536675" stroke="#536675" stroke-width="1.4" />
+<text x="60" y="1935" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">SHARED SUPPORT AND MEMORY</text>
+<text x="60" y="1964.0" font-size="18.5" font-family="Courier, monospace" font-weight="400" fill="#536675" text-anchor="start">[S2] config.py + main.py; calls.py CallRows.step -&gt; adapters/twin.py</text>
+<text x="60" y="1991.125" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Policy JSON + deployment files + tests/ + Makefile + tools/ configure, package and validate.</text>
+<rect x="1525" y="1910" width="1435" height="105" rx="12" fill="#ffffff" stroke="#536675" stroke-width="1.4" />
+<rect x="1525" y="1910" width="7" height="105" rx="3" fill="#536675" stroke="#536675" stroke-width="1.4" />
+<text x="1545" y="1940" font-size="24" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#536675" text-anchor="start">KEEP THE OBJECTS DISTINCT</text>
+<text x="1545" y="1969.0" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#17364a" text-anchor="start">Load = inventory fact; Terms = pricing plan; Step = negotiation decision; calls row = conversation memory; bookings row = local reservation.</text>
+<rect x="40" y="2030" width="2920" height="112" rx="12" fill="#f1f3f5" stroke="#89939c" stroke-width="1.4" stroke-dasharray="8 6"/>
+<text x="58" y="2058" font-size="23" font-family="Arial, Helvetica, sans-serif" font-weight="700" fill="#183b56" text-anchor="start">CURRENT BOUNDARY: CALL CLOSED, LOCAL RESERVATION</text>
+<text x="58" y="2087.0" font-size="20" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#597080" text-anchor="start">The close endpoint records end time and an optional summary; booking stays RESERVED in Twin. Rep Confirm, dashboard and LOAD_BOOK are later work.</text>
+<text x="45" y="2171" font-size="18" font-family="Arial, Helvetica, sans-serif" font-weight="400" fill="#597080" text-anchor="start">main 1d5f6e7 | Source map, not live evidence | Synthetic speech / native rate units | {a,b}.py names two files: a.py and b.py.</text>
+</svg>

@@ -33,7 +33,7 @@ Two rules shape the design: the model talks and the service decides, and only a 
 | Path | Contents |
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the system works. Start here. |
-| [Caller diagrams](docs/diagrams/caller-journey/index.html) | Three matching one-page views tracing a successful call to its code, data and stored state |
+| [Diagram collection](docs/diagrams/index.html) | Teaching atlas, caller journey and historical diagrams, with viewers, PDFs and SVGs |
 | [docs/decisions.md](docs/decisions.md) | Every decision, its reason and its cost, plus open checks |
 | [docs/build-description.md](docs/build-description.md), [docs/qa-package.md](docs/qa-package.md), [docs/qa-results.md](docs/qa-results.md) | Business/IT description, separate QA layers and actual results |
 | [docs/submission.md](docs/submission.md), [docs/walkthrough.md](docs/walkthrough.md), [docs/kpis.md](docs/kpis.md) | Submission draft and approvals, five-minute outline and precise KPI definitions |

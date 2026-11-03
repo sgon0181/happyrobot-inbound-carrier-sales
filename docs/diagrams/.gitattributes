@@ -1,0 +1,2 @@
+# PDF bytes stay unchanged and are reviewed as binary documents.
+*.pdf binary

@@ -34,6 +34,7 @@ class Dashboard:
         self.twin, self.now = twin, now
         self._cached: tuple[datetime, Reply] | None = None
         self._refreshing = asyncio.Lock()
+        self._generation = 0  # rises on every forget, so a refresh begun before it is not kept
 
     async def snapshot(self) -> Reply:
         """Two statements, one per table, at most once every 5 seconds.
@@ -45,14 +46,17 @@ class Dashboard:
             now = self.now()
             if self._cached is not None and now < self._cached[0]:
                 return self._cached[1]
+            generation = self._generation
             calls = await self.twin.get_all("calls")
             bookings = await self.twin.get_all("bookings")
             snapshot = build_snapshot(calls, bookings, now)
-            self._cached = (now + CACHE, snapshot)
+            if generation == self._generation:  # no rep action landed while it was read
+                self._cached = (now + CACHE, snapshot)
             return snapshot
 
     def forget(self) -> None:
         """Drop the cached snapshot, so a rep sees their own action at once."""
+        self._generation += 1
         self._cached = None
 
 

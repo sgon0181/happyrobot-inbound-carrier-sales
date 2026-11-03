@@ -23,10 +23,10 @@ export function AutoRefresh({ generatedAt }: { generatedAt: string | null }) {
   }, [paused, router]);
 
   const at = generatedAt ? new Date(generatedAt) : null;
-  const shown = at && !Number.isNaN(at.getTime()) ? at.toISOString().slice(11, 19) : "n/a";
+  const shown = at && !Number.isNaN(at.getTime()) ? `Snapshot ${at.toISOString().slice(11, 19)} UTC` : "No snapshot";
   return (
     <div className="flex items-center gap-2 text-xs text-muted-foreground">
-      <span>Snapshot {shown} UTC, {paused ? "auto-refresh paused" : "refreshing every 15 s"}</span>
+      <span>{shown}, {paused ? "auto-refresh paused" : "refreshing every 15 s"}</span>
       <Button size="sm" variant="outline" onClick={() => router.refresh()}>
         <IconRefresh data-icon="inline-start" />
         Refresh

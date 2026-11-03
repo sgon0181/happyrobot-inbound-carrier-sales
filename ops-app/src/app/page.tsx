@@ -12,6 +12,7 @@ import {
 
 import { AppShell } from "@/components/app-shell";
 import { AutoRefresh } from "@/components/auto-refresh";
+import { ReceiptPanels } from "@/components/receipt-panels";
 import { RepActions } from "@/components/rep-actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -89,14 +90,21 @@ export default async function HomePage() {
 
   return (
     <AppShell title={PAGE_TITLE}>
+      {/* Outside the snapshot's success branch, so a failed snapshot keeps both. */}
+      <div className="flex justify-end">
+        <AutoRefresh generatedAt={result.ok ? result.snapshot.generatedAt : null} />
+      </div>
+      <ReceiptPanels />
       {!result.ok ? (
         <Alert variant="destructive">
           <AlertTitle>Snapshot unavailable</AlertTitle>
-          <AlertDescription>Carrier sales service: {describeFailure(result)}.</AlertDescription>
+          <AlertDescription>
+            Carrier sales service: {describeFailure(result)}. The page keeps retrying every 15 seconds.
+          </AlertDescription>
         </Alert>
       ) : (
         <>
-          <Overview kpis={result.snapshot.kpis} generatedAt={result.snapshot.generatedAt} />
+          <Overview kpis={result.snapshot.kpis} />
           <RepQueue
             title="Reservations awaiting a rep"
             description="The carrier agreed and nothing has been sent. Confirm sends one booking to the TMS, which spends the load; Decline frees it."
@@ -124,14 +132,11 @@ export default async function HomePage() {
   );
 }
 
-function Overview({ kpis, generatedAt }: { kpis: Kpis; generatedAt: string | null }) {
+function Overview({ kpis }: { kpis: Kpis }) {
   const outcomes = Object.entries(kpis.outcomes).sort((a, b) => b[1] - a[1]);
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-sm font-medium">Real calls</h2>
-        <AutoRefresh generatedAt={generatedAt} />
-      </div>
+      <h2 className="text-sm font-medium">Real calls</h2>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile icon={<IconTarget />} label="Northstar" value={kpis.northstar === null ? "n/a" : `${Math.round(kpis.northstar * 100)}%`} description="Reserved handoffs per code-passed call: the leg the agent owns." />
         <StatTile icon={<IconPhoneCall />} label="Calls answered" value={fmtCount(kpis.calls)} description="Real carrier calls, every one answered." />

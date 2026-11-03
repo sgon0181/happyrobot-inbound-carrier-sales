@@ -175,3 +175,21 @@ def test_dashboards_asking_together_share_one_refresh() -> None:
     snapshots = asyncio.run(twelve())
     assert len(r.twin.statements) == count + 2
     assert all(snapshot is snapshots[0] for snapshot in snapshots)
+
+
+def test_a_refresh_read_before_a_rep_action_is_not_cached_after_it() -> None:
+    r = reserved()
+    read = r.dashboard.twin.get_all
+
+    async def action_lands_between_tables(table: str) -> Any:
+        rows = await read(table)
+        if table == "calls":
+            r.dashboard.forget()  # a decline finished while this refresh was reading
+        return rows
+
+    r.dashboard.twin.get_all = action_lands_between_tables  # type: ignore[method-assign]
+    asyncio.run(r.dashboard.snapshot())
+    r.dashboard.twin.get_all = read  # type: ignore[method-assign]
+    count = len(r.twin.statements)
+    r.get("/ops/snapshot")
+    assert len(r.twin.statements) == count + 2  # read afresh, not the outdated refresh

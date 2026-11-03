@@ -12,7 +12,7 @@ from collections.abc import Awaitable, Callable
 from contextlib import AbstractAsyncContextManager
 from typing import Annotated, Protocol
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Path, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.params import Depends as Dependency
 from fastapi.responses import JSONResponse, Response
@@ -23,10 +23,12 @@ from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import TwinUnavailable
 from service.calls import Calls, Reply
 from service.dashboard import Dashboard
+from service.rep_actions import RepActions
 from service.selling import Sales
 
 VOICE_DEADLINE_SECONDS = 12.0
 MAX_BODY_BYTES = 16_384
+LOAD_ID = r"^[A-Za-z0-9_-]{1,32}$"
 RUN_ID = r"^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
 log = logging.getLogger("service")
 
@@ -72,11 +74,23 @@ class Negotiate(Voice):
     rate: str = Field(max_length=32)  # the carrier's ask, as the agent heard it
 
 
+class RepAction(BaseModel):
+    """A rep's action names the booking version on their screen (D-31) and who they are."""
+
+    model_config = ConfigDict(extra="forbid")
+    version: int = Field(ge=1, strict=True)  # the number from the snapshot, never text
+    rep: str = Field(min_length=1, max_length=200, pattern=r"\S")
+
+
+LoadId = Annotated[str, Path(pattern=LOAD_ID)]
+
+
 def create_app(
     *,
     calls: Calls,
     sales: Sales,
     dashboard: Dashboard,
+    desk: RepActions,
     tms: Reachable,
     agent_key: str,
     ops_key: str,
@@ -90,7 +104,7 @@ def create_app(
     app.add_middleware(_limit_body)  # added last, so it runs first
     either = Depends(_bearer(agent_key, ops_key))
     _voice_routes(app, calls, sales, Depends(_bearer(agent_key)), deadline_seconds)
-    _ops_routes(app, dashboard, Depends(_bearer(ops_key)))
+    _ops_routes(app, dashboard, desk, Depends(_bearer(ops_key)))
 
     @app.get("/health", dependencies=[either])
     async def health() -> Reply:
@@ -135,10 +149,30 @@ def _voice_routes(
         return await voice(sales.close(body.run_id, body.summary))
 
 
-def _ops_routes(app: FastAPI, dashboard: Dashboard, ops: Dependency) -> None:
+def _ops_routes(app: FastAPI, dashboard: Dashboard, desk: RepActions, ops: Dependency) -> None:
+    """The operations app's routes. Rep actions have no voice deadline: they run to the end."""
+
+    async def acted(work: Awaitable[Reply]) -> Reply:
+        try:
+            return await work
+        finally:
+            dashboard.forget()  # the rep's next snapshot shows what they did
+
     @app.get("/ops/snapshot", dependencies=[ops])
     async def snapshot() -> Reply:
         return await dashboard.snapshot()
+
+    @app.post("/bookings/{load_id}/confirm", dependencies=[ops])
+    async def confirm(load_id: LoadId, body: RepAction) -> Reply:
+        return await acted(desk.confirm(load_id, body.version, body.rep))
+
+    @app.post("/bookings/{load_id}/decline", dependencies=[ops])
+    async def decline(load_id: LoadId, body: RepAction) -> Reply:
+        return await acted(desk.decline(load_id, body.version, body.rep))
+
+    @app.post("/bookings/{load_id}/reconcile", dependencies=[ops])
+    async def reconcile(load_id: LoadId, body: RepAction) -> Reply:
+        return await acted(desk.reconcile(load_id, body.version, body.rep))
 
 
 async def _within_deadline(work: Awaitable[Reply], seconds: float) -> Reply:

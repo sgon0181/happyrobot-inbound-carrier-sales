@@ -1,7 +1,7 @@
 """Reservations: one booking row per load, keyed by load ID (D-24, architecture section 10).
 
 Creating the row is the reservation, so the primary key lets only one call hold a load.
-Nothing here talks to the TMS. Rep actions and LOAD_BOOK arrive in slice 4.
+Nothing here talks to the TMS. A rep's confirm, decline and reconcile are in rep_actions.
 """
 
 from collections.abc import Iterable
@@ -48,7 +48,7 @@ class Bookings:
             attempt = {"call_id": call_id, "claim_id": claim_id, "mc": mc, "rate": rate}
             data = new_booking(call_id, mc, rate, cohort) | {"claim_id": claim_id}
             data["void_claims"] = row.get("void_claims", [])
-            data["events"] = _with_event(row, now, "reserved", attempt)
+            data["events"] = with_event(row, now, "reserved", attempt)
             return data, data
 
         return await self.twin.change("bookings", load_id, edit)
@@ -71,13 +71,13 @@ class Bookings:
             if claim_id in voided:
                 return None, None
             attempt = {"call_id": call_id, "claim_id": claim_id}
-            events = _with_event(row, now, "claim_voided", attempt)
+            events = with_event(row, now, "claim_voided", attempt)
             return row | {"void_claims": [*voided, claim_id], "events": events}, None
 
         return await self.twin.change("bookings", load_id, edit)
 
 
-def _with_event(row: Data, now: datetime, action: str, detail: Data) -> list[Data]:
+def with_event(row: Data, now: datetime, action: str, detail: Data) -> list[Data]:
     events = list(row.get("events", []))
     events.append({"seq": len(events) + 1, "at": now.isoformat(), "action": action, **detail})
     return events

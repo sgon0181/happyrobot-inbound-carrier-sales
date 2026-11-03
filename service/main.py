@@ -18,6 +18,7 @@ from service.bookings import Bookings
 from service.calls import CallRows, Calls
 from service.config import Settings, load_settings
 from service.dashboard import Dashboard
+from service.rep_actions import RepActions
 from service.selling import Sales
 
 # httpx logs each request URL at INFO level, and FMCSA's URL carries the webKey.
@@ -56,6 +57,9 @@ def build(settings: Settings) -> FastAPI:
         calls=calls,
         sales=sales,
         dashboard=Dashboard(twin),
+        desk=RepActions(
+            twin=twin, tms=tms, live=settings.live_booking, blocked=settings.blocked_loads
+        ),
         tms=tms,
         agent_key=settings.agent_api_key,
         ops_key=settings.ops_api_key,

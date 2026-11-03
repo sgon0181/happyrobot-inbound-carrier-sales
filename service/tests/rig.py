@@ -1,7 +1,7 @@
 """One app over HTTP with every outside system faked: Twin, FMCSA, email and the TMS."""
 
 import asyncio
-from collections.abc import Callable
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
@@ -11,8 +11,9 @@ from fastapi.testclient import TestClient
 
 from service.adapters.email import EmailFailed
 from service.adapters.fmcsa import Fmcsa, FmcsaSettings
-from service.adapters.tms.client import TmsClient, TmsSettings, TmsUnavailable
+from service.adapters.tms.client import Sent, TmsClient, TmsSettings, TmsUnavailable
 from service.adapters.tms.mapping import to_load, to_summary
+from service.adapters.tms.protocol import parse_reply
 from service.api import Reachable, create_app
 from service.bookings import Bookings
 from service.calls import CallRows, Calls
@@ -20,6 +21,7 @@ from service.config import POLICY_DIR
 from service.core.models import Load, LoadSummary
 from service.core.pricing import PricingPolicy
 from service.dashboard import Dashboard
+from service.rep_actions import RepActions
 from service.selling import Sales
 from service.tests.fake_twin import FakeTwin
 from service.tests.test_carrier_policy import ACTIVE
@@ -66,6 +68,17 @@ class FakeFmcsa:
         return httpx.Response(self.status, json={"content": content})
 
 
+PENDING_RECEIPT = (
+    b"LOAD_ID:LD09001     |BOOKING_REF:FIXTURE01|STATUS:PENDING |TIMESTAMP:20261103010203\r\n"
+    b"END\r\n"
+)
+
+
+def sent(raw: bytes, step: str = "received", error: str | None = None) -> Sent:
+    """A LOAD_BOOK outcome, parsed as the client would parse it."""
+    return Sent(step, error, raw, parse_reply(raw) if error is None else None)
+
+
 @dataclass
 class FakeBoard:
     """The TMS reads that selling needs, from TMS-shaped records, without a socket."""
@@ -77,6 +90,9 @@ class FakeBoard:
     during: Callable[[], None] = lambda: None  # runs while a search is in flight
     reading: Callable[[str], None] = lambda load_id: None  # runs while details are read
     details: dict[str, dict[str, str]] = field(default_factory=dict)  # differ from the search
+    sends: list[tuple[str, str, int]] = field(default_factory=list)  # every LOAD_BOOK asked for
+    receipt: Sent = field(default_factory=lambda: sent(PENDING_RECEIPT))
+    sending: Callable[[], Awaitable[None]] | None = None  # runs while a booking is in flight
 
     async def query(
         self,
@@ -100,6 +116,12 @@ class FakeBoard:
         record = self.details.get(load_id, listed)
         return None if record is None else to_load(record)
 
+    async def book(self, load_id: str, mc: str, rate: int) -> Sent:
+        self.sends.append((load_id, mc, rate))
+        if self.sending is not None:
+            await self.sending()
+        return self.receipt
+
 
 @dataclass
 class Rig:
@@ -110,6 +132,7 @@ class Rig:
     fmcsa: FakeFmcsa
     board: FakeBoard
     dashboard: Dashboard
+    desk: RepActions
 
     def post(self, path: str, key: str = AGENT, **body: Any) -> Any:
         response = self.client.post(
@@ -144,6 +167,7 @@ def rig(
     mail_fails: bool = False,
     deadline: float = 12.0,
     tms: Reachable | None = None,
+    live_booking: bool = True,
 ) -> Rig:
     found = [ACTIVE] if carriers is None else carriers
     fake = FakeFmcsa(found, status=fmcsa_status, delay=fmcsa_delay)
@@ -160,6 +184,14 @@ def rig(
         blocked=BLOCKED,
     )
     dashboard = Dashboard(rows.twin, now=clock)
+    desk = RepActions(
+        twin=rows.twin,
+        tms=board,
+        live=live_booking,
+        blocked=BLOCKED,
+        now=clock,
+        save_pause=0.0,
+    )
     closed_port = TmsSettings(
         host="127.0.0.1", port=9, token="t", read_budget_seconds=0.2, attempt_seconds=0.1
     )
@@ -167,9 +199,10 @@ def rig(
         calls=calls,
         sales=sales,
         dashboard=dashboard,
+        desk=desk,
         tms=tms or TmsClient(closed_port),
         agent_key=AGENT,
         ops_key=OPS,
         deadline_seconds=deadline,
     )
-    return Rig(TestClient(app), twin, mailer, clock, fake, board, dashboard)
+    return Rig(TestClient(app), twin, mailer, clock, fake, board, dashboard, desk)

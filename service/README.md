@@ -11,13 +11,14 @@ The Python service that decides what the voice agent may do. Slices 1 and 2's co
 | `api.py` | Routes, keys, request models | No business rules | Built |
 | `calls.py` | The call row, and the verify and code flows | Calls `core` and `adapters`; no SQL or sockets | Built |
 | `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets | Built |
-| `bookings.py` | Reservation and rep actions | The only code that can reach `LOAD_BOOK` | Reservation built; rep actions in slice 4 |
+| `bookings.py` | Reservation: one booking row per load | No TMS calls | Built |
+| `rep_actions.py` | A rep's confirm, decline and reconcile | The only code that can reach `LOAD_BOOK` | Built |
 | `dashboard.py` | Snapshot and KPIs | Read only | Built |
 | `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment | Built |
 | `adapters/` | Twin, TMS, FMCSA, email | Talks to outside systems, holds no business rules | Built |
 | `policy/` | Versioned pricing policy and blocked loads | Data, loaded once at startup | Built |
 | `tests/` | Tests, the fake TMS, the network guard | Test doubles live here, never in production folders | Built |
 
-Dependencies point one way: `api` to `calls`, `selling`, `bookings` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
+Dependencies point one way: `api` to `calls`, `selling`, `rep_actions` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
 
 Every commit reports its production line count. Size is watched, not capped ([D-28](../docs/decisions.md)).

@@ -203,7 +203,8 @@ service/                                                                   Statu
   api.py             Routes, keys, request models; no business rules       built
   calls.py           The call row, and the verify and code flows           built
   selling.py         Voice flows: search, negotiate, close                 built
-  bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
+  bookings.py        Reservation: one booking row per load                 built
+  rep_actions.py     A rep's confirm, decline and reconcile; LOAD_BOOK     built
   dashboard.py       The snapshot and KPIs for the operations app          built
   core/              Pure rules: no network, no files, no clock
     models.py  money.py  pricing.py  negotiation.py  loads.py              built
@@ -218,7 +219,7 @@ tools/               The branch coverage check that make check runs        built
 
 *Built* means on `main` now; the rest arrives in the slice shown. `tools/` sits outside `service/` because it checks the build and never runs in production. Where each prototype file went, and why, is in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
 
-The dependency direction is one way: `api` calls `calls`, `selling`, `bookings` and `dashboard`, which call `core` and `adapters`. `selling` writes call rows through `calls`. `core` imports nothing from the others.
+The dependency direction is one way: `api` calls `calls`, `selling`, `rep_actions` and `dashboard`, which call `core` and `adapters`. `selling` writes call rows through `calls`. `core` imports nothing from the others.
 
 | Endpoint | Key | Does |
 |---|---|---|
@@ -231,8 +232,10 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `bookings` 
 | `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds. |
 | `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` for the version the rep saw ([§10](#10-reservation-and-confirm)). |
 | `POST /bookings/{load_id}/decline` | Ops | Releases the version the rep saw. Nothing was sent, so the load is free. |
-| `POST /bookings/{load_id}/reconcile` | Ops | Read-only TMS check on a stuck or sent booking. Never sends. |
+| `POST /bookings/{load_id}/reconcile` | Ops | Read-only TMS check on a stuck or sent booking. Never sends. A `SUBMITTING` row older than 60 seconds becomes `UNKNOWN`. |
 | `GET /health` | Either | Liveness and TMS reachability. |
+
+**Rep actions** send `{version, rep}`: the booking version from the snapshot and the signed-in rep. Like voice requests they answer HTTP 200 with a `status`, such as `stale` when the row has moved on or `live_booking_off`.
 
 **Voice responses** are always HTTP 200 with a `status` field, so the agent can say something sensible. HTTP errors are kept for authentication and malformed requests. Each voice request has a 12 second deadline covering everything it does.
 
@@ -476,7 +479,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
-| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `bookings.py` and `dashboard.py` |
+| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
 | Capacity | 12 calls of about 4 minutes within 4 minutes, plus one rep action a minute, all reach a reservation with no response over 12 seconds |

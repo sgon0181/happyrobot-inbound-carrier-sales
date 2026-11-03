@@ -6,6 +6,7 @@ call's own row shows an eligible MC and a passed code (INV-2, INV-3).
 
 import asyncio
 import uuid
+from collections.abc import Awaitable
 from datetime import datetime
 from typing import Protocol
 
@@ -78,14 +79,10 @@ class Sales:
             for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
                 kept = data["offers"].get(load.load_id, terms.opening)
                 data["offers"][load.load_id] = min(max(kept, terms.opening), terms.cap)
-            offered = {load.load_id: data["offers"][load.load_id] for load, _ in priced}
-            return {"status": "found", "offers": offered}
+            views = [public_view(load, data["offers"][load.load_id]) for load, _ in priced]
+            return {"status": "found", "loads": views}  # its event keeps what was pitched
 
-        reply = await self.rows.step(run_id, "find_loads", _searched(search, decide))
-        if reply["status"] != "found":
-            return reply
-        views = [public_view(load, reply["offers"][load.load_id]) for load, _ in priced]
-        return {"status": "found", "loads": views}
+        return await self.rows.step(run_id, "find_loads", _searched(search, decide))
 
     async def negotiate(self, run_id: str, load_id: str, ask: str) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).
@@ -98,24 +95,29 @@ class Sales:
         booking row: settled if it reserved, otherwise voided there and dropped, so its
         first request can never reserve later and the counter is priced afresh.
         """
+        heard = {"load_id": load_id, "ask": parse_ask(ask), "heard": ask}  # on every event
+
+        def log(decide: Decide) -> Awaitable[Reply]:
+            return self.rows.step(run_id, "negotiate", decide, heard)
+
         data = await self.rows.read(run_id)
         early = _refusal(data, load_id)
         if early is not None:
-            return await self.rows.step(run_id, "negotiate", answer(early["status"], early))
+            return await log(answer(early["status"], early))
         claim = data["accepting"]
         if claim is not None:  # voided on the booking row, so its first request cannot reserve
             now = self.rows.now()
             held = await self.bookings.void(load_id, claim_id=claim["id"], call_id=run_id, now=now)
             if held is not None:
-                return await self.rows.step(run_id, "negotiate", _settle(claim["id"], held))
-            await self.rows.step(run_id, "negotiate", _abandon(claim["id"]))
+                return await log(_settle(claim["id"], held))
+            await log(_abandon(claim["id"]))
         try:
             terms = await self._fresh_terms(load_id)
         except TmsUnavailable:
-            return await self.rows.step(run_id, "negotiate", set_outcome("tms_unavailable"))
+            return await log(set_outcome("tms_unavailable"))
         if terms is None:
-            return await self.rows.step(run_id, "negotiate", _drop(load_id))
-        reply = await self.rows.step(run_id, "negotiate", _answer(load_id, ask, terms))
+            return await log(_drop(load_id))
+        reply = await log(_answer(load_id, ask, terms))
         if reply["status"] != "accepting":
             return reply
         held = await self.bookings.reserve(
@@ -127,7 +129,7 @@ class Sales:
             cohort=self.rows.cohort,
             now=self.rows.now(),
         )
-        return await self.rows.step(run_id, "negotiate", _settle(reply["id"], held))
+        return await log(_settle(reply["id"], held))
 
     async def close(self, run_id: str, summary: str | None) -> Reply:
         """Record that the call ended. A repeat changes nothing, so the first close stands."""

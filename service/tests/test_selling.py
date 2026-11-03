@@ -64,7 +64,7 @@ def test_open_loads_on_the_lane_come_earliest_first_with_our_offer() -> None:
     row = r.row()
     assert row["offers"] == {"LD09002": 1900, "LD09001": 1900}
     assert row["search"] == {"equipment": "DRY_VAN", "origin_state": "TX", "dest_state": "GA"}
-    assert row["events"][-1]["offers"] == row["offers"]
+    assert row["events"][-1]["loads"] == reply["loads"]  # what was pitched, as pitched
 
 
 def test_the_ceiling_reaches_neither_the_agent_nor_the_row() -> None:
@@ -75,6 +75,20 @@ def test_the_ceiling_reaches_neither_the_agent_nor_the_row() -> None:
         assert "2345" not in text
         assert "max_rate" not in text
         assert "loadboard_rate" not in text
+
+
+def test_every_ask_and_answer_survives_on_the_call_s_events() -> None:
+    r = offered()
+    replies = [counter(r, 9000), counter(r, "nine thousand one hundred"), counter(r, 9100)]
+    asks = [e for e in r.row()["events"] if e["action"] == "negotiate"]
+    assert [(e["heard"], e["ask"], e["load_id"]) for e in asks] == [
+        ("9000", 9000, "LD09001"),
+        ("nine thousand one hundred", None, "LD09001"),
+        ("9100", 9100, "LD09001"),
+    ]
+    assert [e["status"] for e in asks] == [x["status"] for x in replies]
+    assert [e.get("offer") for e in asks] == [x.get("offer") for x in replies]
+    assert "ask" not in replies[0] and "heard" not in replies[0]  # kept for the record only
 
 
 def test_a_call_that_changes_mc_during_the_search_gets_no_offers() -> None:

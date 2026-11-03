@@ -229,6 +229,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 | `POST /loads/search` | Agent | `LOAD_QUERY`, then `LOAD_GET` on up to 3 candidates. Returns allowed fields and our opening offer. |
 | `POST /negotiate` | Agent | Applies the negotiation policy. On agreement, reserves the load. |
 | `POST /calls/close` | Agent | Records closing time and summary. Safe to repeat. |
+| `POST /calls/ended` | Agent | Sent by the workflow after the voice agent finishes: who ended the call and how long it lasted. Creates the call's row if no tool ran. Safe to repeat. |
 | `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds. |
 | `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` for the version the rep saw ([§10](#10-reservation-and-confirm)). |
 | `POST /bookings/{load_id}/decline` | Ops | Releases the version the rep saw. Nothing was sent, so the load is free. |
@@ -281,6 +282,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
   "agreement": { "load_id": "LD01234", "rate": 3625 },
   "outcome": null,
   "summary": "...",
+  "ended_at": "...", "ended_by": "user", "duration_seconds": 52,
   "policy_version": "pricing-v1",
   "events": [ { "seq": 1, "at": "...", "action": "verify_carrier", "mc": "138328", "status": "checking" } ]
 }
@@ -301,7 +303,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 
 **Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. There are no in-process locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
 
-**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step and the step's result with its details, such as the carrier name, an ineligibility reason or tries left, and never a code. Some results are internal, such as `checking` before an FMCSA lookup and `code_issued` before the email, and a successful email adds no event, so events are not a record of what the agent heard.
+**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step, what was asked of it, and the step's result with its details, and never a code or the ceiling. A negotiation event keeps the carrier's ask as heard and as read, the load and our answer, so every round survives a later one. A search event keeps the loads pitched as the agent received them, a code event whether the email went out, and the workflow's end-of-call request records who ended the call and how long it lasted. Some results are internal, such as `checking` before an FMCSA lookup, so events record what the service decided, not every word spoken. Transcripts stay in HappyRobot, because they contain the spoken code.
 
 **Outcome is computed, not stored twice.** A booking row is the only record of a booking. The dashboard derives each call's outcome when it reads:
 
@@ -310,7 +312,8 @@ Both tables have the same shape, created once in the Twin UI because the API can
 | A booking row exists for the call | `agreed_pending_rep`, with the booking's own state beside it |
 | `outcome` is set | That value: `negotiation_failed`, `no_match`, `carrier_ineligible`, `fmcsa_unavailable`, `code_failed`, `pricing_review_required`, `tms_unavailable` |
 | `closed_at` is set | `ended_without_agreement` |
-| No activity for 30 minutes | `caller_ended` |
+| `ended_at` is set, by the workflow after the call | `ended_without_close` |
+| No activity for 30 minutes and no end recorded | `end_not_recorded` |
 
 Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by their `search` fields.
 

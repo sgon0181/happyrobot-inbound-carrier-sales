@@ -48,12 +48,15 @@ class CallRows:
         row = await self.twin.get("calls", run_id)
         return _complete(row.data if row else None, self.cohort, self.now())
 
-    async def step(self, run_id: str, action: str, decide: Decide) -> Reply:
+    async def step(
+        self, run_id: str, action: str, decide: Decide, detail: Data | None = None
+    ) -> Reply:
         """Apply one decision and its event to the call's row, in one version-checked write.
 
-        The event keeps the call's MC after the step and the step's result, which never
-        holds a code. Some results are internal, such as checking and code_issued, and a
-        successful email adds no event, so events are not a record of what the agent heard.
+        The event keeps the call's MC after the step, any detail of what was asked, such
+        as the carrier's ask, and the step's result, which never holds a code. Some results
+        are internal, such as checking and code_issued, so events record what the service
+        decided, not every word the agent said.
         """
         now = self.now()
 
@@ -65,7 +68,8 @@ class CallRows:
             if (current or {}).get("outcome") == FAILED:  # a failed negotiation stays failed
                 data["outcome"] = FAILED
             data["last_activity"] = now.isoformat()
-            event = {"at": now.isoformat(), "action": action, "mc": data["mc"], **reply}
+            event = {"at": now.isoformat(), "action": action, "mc": data["mc"]}
+            event |= (detail or {}) | reply
             data["events"].append({"seq": len(data["events"]) + 1, **event})
             return data, reply
 
@@ -118,7 +122,22 @@ class Calls:
             await self.mailer.send(code)
         except EmailFailed:
             return await self.rows.step(run_id, "send_code", answer("send_failed"))
-        return {"status": "sent"}
+        return await self.rows.step(run_id, "send_code", answer("sent"))  # delivery recorded too
+
+    async def end(self, run_id: str, ended_by: str | None, seconds: float | None) -> Reply:
+        """Record the call's end, from the workflow's request after the voice agent finishes.
+
+        Every call gets a row this way, even one that ended before the agent called a tool,
+        so a call is never counted, or missed, on the agent's word. A repeat changes nothing.
+        """
+
+        def decide(data: Data, now: datetime) -> Reply | Unchanged:
+            if data["ended_at"] is not None:
+                return Unchanged({"status": "ended"})
+            data.update(ended_at=now.isoformat(), ended_by=ended_by, duration_seconds=seconds)
+            return {"status": "ended", "ended_by": ended_by, "duration_seconds": seconds}
+
+        return await self.rows.step(run_id, "call_ended", decide)
 
     async def verify_code(self, run_id: str, code_text: str) -> Reply:
         code = codes.normalize_code(code_text)
@@ -165,6 +184,9 @@ def new_call(cohort: str, now: datetime) -> Data:
         "policy_version": None,
         "outcome": None,
         "summary": None,
+        "ended_at": None,  # from the workflow, after the voice agent finishes
+        "ended_by": None,
+        "duration_seconds": None,
         "events": [],
     }
 

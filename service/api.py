@@ -69,6 +69,13 @@ class Close(Voice):
     summary: str | None = Field(default=None, max_length=4000)
 
 
+class Ended(Voice):
+    """Sent by the workflow after the voice agent finishes, from the agent node's own output."""
+
+    ended_by: str | None = Field(default=None, max_length=32)
+    duration_seconds: float | None = Field(default=None, ge=0, le=86_400)
+
+
 class Negotiate(Voice):
     load_id: str = Field(max_length=32)
     rate: str = Field(max_length=32)  # the carrier's ask, as the agent heard it
@@ -147,6 +154,10 @@ def _voice_routes(
     @app.post("/calls/close", dependencies=[agent])
     async def close(body: Close) -> Reply:
         return await voice(sales.close(body.run_id, body.summary))
+
+    @app.post("/calls/ended", dependencies=[agent])
+    async def ended(body: Ended) -> Reply:
+        return await voice(calls.end(body.run_id, body.ended_by, body.duration_seconds))
 
 
 def _ops_routes(app: FastAPI, dashboard: Dashboard, desk: RepActions, ops: Dependency) -> None:

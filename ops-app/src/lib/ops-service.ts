@@ -27,6 +27,8 @@ export type EventRow = {
 // Event fields an operator needs to reconstruct a call or a booking, by label.
 const EVENT_DETAIL: [string, string][] = [
   ["mc", "MC"],
+  ["heard", "carrier said"],
+  ["ask", "ask"],
   ["call_id", "call"],
   ["load_id", "load"],
   ["rate", "rate"],
@@ -36,6 +38,8 @@ const EVENT_DETAIL: [string, string][] = [
   ["reference", "ref"],
   ["tms_status", "TMS"],
   ["load_status", "TMS load"],
+  ["ended_by", "ended by"],
+  ["duration_seconds", "seconds"],
 ];
 
 export type Booking = {
@@ -138,6 +142,16 @@ function eventDetail(e: Json): string | null {
     return /^[A-Za-z0-9_-]{1,32}$/.test(load) && amount !== null ? [`${load} ${amount}`] : [];
   });
   if (offers.length) parts.push(`offers ${offers.join(", ")}`);
+  // What was pitched: each load's lane and our offer, from the search's own event.
+  const pitched = list(e.loads).flatMap((raw) => {
+    const load = obj(raw);
+    const id = str(load.load_id, 32);
+    const from = [str(obj(load.origin).city, 40), str(obj(load.origin).state, 4)].filter(Boolean).join(" ");
+    const to = [str(obj(load.destination).city, 40), str(obj(load.destination).state, 4)].filter(Boolean).join(" ");
+    const offer = num(load.offer);
+    return id ? [`${id} ${from} to ${to}${offer === null ? "" : ` at ${offer}`}`] : [];
+  });
+  if (pitched.length) parts.push(`pitched ${pitched.slice(0, 3).join("; ")}`);
   return parts.length ? parts.join(", ") : null;
 }
 

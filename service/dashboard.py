@@ -22,6 +22,7 @@ HOLDS_NOTHING = "UNCLAIMED"  # a voided claim on a load nobody reserved: not a r
 CALL_FIELDS = (
     *("started_at", "last_activity", "closed_at", "mc", "carrier_name", "eligible"),
     *("verified_at", "search", "offers", "rounds", "agreement", "summary", "events"),
+    *("ended_at", "ended_by", "duration_seconds"),
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
@@ -105,9 +106,11 @@ def outcome(data: Data, booking: Data | None, now: datetime) -> str:
         return str(data["outcome"])
     if data.get("closed_at"):
         return "ended_without_agreement"
+    if data.get("ended_at"):  # the call ended before the agent closed it
+        return "ended_without_close"
     last = _time(data.get("last_activity"))
     if last is not None and now - last >= IDLE:
-        return "caller_ended"
+        return "end_not_recorded"  # no end arrived: inferred from 30 quiet minutes
     return "in_progress"
 
 

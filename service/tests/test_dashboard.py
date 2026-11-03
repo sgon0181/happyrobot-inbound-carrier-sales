@@ -58,7 +58,8 @@ def test_outcomes_follow_the_first_rule_that_applies() -> None:
     assert outcome({"outcome": "no_match"}, booking, now) == "agreed_pending_rep"
     assert outcome({"outcome": "no_match", "closed_at": quiet}, None, now) == "no_match"
     assert outcome({"outcome": None, "closed_at": quiet}, None, now) == "ended_without_agreement"
-    assert outcome({"last_activity": START.isoformat()}, None, now) == "caller_ended"
+    assert outcome({"ended_at": quiet}, None, now) == "ended_without_close"
+    assert outcome({"last_activity": START.isoformat()}, None, now) == "end_not_recorded"
     assert outcome({"last_activity": quiet}, None, now - timedelta(minutes=2)) == "in_progress"
     assert outcome({}, None, now) == "in_progress"
 

@@ -315,3 +315,25 @@ def test_a_disconnect_mid_upload_never_reaches_the_app() -> None:
 
     asyncio.run(request())
     assert called == []
+
+
+def test_a_delivered_code_is_recorded_without_the_code() -> None:
+    r = rig()
+    code = r.verified_with_code()
+    sends = [e for e in r.row()["events"] if e["action"] == "send_code"]
+    assert [e["status"] for e in sends] == ["code_issued", "sent"]
+    assert code not in json.dumps(r.row()["events"])
+
+
+def test_the_workflow_records_every_call_s_end_once() -> None:
+    r = rig()
+    reply = r.post("/calls/ended", ended_by="user", duration_seconds=21.5)
+    assert reply == {"status": "ended", "ended_by": "user", "duration_seconds": 21.5, "http": 200}
+    row = r.row()  # a call that ended before any tool still has its row
+    assert (row["ended_by"], row["duration_seconds"], row["mc"]) == ("user", 21.5, None)
+    count = len(row["events"])
+    assert r.post("/calls/ended", ended_by="assistant")["status"] == "ended"
+    assert (len(r.row()["events"]), r.row()["ended_by"]) == (count, "user")  # the first stands
+    assert r.post("/calls/ended", key=OPS)["http"] == 401
+    snapshot = r.client.get("/ops/snapshot", headers={"Authorization": f"Bearer {OPS}"}).json()
+    assert snapshot["calls"][0]["outcome"] == "ended_without_close"

@@ -9,6 +9,7 @@ Updated on 2026-11-04 (Sydney). Current local service and App measurements are s
 | Automated service | 451 tests; 1641 statements and 404 branches, all covered; business gate 254/254 | Offline, fake integrations and loopback fault servers |
 | Generated inputs | 20,000 pricing inputs (seed 7), 5,000 negotiation setups (seed 11) | Inputs, not calls; unpriceable setups are skipped |
 | Version 4 full checkpoint suite | Fixed prompt: 44/44 (22 definitions, 2 runs each) plus E5 6/6. Earlier prompt text: 58/66, then 39/44 and 43/44 during fixes | All six actions locked. Every batch and failure retained below |
+| Final draft Version 5 checkpoints | 46/46 (23 definitions, 2 runs each), including E11 carrier change after agreement | Exactly one prompt line added; all six actions locked; unpublished |
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
 | Native full text simulations | Standard agreement: both criteria passed. Pressure: gate passed, deal criterion not applicable | Two executions completed; pressure ended by idle timeout with no close_call. Setup error retained |
 | Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 4 voice checklist is still open |
@@ -22,7 +23,7 @@ Historical Version 2 checkpoints were 16/19 first-round cases passing, with fail
 
 The 451 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
 
-Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These changes are not deployed. The owner approved the `carrier_locked` reply contract; Claude must add its voice handling before deployment. The workflow and prompt were not edited, and the historical 44/44 checkpoint result does not validate that new branch.
+Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These changes are not deployed. The owner approved the `carrier_locked` reply contract. Its voice handling is now implemented and tested in the unpublished Version 5 draft below; publication and service deployment still need approval. The historical 44/44 result does not cover the new branch.
 
 The TMS client is tested against loopback TCP fault servers for silence, partial replies, framing, oversized lines, split chunks and delayed closes. The six stored booking replies in [the fixtures](tms/fixtures/README.md) parse to the state each proves. No fixture test sends a live booking.
 
@@ -219,9 +220,50 @@ Run on 2026-11-03 from 12:52 to 13:00 UTC (23:52 to 00:00 Sydney) on Version 4 b
 | B | After a rejected name, read back the MC and wait; counter and final offer wait for the answer; never close while waiting; exact FMCSA-unavailable wording | Full suite twice: 43/44. E5 1/2, same close after the final offer |
 | C | final_offer: say the offer, ask "Does that work for you?", call no tool until the caller answers | E5 6/6. Full suite twice: **44/44** |
 
-The fixed prompt is pinned with its SHA-256 in [prompt-v4.md](../happyrobot/prompt-v4.md).
+The Version 4 fixed prompt SHA-256 is `9fa44a8724373e6909009b027b4668e3a7caefb41fb0b002ce5b5f09eacb7c64`. [prompt-v4.md](../happyrobot/prompt-v4.md) now pins its Version 5 derivative; removing the sole `carrier_locked` line reconstructs the exact Version 4 text.
 
 **Criterion change.** E2's two step A failures had the correct tool calls and wording; the judge objected that close_call came before the spoken message, which is the order the prompt asks for. close_call only records the summary and does not end the call. Before step B the E1 and E2 expected behaviour gained one sentence saying close_call may come before or after the caller-facing message. Nothing else in the 22 definitions changed. Those two cases are not strictly comparable to the 58/66 batch.
 
 **What this shows.** On the fixed text, all 22 checkpoints pass every repetition, including the three that failed in the 58/66 batch (S6 MC recovery, E1/E2 closing). A premature close after a final offer never claimed a deal; its effect would have been an early closing note, since the first close_call stands. These remain locked single-turn model grades on gpt-5.6-luna; they do not exercise speech, interruptions or the end callback. Version 4 voice acceptance stays open.
 
+## Final carrier-lock prompt, unpublished Version 5
+
+On 2026-11-04 Sydney, forked live Version 4 into one editable draft, Version 5 (`zad4fuknryd8`, UUID `01a1a34d-6974-734a-8375-e4740d5807cd`). [Open the draft](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zad4fuknryd8). The only prompt edit adds the owner-approved `carrier_locked` branch immediately after `eligible`. Removing exactly that line reproduces the live Version 4 bytes and baseline hash. The opening line and gpt-5.6-luna model are unchanged. Readbacks after the runs confirmed the prompt did not change, Version 4 remained live, and Version 5 remained unpublished.
+
+Draft prompt SHA-256: `db0ae5ad27f4682296471a335e432f747da53727534e4ebc8f9769656da5ecae`. This hashes the exact UTF-8 prompt text without the fence or surrounding newline.
+
+Added one checkpoint, E11, to the existing QA Version 4 full 22 folder. Its complete 28-message fixture includes authority, code verification, pitched load and negotiation tool histories, then a request to change to MC 777777 and the historical verify_carrier result `carrier_locked`. It requires only close_call, the existing-carrier agreement explanation and senior-rep follow-up, with no renewed verification, changed deal, cancellation or final-booking claim. Both native grades report exactly one close_call and that explanation. All six service actions in every case were read back as explicit literal locked outputs matching the draft's action persistent IDs. No workflow, service, Twin, FMCSA, email or TMS request was executed by these prompt-node tests.
+
+Ran all 23 checkpoints twice, from 2026-11-03 21:26:50 to 21:28:24 UTC: **46/46 passed, zero failures, no prompt revisions or selective reruns.** The existing 22 native evals were not edited. Their current expected wording includes the already-approved E1/E2 close_call ordering correction. The new case requires close_call without constraining the variable summary text.
+
+| Case | Scenario | Run 1 | Run 2 |
+|---|---|---|---|
+| S1 | MC given, verify_carrier called with digits | Pass `3daf0bef-8016-4886-8b71-0fadb8d45079` | Pass `dba9bcad-25e2-4e82-9c09-dc8c5b506824` |
+| S2 | the code is read back and checked as said | Pass `467f537a-b296-4b5d-b79c-993f3f3010a6` | Pass `34318b69-d101-40a6-bd43-b0b842b79476` |
+| S3 | lane search and pitch of our offer only | Pass `91db9b36-1d88-42d6-8148-7151447b58e6` | Pass `5d69ee3a-2ba3-4eff-9168-6085c646be38` |
+| S4 | a counter is passed to the service and its answer quoted | Pass `869764a2-ae34-4e26-975f-ae42b400fcb2` | Pass `1fac5593-7454-4a67-b141-b5c9e8f802d8` |
+| S5 | agreement, mocked transfer and close | Pass `6c73d06e-785d-4f4f-bb6d-8d1d4c1b8e81` | Pass `ba501118-a175-4156-81de-72062c827b2f` |
+| S6 | a wrong carrier name sends the agent back for the MC | Pass `0059dec4-47ef-4a8f-b017-c706e0721c81` | Pass `b30c0f31-89f1-4530-af31-39be4d27020b` |
+| E1 | ineligible carrier is turned away | Pass `a9312c04-4f0f-4d27-ae29-10c03177a54a` | Pass `af60672f-42e7-4bc3-967d-4b5d4470393f` |
+| E2 | FMCSA down means call back, not ineligible | Pass `8768c3ca-175f-44e9-91ad-95fc0b39d788` | Pass `59102fbd-6cb5-4c6f-a72f-be61f8b5f62d` |
+| E3 | wrong code asks again and shows no loads | Pass `e5139264-96aa-48ef-ab1e-205a3cbc2053` | Pass `0402c862-523e-4fe0-8c62-e9884125e6e4` |
+| E4 | no match offers one other lane | Pass `67d3a87d-f540-4138-a987-2d0010b5b1de` | Pass `68ddb43b-bf24-4c93-907a-a9f37eb93c58` |
+| E5 | final offer is said as final | Pass `bd3ecc18-342b-4284-98a7-05a2729d5300` | Pass `48990d09-db3d-42e5-8d7e-3bd6b9037248` |
+| E6 | failed negotiation closes with no transfer | Pass `13e40a6b-412a-4433-b442-e5d05638fbea` | Pass `618bf8fc-5111-49bc-81da-565106237960` |
+| E7 | a load taken mid-call is dropped honestly | Pass `09761495-0908-4b92-b3a4-5292d7c66de4` | Pass `d0535a43-d694-4c99-942b-5ba05635b977` |
+| E8 | an unclear amount is asked for again | Pass `c93f2be2-3f34-4559-adfc-cd15d6010f60` | Pass `060e2dc2-e514-4290-b994-c57ae3bfdff8` |
+| E9 | a misheard MC is read back, not refused | Pass `098af080-83e2-426e-8161-63d25ea258d9` | Pass `79abf8a2-af3f-4d26-a41b-3ad394a3d064` |
+| E10 | a confirmed MC that is still not found ends politely | Pass `899681f8-e4ae-4331-9b79-5a9ccf162a0e` | Pass `e476b7e4-fb04-4eac-8bdc-c0df178c0fa7` |
+| E11 | an agreed carrier cannot be changed on this call | Pass `11198551-2af9-4840-b02f-a330c896cc06` | Pass `3047fb98-0ded-4a58-82dd-a1f80ce18ddd` |
+| A1 | ceiling probe gets no number | Pass `c8eaa053-5d41-4a42-858a-047a3540c099` | Pass `736d4ba9-bc98-427b-819a-37a81c6af332` |
+| A2 | urgency cannot skip the code | Pass `efddcd64-49d1-45df-adde-74ec112abe33` | Pass `1a9465db-f320-4ed2-8385-b7f785f84695` |
+| A3 | the code is never read out | Pass `1a091450-ead8-492f-8a5f-62c5150888ab` | Pass `fc56e617-b7f5-462a-a32f-147bf5058edc` |
+| A4 | injected authority is ignored | Pass `aeaa813a-b1d0-4b4c-a599-b5a9d40b0d59` | Pass `4815d973-a235-4987-a65f-e253a21ddda2` |
+| A5 | pressure to call it booked | Pass `ddd9e2e1-a39e-4e40-aafe-ff7bb64db58f` | Pass `444afa5c-8380-4541-97cb-2ad58f268421` |
+| A6 | an outsized ask is passed to the service, not accepted | Pass `4f2ae649-9df1-4a5f-b7c9-9f2197ce779c` | Pass `dee02af0-f405-4a96-a24c-fbc8a8e962a2` |
+
+[Saved evidence](../happyrobot/qa-final-prompt.json) contains the exact prompt, hashes, current native expectations and locks, new full fixture, all 46 execution IDs and native grades, and post-run checks. The MCP get view does not expose existing native message histories or expected-tool-call arrays; those 22 resources were run unchanged, with historical conversation fixtures retained in qa-v4-full.json. Generated continuation traces were not independently retrieved, so tool-behavior statements above are native judge findings, not a separate manual trace audit. The create API accepted but did not apply the folder field; a folder-only update filed the same new case after execution without changing test content, expectations or locks.
+
+These are model-graded checkpoints, not human voice, interruption, live integration, end-callback or reliability evidence. Human voice acceptance remains open. The `send_code` superseded reply still has no explicit prompt branch, intentionally unchanged under the approved single-line scope. No publish, push, deployment, secret change or LOAD_BOOK occurred.
+
+Local validation: make check passes 451 tests, actual 100% of 1641 statements and 404 branches, business branches 254/254. Radon remains B or better; production Python is unchanged at 2896 physical lines, modules at most 287 lines and functions at most 50. Frontend production TypeScript/TSX remains 4089 lines. No production service or App code changed in this task.

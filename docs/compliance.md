@@ -64,7 +64,7 @@ Statuses: Met means implemented with the stated evidence. Qualified means demons
 
 | Item | Local completion | Remaining acceptance or owner action |
 |---|---|---|
-| R1 conversation correctness | Version 3 fixes retained; E7 service continuation and Version 4 draft tested 18/18 checkpoints. No final booking claim observed in new simulations | Deploy service, publish Version 4, run exact-version voice checklist; refusal-path closing remains bounded, not proven |
+| R1 conversation correctness | Version 3 fixes retained; Version 4 fixed prompt passes all 22 checkpoints twice (44/44) plus E5 6/6, after earlier 58/66, 39/44 and 43/44 batches. No final booking claim observed | Deploy service, publish Version 4, run exact-version voice checklist; refusal-path closing remains bounded, not proven |
 | R2 basic carrier experience | Version 3 greeting/name/MC corrections already implemented, no duplicate rebuild | Human greeting, misheard-MC and interruption regression checks |
 | R3 activity capture | Per-event asks/search/pitch/delivery/notes/end coverage and privacy/reconstruction tests complete | Deploy then publish callback; undelivered events and spoken content remain outside guarantees |
 | R4 essential dashboard | Redesign pieces 1/2 plus send mode, missing-history labels and recovery regressions complete | App publication, platform name and final visual review; broader cosmetic pieces deferred |

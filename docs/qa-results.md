@@ -8,7 +8,7 @@ Updated on 2026-11-03 (Sydney). Current local service and App measurements are s
 |---|---|---|
 | Automated service | 438 tests; 1622 statements and 394 branches, all covered; business gate 244/244 | Offline, fake integrations and loopback fault servers |
 | Generated inputs | 20,000 pricing inputs (seed 7), 5,000 negotiation setups (seed 11) | Inputs, not calls; unpriceable setups are skipped |
-| Version 4 full checkpoint suite | 22 definitions, 3 runs each:58/66 pass, 8 fail; 18/22 cases pass every run | Same fixed prompt; all six actions locked. Earlier 18/18 candidate checks retained separately below |
+| Version 4 full checkpoint suite | Fixed prompt: 44/44 (22 definitions, 2 runs each) plus E5 6/6. Earlier prompt text: 58/66, then 39/44 and 43/44 during fixes | All six actions locked. Every batch and failure retained below |
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
 | Native full text simulations | Standard agreement: both criteria passed. Pressure: gate passed, deal criterion not applicable | Two executions completed; pressure ended by idle timeout with no close_call. Setup error retained |
 | Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 4 voice checklist is still open |
@@ -204,3 +204,20 @@ Standard cases: 16/18. Edge cases: 24/30. Adversarial cases: 18/18. Do not pool 
 **Fixture and criterion corrections before the batch.** Historical qa-evals.json remains untouched. The separate current suite converts object lanes to actual public_view strings, adds missing round 2 history to E5 and round 2/final-round 3 history to E6, uses the current E7 message/consent contract, makes A5's repeat return its existing agreement, and explicitly rejects fabricated-code calls in A2 to A4. Terminal E1/E2/E10 criteria now require the prompt's close_call step; E4 must wait for a lane choice. Those stricter criteria expose omissions the historical summaries did not check. This is the same 22 scenario intents with current-contract fixtures, not a byte-identical score comparison to Version 3.
 
 The suite lives in the native folder QA Version 4 full 22, contract fixtures. One initial folder-creation transport error was resolved by reading back state before retrying; no eval launch was ambiguous or retried. The prompt, service and application behavior were not changed for this rerun. The next conversation work is S6 MC recovery and explicit closing paths; keep the 8 failed grades and this batch unchanged when checking a future fix. Version 4 remains unpublished, and human voice acceptance remains open.
+
+## Version 4 closing and wait fixes
+
+Run on 2026-11-03 from 12:52 to 13:00 UTC (23:52 to 00:00 Sydney) on unpublished Version 4, same 22 definitions and locks as the batch above. Reruns at 12:52 on the batch's prompt reproduced E1 and E2 (0/3 each, close_call missing) and passed S5 and S6 (3/3 each).
+
+| Step | Prompt change | Result |
+|---|---|---|
+| A | Refusal, unavailable and lock paths call close_call first, then speak; agreed names the load ID; every call ends with close_call | E1 3/3, E2 2/3. Full suite twice: 39/44. S6 0/2 (one re-called verify_carrier before the caller answered, one closed), E2 0/2, E5 1/2 (close_call after the final offer) |
+| B | After a rejected name, read back the MC and wait; counter and final offer wait for the answer; never close while waiting; exact FMCSA-unavailable wording | Full suite twice: 43/44. E5 1/2, same close after the final offer |
+| C | final_offer: say the offer, ask "Does that work for you?", call no tool until the caller answers | E5 6/6. Full suite twice: **44/44** |
+
+The fixed prompt is pinned with its SHA-256 in [prompt-v4.md](../happyrobot/prompt-v4.md).
+
+**Criterion change.** E2's two step A failures had the correct tool calls and wording; the judge objected that close_call came before the spoken message, which is the order the prompt asks for. close_call only records the summary and does not end the call. Before step B the E1 and E2 expected behaviour gained one sentence saying close_call may come before or after the caller-facing message. Nothing else in the 22 definitions changed. Those two cases are not strictly comparable to the 58/66 batch.
+
+**What this shows.** On the fixed text, all 22 checkpoints pass every repetition, including the three that failed in the 58/66 batch (S6 MC recovery, E1/E2 closing). A premature close after a final offer never claimed a deal; its effect would have been an early closing note, since the first close_call stands. These remain locked single-turn model grades on gpt-5.6-luna; they do not exercise speech, interruptions or the end callback. Version 4 voice acceptance stays open.
+

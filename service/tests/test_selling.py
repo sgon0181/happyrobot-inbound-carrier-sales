@@ -3,8 +3,9 @@
 import json
 from typing import Any
 
+from service.selling import _abandon, _settle
 from service.tests.fake_tms import make_load
-from service.tests.rig import RUN, Rig, rig
+from service.tests.rig import RUN, START, Rig, rig
 
 LANE = {"equipment": "dry van", "origin_state": "tx", "dest_state": "GA"}
 PUBLIC = {
@@ -300,14 +301,52 @@ def test_a_repeated_ask_is_answered_within_todays_ceiling() -> None:
     assert r.row()["rounds"] == 1
 
 
-def test_a_retry_finishes_the_first_attempt_at_its_own_rate() -> None:
-    r = offered()
-    claim = {"load_id": "LD09001", "rate": 1850, "mc": "138328"}
+CLAIM = {"id": "a1", "load_id": "LD09001", "rate": 1850, "mc": "138328"}
+
+
+def stranded(r: Rig, *, booked: bool) -> None:
+    """An earlier accept claimed the load, and then a write failed."""
     version, data = r.twin.tables["calls"][RUN]
-    r.twin.tables["calls"][RUN] = (version + 1, data | {"accepting": claim})
-    r.twin.tables["bookings"]["LD09001"] = (1, {"state": "RESERVED", "call_id": RUN, **claim})
+    r.twin.tables["calls"][RUN] = (version + 1, data | {"accepting": CLAIM})
+    if booked:
+        booking = {"state": "RESERVED", "call_id": RUN, "rate": 1850, "mc": "138328"}
+        r.twin.tables["bookings"]["LD09001"] = (1, booking)
+
+
+def test_a_retry_finishes_the_first_attempt_from_its_booking() -> None:
+    r = offered()
+    stranded(r, booked=True)
+    r.board.records = [make_load(STATUS="PENDING")]  # recovered before the TMS is read
     assert counter(r, 1800)["rate"] == 1850
     assert r.row()["agreement"]["rate"] == 1850 and r.row()["accepting"] is None
+
+
+def test_a_claim_without_a_booking_is_dropped_and_priced_afresh() -> None:
+    r = offered()
+    stranded(r, booked=False)
+    r.board.records = [make_load(MAX_BUY="1800", RATE="1500")]
+    assert counter(r, 1850)["status"] == "counter"  # 1850 is above today's cap
+    assert r.twin.tables["bookings"] == {} and r.row()["accepting"] is None
+
+
+def test_a_late_settlement_never_clears_a_newer_claim() -> None:
+    newer = CLAIM | {"id": "b2"}
+    data: dict[str, Any] = {"accepting": newer, "offers": {}}
+    assert _settle("a1", None)(data, START) == {"status": "superseded"}
+    assert data["accepting"] == newer
+    assert _abandon("a1")(data, START)["status"] == "claim_dropped"
+    assert data["accepting"] == newer
+
+
+def test_a_failed_negotiation_survives_every_other_route() -> None:
+    r = offered()
+    for n in range(4):
+        counter(r, 9000 + n)
+    r.board.down = True
+    search(r)
+    r.post("/carriers/verify", mc="138328")
+    assert r.row()["outcome"] == "negotiation_failed"
+    assert counter(r, 1000)["status"] == "negotiation_failed"
 
 
 def test_concurrent_counters_each_use_their_own_round() -> None:
@@ -354,3 +393,10 @@ def test_close_works_without_a_summary_on_any_call() -> None:
     r = rig()
     assert r.post("/calls/close")["status"] == "closed"
     assert r.row()["closed_at"] is not None and r.row()["summary"] is None
+
+
+def test_a_second_accept_on_the_same_load_waits_for_the_first() -> None:
+    r = offered()
+    meanwhile(r, accepting=CLAIM)  # another request claimed this load during the read
+    assert counter(r, 1800)["status"] == "busy"
+    assert r.row()["accepting"] == CLAIM

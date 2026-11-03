@@ -21,6 +21,13 @@ class Bookings:
         rows = await self.twin.get_many("bookings", load_ids)
         return frozenset(key for key, row in rows.items() if row.data.get("state") not in FREE)
 
+    async def held_by(self, load_id: str, call_id: str) -> Data | None:
+        """The load's booking row, if it holds the load for this call."""
+        row = await self.twin.get("bookings", load_id)
+        if row is None or row.data.get("state") in FREE or row.data.get("call_id") != call_id:
+            return None
+        return row.data
+
     async def reserve(
         self, load_id: str, *, call_id: str, mc: str, rate: int, cohort: str, now: datetime
     ) -> Data | None:

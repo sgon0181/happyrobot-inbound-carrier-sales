@@ -17,6 +17,7 @@ from service.core import codes
 from service.core.carrier_policy import assess, normalize_mc
 
 Reply = dict[str, Any]
+FAILED = "negotiation_failed"  # terminal: no route may clear it
 Decide = Callable[[Data, datetime], Reply]
 
 
@@ -49,6 +50,8 @@ class CallRows:
         def edit(current: Data | None) -> tuple[Data, Reply]:
             data = _complete(current, self.cohort, now)
             reply = decide(data, now)
+            if (current or {}).get("outcome") == FAILED:  # a failed negotiation stays failed
+                data["outcome"] = FAILED
             data["last_activity"] = now.isoformat()
             event = {"at": now.isoformat(), "action": action, "mc": data["mc"], **reply}
             data["events"].append({"seq": len(data["events"]) + 1, **event})

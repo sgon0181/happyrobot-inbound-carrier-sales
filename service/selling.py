@@ -5,6 +5,7 @@ call's own row shows an eligible MC and a passed code (INV-2, INV-3).
 """
 
 import asyncio
+import uuid
 from datetime import datetime
 from typing import Protocol
 
@@ -93,11 +94,19 @@ class Sales:
         ceiling. Each answer is computed inside the call row's version-checked write, so
         concurrent requests cannot share a round. An acceptance is first claimed on the
         call row, which allows one per call; then the booking row decides who holds the
-        load (D-24). A retry after a partial failure finishes the stored claim.
+        load (D-24). A claim left by an earlier attempt is resolved first: settled from
+        its booking row if one exists, otherwise dropped, so the counter is priced afresh.
         """
-        early = _refusal(await self.rows.read(run_id), load_id)
+        data = await self.rows.read(run_id)
+        early = _refusal(data, load_id)
         if early is not None:
             return await self.rows.step(run_id, "negotiate", answer(early["status"], early))
+        claim = data["accepting"]
+        if claim is not None:
+            held = await self.bookings.held_by(load_id, run_id)
+            if held is not None:
+                return await self.rows.step(run_id, "negotiate", _settle(claim["id"], held))
+            await self.rows.step(run_id, "negotiate", _abandon(claim["id"]))
         try:
             terms = await self._fresh_terms(load_id)
         except TmsUnavailable:
@@ -115,7 +124,7 @@ class Sales:
             cohort=self.rows.cohort,
             now=self.rows.now(),
         )
-        return await self.rows.step(run_id, "negotiate", _settle(load_id, held))
+        return await self.rows.step(run_id, "negotiate", _settle(reply["id"], held))
 
     async def close(self, run_id: str, summary: str | None) -> Reply:
         """Record that the call ended. A repeat changes nothing, so the first close stands."""
@@ -210,8 +219,8 @@ def _answer(load_id: str, ask: str, terms: Terms) -> Decide:
         refused = _refusal(data, load_id)
         if refused is not None:
             return refused
-        if data["accepting"] is not None:  # a retry finishes the stored claim
-            return {"status": "accepting", **data["accepting"]}
+        if data["accepting"] is not None:  # another request on this load is accepting now
+            return {"status": "busy"}
         amount = parse_ask(ask)
         offer = min(max(int(data["offers"][load_id]), terms.opening), terms.cap)  # INV-1
         last = data["last_counter"]
@@ -230,7 +239,8 @@ def _answer(load_id: str, ask: str, terms: Terms) -> Decide:
 
 def _apply(data: Data, load_id: str, step: Step) -> Reply:
     if step.action is Action.ACCEPT:
-        data["accepting"] = {"load_id": load_id, "rate": step.rate, "mc": data["mc"]}
+        claim = {"id": uuid.uuid4().hex, "load_id": load_id, "rate": step.rate, "mc": data["mc"]}
+        data["accepting"] = claim
         return {"status": "accepting", **data["accepting"]}
     if step.action is Action.FAILED:
         data["outcome"] = "negotiation_failed"
@@ -246,15 +256,31 @@ def _apply(data: Data, load_id: str, step: Step) -> Reply:
     }
 
 
-def _settle(load_id: str, held: Data | None) -> Decide:
-    """Record the reservation as the booking row holds it, or drop a load that was lost."""
+def _settle(claim_id: str, held: Data | None) -> Decide:
+    """Finish one claim, by its ID: record the reservation as its booking row holds it, or
+    drop a load that was lost. A late helper for an older claim changes nothing.
+    """
 
     def decide(data: Data, now: datetime) -> Reply:
-        data["accepting"] = None
+        claim = data["accepting"]
+        if claim is None or claim["id"] != claim_id:
+            return {"status": "superseded"}
+        load_id, data["accepting"] = claim["load_id"], None
         if held is None:
             data["offers"].pop(load_id, None)
             return {"status": "load_gone", "load_id": load_id}
         data["agreement"] = {"load_id": load_id, "rate": held["rate"], "mc": held["mc"]}
         return {"status": "agreed", "load_id": load_id, "rate": held["rate"]}
+
+    return decide
+
+
+def _abandon(claim_id: str) -> Decide:
+    """Drop a claim that never got its booking row, so nothing of it outlives today's terms."""
+
+    def decide(data: Data, now: datetime) -> Reply:
+        if data["accepting"] is not None and data["accepting"]["id"] == claim_id:
+            data["accepting"] = None
+        return {"status": "claim_dropped"}
 
     return decide

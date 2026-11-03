@@ -12,7 +12,7 @@ Updated on 2026-11-04 (Sydney). Current local service and App measurements are s
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
 | Native full text simulations | Standard agreement: both criteria passed. Pressure: gate passed, deal criterion not applicable | Two executions completed; pressure ended by idle timeout with no close_call. Setup error retained |
 | Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 4 voice checklist is still open |
-| Frontend | 13 tests, lint, typecheck and production build pass; production dependency audit 0 | Node 22 container. Three existing lint warnings; published visual review pending |
+| Frontend | 35 tests, lint, typecheck and production build pass; production dependency audit 0 | Node 22 container. Three existing lint warnings; published visual review pending |
 
 Historical Version 2 checkpoints were 16/19 first-round cases passing, with failures retained below. The retained Version 3 round table totals 50/54 across prompt edits, not 51/54 and not a single immutable snapshot. Do not add these layers into a combined call count.
 
@@ -27,6 +27,8 @@ Local carrier-context fixes add 13 regression cases. The first 11 failed before 
 The TMS client is tested against loopback TCP fault servers for silence, partial replies, framing, oversized lines, split chunks and delayed closes. The six stored booking replies in [the fixtures](tms/fixtures/README.md) parse to the state each proves. No fixture test sends a live booking.
 
 Frontend commands in a clean temporary copy, with no .env: `npm ci --include=dev`, `npm run lint`, `npm run build`, `npm run typecheck`, `npm test`, `npm audit --omit=dev`. These run in `node:22` because local Node is broken. Lint reports three existing warnings (two template image elements and an unused destructured field). React's test renderer is a dev-only deprecated dependency. Production audit reports zero vulnerabilities; the full development dependency audit reports 21 (2 low, 19 moderate), no high or critical.
+
+The 22 new rep-feedback cases click the actual component handler with mocked HTTP replies. Fifteen reproduced misleading feedback before the change; seven preserve existing branches. Messages distinguish no send, TMS refusal, unknown outcome, pending acknowledgement and final confirmation. Receipt-save failures remain errors even after `BOOKED`, preserve the returned evidence, and show the recovery copy. Failed preflight checks and local release never assert external load availability. Version forwarding, refresh, disabled sends and existing recovery tests pass. Production TypeScript/TSX under `ops-app/src` totals 4089 physical lines, including the 138-line rep-actions module. No service reply field changed. This App change is local and has not received a published visual review.
 
 ## Historical deployed observations
 

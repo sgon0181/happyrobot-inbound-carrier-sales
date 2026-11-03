@@ -10,25 +10,48 @@ import type { ActionReply, RepAction } from "@/lib/ops-service";
 import { keepReceipt } from "@/lib/unsaved-receipts";
 
 const LABEL: Record<RepAction, string> = { confirm: "Confirm", decline: "Decline", reconcile: "Reconcile" };
+
+function bookingResult(r: ActionReply): { ok: boolean; text: string } {
+  const reference = ` Reference ${r.reference ?? "not recorded"}.`;
+  switch (r.state) {
+    case "FAILED":
+      return {
+        ok: false,
+        text: r.reason === "not_sent"
+          ? "No booking request was sent. Review the failure before trying again."
+          : r.reason
+            ? `The TMS refused this booking: ${r.reason}.`
+            : "Booking failed. Review the receipt before trying again.",
+      };
+    case "UNKNOWN":
+      return { ok: false, text: `Booking outcome unknown. The request may have reached the TMS. Reconcile; never resend.${reference}` };
+    case "ACK_PENDING":
+      return { ok: true, text: `The TMS acknowledged the request as pending; this is not a final booking.${reference}` };
+    case "CONFIRMED":
+      return { ok: true, text: `The TMS confirmed the booking (BOOKED).${reference}` };
+    default:
+      return { ok: false, text: `Unrecognized booking result: ${r.state ?? "not recorded"}. Review the receipt before taking another action.` };
+  }
+}
+
 // What the service's status means for the rep. Unknown statuses are shown as they are.
 function describe(r: ActionReply): { ok: boolean; text: string } {
   switch (r.status) {
     case "sent":
-      return {
-        ok: r.state === "ACK_PENDING" || r.state === "CONFIRMED",
-        text: `Sent once. Booking ${r.state}, TMS status ${r.tmsStatus ?? "none"}, reference ${r.reference ?? "none"}${r.reason ? ` (${r.reason})` : ""}.`,
-      };
-    case "receipt_not_saved":
+      return bookingResult(r);
+    case "receipt_not_saved": {
+      const result = bookingResult(r);
       return {
         ok: false,
-        text: `Sent, but the receipt was not saved: ${r.state}, reference ${r.reference ?? "none"}. Keep the copy shown at the top of the page.`,
+        text: `${result.text} The result was not saved. Keep the copy shown at the top of the page.`,
       };
+    }
     case "released":
-      return { ok: true, text: "Reservation released. Nothing was sent, so the load is free." };
+      return { ok: true, text: "Reservation released. No booking request was sent." };
     case "reconciled":
       return { ok: true, text: `The TMS shows the load as ${r.loadStatus}. The booking is ${r.state}.` };
     case "failed":
-      return { ok: false, text: `Not sent: ${r.reason}. The load is free; call the carrier back.` };
+      return { ok: false, text: `No booking request was sent: ${r.reason ?? "reason not recorded"}. Review the load and contact the carrier.` };
     case "stale":
       return { ok: false, text: "This booking changed since your screen loaded. Review it again." };
     case "not_allowed":

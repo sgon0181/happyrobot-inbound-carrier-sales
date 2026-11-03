@@ -202,7 +202,7 @@ service/                                                                   Statu
   config.py          Typed settings; the only code that reads the env      built
   api.py             Routes, keys, request models; no business rules       built
   calls.py           The call row, and the verify and code flows           built
-  selling.py         Voice flows: search, negotiate, close                 close in slice 3
+  selling.py         Voice flows: search, negotiate, close                 built
   bookings.py        Reservation and rep actions: confirm, decline         slices 3 and 4
   dashboard.py       The snapshot and KPIs for the operations app          slice 4
   core/              Pure rules: no network, no files, no clock
@@ -227,7 +227,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `bookings` 
 | `POST /otp/verify` | Agent | Checks the spoken code. At most 3 failures, then the call is locked. |
 | `POST /loads/search` | Agent | `LOAD_QUERY`, then `LOAD_GET` on up to 3 candidates. Returns allowed fields and our opening offer. |
 | `POST /negotiate` | Agent | Applies the negotiation policy. On agreement, reserves the load. |
-| `POST /calls/{id}/close` | Agent | Records closing time and summary. Safe to repeat. |
+| `POST /calls/close` | Agent | Records closing time and summary. Safe to repeat. |
 | `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds. |
 | `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` for the version the rep saw ([§10](#10-reservation-and-confirm)). |
 | `POST /bookings/{load_id}/decline` | Ops | Releases the version the rep saw. Nothing was sent, so the load is free. |

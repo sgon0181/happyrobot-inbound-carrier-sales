@@ -336,3 +336,21 @@ def test_each_reservation_event_names_its_call_mc_and_rate() -> None:
         "mc": "138328",
         "rate": 1850,
     }
+
+
+def test_close_records_the_end_once_and_a_repeat_changes_nothing() -> None:
+    r = offered()
+    counter(r, 1850)
+    assert r.post("/calls/close", summary="Agreed LD09001 at 1850.")["status"] == "closed"
+    first = r.row()["closed_at"]
+    r.clock.now = r.clock.now.replace(hour=13)
+    assert r.post("/calls/close", summary="other")["status"] == "closed"
+    row = r.row()
+    assert (row["closed_at"], row["summary"]) == (first, "Agreed LD09001 at 1850.")
+    assert row["agreement"]["rate"] == 1850  # closing never touches the reservation
+
+
+def test_close_works_without_a_summary_on_any_call() -> None:
+    r = rig()
+    assert r.post("/calls/close")["status"] == "closed"
+    assert r.row()["closed_at"] is not None and r.row()["summary"] is None

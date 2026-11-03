@@ -117,6 +117,16 @@ class Sales:
         )
         return await self.rows.step(run_id, "negotiate", _settle(load_id, held))
 
+    async def close(self, run_id: str, summary: str | None) -> Reply:
+        """Record that the call ended. A repeat changes nothing, so the first close stands."""
+
+        def decide(data: Data, now: datetime) -> Reply:
+            if data["closed_at"] is None:
+                data["closed_at"], data["summary"] = now.isoformat(), summary
+            return {"status": "closed"}
+
+        return await self.rows.step(run_id, "close", decide)
+
     async def _fresh_terms(self, load_id: str) -> Terms | None:
         """Today's terms for the load, or None if it is gone, blocked or cannot be priced."""
         load = await self.board.get(load_id)

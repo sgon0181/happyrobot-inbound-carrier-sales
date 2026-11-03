@@ -6,7 +6,7 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Slice 4 of 5 done.** A real web call on 2026-11-03 passed MC and code, found a dry van out of Kentucky, countered twice and reserved LD01080 at 575. The owner then confirmed it as the rep in the operations app, which sent one `LOAD_BOOK` and got back a TMS reference with status `PENDING`, saved as `ACK_PENDING` with every byte of the reply. QA suites, KPIs and the demo come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
+**Slice 4 of 5 done.** A real web call on 2026-11-03 passed MC and code, found a dry van out of Kentucky, countered twice and reserved LD01080 at 575. The owner then confirmed it as the rep in the operations app, which sent one `LOAD_BOOK` and got back a TMS reference with status `PENDING`, saved as `ACK_PENDING` with every byte of the reply. Conversation QA and the build description are written; the demo video and submission come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
 
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
 
@@ -32,6 +32,8 @@ Two rules shape the design: the model talks and the service decides, and only a 
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the system works. Start here. |
 | [docs/decisions.md](docs/decisions.md) | Every decision, its reason and its cost, plus open checks |
+| [docs/build-description.md](docs/build-description.md), [docs/qa-results.md](docs/qa-results.md) | The build description for the business and IT teams, and what was measured |
+| [docs/prospect-email.md](docs/prospect-email.md), [docs/demo-script.md](docs/demo-script.md) | Submission drafts: the email and the video run sheet |
 | [docs/lessons-from-prototype.md](docs/lessons-from-prototype.md) | What the prototype proved and what carries over |
 | [docs/onboarding.md](docs/onboarding.md) | Access, setup steps and current platform state |
 | [docs/assignment.md](docs/assignment.md) | Summary of the assignment and platform |
@@ -41,7 +43,7 @@ Two rules shape the design: the model talks and the service decides, and only a 
 | [docs/audits/](docs/audits/) | The two independent code audits of the prototype |
 | [service/](service/README.md) | The Python service |
 | [tools/](tools/check_branch_coverage.py) | Build checks: the branch coverage gate that `make check` runs |
-| [happyrobot/](happyrobot/README.md) | Voice workflow export, prompt and test suites |
+| [happyrobot/](happyrobot/README.md) | The voice prompt, its tools and the conversation evals |
 | [ops-app/](ops-app/README.md) | Operations dashboard source |
 
 ## Development

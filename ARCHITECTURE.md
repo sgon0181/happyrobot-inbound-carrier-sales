@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Version** | 3.0, 2026-11-02 |
-| **Status** | Design for the real build. `main` holds no service code yet; it arrives through the [build plan](#15-build-plan). |
+| **Status** | Slices 1 to 4 of the [build plan](#15-build-plan) are built on `main` and live; slice 5 (QA, KPIs, delivery) is in progress. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |

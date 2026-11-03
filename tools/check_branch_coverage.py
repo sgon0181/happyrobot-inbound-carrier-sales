@@ -12,7 +12,7 @@ from typing import Any
 
 GATED = (
     *("service/core/", "service/calls.py", "service/selling.py", "service/bookings.py"),
-    *("service/dashboard.py", "service/rep_actions.py"),
+    *("service/dashboard.py", "service/rep_actions.py", "service/sale_decisions.py"),
 )
 MINIMUM = 90.0
 

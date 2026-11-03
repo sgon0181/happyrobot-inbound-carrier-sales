@@ -26,7 +26,7 @@ CALL_FIELDS = (
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
-    *("raw_reply", "send", "reason", "events"),
+    *("raw_reply", "send", "reason", "events", "load"),
 )
 
 
@@ -65,7 +65,7 @@ def build_snapshot(calls: dict[str, Row], bookings: dict[str, Row], now: datetim
     held = handoffs(bookings)
     shown = [_call(key, row, held.get(key), now) for key, row in calls.items()]
     shown.sort(key=lambda call: call["started_at"] or "", reverse=True)
-    queue = [_booking(key, row) for key, row in bookings.items()]
+    queue = [_booking(key, row, calls) for key, row in bookings.items()]
     return {
         "status": "ok",
         "generated_at": now.isoformat(),
@@ -175,8 +175,11 @@ def _call(key: str, row: Row, booking: Data | None, now: datetime) -> Data:
     return {"id": key, "version": row.version, **fields, **derived}
 
 
-def _booking(key: str, row: Row) -> Data:
-    return {"load_id": key, "version": row.version} | {
+def _booking(key: str, row: Row, calls: dict[str, Row]) -> Data:
+    call = calls.get(str(row.data.get("call_id")))
+    matched = call is not None and call.data.get("mc") == row.data.get("mc")
+    carrier = call.data.get("carrier_name") if matched and call is not None else None
+    return {"load_id": key, "version": row.version, "carrier_name": carrier} | {
         name: row.data.get(name) for name in BOOKING_FIELDS
     }
 

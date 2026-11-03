@@ -134,3 +134,21 @@ def _state(text: str | None) -> str | None:
 
 def _place(place: Place) -> str:
     return f"{place.city}, {place.state}"
+
+
+def reservation_view(load: Load) -> dict[str, object]:
+    """Load terms for a rep, captured at reservation. Neither ceiling nor model inputs."""
+    return {
+        "origin": {"city": load.origin.city, "state": load.origin.state},
+        "destination": {"city": load.destination.city, "state": load.destination.state},
+        "pickup_datetime": load.pickup_datetime and load.pickup_datetime.isoformat(),
+        "delivery_datetime": load.delivery_datetime and load.delivery_datetime.isoformat(),
+        "equipment_type": load.equipment_type,
+        "miles": load.miles,
+        "weight": load.weight,
+        "commodity_type": load.commodity_type,
+        "num_of_pieces": load.num_of_pieces,
+        "dimensions": load.dimensions,
+        "notes": load.notes,
+        "loadboard_rate": load.loadboard_rate,
+    }

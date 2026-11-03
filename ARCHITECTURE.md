@@ -203,6 +203,7 @@ service/                                                                   Statu
   api.py             Routes, keys, request models; no business rules       built
   calls.py           The call row, and the verify and code flows           built
   selling.py         Voice flows: search, negotiate, close                 built
+  sale_decisions.py  Pure call-row negotiation decisions                   built
   bookings.py        Reservation: one booking row per load                 built
   rep_actions.py     A rep's confirm, decline and reconcile; LOAD_BOOK     built
   dashboard.py       The snapshot and KPIs for the operations app          built
@@ -294,10 +295,11 @@ Both tables have the same shape, created once in the Twin UI because the API can
 {
   "state": "RESERVED",
   "call_id": "...", "mc": "138328", "rate": 3625, "cohort": "real",
+  "load": { "origin": { "city": "...", "state": "..." }, "pickup_datetime": "...", "loadboard_rate": 3800 },
   "rep": null, "reference": null, "tms_status": null, "raw_reply": null,
   "send": { "step": null, "error": null, "bytes": 0, "sha256": null },
   "reason": null,
-  "events": [ { "seq": 1, "at": "...", "action": "reserved", "status": "RESERVED" } ]
+  "events": [ { "seq": 1, "at": "...", "action": "reserved", "state": "RESERVED" } ]
 }
 ```
 
@@ -357,6 +359,8 @@ Both draws use an HMAC of the policy version, load ID and purpose under a server
 ## 10. Reservation and Confirm
 
 **On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
+
+**Reservation context (R4 local candidate).** The fresh detail read used to price an acceptance also supplies an explicit rep-view allowlist. Its lane, dates, equipment, cargo and posted rate are stored on the booking row and its reserved event; the ceiling is excluded. Reusing a released row preserves the previous snapshot in its event. Old rows have no reconstructed context. A carrier name is joined only while the call MC matches the reservation MC.
 
 **In the app.** Confirm checks the row is still the version the rep saw, re-reads the load, wins a version-checked write to `SUBMITTING`, sends `LOAD_BOOK` once and saves the reply. Decline makes the same version check.
 

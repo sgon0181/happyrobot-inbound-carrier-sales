@@ -31,6 +31,7 @@ class Bookings:
         rate: int,
         cohort: str,
         now: datetime,
+        load: Data | None = None,
     ) -> Data | None:
         """Hold the load for this claim. Returns the row if this call holds it, as stored,
         so a retry recovers the first attempt's rate and MC. None if another call holds it,
@@ -47,8 +48,11 @@ class Bookings:
                 return None, current if row.get("call_id") == call_id else None
             attempt = {"call_id": call_id, "claim_id": claim_id, "mc": mc, "rate": rate}
             data = new_booking(call_id, mc, rate, cohort) | {"claim_id": claim_id}
+            data["load"] = load
             data["void_claims"] = row.get("void_claims", [])
-            data["events"] = with_event(row, now, "reserved", attempt)
+            data["events"] = with_event(
+                row, now, "reserved", attempt | {"state": "RESERVED", "load": load}
+            )
             return data, data
 
         return await self.twin.change("bookings", load_id, edit)

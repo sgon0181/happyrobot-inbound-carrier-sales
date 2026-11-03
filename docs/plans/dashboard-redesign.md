@@ -90,3 +90,9 @@ Today the rep sees a load ID and a rate, and cannot judge the deal without the l
 3. Central Time for every time shown, labelled "CT".
 4. Reps see the posted rate next to the agreed rate; the ceiling stays out.
 5. The PDF compliance audit runs first; pieces 1 and 2 may follow it directly, since the audit cannot change them.
+
+## Candidate progress
+
+R4 piece 1 is implemented locally: an explicit reservation view from the fresh pricing read is saved on the row and its reserved event. Dashboard projection includes that view and an MC-matched carrier name. Released-row reuse retains the earlier snapshot in its events; old rows remain missing. Voice public_view is unchanged. Frontend presentation and rollout remain pending.
+
+Piece 1 validation: 423 offline service tests pass, 1,616 statements and 392 branches at 100%, with 242/242 gated branches. Repeat acceptance preserves the original snapshot after TMS details change. Radon B or better, functions at most 50 lines and production Python modules at most 300 lines. Production total: 2,841 lines. The app has not yet been updated or published.

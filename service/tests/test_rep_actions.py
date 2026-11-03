@@ -71,7 +71,7 @@ def test_confirm_sends_once_and_keeps_the_whole_receipt() -> None:
     size = len(PENDING_RECEIPT)
     assert row["send"] == {"step": "received", "error": None, "bytes": size, "sha256": digest}
     actions = [(event["action"], event.get("state")) for event in row["events"]]
-    assert actions == [("reserved", None), ("confirm", "SUBMITTING"), ("sent", "ACK_PENDING")]
+    assert actions == [("reserved", "RESERVED"), ("confirm", "SUBMITTING"), ("sent", "ACK_PENDING")]
     snapshot = r.get("/ops/snapshot")  # forgotten, so the rep sees their own action
     assert (snapshot["kpis"]["rep_confirmed"], snapshot["kpis"]["tms_acknowledged"]) == (1, 1)
     assert snapshot["kpis"]["tms_confirmed"] == 0  # PENDING is never counted as confirmed

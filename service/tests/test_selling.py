@@ -5,7 +5,8 @@ import json
 from typing import Any
 
 from service.bookings import Bookings
-from service.selling import _abandon, _settle
+from service.sale_decisions import abandon as _abandon
+from service.sale_decisions import settle as _settle
 from service.tests.fake_tms import make_load
 from service.tests.rig import RUN, START, Rig, rig
 

@@ -1,0 +1,1324 @@
+{
+  "workflow_id": "01a18119-67a1-79a3-b220-369aa359d4fb",
+  "version_id": "01a1a12f-1eb3-7900-a612-f035faaa4e12",
+  "version_slug": "l8x9v2kyt4mc",
+  "prompt_node": "01a1a12f-1ebe-790d-909b-3f528f0dcee8",
+  "safety": "Checkpoint evals only. Every one of six child service actions is explicitly locked. The post-call callback is not run. No real email, Twin access or TMS operation.",
+  "action_persistent_ids": {
+    "verify_carrier": "01a19dc0-e21e-7ed2-b4a3-8b44ad7a8a3c",
+    "send_code": "01a19dc0-e22f-791f-8b8f-2610fa4fb259",
+    "verify_code": "01a19dc0-e23f-7d39-982a-ed22d467f2ae",
+    "find_loads": "01a19f02-66e3-7f61-931c-a1e0a53874e1",
+    "negotiate": "01a19f02-66f9-746d-ac7d-ae4b61fd8bb4",
+    "close_call": "01a19f02-670d-726a-93b4-6ebba58652b3"
+  },
+  "cases": [
+    {
+      "key": "E7a",
+      "name": "E7a candidate: explain unavailable load and wait",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "Okay, 1,800 works.",
+          "turn_index": 17
+        }
+      ],
+      "expected": "Calls negotiate with LD90001 and 1800. After load_gone, tells the caller the load is no longer available and no reservation was made, then asks whether to search the same lane again and waits. No close_call, no handoff, no claim it was booked or taken by another carrier.",
+      "expected_tool_calls": [
+        {
+          "name": "negotiate",
+          "arguments": {
+            "load_id": "LD90001",
+            "rate": "1800"
+          }
+        }
+      ],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90001",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "load_gone",
+          "load_id": "LD90001",
+          "message": "That load is no longer available. No reservation was made.",
+          "next_action": "ask_to_search_again",
+          "search": {
+            "equipment": "DRY_VAN",
+            "origin_state": "TX",
+            "dest_state": "GA"
+          }
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 8,
+      "eval_id": "01a1a145-70b8-7abe-a8b6-23ed3eaacd59",
+      "safety_verified": true
+    },
+    {
+      "key": "E7b",
+      "name": "E7b candidate: consent to fresh search",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "Okay, 1,800 works.",
+          "turn_index": 17
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_e7_unavailable",
+              "type": "function",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\": \"LD90001\", \"rate\": \"1800\"}"
+              }
+            }
+          ],
+          "turn_index": 18
+        },
+        {
+          "role": "tool",
+          "name": "negotiate",
+          "tool_call_id": "call_e7_unavailable",
+          "content": "{\"status\": \"load_gone\", \"load_id\": \"LD90001\", \"message\": \"That load is no longer available. No reservation was made.\", \"next_action\": \"ask_to_search_again\", \"search\": {\"equipment\": \"DRY_VAN\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}}",
+          "turn_index": 19
+        },
+        {
+          "role": "assistant",
+          "content": "That load is no longer available. No reservation was made. Would you like me to search that lane again?",
+          "turn_index": 20
+        },
+        {
+          "role": "user",
+          "content": "Yes, check the same lane again.",
+          "turn_index": 21
+        }
+      ],
+      "expected": "Calls find_loads for dry van TX to GA, then pitches LD90002 from its fresh result at 1800 and waits for the caller. No agreement, handoff or close.",
+      "expected_tool_calls": [
+        {
+          "name": "find_loads",
+          "arguments": {
+            "equipment": "DRY_VAN",
+            "origin_state": "TX",
+            "dest_state": "GA"
+          }
+        }
+      ],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90002",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "counter",
+          "offer": 1900,
+          "round": 1
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 2,
+      "eval_id": "01a1a145-9049-72d9-a758-6b40fdfc92a5",
+      "safety_verified": true
+    },
+    {
+      "key": "E7c",
+      "name": "E7c candidate: caller declines another search",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "Okay, 1,800 works.",
+          "turn_index": 17
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_e7_unavailable",
+              "type": "function",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\": \"LD90001\", \"rate\": \"1800\"}"
+              }
+            }
+          ],
+          "turn_index": 18
+        },
+        {
+          "role": "tool",
+          "name": "negotiate",
+          "tool_call_id": "call_e7_unavailable",
+          "content": "{\"status\": \"load_gone\", \"load_id\": \"LD90001\", \"message\": \"That load is no longer available. No reservation was made.\", \"next_action\": \"ask_to_search_again\", \"search\": {\"equipment\": \"DRY_VAN\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}}",
+          "turn_index": 19
+        },
+        {
+          "role": "assistant",
+          "content": "That load is no longer available. No reservation was made. Would you like me to search that lane again?",
+          "turn_index": 20
+        },
+        {
+          "role": "user",
+          "content": "No thanks, that is all. Goodbye.",
+          "turn_index": 21
+        }
+      ],
+      "expected": "Closes politely with close_call and no handoff or booking claim. Does not search again.",
+      "expected_tool_calls": [
+        {
+          "name": "close_call"
+        }
+      ],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90001",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "counter",
+          "offer": 1900,
+          "round": 1
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 2,
+      "eval_id": "01a1a145-918e-7579-bf66-57e1dd6fb078",
+      "safety_verified": true
+    },
+    {
+      "key": "S5",
+      "name": "S5 candidate regression",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "I need 2,100 on that.",
+          "turn_index": 17
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_5",
+              "type": "function",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\": \"LD90001\", \"rate\": \"2100\"}"
+              }
+            }
+          ],
+          "turn_index": 18
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"counter\", \"offer\": 1900, \"round\": 1}",
+          "tool_call_id": "call_hist_5",
+          "name": "negotiate",
+          "turn_index": 19
+        },
+        {
+          "role": "assistant",
+          "content": "I can do $1,900. Does that work?",
+          "turn_index": 20
+        },
+        {
+          "role": "user",
+          "content": "Make it 1,950 and we're good.",
+          "turn_index": 21
+        }
+      ],
+      "expected": "Calls negotiate with LD90001 and 1950; on agreed, confirms LD90001 at $1,950, says it is transferring the caller to a senior rep to confirm the booking, calls close_call with a short summary, and does not say the booking is confirmed.",
+      "expected_tool_calls": [
+        {
+          "name": "negotiate",
+          "arguments": {
+            "load_id": "LD90001",
+            "rate": "1950"
+          }
+        },
+        {
+          "name": "close_call"
+        }
+      ],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90001",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "agreed",
+          "load_id": "LD90001",
+          "rate": 1950
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 2,
+      "eval_id": "01a1a145-92cf-7f42-a052-30b4f43ff38f",
+      "safety_verified": true
+    },
+    {
+      "key": "E6",
+      "name": "E6 candidate regression",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "I need 2,100 on that.",
+          "turn_index": 17
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_5",
+              "type": "function",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\": \"LD90001\", \"rate\": \"2100\"}"
+              }
+            }
+          ],
+          "turn_index": 18
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"counter\", \"offer\": 1900, \"round\": 1}",
+          "tool_call_id": "call_hist_5",
+          "name": "negotiate",
+          "turn_index": 19
+        },
+        {
+          "role": "assistant",
+          "content": "I can do $1,900. Does that work?",
+          "turn_index": 20
+        },
+        {
+          "role": "user",
+          "content": "No, 2,400 or nothing.",
+          "turn_index": 21
+        }
+      ],
+      "expected": "Calls negotiate with LD90001 and 2400; on negotiation_failed says we can't meet that rate, thanks the caller and calls close_call. Does not mention a transfer to a rep.",
+      "expected_tool_calls": [
+        {
+          "name": "negotiate",
+          "arguments": {
+            "load_id": "LD90001",
+            "rate": "2400"
+          }
+        },
+        {
+          "name": "close_call"
+        }
+      ],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90001",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "negotiation_failed"
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 2,
+      "eval_id": "01a1a145-9427-78bf-9210-b014fd6d772d",
+      "safety_verified": true
+    },
+    {
+      "key": "E8",
+      "name": "E8 candidate regression",
+      "conversation": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "turn_index": 0
+        },
+        {
+          "role": "user",
+          "content": "MC 138328.",
+          "turn_index": 1
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_1",
+              "type": "function",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\": \"138328\"}"
+              }
+            }
+          ],
+          "turn_index": 2
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"eligible\", \"carrier_name\": \"Synthetic Carrier LLC\"}",
+          "tool_call_id": "call_hist_1",
+          "name": "verify_carrier",
+          "turn_index": 3
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "turn_index": 4
+        },
+        {
+          "role": "user",
+          "content": "Yes, that's us.",
+          "turn_index": 5
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_2",
+              "type": "function",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ],
+          "turn_index": 6
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"sent\"}",
+          "tool_call_id": "call_hist_2",
+          "name": "send_code",
+          "turn_index": 7
+        },
+        {
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "turn_index": 8
+        },
+        {
+          "role": "user",
+          "content": "4 8 1 2 0 6.",
+          "turn_index": 9
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_3",
+              "type": "function",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\": \"481206\"}"
+              }
+            }
+          ],
+          "turn_index": 10
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"verified\"}",
+          "tool_call_id": "call_hist_3",
+          "name": "verify_code",
+          "turn_index": 11
+        },
+        {
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "turn_index": 12
+        },
+        {
+          "role": "user",
+          "content": "Dry van, Texas to Georgia.",
+          "turn_index": 13
+        },
+        {
+          "role": "assistant",
+          "content": "",
+          "tool_calls": [
+            {
+              "id": "call_hist_4",
+              "type": "function",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"equipment\": \"dry van\", \"origin_state\": \"TX\", \"dest_state\": \"GA\"}"
+              }
+            }
+          ],
+          "turn_index": 14
+        },
+        {
+          "role": "tool",
+          "content": "{\"status\": \"found\", \"loads\": [{\"load_id\": \"LD90001\", \"origin\": \"Dallas, TX\", \"destination\": \"Atlanta, GA\", \"pickup_datetime\": \"2026-11-06T08:00:00+00:00\", \"delivery_datetime\": \"2026-11-06T20:00:00+00:00\", \"equipment_type\": \"DRY_VAN\", \"miles\": 780, \"weight\": 42000, \"commodity_type\": \"General Freight\", \"num_of_pieces\": 24, \"dimensions\": \"636 x 96 x 108 in\", \"notes\": \"\", \"offer\": 1800}]}",
+          "tool_call_id": "call_hist_4",
+          "name": "find_loads",
+          "turn_index": 15
+        },
+        {
+          "role": "assistant",
+          "content": "I have load LD90001, Dallas, Texas to Atlanta, Georgia, picking up November 6 at 8 AM, dry van, 42,000 pounds of general freight. I can offer $1,800. Does that work?",
+          "turn_index": 16
+        },
+        {
+          "role": "user",
+          "content": "Somewhere around the high teens, low twenties, you know.",
+          "turn_index": 17
+        }
+      ],
+      "expected": "Does not pick a number for the caller: does not call negotiate with any amount the caller did not say, and asks for one clear dollar amount.",
+      "expected_tool_calls": [],
+      "mocks": {
+        "verify_carrier": {
+          "status": "eligible",
+          "carrier_name": "Synthetic Carrier LLC"
+        },
+        "send_code": {
+          "status": "sent"
+        },
+        "verify_code": {
+          "status": "verified"
+        },
+        "find_loads": {
+          "status": "found",
+          "loads": [
+            {
+              "load_id": "LD90001",
+              "origin": "Dallas, TX",
+              "destination": "Atlanta, GA",
+              "pickup_datetime": "2026-11-06T08:00:00+00:00",
+              "delivery_datetime": "2026-11-06T20:00:00+00:00",
+              "equipment_type": "DRY_VAN",
+              "miles": 780,
+              "weight": 42000,
+              "commodity_type": "General Freight",
+              "num_of_pieces": 24,
+              "dimensions": "636 x 96 x 108 in",
+              "notes": "",
+              "offer": 1800
+            }
+          ]
+        },
+        "negotiate": {
+          "status": "ask_again"
+        },
+        "close_call": {
+          "status": "closed"
+        }
+      },
+      "repetitions": 2,
+      "eval_id": "01a1a145-e3bf-79ce-ae70-6eafb9444bb0",
+      "safety_verified": true
+    }
+  ]
+}

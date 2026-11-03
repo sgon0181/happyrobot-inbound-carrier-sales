@@ -36,7 +36,7 @@ def drop(load_id: str) -> Decide:
 
     def decide(data: Data, now: datetime) -> Reply:
         data["offers"].pop(load_id, None)
-        return {"status": "load_gone", "load_id": load_id}
+        return _unavailable(data, load_id)
 
     return decide
 
@@ -97,7 +97,7 @@ def settle(claim_id: str, held: Data | None) -> Decide:
         load_id, data["accepting"] = claim["load_id"], None
         if held is None:
             data["offers"].pop(load_id, None)
-            return {"status": "load_gone", "load_id": load_id}
+            return _unavailable(data, load_id)
         data["agreement"] = {"load_id": load_id, "rate": held["rate"], "mc": held["mc"]}
         return {"status": "agreed", "load_id": load_id, "rate": held["rate"]}
 
@@ -113,3 +113,16 @@ def abandon(claim_id: str) -> Decide:
         return {"status": "claim_dropped"}
 
     return decide
+
+
+def _unavailable(data: Data, load_id: str) -> Reply:
+    """Give a truthful explanation and a next step without extra reads or stale alternatives."""
+    if not is_verified(data):
+        return {"status": "not_verified"}
+    return {
+        "status": "load_gone",
+        "load_id": load_id,
+        "message": "That load is no longer available. No reservation was made.",
+        "next_action": "ask_to_search_again",
+        "search": dict(data.get("search") or {}),
+    }

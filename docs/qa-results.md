@@ -127,3 +127,18 @@ The last prompt edit only changed the no-match and load-gone lines, and only E4 
 Row-only reconstruction now checks two counters followed by an agreement, the delivered email, pitch details, search criteria, summary and workflow end. Earlier asks and searches survive later ones. A separate marked-ceiling and fixed expected-code scan covers the new event fields, booking row, replies and operations snapshot. A pre-tool end creates an unverified call with no invented notes. App projection tests use actual public_view string lanes. These checks do not prove spoken words or successful callback delivery on the live workflow. Version 4 must follow the service deploy; before then the call counter covers service requests only.
 
 R3 local validation: `make check` passed 418 tests, 1,602 statements and 392 branches at 100%, with 242/242 gated branches. Radon found no production function above B; all production Python modules are at most 300 lines. In `node:22`, `npm ci --include=dev`, build, typecheck and two projection tests passed; `npm audit --omit=dev` found zero vulnerabilities. Python production total: 2,801 physical lines. No live booking, email or workflow execution was used.
+
+## Round 4: E7 continuation candidate on Version 4
+
+Unpublished Version 4 (`l8x9v2kyt4mc`) replaces the existing load_gone branch to follow the service message and ask whether to search again. The service supplies a generic unavailable message and normalized search criteria, without additional reads or stale alternatives. The cause is not claimed to be another carrier. Definitions and sanitized result IDs/reasoning are in happyrobot/e7-candidate.json and happyrobot/e7-results.json; the exact prompt is in happyrobot/prompt-v4.md.
+
+| Case | Result | Scope |
+|---|---|---|
+| E7a: unavailable after acceptance, explain and wait | 8/8 pass | Agent calls negotiate, explains no reservation, asks to search; no close or booking claim |
+| E7b: caller accepts another search | 2/2 pass | Existing find_loads, fresh mocked alternative, no agreement claim |
+| E7c: caller declines another search | 2/2 pass | Polite close, no handoff |
+| S5 agreement regression | 2/2 pass | negotiate then handoff and close |
+| E6 final-number regression | 2/2 pass | negotiate then professional failed close |
+| E8 vague-rate regression | 2/2 pass | Clarification instead of an invented ask |
+
+Total 18/18 model-graded checkpoint runs. Each case's six action locks were read back and verified before running. These prompt-node evals do not run the post-call webhook or any real service action. This does not establish full-call or voice success. Earlier failures remain recorded. Four new offline unavailability cases cover pending, expired pickup, unusable pricing and lost verification; all preserve round budgets and send nothing. Local make check: 428 tests, 1,620 statements and 394 branches at 100%, gated244/244.

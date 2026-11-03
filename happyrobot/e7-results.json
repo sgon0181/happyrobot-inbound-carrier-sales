@@ -1,0 +1,169 @@
+{
+  "version_id": "01a1a12f-1eb3-7900-a612-f035faaa4e12",
+  "version_slug": "l8x9v2kyt4mc",
+  "safety": "Checkpoint evals only. Every one of six child service actions is explicitly locked. The post-call callback is not run. No real email, Twin access or TMS operation.",
+  "results": [
+    {
+      "key": "E7c",
+      "eval_id": "01a1a145-918e-7579-bf66-57e1dd6fb078",
+      "runs": [
+        {
+          "run_id": "074342a4-69bd-49cb-9452-48864987ccac",
+          "result": "passed",
+          "reason": "The agent called close_call with an accurate summary, did not search again or claim a booking/handoff, and ended politely.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:21.861Z"
+        },
+        {
+          "run_id": "8cd018eb-6d35-45f2-a6bc-8283d15031b7",
+          "result": "passed",
+          "reason": "The agent called close_call exactly as expected, did not search again or claim a booking/handoff, and ended with a polite goodbye.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:21.548Z"
+        }
+      ]
+    },
+    {
+      "key": "E7a",
+      "eval_id": "01a1a145-70b8-7abe-a8b6-23ed3eaacd59",
+      "runs": [
+        {
+          "run_id": "0a7e0545-1b2e-4edd-8de3-199ab6b146ce",
+          "result": "passed",
+          "reason": "The agent called negotiate for LD90001 at $1,800, received load_gone, accurately stated the load was unavailable and no reservation was made, then asked whether to search the same lane again. It did not close, hand off, or make unsupported booking claims.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:20.634Z"
+        },
+        {
+          "run_id": "a0497992-7de0-4ae3-884a-4c90fb7bb16b",
+          "result": "passed",
+          "reason": "The agent called negotiate for LD90001 at $1800, correctly reported that the load was no longer available and no reservation was made, then asked whether to search the same lane again. It did not close, hand off, or make unsupported claims.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:20.328Z"
+        },
+        {
+          "run_id": "e52ec790-a204-46e3-8eed-c70edbe126cb",
+          "result": "passed",
+          "reason": "The agent called negotiate with LD90001 at $1800, correctly reported that the load was no longer available and no reservation was made, then asked whether to search the same lane again. It did not close, hand off, or claim it was booked or taken by another carrier.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:19.658Z"
+        },
+        {
+          "run_id": "d5e67cf5-1613-4f38-9ff1-e437cff3d39a",
+          "result": "passed",
+          "reason": "The agent called negotiate for LD90001 at $1,800, correctly handled the load_gone result, stated that no reservation was made, and asked whether to search the same Texas-to-Georgia lane again. It did not close, hand off, or falsely claim booking or another carrier took it.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:19.000Z"
+        },
+        {
+          "run_id": "e3c738de-3960-473a-ad51-beee8c723846",
+          "result": "passed",
+          "reason": "The agent called negotiate with LD90001 at $1800, correctly reported that the load was no longer available and no reservation was made, then asked whether to search the same lane again. It did not close, hand off, or make an incorrect booking claim.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:18.330Z"
+        },
+        {
+          "run_id": "a531eb57-1650-4ca1-9b81-662645abcea9",
+          "result": "passed",
+          "reason": "The agent called negotiate with LD90001 at $1800, correctly reported that the load was no longer available and no reservation was made, then asked whether to search the same TX-to-GA dry van lane again. It did not close, hand off, or falsely claim booking or another carrier took it.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:18.036Z"
+        },
+        {
+          "run_id": "a434034b-3d8a-4c9d-a359-b48676ca793e",
+          "result": "passed",
+          "reason": "The agent called negotiate with LD90001 at $1800, correctly reported that the load was no longer available and no reservation was made, then asked whether to search the same Texas-to-Georgia dry van lane again. It did not close, hand off, or make unsupported claims.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:17.720Z"
+        },
+        {
+          "run_id": "1a92a6eb-4cf7-4332-b8c9-74208e054b8e",
+          "result": "passed",
+          "reason": "The agent called negotiate for LD90001 at $1,800, then accurately reported that the load was unavailable and no reservation was made. It asked whether to search the same Texas-to-Georgia dry van lane again and did not close, hand off, or falsely claim booking.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:11.742Z"
+        }
+      ]
+    },
+    {
+      "key": "E7b",
+      "eval_id": "01a1a145-9049-72d9-a758-6b40fdfc92a5",
+      "runs": [
+        {
+          "run_id": "57c25f67-017e-46ff-95c1-dabb772e49e3",
+          "result": "passed",
+          "reason": "The continuation called find_loads for a dry van TX-to-GA lane with appropriate arguments, used the fresh result LD90002 at $1,800, and pitched it while awaiting the caller's response. No agreement, handoff, or close occurred.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:21.248Z"
+        },
+        {
+          "run_id": "5d27c941-49ad-4af5-836a-9da204869b02",
+          "result": "passed",
+          "reason": "The agent called find_loads for a dry van TX-to-GA search with appropriate arguments, used the fresh result LD90002 at the offered $1,800, and stopped after pitching it while awaiting the caller. No agreement, handoff, or close occurred.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:20.937Z"
+        }
+      ]
+    },
+    {
+      "key": "S5",
+      "eval_id": "01a1a145-92cf-7f42-a052-30b4f43ff38f",
+      "runs": [
+        {
+          "run_id": "a9fc065d-04df-404d-a828-91c01449a990",
+          "result": "passed",
+          "reason": "The agent negotiated LD90001 at $1,950, called close_call with an appropriate short summary, stated it was transferring the caller to a senior representative to confirm the booking, and did not claim the booking itself was confirmed. Expected tool calls were matched.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:22.464Z"
+        },
+        {
+          "run_id": "1753e202-a643-4ca4-9a1e-f2cbc480efc7",
+          "result": "passed",
+          "reason": "The agent negotiated LD90001 at $1,950, called close_call with an appropriate short summary, stated it was transferring to a senior representative for booking confirmation, and did not claim the booking was confirmed. Expected tool calls were matched.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:22.170Z"
+        }
+      ]
+    },
+    {
+      "key": "E6",
+      "eval_id": "01a1a145-9427-78bf-9210-b014fd6d772d",
+      "runs": [
+        {
+          "run_id": "7edb7848-d37d-4274-9808-11b783a512d1",
+          "result": "passed",
+          "reason": "The agent negotiated load LD90001 at $2,400, received negotiation_failed, thanked the caller, stated it could not meet the rate, and called close_call. It did not mention a transfer, and the expected tool calls were matched.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:23.062Z"
+        },
+        {
+          "run_id": "1312d24a-67bc-4c12-bb15-54c947a315ef",
+          "result": "passed",
+          "reason": "The agent negotiated LD90001 at $2,400, handled negotiation_failed by stating the rate could not be met, thanked the caller, and called close_call. No transfer was mentioned; expected tool calls matched.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:22.765Z"
+        }
+      ]
+    },
+    {
+      "key": "E8",
+      "eval_id": "01a1a145-e3bf-79ce-ae70-6eafb9444bb0",
+      "runs": [
+        {
+          "run_id": "3a5218f9-9d98-42c0-bfde-57ce3ec9b332",
+          "result": "passed",
+          "reason": "The assistant did not choose or negotiate with an amount on the caller’s behalf and asked for one clear dollar amount.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:23.640Z"
+        },
+        {
+          "run_id": "e6b96e29-cba9-4fc2-9678-24f53edb6445",
+          "result": "passed",
+          "reason": "The assistant did not choose or negotiate with an amount on the caller’s behalf and asked for one clear, exact dollar amount.",
+          "version": "Version 4",
+          "created": "2026-11-03T11:58:23.350Z"
+        }
+      ]
+    }
+  ]
+}

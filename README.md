@@ -6,7 +6,7 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Submission candidate built locally, rollout and owner acceptance pending.** R1/R2 conversation changes are live in workflow Version 3. The local candidate finishes structured activity capture, essential rep review, send-mode controls, KPI definitions and layered QA. Version 4 is an unpublished draft with end reporting and the tested unavailable-load continuation. The live App remains Build 17. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
+**Submission candidate built locally, rollout and owner acceptance pending.** Workflow Version 4 is live, with the tested conversation fixes, end reporting and unavailable-load continuation. The local candidate finishes structured activity capture, essential rep review, send-mode controls, KPI definitions and layered QA. The live App remains Build 17. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
 
 An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
 

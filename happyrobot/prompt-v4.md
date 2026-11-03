@@ -1,6 +1,6 @@
 # Version 4 candidate
 
-Unpublished draft `l8x9v2kyt4mc`, version UUID `01a1a12f-1eb3-7900-a612-f035faaa4e12`. Version 3 remains live. This candidate keeps the opening line below, replaces the existing load_gone branch with the service continuation contract, and retains the post-agent `/calls/ended` webhook. The deployed service already serves `/calls/ended`. Publication requires owner approval.
+Live version `l8x9v2kyt4mc`, version UUID `01a1a12f-1eb3-7900-a612-f035faaa4e12`, published 2026-11-04 in place of Version 3; the live prompt was read back and matches the text below. This candidate keeps the opening line below, replaces the existing load_gone branch with the service continuation contract, and retains the post-agent `/calls/ended` webhook. The deployed service serves `/calls/ended`.
 
 Opening line: HappyRobot Logistics, carrier sales. Can I get your MC number?
 

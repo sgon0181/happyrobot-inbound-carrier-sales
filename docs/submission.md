@@ -7,8 +7,8 @@ Do not send, push, invite reviewers or submit without owner approval. These text
 | Item | Candidate value | Remaining step |
 |---|---|---|
 | Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Approve push of the reviewed local candidate; invite specified reviewers |
-| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l8x9v2kyt4mc | Version 4 remains unpublished; deploy the service before approving publication |
-| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Currently Version 3 until Version 4 is approved and published |
+| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l8x9v2kyt4mc | Version 4 live since 2026-11-04 on the deployed service; voice checklist pending |
+| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Serves Version 4 |
 | Operations App | https://carrier-sales-santiago.happyrobot.dev | Build 17 remains live until approved App publication and visual review |
 | Build description | docs/build-description.md; export in submission/build-description.pdf | Review the candidate facts and generated document |
 | Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |

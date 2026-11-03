@@ -1,6 +1,6 @@
 # QA results
 
-Updated on 2026-11-03 (Sydney). Current local service and App measurements are separate from historical deployed observations. Live Version 3 and App Build 17 do not yet include the local submission candidate. Version 4 is unpublished. No new live booking was sent for this package.
+Updated on 2026-11-03 (Sydney). Current local service and App measurements are separate from historical deployed observations. Version 4 has been live since 2026-11-04 with the prompt tested in "Version 4 closing and wait fixes". App Build 17 does not yet include the local App changes. No new live booking was sent for this package.
 
 ## Current candidate summary
 
@@ -207,7 +207,7 @@ The suite lives in the native folder QA Version 4 full 22, contract fixtures. On
 
 ## Version 4 closing and wait fixes
 
-Run on 2026-11-03 from 12:52 to 13:00 UTC (23:52 to 00:00 Sydney) on unpublished Version 4, same 22 definitions and locks as the batch above. Reruns at 12:52 on the batch's prompt reproduced E1 and E2 (0/3 each, close_call missing) and passed S5 and S6 (3/3 each).
+Run on 2026-11-03 from 12:52 to 13:00 UTC (23:52 to 00:00 Sydney) on Version 4 before its publication, same 22 definitions and locks as the batch above. Reruns at 12:52 on the batch's prompt reproduced E1 and E2 (0/3 each, close_call missing) and passed S5 and S6 (3/3 each).
 
 | Step | Prompt change | Result |
 |---|---|---|

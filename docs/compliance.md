@@ -1,6 +1,6 @@
 # Assignment compliance, submission candidate
 
-Source: [the five-page assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), reread on 2026-11-03. This updates the e00ef94 audit against the local R1 to R6 candidate and retained live evidence. A local fix is not presented as deployed. Live workflow: Version 3. Candidate: unpublished Version 4. Live App: Build 17. Fly rollout and published-App visual acceptance are pending.
+Source: [the five-page assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), reread on 2026-11-03. This updates the e00ef94 audit against the local R1 to R6 candidate and retained live evidence. A local fix is not presented as deployed. Live workflow: Version 4, published 2026-11-04 after the 44/44 checkpoint rerun, on the deployed service. Live App: Build 17. Version 4 voice acceptance and published-App visual acceptance are pending.
 
 Statuses: Met means implemented with the stated evidence. Qualified means demonstrated within a stated interpretation or limit. Partial means a material requirement or acceptance step remains open. Gap means absent. The build is a proof of concept, not a claim of production reliability. [QA results](qa-results.md) retains failures and versions; [submission.md](submission.md) lists the owner approval steps.
 

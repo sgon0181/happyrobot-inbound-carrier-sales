@@ -1,6 +1,6 @@
 # Inbound Carrier Sales: build description
 
-For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. The service and App improvements are local until reviewed and approved for rollout. Version 3 is live; Version 4 is an unpublished candidate. The release checklist is in submission.md.
+For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. The service and workflow Version 4 are live; the App improvements remain local until approved for publication. The release checklist is in submission.md.
 
 ## Customer problem and scope
 

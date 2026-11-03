@@ -1,6 +1,6 @@
 {
   "workflow": "01a18119-67a1-79a3-b220-369aa359d4fb",
-  "version": "Version 3 draft (01a19fd2-f487-76f0-9195-a075751d48ee, slug 5j04ci46nsbf), unpublished; earlier rounds ran on Version 2",
+  "version": "Historical Version 2 and Version 3 checkpoints, including draft revisions. Fixture shapes are preserved as executed. Current Version 4 contract fixtures and results are in e7-candidate.json and simulations.json.",
   "prompt_node": "01a19f01-c942-747b-92b9-5bed990aad07",
   "folder": "QA slice 5 (all tools mocked)",
   "safety": "Every eval locks all six service actions (verify_carrier, send_code, verify_code, find_loads, negotiate, close_call) with skip_execution_with_mock_output, so no eval reaches the service, Twin, FMCSA, email or the TMS.",

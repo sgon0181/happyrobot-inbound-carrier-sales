@@ -88,3 +88,7 @@ Every requirement in [the assignment PDF](FDE_Technical_Challenge_-_Inbound_Carr
 - The booking is sent at the rep's Confirm, not during the call (3.1, D-22): the PDF's process has the rep confirm, and the TMS has no cancel.
 - Every live booking returns `PENDING`, never `BOOKED`: the dashboard shows the TMS's own status and never counts `PENDING` as confirmed. Luke's answer (Q8) is still open.
 - Page 1 says dispatchers "hand off confirmed bookings" to a rep, while page 3 has the rep confirm. We follow page 3, where the steps are spelled out.
+
+## R3 local completion, awaiting rollout
+
+The R3 candidate stores successful/failed code delivery, normalized search criteria, returned public pitch details, each heard and parsed ask, the approved response/round, reservation and rep decisions, and the workflow end report. Reconstruction and marked-ceiling/expected-code tests use only fake integrations. The app projects the actual string lanes and all captured public pitch fields. Rows 1.4, 3.2 and 4.3 remain Partial for the live system until deployment and Version 4 publication are approved and checked. No raw transcript is copied. Model speech, calls that never reach the end callback, failed Twin writes and absent closing summaries remain limits; an inferred quiet call is end_not_recorded, not a proven hangup.

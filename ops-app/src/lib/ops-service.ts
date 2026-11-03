@@ -5,6 +5,10 @@
 // Only listed fields are projected, so a field the service adds later stays out of
 // the page by default. Upstream error bodies are discarded.
 import { getOpsEnv } from "@/lib/env";
+import { redactText } from "@/lib/redact-text";
+export { redactText } from "@/lib/redact-text";
+import { events, type EventRow } from "@/lib/event-history";
+export type { EventRow } from "@/lib/event-history";
 
 const SNAPSHOT_TIMEOUT_MS = 10_000;
 const ACTION_TIMEOUT_MS = 45_000; // a confirm sends once, then saves for up to about 10 seconds
@@ -12,35 +16,6 @@ const STALE_SEND_MS = 60_000; // a SUBMITTING row this old lost its sender: offe
 
 export type Cohort = "real" | "synthetic";
 export type RepAction = "confirm" | "decline" | "reconcile";
-
-export type EventRow = {
-  seq: number | null;
-  at: string | null;
-  action: string | null;
-  status: string | null;
-  state: string | null;
-  rep: string | null;
-  reason: string | null;
-  detail: string | null; // the business fields: MC, load, rate, offers, round, TMS answer
-};
-
-// Event fields an operator needs to reconstruct a call or a booking, by label.
-const EVENT_DETAIL: [string, string][] = [
-  ["mc", "MC"],
-  ["heard", "carrier said"],
-  ["ask", "ask"],
-  ["call_id", "call"],
-  ["load_id", "load"],
-  ["rate", "rate"],
-  ["offer", "offer"],
-  ["round", "round"],
-  ["tries_left", "tries left"],
-  ["reference", "ref"],
-  ["tms_status", "TMS"],
-  ["load_status", "TMS load"],
-  ["ended_by", "ended by"],
-  ["duration_seconds", "seconds"],
-];
 
 export type Booking = {
   loadId: string;
@@ -115,63 +90,6 @@ const str = (v: unknown, max = 200): string | null =>
   typeof v === "string" ? v.slice(0, max) : typeof v === "number" && Number.isFinite(v) ? String(v) : null;
 const num = (v: unknown): number | null => (typeof v === "number" && Number.isFinite(v) ? v : null);
 const cohort = (v: unknown): Cohort | null => (v === "real" || v === "synthetic" ? v : null);
-
-// Defense in depth for free text written during a call: mask anything that looks like
-// a code, a pricing figure or a token, even though the service never stores one.
-export function redactText(text: string, max = 2_000): string {
-  return text
-    .slice(0, max)
-    .replace(/[A-Za-z0-9_-]{40,}/g, "[redacted]")
-    .replace(
-      /\b(otp|one[- ]time|code|passcode|pin|verification|token|password|secret)\b([^\n]{0,40}?)(\d(?:[\s-]?\d){3,7})/gi,
-      "$1$2[redacted]"
-    )
-    .replace(
-      /\b(ceiling|cap|max(?:imum)? rate|max buy|target rate|policy)\b([^\n\d$]{0,20})\$?\s?\d[\d,.]*/gi,
-      "$1$2[redacted]"
-    );
-}
-
-function eventDetail(e: Json): string | null {
-  const parts = EVENT_DETAIL.flatMap(([key, label]) => {
-    const value = str(e[key], 80);
-    return value === null ? [] : [`${label} ${value}`];
-  });
-  const offers = Object.entries(obj(e.offers)).flatMap(([load, offer]) => {
-    const amount = num(offer);
-    return /^[A-Za-z0-9_-]{1,32}$/.test(load) && amount !== null ? [`${load} ${amount}`] : [];
-  });
-  if (offers.length) parts.push(`offers ${offers.join(", ")}`);
-  // What was pitched: each load's lane and our offer, from the search's own event.
-  const pitched = list(e.loads).flatMap((raw) => {
-    const load = obj(raw);
-    const id = str(load.load_id, 32);
-    const from = [str(obj(load.origin).city, 40), str(obj(load.origin).state, 4)].filter(Boolean).join(" ");
-    const to = [str(obj(load.destination).city, 40), str(obj(load.destination).state, 4)].filter(Boolean).join(" ");
-    const offer = num(load.offer);
-    return id ? [`${id} ${from} to ${to}${offer === null ? "" : ` at ${offer}`}`] : [];
-  });
-  if (pitched.length) parts.push(`pitched ${pitched.slice(0, 3).join("; ")}`);
-  return parts.length ? parts.join(", ") : null;
-}
-
-function events(v: unknown): EventRow[] {
-  return list(v)
-    .slice(-100)
-    .map((raw) => {
-      const e = obj(raw);
-      return {
-        seq: num(e.seq),
-        at: str(e.at, 40),
-        action: str(e.action, 60),
-        status: str(e.status, 60),
-        state: str(e.state, 40),
-        rep: str(e.rep, 200),
-        reason: str(e.reason, 80),
-        detail: eventDetail(e),
-      };
-    });
-}
 
 function projectBooking(raw: unknown): Booking[] {
   const b = obj(raw);

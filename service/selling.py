@@ -64,7 +64,7 @@ class Sales:
             loads = await self._open_loads(search)
         except TmsUnavailable:
             failed = _searched(search, set_outcome("tms_unavailable"))
-            return await self.rows.step(run_id, "find_loads", failed)
+            return await self.rows.step(run_id, "find_loads", failed, {"search": dict(search)})
         priced = [(load, terms) for load in loads if (terms := self._terms(load))]
 
         def decide(data: Data, now: datetime) -> Reply:
@@ -82,7 +82,9 @@ class Sales:
             views = [public_view(load, data["offers"][load.load_id]) for load, _ in priced]
             return {"status": "found", "loads": views}  # its event keeps what was pitched
 
-        return await self.rows.step(run_id, "find_loads", _searched(search, decide))
+        return await self.rows.step(
+            run_id, "find_loads", _searched(search, decide), {"search": dict(search)}
+        )
 
     async def negotiate(self, run_id: str, load_id: str, ask: str) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).

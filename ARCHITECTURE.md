@@ -321,6 +321,8 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 ---
 
+**Capture coverage (R3 candidate, not deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, but only after the service deploy and Version 4 publication, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Until that rollout, call counts cover service requests, not all web calls. No start-to-offer timing is inferred from the end webhook's receipt time.
+
 ## 8. Verification and the one-time code
 
 1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if `allowedToOperate` is `Y`, `commonAuthorityStatus` or `contractAuthorityStatus` is `A`, `statusCode` is `A`, `oosDate` is present and null, and any other out-of-service field says no. `allowedToOperate` alone is not enough, because inactive carriers still showed `Y`. Missing or unknown values fail closed, and an empty result means not found. FMCSA errors return `fmcsa_unavailable`, never inactive. The request works from Fly.io but returns HTTP 403 from the local machine. The ledger of checked carriers is in [docs/test-carriers.md](docs/test-carriers.md).

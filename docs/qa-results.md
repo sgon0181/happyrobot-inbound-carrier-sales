@@ -12,7 +12,7 @@ Updated on 2026-11-03 (Sydney). Current local service and App measurements are s
 | Complete HTTP journeys | Nine scenarios | Stateful real routes with fake dependencies, sends disabled; no LLM or speech |
 | Native full text simulations | Standard agreement: both criteria passed. Pressure: gate passed, deal criterion not applicable | Two executions completed; pressure ended by idle timeout with no close_call. Setup error retained |
 | Human voice | Historical four real-cohort rows plus separate owner tests on Versions 2 and 3 | Version 4 voice checklist is still open |
-| Frontend | 11 tests, lint, typecheck and production build pass; production dependency audit 0 | Node 22 container. Three existing lint warnings; published visual review pending |
+| Frontend | 13 tests, lint, typecheck and production build pass; production dependency audit 0 | Node 22 container. Three existing lint warnings; published visual review pending |
 
 Historical Version 2 checkpoints were 16/19 first-round cases passing, with failures retained below. The retained Version 3 round table totals 50/54 across prompt edits, not 51/54 and not a single immutable snapshot. Do not add these layers into a combined call count.
 
@@ -161,3 +161,7 @@ Owner run8167bb06-9155-4c35-9903-3155a6f7b49c on live Version 3 had a 142-second
 The owner's earlier Version 2 misheard-MC and silent-opening failures remain part of the evidence, not erased by the later run. Version 4 human acceptance still needs prompt greeting, MC correction, interruption/resumption, vague amount clarification, E7 continuation and professional failed close. The pressure simulation's idle timeout is disclosed rather than treated as proof of closing reliability. The exact deployed candidate and live workflow must be recorded with those tests.
 
 [The layered QA package](qa-package.md) supplies the scenario matrix and owner checklist. Exact voice-start-to-spoken-offer latency and production capacity remain unproven. Calls that reach neither a service action nor a successful end callback remain unrecorded. No model-graded or randomized result is called a proof.
+
+## Essential App local visual check
+
+A temporary static rendering of the actual candidate HomePage, AppShell and rep components used synthetic data, the production-built CSS and no service connection or action handlers. At 1280x900 the current terms, posted/agreed payment, disabled Confirm, off-mode reason and historical Not recorded labels were inspected. This is layout evidence only; component tests exercise action/recovery behavior. It does not replace the authenticated published-App check after owner-approved publication. A follow-up history regression projects each reserved event's own snapshot, so reused rows expose prior pickup, posted payment, piece count and notes rather than the latest reservation's terms.

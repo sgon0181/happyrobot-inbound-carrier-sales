@@ -6,7 +6,9 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Slice 4 of 5 done.** A real web call on 2026-11-03 passed MC and code, found a dry van out of Kentucky, countered twice and reserved LD01080 at 575. The owner then confirmed it as the rep in the operations app, which sent one `LOAD_BOOK` and got back a TMS reference with status `PENDING`, saved as `ACK_PENDING` with every byte of the reply. Conversation QA and the build description are written; the demo video and submission come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
+**Submission candidate built locally, rollout and owner acceptance pending.** R1/R2 conversation changes are live in workflow Version 3. The local candidate finishes structured activity capture, essential rep review, send-mode controls, KPI definitions and layered QA. Version 4 is an unpublished draft with end reporting and the tested unavailable-load continuation. The live App remains Build 17. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
+
+An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
 
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
 
@@ -32,8 +34,8 @@ Two rules shape the design: the model talks and the service decides, and only a 
 |---|---|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | How the system works. Start here. |
 | [docs/decisions.md](docs/decisions.md) | Every decision, its reason and its cost, plus open checks |
-| [docs/build-description.md](docs/build-description.md), [docs/qa-results.md](docs/qa-results.md) | The build description for the business and IT teams, and what was measured |
-| [docs/submission.md](docs/submission.md) | What goes into each field of the submission form: the summary email and the reviewer notes |
+| [docs/build-description.md](docs/build-description.md), [docs/qa-package.md](docs/qa-package.md), [docs/qa-results.md](docs/qa-results.md) | Business/IT description, separate QA layers and actual results |
+| [docs/submission.md](docs/submission.md), [docs/walkthrough.md](docs/walkthrough.md), [docs/kpis.md](docs/kpis.md) | Submission draft and approvals, five-minute outline and precise KPI definitions |
 | [docs/lessons-from-prototype.md](docs/lessons-from-prototype.md) | What the prototype proved and what carries over |
 | [docs/onboarding.md](docs/onboarding.md) | Access, setup steps and current platform state |
 | [docs/assignment.md](docs/assignment.md) | Summary of the assignment and platform |

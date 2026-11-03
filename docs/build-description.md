@@ -1,83 +1,52 @@
 # Inbound Carrier Sales: build description
 
-For HappyRobot Logistics' business and IT teams. It covers what the system does, why it can be trusted with money and carrier data, what was measured, and how it runs. [ARCHITECTURE.md](../ARCHITECTURE.md) has the full technical design.
+For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. The service and App improvements are local until reviewed and approved for rollout. Version 3 is live; Version 4 is an unpublished candidate. The release checklist is in submission.md.
 
-## What it does
+## Customer problem and scope
 
-Carriers call in to book loads. Today a rep answers each call, checks the carrier by hand, searches the TMS and haggles. This build answers those calls with a voice agent and hands the rep only the deals worth confirming.
+The brokerage wants to automate repetitive inbound qualification, matching and negotiation while keeping a senior rep responsible for the booking decision. This candidate demonstrates that first leg through HappyRobot web calls, an integration service and a HappyRobot Apps operations screen. It does not establish production capacity, answer-rate improvement, reduced burnout or financial return.
 
-1. **Verify the carrier.** The agent takes the MC number. The system checks the carrier's operating authority with FMCSA, then emails a six-digit code that the caller reads back. No load is discussed before both pass.
-2. **Find loads.** The caller names their equipment and lane. The system searches the TMS for open loads with a future pickup and pitches the best match.
-3. **Negotiate.** The system prices every offer from the load's private ceiling, with at most three counter rounds per call. The agent never learns the ceiling, so it cannot reveal it.
-4. **Reserve.** On agreement the load is reserved for that carrier at that rate, and the agent says it is transferring the caller to a senior rep (the transfer is mocked, as the brief asks).
-5. **Confirm.** A senior rep reviews the reservation in the operations dashboard and clicks Confirm. Only then is the booking sent to the TMS, exactly once.
+1. **Check authority.** Take an MC number, look it up in FMCSA, confirm the returned carrier name with the caller and distinguish refusal from an unavailable service.
+2. **Check the emailed code.** Send a code to the configured demo inbox and check what the caller reads back before discussing loads. This demonstrates the code gate and access to that inbox, not the caller's legal carrier identity.
+3. **Find and price loads.** Read available loads matching equipment and state-level lane preferences. Offer a price below the private ceiling, with at most three counter rounds across the call.
+4. **Record agreement.** Save one tentative reservation at the agreed rate. The agent speaks a mocked handoff to a senior rep. A reservation is not a final TMS booking.
+5. **Rep review.** Show the captured carrier, shipment details, pickup/delivery, posted and agreed payment, negotiation activity and next action. Only the rep's Confirm can submit a booking request. Sends off or unknown mode disables Confirm.
 
-Every call is recorded in Twin, with its outcome, rounds, agreed rate, summary and a step-by-step audit trail.
+## Rules and boundaries
 
-## Why it can be trusted
+The voice model requests actions; the service decides from stored state and fresh TMS reads. Authority, code checks, rate bounds, round counts, reservations and rep version checks are service rules. The model never receives the expected code or raw ceiling. Withholding the field prevents direct field exposure; it does not prove that offers reveal no indirect information. The load-specific cap makes exact inversion harder, while known policy bands still constrain possible ceilings.
 
-Two rules shape the design:
+The TMS has no supported cancellation or idempotency key. A rep's Confirm rechecks the load and ceiling, wins a version-checked state change, then sends once. A timeout or incomplete result is unknown and is never resent. A complete reference-bearing PENDING receipt is an acknowledgement, not final confirmation. No live BOOKED receipt has been observed. No inventory quota or permanent consumption guarantee is inferred from those observations.
 
-- **The model talks; the service decides.** The voice model can only ask. A separate service checks every request against its own records: whether the carrier passed verification, which loads are open, what rate is allowed. A carrier who talks the model into something still meets the service's rules.
-- **Only a rep can send a booking.** The TMS has no cancel. So an agreement on the call only creates a reservation, and a person confirms it. A misheard rate or a confused caller reaches a rep, not the TMS.
+## What operations can inspect
 
-What this guarantees, tested on every change:
+Twin stores structured service activity: authority decisions, code delivery outcome, search criteria and returned public pitch details, each heard and normalized carrier ask, response and round, reservation and rep events, closing notes when supplied, and the workflow end report when delivered. State and its event are written together in the same row.
 
-| Guarantee | How |
-|---|---|
-| No rate above the ceiling | The service prices and checks every number, and rechecks the ceiling at Confirm |
-| The ceiling is never disclosed | It never leaves the service; the agent sees only our offer |
-| No loads without verification | The service refuses a search until the call itself shows both checks passed |
-| At most three counters | Counted by the service across every load on the call |
-| A booking is never sent twice | Confirm must win a versioned write first; an unclear result is held for review and never resent |
-| Every action is audited | Each change and its audit entry are saved in the same write |
+This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. Pre-tool calls become visible after Version 4's callback is deployed and published successfully. No external database or general-purpose logging framework is used.
 
-## Results
+The App separates real and test calls. Its metrics count recorded calls, reservations, rep approvals, pending acknowledgements, final confirmations, unknown outcomes and unmatched demand. The northstar is recorded reservations per call that ever passed its code. Tool-to-offer time begins at the first service request, excluding greeting and spoken delivery. Complete definitions and missing-data behavior are in kpis.md. Carrier payment and concessions are not brokerage revenue or profit.
 
-Measured on 2026-11-03; details in [QA results](qa-results.md).
+## Evidence
 
-- **A real call, end to end.** An active carrier passed FMCSA and the emailed code, found a dry van out of Kentucky, countered twice and agreed at 575 in the third round. The agent spoke the handoff and ended the call. A rep then confirmed it in the dashboard, and the TMS returned a booking reference.
-- **Conversation tests.** 19 scripted cases (standard, edge and adversarial) run in HappyRobot with every tool mocked. The live prompt passes 16. All three failures were the same weakness: on an acceptance the agent could close the call without asking the service. The service still held: no reservation, no booking. A two-line prompt fix passes 17 of the 19 every time and the other two most of the time. It awaits review before going live.
-- **Service tests.** 411 automated tests with complete statement and branch coverage, including a fake TMS that injects timeouts, partial and malformed replies.
-- **Security.** Every endpoint needs a key, each key opens only its own endpoints, and there are no public API docs.
+The layered package in qa-package.md separates service tests, seeded generated inputs, conversation checkpoints, complete HTTP journeys, native model simulations and human voice calls. Current raw totals, versions, failures and reruns are in qa-results.md; they must accompany any presentation of success.
 
-## The dashboard
+One earlier real-integration call reached agreement and a rep Confirm whose TMS reply was PENDING. The owner's Version 3 transcript also shows name confirmation before code delivery, unmatched searches, an agreement through negotiate, a mocked handoff and clean close. The Version 4 candidate's E7 continuation passed eight repetitions, with ten additional continuation/regression checkpoints passing. The standard full text simulation reached a truthful handoff; the pressure simulation held verification but ended by idle timeout without closing notes. These small samples do not prove broad reliability. Human voice acceptance of Version 4, interruptions and final published-App visual review remain release checks.
 
-The operations app in HappyRobot Apps shows, for real calls only:
+## How it runs and who owns what
 
-- **KPIs:** calls answered, code-passed calls, reserved handoffs, the northstar (reserved handoffs per code-passed call), rep-confirmed, TMS-acknowledged and TMS-confirmed bookings, outcomes, and time to first offer.
-- **Rep queue:** reservations awaiting a decision, with Confirm and Decline, then sent bookings with their actual TMS status and reference.
-- **Call log:** each call's outcome, rounds, summary and audit trail.
-- **Turned-away demand:** lanes carriers asked for when nothing matched, which is freight the brokerage is not covering today.
-
-Test calls are kept out of every KPI and shown separately.
-
-## How it runs
-
-| Part | Runs on | Does |
+| Component | Location | Responsibility |
 |---|---|---|
-| Voice workflow | HappyRobot | Web call, voice agent, prompt and six tools |
-| Carrier Sales Service | One Docker container on Fly.io | Every rule: verification, search, pricing, negotiation, reservation, Confirm |
-| Twin | HappyRobot | The record of every call and booking |
-| Operations app | HappyRobot Apps | Dashboard and rep actions, reading through the service |
+| Voice workflow | HappyRobot | Web-call conversation and six service tools; Version 4 adds the post-agent end report |
+| Carrier Sales Service | Python 3.12 Docker container on Fly.io | Rules, FMCSA, code email, raw-TCP TMS adapter, Twin writes and rep actions |
+| Twin | HappyRobot | Call and booking rows, each with its own event history |
+| Operations App | HappyRobot Apps | Authenticated review, metrics and rep decisions through the service |
 
-- **Integrations:** FMCSA's carrier API, the legacy TMS over its TCP protocol, and Gmail for the codes. TMS reads retry within 6 seconds; a booking is never retried.
-- **Deployment:** `make deploy` builds the image and deploys it. Any host that runs a container can run it.
-- **Security:** two keys, one for the voice agent and one for the dashboard, compared in constant time. Secrets live in Fly and HappyRobot, never in the code. The dashboard checks the signed-in user and keeps its key on its server.
-- **Safety switch:** `LIVE_BOOKING` must be on for Confirm to reach the TMS. It is off by default, because every booking spends a load for good.
+After one-time cloud and secret setup, make deploy builds and deploys the container to the approved Fly environment. Voice and operations routes use separate credentials. The App verifies the signed-in user and keeps its service key server-side. No secret value belongs in the repository, prompt, video or submission.
 
-## Assumptions to review
+## Tailored next steps
 
-The brief left these open, and the brokerage would own the final answer. Each is recorded in [decisions](decisions.md).
-
-- **Booking at Confirm, not on the call (D-22).** The brief has a rep confirm, and the TMS has no cancel, so the booking is sent at the rep's click.
-- **`MAX_BUY` is the ceiling (D-10).** The TMS field `MAX_BUY` is used as `max_rate`. A load without a usable one is never offered.
-- **`PENDING` is not confirmed.** Every live booking so far returned `PENDING` with a reference, never the handbook's `BOOKED`. The dashboard shows the TMS's own status and never counts `PENDING` as confirmed.
-- **Codes go to one demo inbox (D-12).** As agreed for the demo. In production they would go to the carrier's contact on file.
-- **Pricing policy (D-4).** Offers usually open 5% under the posted rate and rise in three steps to a cap kept 2 to 6% under the ceiling, varying by load so the ceiling cannot be worked out. The percentages are demo choices for the brokerage to set.
-
-## What is next
-
-- Review and publish the prompt fix, then rerun the evals and a real call.
-- Measure capacity: 12 calls of about 4 minutes in parallel, against Twin's 4 statements a second.
-- Ask the TMS owner how `PENDING` bookings become `BOOKED`.
+1. Agree pricing assumptions, the MAX_BUY mapping and TMS finalization/cancellation behavior.
+2. Replace the shared demo inbox with trusted carrier-contact records and an appropriate identity process.
+3. Validate expected capacity and conversation behavior, including speech recognition, interruptions and failures.
+4. Run a supervised pilot with agreed success criteria and review of unknown outcomes.
+5. Consider real telephony and operational notifications after those checks.

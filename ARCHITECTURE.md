@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Version** | 3.0, 2026-11-02 |
-| **Status** | Slices 1 to 4 of the [build plan](#15-build-plan) are built on `main` and live; slice 5 (QA, KPIs, delivery) is in progress. |
+| **Version** | 3.1 candidate, 2026-11-03 |
+| **Status** | Slices 1 to 4 have live evidence. Local R3 to R6 improvements and QA form the submission candidate; service deployment, Version 4 publication, App publication and owner acceptance remain pending. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
@@ -26,7 +26,7 @@ Four parts, each with one job:
 |---|---|---|
 | **Voice workflow** | HappyRobot | The conversation: web-call trigger, inbound agent, prompt, tools. |
 | **Carrier Sales Service** | Docker on Fly.io | Rules and integrations: verification, negotiation, reservations, TMS and FMCSA access. |
-| **Twin** | HappyRobot | The system of record for what happened on every call. |
+| **Twin** | HappyRobot | Saved service activity and booking decisions, with explicit capture gaps. |
 | **Operations app** | HappyRobot Apps | What the operations manager sees and does: KPIs, call history, the rep queue. |
 
 The TMS stays the source of truth for loads. Twin records what our solution did.
@@ -165,7 +165,7 @@ Tests must prove these regardless of what the model does.
 | **INV-7** | `LOAD_BOOK` is sent only after a rep's Confirm of the reservation version they saw, at most once per reservation, and is never resent. A timeout is `UNKNOWN`, because a timeout does not say whether the request landed. |
 | **INV-8** | Every endpoint requires authentication, including health. No public API docs. |
 | **INV-9** | Every state change and its audit event commit in the same write. Neither can exist without the other. |
-| **INV-10** | `LOAD_BOOK` evidence is never discarded: the step reached, the error type and every byte received. |
+| **INV-10** | Handled LOAD_BOOK outcomes retain the step, error type and every received byte/hash. This is not a durable crash journal; process death before persistence can lose a receipt. |
 
 **What these cannot cover.** The service cannot control what the model says. A wrong number can be spoken, and a misheard rate inside the limits can reach a reservation. That is why a rep reviews every reservation before anything is sent. Conversation tests measure how often this happens.
 
@@ -258,7 +258,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 
 ## 7. Data: two tables
 
-Twin has no multi-table transactions, but one row can be updated atomically with a version check. So everything that must change together lives in one row ([D-23](docs/decisions.md)).
+Twin has no multi-table transactions, but one row can be updated atomically with a version check. State and its own event therefore share one row. Agreement and load reservation still cross call/booking rows and use ID-bearing accepting claims, booking-row voids and retry recovery; they are not a transaction ([D-23](docs/decisions.md)).
 
 Both tables have the same shape, created once in the Twin UI because the API cannot create tables:
 
@@ -305,9 +305,9 @@ Both tables have the same shape, created once in the Twin UI because the API can
 }
 ```
 
-**Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. There are no in-process locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
+**Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. Reservation correctness does not depend on local locks. Dashboard refresh and Twin pacing do use local asyncio locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
 
-**The audit trail is the `events` list.** Because an event is written with the change it describes, audit records cannot disagree with state (INV-9). There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step, what was asked of it, and the step's result with its details, and never a code or the ceiling. A negotiation event keeps the carrier's ask as heard and as read, the load and our answer, so every round survives a later one. A search event keeps the loads pitched as the agent received them, a code event whether the email went out, and the workflow's end-of-call request records who ended the call and how long it lasted. Some results are internal, such as `checking` before an FMCSA lookup, so events record what the service decided, not every word spoken. Transcripts stay in HappyRobot, because they contain the spoken code.
+**The audit trail is the `events` list.** Because an event is written with the change it describes, an individual persisted row cannot lose its event through a separate failed audit write (INV-9). Call and booking rows can temporarily disagree during reservation recovery; claim IDs and booking history resolve that boundary. External TMS effects are a separate boundary. There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step, what was asked of it, and the step's result with its details, and never a code or the ceiling. A negotiation event keeps the carrier's ask as heard and as read, the load and our answer, so every round survives a later one. A search event keeps the loads pitched as the agent received them, a code event whether the email went out, and the workflow's end-of-call request records who ended the call and how long it lasted. Some results are internal, such as `checking` before an FMCSA lookup, so events record what the service decided, not every word spoken. Transcripts stay in HappyRobot, because they contain the spoken code.
 
 **Outcome is computed, not stored twice.** A booking row is the only record of a booking. The dashboard derives each call's outcome when it reads:
 
@@ -330,7 +330,7 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 ## 8. Verification and the one-time code
 
 1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if `allowedToOperate` is `Y`, `commonAuthorityStatus` or `contractAuthorityStatus` is `A`, `statusCode` is `A`, `oosDate` is present and null, and any other out-of-service field says no. `allowedToOperate` alone is not enough, because inactive carriers still showed `Y`. Missing or unknown values fail closed, and an empty result means not found. FMCSA errors return `fmcsa_unavailable`, never inactive. The request works from Fly.io but returns HTTP 403 from the local machine. The ledger of checked carriers is in [docs/test-carriers.md](docs/test-carriers.md).
-2. **Issue.** The service generates a 6-digit code, stores a keyed hash on the call row with a 5-minute expiry, then sends the email itself over Gmail SMTP. The code never enters a HappyRobot run, and an uncertain send counts against the limit and is not silently retried.
+2. **Issue.** The service generates a 6-digit code, stores a keyed hash on the call row with a 5-minute expiry, then sends the email itself over Gmail SMTP. The service never returns the expected code to the workflow; the caller-spoken code and verification request do appear in restricted platform run records, and an uncertain send counts against the limit and is not silently retried.
 3. **Check.** The carrier reads the code aloud, which is unavoidable. The service compares it against the hash in constant time. Consuming the code and marking the call verified are one write, so a crash cannot leave a used code and an unverified call.
 4. **Destination.** Codes go to one configured demo inbox (D-12), as Luke approved. This proves access to that inbox, not who owns an MC, so records say *code passed*, never *identity verified*.
 5. **Every call.** A fresh code is required on every call before matching (D-9).
@@ -350,7 +350,7 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 - **Opening offer:** the posted rate minus 5% when that leaves room below the cap, otherwise a load-specific spread of 8 to 15% below the cap.
 - **Round targets:** 35%, 65% and 100% of the way from opening to cap.
 
-Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back gains nothing, and knowing the policy without the secret does not reveal the gap. These percentages are demo choices the brokerage would own.
+Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back does not redraw the price. The secret prevents exact recomputation, but the public policy band and observed offers still constrain possible ceilings. These percentages are demo choices the brokerage would own.
 
 **Rounds.** Each counter advances to the next target. An ask at or below the target is accepted at the carrier's number. Round 3 is the final offer at the cap, and anything but acceptance ends the call as `negotiation_failed`, with no transfer. Rounds count across loads (INV-4).
 
@@ -417,9 +417,9 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
 | Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, the receipt is logged and shown on the rep's screen. |
 
-**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and none has moved on. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
+**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
 
-**Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because each send spends a load permanently.
+**Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because there is no supported cancellation/reset and sends have left lasting token-scoped state in observations. No permanent consumption or quota is established.
 
 ---
 
@@ -442,7 +442,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 - **Social engineering.** No path skips verification, because the gate is in the service, not the prompt. The code's destination comes from configuration, never the conversation.
 - **Call isolation.** Identity comes from `run_id` in a hidden runtime field (D-16), so the model has no call ID to substitute.
 - **SQL.** Twin's API takes SQL text, so every value goes through one quoting function and table names come from constants.
-- **Logs.** Codes and the ceiling stay out of logs. Platform transcripts contain spoken codes, so they stay restricted to operators. Twin stores a summary, not the transcript.
+- **Logs.** Codes and the ceiling stay out of logs. Platform transcripts contain spoken codes, so they stay restricted to operators. Twin stores structured service events and closing notes when supplied, not a raw transcript.
 
 ---
 
@@ -452,9 +452,9 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 - **Voice deadline.** Every voice request stops at 12 seconds and returns `temporarily_unavailable`. That is safe because no voice request can send a booking. An interrupted code email counts against the send limit and is not retried.
 - **Confirm runs to completion.** It has no voice deadline, and a dashboard disconnecting does not cancel it.
 - **Twin rate limit.** All statements pass through one pacer at 4 per second, retrying only on HTTP 429. A timed-out write may still have landed, so the next read decides. Conditional writes make that safe.
-- **One instance.** One service instance for simplicity. The version check protects against restarts and deployment overlap, without in-process locks.
-- **No background jobs.** Stale calls and stuck bookings are detected when read, and resolved by a rep. A process restart loses nothing but in-flight requests.
-- **Capacity.** A call is estimated at about 20 Twin statements, against 70 measured on the prototype, so the 4 per second limit allows about 12 full calls a minute. This estimate must be measured ([§14](#14-quality)).
+- **One instance.** One service instance for simplicity. The version check protects against restarts and deployment overlap, without process-local reservation locks.
+- **No background jobs.** Stale calls and stuck bookings are detected when read, and resolved by a rep. Saved row state survives restarts. An in-flight email or booking can have an uncertain outcome; a booking receipt not yet saved in Twin can be lost from process memory. Recovery depends on retained logs or the rep receipt, and no automatic resend is allowed.
+- **Capacity.** Unproven. Earlier statement-count estimates were not a throughput benchmark and omit pacing, retries, concurrent tools and latency. The single-instance Twin pacer is a constraint, not a measured call rate. Capacity validation is a pilot prerequisite, not an extra assignment requirement.
 
 ---
 
@@ -473,7 +473,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Dispatcher burnout | Calls handled without a dispatcher |
 | Unmatched demand | Latest unmatched lanes, not measured revenue |
 
-**Guardrails, must stay at 0:** rate above ceiling, ceiling disclosed, verification bypassed, more than 3 counters, a booking sent twice.
+**Guardrails:** service rates above ceiling, raw-ceiling field exposure, verification bypass, counters beyond three and duplicate booking sends must stay at zero in tests. These checks do not prove the model can never infer or speak a private number.
 
 | Test layer | Covers | Where |
 |---|---|---|
@@ -490,10 +490,10 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
-| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
+| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `sale_decisions.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
-| Capacity | 12 calls of about 4 minutes within 4 minutes, plus one rep action a minute, all reach a reservation with no response over 12 seconds |
+| Capacity | Unproven; agree a representative workload and latency target before a supervised pilot. The earlier 12-call benchmark was a recommendation, not a submission gate |
 | Dependencies | `pip-audit` and `npm audit --omit=dev` show no high or critical issue |
 
 ---
@@ -508,12 +508,12 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 | **1. Foundations** | Money, models, pricing, negotiation, loads; TMS protocol, mapping and read-only client. Rewritten in six small pieces, with the prototype's tests and recorded TMS replies as the check. | `make check` passes offline |
 | **2. Verify** | Service, config, Twin adapter, FMCSA, email, Docker, deployment. Real workflow wired for verify, send and check. | A real call passes MC and code |
 | **3. Sell** | Search, negotiation, reservation, close, mocked handoff. | A real call ends in a reservation |
-| **4. Operate** | Dashboard, rep queue, `LOAD_BOOK` in the TMS client, Confirm with `LIVE_BOOKING` on. | A rep click returns a TMS reference, spending one load |
+| **4. Operate** | Dashboard, rep queue, `LOAD_BOOK` in the TMS client, Confirm with `LIVE_BOOKING` on. | A rep click returns a reference with its actual TMS status |
 | **5. Deliver** | QA suites, KPIs, build description, email, video. | Submission |
 
 **Definition of done** is one real run showing: an active MC, an emailed code, at least one counter, a spoken mocked transfer, the agent ending the session, complete Twin rows, and a rep Confirm that returns a TMS reference.
 
-**Target.** Working software by 16:00 on 2026-11-03, with the demo video recorded that evening. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
+**Delivery state.** The original same-day target is historical. The reviewed candidate must pass the release checklist and owner voice/App checks before recording. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
 
 ---
 
@@ -528,4 +528,4 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 
 ## 17. Open questions
 
-Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). The ones that could change this design: Luke's answer on `PENDING` (Q8), and whether a native post-call summary works in this workspace (T-8).
+Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). The material integration question remains Luke's answer on PENDING, currency and bounds (Q8). A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.

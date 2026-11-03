@@ -1,55 +1,57 @@
-# Submission
+# Submission candidate
 
-What goes into each field of the candidate portal's submission form. Drafts for the owner to edit; fill in the two links marked `[...]`.
+Do not send, push, invite reviewers or submit without owner approval. These texts describe the reviewed candidate; complete the release and voice checks before presenting it as live.
 
-| Form field | What to give |
-|---|---|
-| Repository | The .zip built from `main` with `git archive` (no ignored files, so no secrets), or the private repository's URL |
-| HappyRobot workflow URL | The Inbound Carrier Sales workflow, copied from the browser |
-| Walkthrough video URL | The video, 5 minutes at most |
-| Summary email to the prospect | The email below |
-| Notes | The notes below |
-| Files | `build-description.pdf`, made from [build-description.md](build-description.md) |
+## Links and files
+
+| Item | Candidate value | Remaining step |
+|---|---|---|
+| Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Approve push of the reviewed local candidate; invite specified reviewers |
+| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l8x9v2kyt4mc | Version 4 remains unpublished; deploy the service before approving publication |
+| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Currently Version 3 until Version 4 is approved and published |
+| Operations App | https://carrier-sales-santiago.happyrobot.dev | Build 17 remains live until approved App publication and visual review |
+| Build description | docs/build-description.md; export in submission/build-description.pdf | Review the candidate facts and generated document |
+| Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
+
+Repository privacy was verified read-only on GitHub on 2026-11-03: private, default branch main, only the owner listed as collaborator, zero pending invitations. No invitations were sent. Repository access and HappyRobot workspace access are separate; validate both with the reviewers' own accounts. Do not share service keys.
 
 ## Summary email to the prospect
 
-**Subject:** Inbound carrier sales: what we built and next steps
+Subject: Inbound carrier sales proof of concept and proposed next steps
 
 Hi team,
 
-We built an assistant that answers your inbound carrier calls. It checks the carrier's authority with FMCSA and confirms the caller with an emailed code, finds open loads on their lane in your TMS, negotiates within your pricing limits and reserves the load. A senior rep then confirms each booking from one dashboard, so nothing reaches your TMS without a person's click.
+We built a proof of concept for the first leg of inbound carrier sales. It checks FMCSA operating authority, checks an emailed code, finds matching loads and negotiates within the configured pricing rules. An agreement creates a tentative reservation for a senior rep to review. Transfers are mocked for the web-call demonstration.
 
-**What it does today**
+The operations App brings the carrier, lane, schedule, posted and agreed payment, negotiation history and next action into one view. It separates reservations, rep-approved submissions, pending TMS acknowledgements, final confirmations and unknown outcomes. Confirm is disabled while booking sends are off.
 
-- In a live test, a carrier passed both checks, countered twice and agreed a rate in the third round. The rep confirmed it in the dashboard and your TMS returned a booking reference.
-- The agent never sees your rate ceiling, so it cannot reveal it, and the system will not accept a rate above it. Verification cannot be skipped, whatever the caller says.
-- Every call is logged with its outcome, agreed rate and a step-by-step audit trail.
-- The dashboard shows calls answered, verified carriers, deals handed to reps, bookings with their TMS status, and the lanes carriers asked for that you could not cover.
+The service enforces the code gate, rate bounds and three-round limit independently of the model. The ceiling and expected code are withheld from the voice agent; remaining inference and identity limitations are documented. A booking request is sent at most once after rep approval. Our observed successful TMS acknowledgements have returned PENDING, so we do not describe them as final bookings.
 
-**How we tested it**
+We tested the rules offline, generated reproducible pricing and negotiation inputs, repeated unstable conversation checkpoints, and kept complete simulated conversations separate from human voice calls with real integrations. The QA report includes the failures and reruns, exact versions and remaining limits. Production capacity and financial impact have not been established by this demo.
 
-19 scripted conversations, covering normal calls, edge cases and attempts to trick the agent, plus over 400 automated checks on the rules. The rules held in every case. The one weakness found was the agent sometimes ending a call right after an agreement; the system still reserved nothing in those cases, and a fix is ready to review.
+The next steps are to agree the pricing and TMS finalization assumptions; replace the demo inbox with trusted carrier contacts; validate expected capacity and conversation behavior; run a supervised pilot against agreed success criteria; and then consider real telephony and notifications.
 
-**Next steps**
-
-1. Review the prompt fix together and put it live.
-2. Agree the business rules we assumed: when the booking is sent, how your TMS marks a booking final (it currently answers "pending"), and the pricing margins.
-3. Run a two-week pilot on a share of real inbound calls, measuring deals handed to reps per verified call.
-4. Then send codes to each carrier's contact on file instead of a demo inbox, and connect the rep transfer to your phone system.
-
-The walkthrough video, workflow and repository are linked below, and the build description is attached.
-
-- Walkthrough video: [...]
-- Dashboard: https://carrier-sales-santiago.happyrobot.dev
-- Workflow: [...]
+The repository, workflow and dashboard links are above. The build description accompanies the walkthrough. The owner will insert the final video URL before sending this email.
 
 Thanks,
 Santiago
 
-## Notes for the reviewer
+## Reviewer notes
 
-Start with README.md, then ARCHITECTURE.md; every decision and its reason is in docs/decisions.md, and QA results are in docs/qa-results.md.
+Start with README.md, ARCHITECTURE.md and docs/decisions.md. docs/compliance.md distinguishes local candidate completion from live rollout. docs/qa-package.md separates the test layers; docs/qa-results.md records actual counts, versions and remaining failures. docs/kpis.md defines every displayed measure.
 
-Assumptions, as Luke invited: the booking (LOAD_BOOK) is sent when the rep clicks Confirm, not during the call (D-22), because the TMS has no cancel. MAX_BUY is used as max_rate (D-10). Every live booking returned PENDING with a reference, never BOOKED, so the dashboard shows the TMS's own status and never counts PENDING as confirmed. Codes go to one demo inbox, as agreed.
+The chosen interpretation is to reserve in Twin on agreement and send LOAD_BOOK only at a rep's Confirm. MAX_BUY is provisionally mapped to max_rate, and TMS whole units are displayed as USD. Luke's finalization question remains open in docs/questions.md. PENDING is not final confirmation, and no supported cancel/reset is established. The sandbox is not claimed to have a booking quota.
 
-Bookings spend a load for good, so Confirm reaches the TMS only while LIVE_BOOKING is on; it is off by default. The dashboard needs a HappyRobot sign-in. Branch prototype/e2e is an earlier prototype, kept for reference only.
+The shared demo inbox is an approved demonstration exception, not proof of carrier identity. CALL_COHORT is currently synthetic and LIVE_BOOKING is off. Changing either Fly setting requires owner approval. There is no fallback to prototype/e2e.
+
+## Release and access checklist
+
+1. Claude reviews each local candidate commit and unresolved limits. The owner approves any push; push is a separate action from deployment.
+2. Approve and deploy the reviewed service first. Verify authenticated snapshot mode and end-report route without a booking send.
+3. Separately approve publishing Version 4, then run the owner voice checklist with authorized email delivery. Leave hostile tests synthetic and booking sends off.
+4. Separately approve the App source publication and platform name Carrier Sales. Review it at the demo screen size, including off-mode Confirm, missing historical details, refresh and receipt recovery.
+5. Before the demo, separately approve changing CALL_COHORT back to real. A demo booking send requires its own approval for the selected load; historical LD01080 already provides a PENDING receipt example. No new send is required for hostile testing.
+6. Obtain the reviewer handles from the candidate portal, approve the invitations, grant the agreed repository access and verify acceptance. Verify the workflow and App open for their HappyRobot accounts too.
+7. The owner records the video, inserts its URL, reviews the email and build description, and separately approves submission.
+
+Two synthetic test reservations identified in the handover remain to review and release if appropriate: LD01088 and the reservation from run 8167bb06. Decline releases our reservation without a TMS booking send; do not confuse that with external TMS cancellation.

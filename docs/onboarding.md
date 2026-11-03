@@ -1,6 +1,6 @@
 # Onboarding
 
-Checked 2026-11-02 (Australia/Sydney). The shared starting map for the owner, Claude Code and Codex. A Git clone includes everything tracked here. It does not include browser sessions, local `.env`, ignored evidence or MCP authentication.
+Updated 2026-11-03 (Australia/Sydney). The shared starting map for the owner, Claude Code and Codex. A Git clone includes everything tracked here. It does not include browser sessions, local `.env`, ignored evidence or MCP authentication.
 
 ## Read first
 
@@ -17,28 +17,30 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Skeleton: docs, tooling and policy files. No service code yet. |
+| `main` | Production implementation in service/ and ops-app/. Local R1 to R6 submission candidate; see submission.md for rollout and access steps. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
-| Who does what | One writer at a time on `main`, normally Claude Code, with Codex reviewing. The owner approves every push. |
-| Spent loads | Listed in [`tms-contract.md`](tms-contract.md#booking-test-inventory) and [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json). The TMS has no reset. |
+| Who does what | One writer at a time on main. Codex is writing this candidate; Claude reviews afterward. The owner approves every push. |
+| Spent loads | Listed in [`tms-contract.md`](tms-contract.md#booking-test-inventory) and [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json). No supported cancel/reset is established; no quota or permanent-consumption claim follows. |
 
 Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez), organization ID `01a17a99-0856-7f88-b09f-4b787e20413c`.
 
 | Platform resource | Identity | State |
 |---|---|---|
-| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 1 live in production since 2026-11-03, with the verification prompt and the `verify_carrier`, `send_code` and `verify_code` tools. |
+| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 3 (5j04ci46nsbf) live. Version 4 (l8x9v2kyt4mc) is an unpublished end-report/E7 candidate; deploy the service first. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Production v17 passed the owner run. |
 | Operations app | `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 17 runs `ops-app/` from `main` at `2960ffb`, reading the new service with the ops key, since 2026-11-03. The first rep Confirm, LD01080, was sent from it. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
+The handover reports Fly running pre-R3 code (f02d12b), LIVE_BOOKING=false and CALL_COHORT=synthetic. These settings were not changed. App Build 17 remains live from 2960ffb. New local commits are not deployed by committing. The repository is private; read-only GitHub access checks found only the owner and zero pending invitations on 2026-11-03. Reviewer invitations remain an approval step.
+
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 
 ## Setup for the build
 
-Owner steps, needed by slice 2. Everything else can be done by the writing agent.
+One-time setup below is already complete for the existing deployment. Do not recreate tables, keys or apps. Any secret change or deployment needs owner approval.
 
 1. **Twin tables.** In the Twin UI, create `calls` and `bookings`, each with `id` (text, primary key), `version` (int) and `data` (jsonb, not json). The API cannot create tables. Leave the `proto_*` tables alone.
 2. **Twin key.** Create an Editor API key for the service. Do not reuse a lab key. Editor applies workspace-wide while tag scopes are off.
@@ -60,7 +62,7 @@ The private candidate portal link is in Luke's original "HappyRobot | FDE Techni
 | OTP email | Luke approved email to the candidate's demo inbox. `DEMO_OTP_EMAIL` is configuration, never caller input, and is not proof of carrier identity. |
 | Fly.io | The CLI is installed and authenticated. The service runs as `happyrobot-carrier-sales-sg` at `https://happyrobot-carrier-sales-sg.fly.dev`, one machine in `iad`, deployed 2026-11-03. |
 
-The main `.env` holds only TMS and handbook values. Newer credentials are in the ignored `.env` of Codex's prototype worktree. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
+Local credentials are not part of a clone. Use the owner-managed ignored .env and platform secret settings; do not assume an old prototype worktree is the current source. Secret values and their synchronization were not inspected for this documentation pass. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
 
 ## FMCSA integration starting point
 

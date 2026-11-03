@@ -38,3 +38,5 @@ Recorded outcomes must distinguish observation from inference. A saved reservati
 ## Review and release
 
 Preserve historical failures and setup errors. Reconcile case IDs, versions, fixture shapes, run IDs and denominators before presentation. A fresh service or prompt change requires the relevant regression layer, not an inflated combined test count. Final human voice and published App visual checks remain approval steps, not automatic test results.
+
+Frontend evidence: 13 tests after the reservation-history follow-up. A synthetic static preview checks candidate layout at 1280x900; no authentication, live fetch, receipt persistence or click behavior is inferred from that rendering. Those behaviors have component regression tests and still need the published-App acceptance check.

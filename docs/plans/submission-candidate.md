@@ -51,3 +51,19 @@ Baseline: `main` at `b0d9cf5`, read on 2026-11-03. Codex is the sole writer; Cla
 Local work continues without push or deployment. Ask in chat before push, service deployment, workflow publication, App publication, any Fly secret change, any real booking, reviewer invitations or submission. Batch concrete approval requests after the local candidate is reviewable. `CALL_COHORT` remains synthetic until the owner approves changing it; `LIVE_BOOKING` remains off.
 
 The root untracked assignment PDF is untouched. The tracked PDF under docs/ remains the requirements reference.
+
+## Candidate completion after the baseline
+
+The table above is retained as the before-implementation mapping, not today's open-work list. Current completion:
+
+| Group from the owner's plan | Current state |
+|---|---|
+| Conversation correctness/basic experience | Version 3 retained. Small E7 service response and exact Version 4 draft tested 18/18 checkpoints; standard full text agreement also completed. Misheard-MC, greeting, interruptions and Version 4 voice acceptance remain owner checks. Pressure text run held the gate but stalled by idle timeout |
+| Structured activity and capture gaps | R3 completed and tested from rows alone, including privacy scans. Deploy service then publish callback. Missing spoken content, notes or undelivered callbacks stay explicit |
+| Essential dashboard pieces 1/2 and send mode | Implemented, historical snapshot gap fixed, 13 frontend tests and 1280px local static layout review. Published App and platform name remain approval/acceptance steps; cosmetic pieces 3 to 7 deferred |
+| Layered QA and reproducible inputs | Existing seed 7/11 checks documented rather than rebuilt; 438 service tests, nine HTTP journeys, six current checkpoints and two native full text runs kept separate from owner voice evidence. Historical failures/reruns retained; Version 3 table corrected 50/54 |
+| KPI definitions and claims | Complete locally, including missing data, clocks, reservations versus handoffs and approvals versus pending/final booking. No exact voice latency, profit, capacity or legal identity claim |
+| Handover and five tailored steps | Compliance, email, business/IT description/PDF, links, access instructions and five-minute outline ready for review. Video, reviewer access, releases and submission remain owner actions |
+| Optional A to C | Separate value/placement analysis follows R6. No implementation authorized |
+
+Full state and approval checklist: docs/submission.md. Failure/coverage limits: docs/qa-results.md. The baseline's randomized-check item is resolved by existing seeded tests, not new random-call claims. The exact call-start KPI replacement is superseded by the honest tool-to-offer metric until a trusted start timestamp exists. The native AI summary assumption is superseded by structured activity plus explicit missing notes.

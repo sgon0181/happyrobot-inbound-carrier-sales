@@ -11,7 +11,7 @@ The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02, and later th
 Replaces D-8.
 
 - **Why:** the TMS has no cancel and no idempotency key. During a call, that send had to finish inside a 12 second request on a database allowing about 4 statements per second, while the carrier could hang up.
-- **Evidence:** a hang-up during booking permanently hid a load, a Twin failure after a real send left no stored reference, and in the model two bookings starting together sent nothing. On LD01094 a load was spent before the caller clearly agreed. The send path took 21 statements, and the code protecting it accounted for much of the size.
+- **Evidence:** a hang-up during booking made the load unavailable on the observed token, a Twin failure after a real send left no stored reference, and in the model two bookings starting together sent nothing. On LD01094 a load was spent before the caller clearly agreed. The send path took 21 statements, and the code protecting it accounted for much of the size.
 - **PDF fit:** the PDF reserves tentatively at agreement and has the senior rep confirm the booking. The handbook describes `LOAD_BOOK` as committing a booking. Luke left the timing to us.
 - **Cost:** a booking failure appears after the call, so the rep calls the carrier back. The TMS shows the load `OPEN` until Confirm, so Confirm must re-check it. D-8's reasoning that `PENDING` reads as the tentative stage no longer applies; `PENDING` is now simply what the TMS returned.
 - **Would change it:** a reply from Luke, or a rubric, requiring the send during the call.
@@ -23,22 +23,22 @@ Replaces the nine prototype tables.
 - **Why:** Twin has no multi-table transactions, but one row updates atomically with a version check. Anything spread across rows can stop halfway.
 - **Evidence:** three prototype failures came from this. Reservation spanned claims, a call freeze and a booking row. OTP consumption and call verification were separate writes. State saved first and its audit event afterwards, so an event could be lost. Of 70 statements per call, 13 were audit writes.
 - **Book:** *Designing Data-Intensive Applications*: fields updated together can live in one document, which removes the need for multi-object transactions (p.287); conditional writes with a version number (p.302).
-- **Cost:** events live in JSON instead of their own table. Rows are larger, though a call has about 30 events at most.
+- **Cost:** events live in JSON instead of their own table. Rows are larger, and grow with repeated activity. No event-count maximum is proven; row size and retention need pilot measurements.
 - **Rejected:** a same-row outbox with a projected `call_events` table, which both audits proposed. Nothing consumes that table, so it adds flushing, pruning and lag for no gain. The book's outbox (p.507) exists to decouple downstream consumers, and this system has none. Event sourcing (pp.103-104) was rejected for its replay and versioning cost.
 
 ### D-24: A reservation is one booking row keyed by load ID
 
 - **Why:** the primary key gives one winner per load in one statement, which is the behaviour already proven on Twin (1 winner of 20 contenders).
-- **Replaces:** the prototype's call claim, load claim, call freeze and booking row. Because the reservation is now a single row, an orphaned claim cannot exist, so no reaper or fencing scheme is needed. That removes the cleanup design the audits debated.
+- **Replaces:** the prototype's multi-table reservation layout. The booking row alone decides the holder, but one agreement per call still crosses the call and booking rows. Review found that the original no-claims argument was wrong. The implementation now uses an ID-bearing accepting claim, resolves it from booking history, and voids a stale claim through the booking row's own version-checked write before repricing. This is explicit recovery, not a multi-row transaction.
 - **Cost:** one row per load, so a later attempt on a freed load carries earlier events forward.
 
 ### D-25: Five things removed
 
 | Removed | Why it existed | Why it can go | Remaining risk |
 |---|---|---|---|
-| Transcript-reading consent check | A false yes spent a load forever | A false yes now creates a reservation the rep can decline. It was 155 lines at complexity 29 and 19, and it caused a redundant question on the passing call. | The rep is the safety check. |
-| Transcript redaction and collection | Kept spoken codes out of stored transcripts | Twin stores a summary, so there is no raw copy to redact. It was the most complex function in the repo. | Depends on T-8. |
-| Receipt journal | Backed up the in-call send | It sat in container storage, and the evidence records it lost after an automatic stop and start. At Confirm the rep sees the result. | If Twin stays down after a send, the receipt survives in the log and on the rep's screen. |
+| Transcript-reading consent check | A false yes could trigger a non-cancellable send | A false yes now creates a reservation the rep can decline. It was 155 lines at complexity 29 and 19, and it caused a redundant question on the passing call. | The rep is the safety check. |
+| Transcript redaction and collection | Kept spoken codes out of stored transcripts | Twin stores structured activity and optional closing notes, so there is no raw copy to redact. It was the most complex function in the repo. | No verbatim Twin transcript; missing closing notes stay missing. T-8 is optional. |
+| Receipt journal | Backed up the in-call send | It sat in container storage, and the evidence records it lost after an automatic stop and start. At Confirm the rep sees the result. | If Twin stays down after a send, the service logs the receipt and returns it to the rep when possible. Logs and browser recovery are not a durable independent journal; process/log retention failure can lose evidence. |
 | Cross-call OTP throttle | Limited sends across calls | Per-call limits stay (2 sends, 3 failures), and codes reach only the demo inbox. | A real deployment would need it back. |
 | Retry fingerprinting (D-17) | Caught duplicate tool calls | See D-26. | Depends on T-10. |
 
@@ -78,7 +78,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 ### D-32: The second rule limits who can send, not when
 
 - **Why:** the earlier wording, "nothing irreversible happens during a call", did not match the design. A reservation exists before the call ends, nothing makes Confirm wait for it, and the code email is also sent during a call. What protects the TMS is that the voice agent has no route to `LOAD_BOOK`.
-- **Cost:** a rep can confirm while the carrier is still on the line. That is harmless, because the send runs outside the voice request and touches only the booking row.
+- **Cost:** a rep can confirm while the carrier is still on the line. The send runs outside voice cancellation, but the rep still owns the approval and the external outcome may be uncertain.
 - **Also changed:** INV-1 now covers what the service returns and accepts, because the service cannot control what the model says.
 
 ## Decisions made on 2026-11-03
@@ -100,7 +100,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 | D-4 | Versioned pricing with a keyed gap below the ceiling | Active |
 | D-5 | No cached loads; report a TMS outage honestly | Active |
 | D-6 | Separate `ACK_PENDING`, `CONFIRMED`, `UNKNOWN`; never resend | Active |
-| D-7 | One service instance | Active. Coordination is by version check alone, with no in-process locks. |
+| D-7 | One service instance | Active. Coordination is by version check alone, without process-local reservation locks; pacing and refresh have local locks. |
 | D-8 | Send `LOAD_BOOK` at rate agreement | **Replaced by D-22** |
 | D-9 | OTP on every call | Active |
 | D-10 | `MAX_BUY` supplies `max_rate`, subject to validation | Active |
@@ -108,7 +108,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 | D-12 | Codes go to one configured demo inbox | Active |
 | D-13 | Record turned-away demand | Active. Derived from call rows, with no table. |
 | D-14 | Carrier view in the operations app | Deferred to optional additions |
-| D-15 | Northstar is a handoff per verified call | Changed: reserved handoffs per code-passed call |
+| D-15 | Northstar is a handoff per verified call | Clarified: recorded reservations per call that ever passed its code; not proof of a spoken handoff |
 | D-16 | `run_id` is the only call identity, in a hidden field | Active |
 | D-17 | Retries recognized by request fingerprint | **Replaced by D-26** |
 | D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The agent takes no part in the send, so it never has to describe `UNKNOWN`, and Confirm applies only to `RESERVED`. |
@@ -127,8 +127,8 @@ Each original decision's full reasoning is in [architecture v2.5](https://github
 | T-3 | Can the service deliver codes? | Proven: Gmail SMTP from Fly | |
 | T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype, and on the real workflow on 2026-11-03: the model's tool arguments held only the MC and code, and the Twin row is keyed by the run's ID. | |
 | T-5 | Can the service reach FMCSA? | Proven from Fly `iad`, again by the new service on 2026-11-03. The local machine gets HTTP 403. | Native HTTP node passes the raw result |
-| T-6 | Can the agent end a voice session and speak the handoff? | Proven on the prototype's owner run. One ineligible-call simulation failed to close, so closing remains a QA item. The slice 2 call on 2026-11-03 was ended by the agent, but one exchange later than the prompt asked. | |
+| T-6 | Can the agent end a voice session and speak the handoff? | Observed on the prototype and owner Version 3 run8167bb06. Version 4 standard text simulation closed, but the pressure simulation ended by idle_timeout with no close_call. Voice refusal/interruptions remain acceptance checks. | |
 | T-7 | Why does the Apps gateway to Twin fail? | Open, and designed around by D-30 | |
-| T-8 | Can a native post-call node produce a summary for the close request? | Not tested in this workspace. Documentation shows AI nodes that accept transcripts. | A deterministic summary from events, as on the prototype |
+| T-8 | Can a native post-call node produce a summary for the close request? | Optional and untested. No longer a dependency: R3 stores structured decisions and best-effort model closing notes, with end reporting separate. | Show absent notes honestly; do not invent a post-call summary |
 | T-9 | Should workflow run dumps store full transcripts in Twin natively? | Not tested. They would add spoken codes to Twin. | Transcripts stay on the platform |
 | T-10 | Does the platform retry tool calls? | Unknown. D-26 is safe either way. | |

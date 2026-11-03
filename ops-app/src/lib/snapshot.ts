@@ -1,20 +1,9 @@
 // Explicit projection of authenticated operations snapshots. Unknown fields stay private.
 import { events, type EventRow } from "@/lib/event-history";
+import { projectRepLoad } from "@/lib/rep-load";
+export type { RepLoad } from "@/lib/rep-load";
+import type { RepLoad } from "@/lib/rep-load";
 import { redactText } from "@/lib/redact-text";
-
-export type RepLoad = {
-  origin: string | null;
-  destination: string | null;
-  pickup: string | null;
-  delivery: string | null;
-  equipment: string | null;
-  postedRate: number | null;
-  weight: number | null;
-  miles: number | null;
-  commodity: string | null;
-  dimensions: string | null;
-  notes: string | null;
-};
 
 export type Cohort = "real" | "synthetic";
 export type RepAction = "confirm" | "decline" | "reconcile";
@@ -106,27 +95,6 @@ const num = (v: unknown): number | null =>
 const cohort = (v: unknown): Cohort | null =>
   v === "real" || v === "synthetic" ? v : null;
 
-function projectLoad(v: unknown): RepLoad | null {
-  if (!v || typeof v !== "object" || Array.isArray(v)) return null;
-  const l = obj(v);
-  const place = (p: unknown) =>
-    [str(obj(p).city, 100), str(obj(p).state, 4)].filter(Boolean).join(", ") ||
-    null;
-  return {
-    origin: place(l.origin),
-    destination: place(l.destination),
-    pickup: str(l.pickup_datetime, 40),
-    delivery: str(l.delivery_datetime, 40),
-    equipment: str(l.equipment_type, 40),
-    postedRate: num(l.loadboard_rate),
-    weight: num(l.weight),
-    miles: num(l.miles),
-    commodity: str(l.commodity_type, 120),
-    dimensions: str(l.dimensions, 100),
-    notes: typeof l.notes === "string" ? redactText(l.notes) : null,
-  };
-}
-
 function projectBooking(raw: unknown): Booking[] {
   const b = obj(raw);
   const loadId = str(b.load_id, 64);
@@ -139,7 +107,7 @@ function projectBooking(raw: unknown): Booking[] {
       loadId,
       version,
       carrierName: str(b.carrier_name, 120),
-      load: projectLoad(b.load),
+      load: projectRepLoad(b.load),
       state: str(b.state, 40),
       callId: str(b.call_id, 128),
       mc: str(b.mc, 32),

@@ -29,3 +29,11 @@ test('historical reservation details are explicitly not recorded', () => {
   assert.ok(html.includes('Not recorded'));
   assert.ok(!html.includes('Dallas'));
 });
+
+test('historical terms render in the event timeline rather than becoming current terms', () => {
+  const { events }=loadTs('src/lib/event-history.ts');
+  const { EventList }=loadTs('src/components/ops-events.tsx');
+  const history=events([{action:'reserved',load:{origin:{city:'Dallas',state:'TX'},destination:{city:'Atlanta',state:'GA'},loadboard_rate:2150,pickup_datetime:'2026-11-03T12:00:00Z',num_of_pieces:14,notes:'First terms'}}]);
+  const html=renderToStaticMarkup(React.createElement(EventList,{events:history}));
+  for(const value of ['Reservation terms','Dallas, TX','Atlanta, GA','$2,150','06:00 CT','Pieces: 14','First terms'])assert.ok(html.includes(value),value);
+});

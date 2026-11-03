@@ -100,7 +100,7 @@ export function RepQueue({
                           version={b.version}
                           actions={allowedActions(b, now)}
                           confirmDisabledReason={liveBooking === true ? null : liveBooking === false ? "Booking sends are off. Confirm is disabled." : "Send mode unavailable. Confirm is disabled."}
-                    confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
+                          confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
                         />
                       </TableCell>
                     </TableRow>
@@ -114,6 +114,7 @@ export function RepQueue({
                             <div className="text-sm">
                               <p>
                                 Weight: {fmtCount(b.load?.weight ?? null)} lbs.
+                                Pieces: {fmtCount(b.load?.pieces ?? null)}.
                                 Miles: {fmtCount(b.load?.miles ?? null)}.
                               </p>
                               <p>

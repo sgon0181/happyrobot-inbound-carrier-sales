@@ -1,4 +1,6 @@
 // Explicit projection of structured call and booking history. Private fields are ignored.
+import { projectRepLoad, type RepLoad } from "@/lib/rep-load";
+
 export type EventRow = {
   seq: number | null;
   at: string | null;
@@ -7,6 +9,7 @@ export type EventRow = {
   state: string | null;
   rep: string | null;
   reason: string | null;
+  load: RepLoad | null;
   detail: string | null; // the business fields: MC, load, rate, offers, round, TMS answer
 };
 
@@ -76,6 +79,7 @@ export function events(v: unknown): EventRow[] {
         state: str(e.state, 40),
         rep: str(e.rep, 200),
         reason: str(e.reason, 80),
+        load: projectRepLoad(e.load),
         detail: eventDetail(e),
       };
     });

@@ -1,18 +1,7 @@
 const assert = require('node:assert/strict');
-const fs = require('node:fs');
 const test = require('node:test');
-const ts = require('typescript');
-
-function load(relative) {
-  const source = fs.readFileSync(relative, 'utf8');
-  const { outputText } = ts.transpileModule(source, {
-    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022 },
-  });
-  const loaded = { exports: {} };
-  new Function('module', 'exports', 'require', outputText)(loaded, loaded.exports, require);
-  return loaded.exports;
-}
-const { events } = load('src/lib/event-history.ts');
+const loadTs = require('./load-ts.cjs');
+const { events } = loadTs('src/lib/event-history.ts');
 
 test('projects actual public_view strings, pitch details and search criteria', () => {
   const [event] = events([{
@@ -40,4 +29,21 @@ test('keeps earlier asks, normalized amounts and terminal outcome without privat
   assert.match(history[1].detail, /ask 5100/);
   assert.match(history[2].detail, /ended by user, seconds 52/);
   assert.ok(!JSON.stringify(history).includes('private-'));
+});
+
+test('keeps each reservation snapshot after the same booking row is freed and reused', () => {
+  const snapshot = (posted, pickup, note) => ({origin:{city:'Dallas',state:'TX'}, destination:{city:'Atlanta',state:'GA'}, loadboard_rate:posted, pickup_datetime:pickup, notes:note, num_of_pieces:14, max_rate:9876543, token:'private-token'});
+  const history=events([
+    {action:'reserved',call_id:'first',state:'RESERVED',load:snapshot(2150,'2026-11-03T12:00:00Z','First terms')},
+    {action:'declined',state:'FREED'},
+    {action:'reserved',call_id:'second',state:'RESERVED',load:snapshot(2300,'2026-11-05T12:00:00Z','New terms')},
+  ]);
+  assert.equal(history[0].load.postedRate,2150);
+  assert.equal(history[0].load.notes,'First terms');
+  assert.equal(history[0].load.pieces,14);
+  assert.equal(history[1].load,null);
+  assert.equal(history[2].load.postedRate,2300);
+  assert.notEqual(history[0].load.pickup,history[2].load.pickup);
+  assert.ok(!JSON.stringify(history).includes('9876543'));
+  assert.ok(!JSON.stringify(history).includes('private-token'));
 });

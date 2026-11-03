@@ -166,13 +166,32 @@ Both exchanges completed without a transport exception. Subsequent read-only `LO
 
 After this campaign, the recorded cumulative evidence is **twelve booking sends across ten load IDs: nine complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.** These historical counts are not a provider quota or a claim that sandbox inventory is finite.
 
+### First rep Confirm through the service, 2026-11-03
+
+The first booking sent by the production service, at a rep's Confirm in the operations app (D-22), after the reservation from the real call on run `ddae86e8`. The rep was the owner, signed in to the app. Before the send, the service re-read LD01080: `OPEN`, pickup 2026-11-04 21:33 (UTC assumed), ceiling above the agreed rate. It then won the version-checked write to `SUBMITTING` at the version the rep saw and sent one `LOAD_BOOK` on one fresh connection, with no retry.
+
+| Load | MC | `AGREED_RATE` | Sent (UTC) | Direct receipt | Bytes | SHA-256 of the receipt |
+|---|---|---:|---|---|---:|---|
+| LD01080 | 138328, active | 575 | 2026-11-03 04:37:29 | Reference with `PENDING`, timestamp `20261103043729` | 97 | `6b5a770640d954a83467681b40b65b8249ed0bc3d96df988670afa5899bf7dd1` |
+
+```text
+CMD:LOAD_BOOK|AUTH:<redacted>|LOAD_ID:LD01080|MC_NUM:138328|AGREED_RATE:575\r\n
+LOAD_ID:LD01080     |BOOKING_REF:<real reference, kept in Twin>|STATUS:PENDING |TIMESTAMP:20261103043729\r\nEND\r\n
+```
+
+The service saved the receipt in the same write as its event: the booking row is `ACK_PENDING` at version 3, with the reference, `tms_status` `PENDING`, all 97 bytes as `raw_reply`, and `send` at step `received` with no error. The hash above was recomputed from the stored bytes and matches. The events run `reserved`, `confirm` (`SUBMITTING`, with the rep) and `sent` (`ACK_PENDING`), with no second send. The real reference stays in Twin, not in this repository.
+
+This is the same `PENDING` outcome as every earlier complete receipt, now on a real call's reservation through the full path: FMCSA, emailed code, negotiation, reservation, rep Confirm. It establishes nothing new about what moves a booking to `BOOKED`.
+
+The recorded cumulative evidence is now **thirteen booking sends across eleven load IDs: ten complete `PENDING` acknowledgements, two explicit errors, one `UNKNOWN` and zero observed `BOOKED`.**
+
 ## Booking test inventory
 
 All statuses below are historical snapshots, not current availability. These IDs are sandbox test inventory, not credentials. The service reads the same list from [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json).
 
 | Purpose | IDs | Required handling |
 |---|---|---|
-| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062, LD01090, LD01108 | Keep blocked from offers and further booking sends until authoritatively resolved. |
+| Spent, acknowledged `PENDING` | LD01086, LD01082, LD01081, LD01075, LD01094, LD01085, LD01062, LD01090, LD01108, LD01080 | Keep blocked from offers and further booking sends until authoritatively resolved. |
 | Spent, outcome unknown | LD01077 | Keep blocked from offers and further booking sends. Never resend: no receipt or reference exists. |
 | Voided control | LD01069 | Never offer or book. |
 | Protected, historical `OPEN` snapshot | LD01023, LD01032, LD01036 | Do not spend on write probes. Re-read status, schedule and ceiling before any demo; protection does not guarantee continued availability. |
@@ -186,7 +205,7 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 
   The handbook's [LOAD_BOOK page](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/) explicitly says the same load can resolve to different booking states for different tokens, intentionally. Captured `PENDING` values occupy the normal padded `STATUS` field, as `OPEN` and `BOOKED` do, and subsequent reads also reported `PENDING`. This supports a normal server status rather than a truncated or malformed injected reply. Padding alone cannot exclude every possible injected fault.
 
-  Across twelve sends, we varied the load, carrier (inactive MC 872144 and active MC 138328) and rate, including `1`, equality with `MAX_BUY` and `MAX_BUY + 1`. Results were nine complete `PENDING` acknowledgements, two explicit errors and one `UNKNOWN`, with no observed `BOOKED`. Inactive authority cannot explain all the pending acknowledgements, and none of these tested variations established a `BOOKED` trigger.
+  Across thirteen sends, we varied the load, carrier (inactive MC 872144 and active MC 138328) and rate, including `1`, equality with `MAX_BUY` and `MAX_BUY + 1`. Results were ten complete `PENDING` acknowledgements, two explicit errors and one `UNKNOWN`, with no observed `BOOKED`. Inactive authority cannot explain all the pending acknowledgements, and none of these tested variations established a `BOOKED` trigger.
 
   Token-specific or server-side configuration is the leading working hypothesis, not an established diagnosis. All sends used one candidate token, which cannot isolate a token effect or distinguish configuration from undocumented server logic. [Q8](questions.md) asks Luke for clarification. A controlled comparison with a second authorized token could demonstrate token-dependent behavior if outcomes differ; matching outcomes would not by themselves settle the cause or establish what triggers `BOOKED`.
 - **Other integrations:** [platform checks](platform-checks.md) record what Codex's experiment settled and left open. None of it is established by the older SQLite lab.

@@ -406,7 +406,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
 | Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, the receipt is logged and shown on the rep's screen. |
 
-**`PENDING`.** The handbook shows `BOOKED`, but all nine complete live receipts returned `PENDING`, including one sent deliberately above the ceiling, and none has moved on. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
+**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and none has moved on. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
 
 **Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because each send spends a load permanently.
 

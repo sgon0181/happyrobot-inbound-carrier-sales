@@ -29,7 +29,7 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 |---|---|---|
 | Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 1 live in production since 2026-11-03, with the verification prompt and the `verify_carrier`, `send_code` and `verify_code` tools. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Production v17 passed the owner run. |
-| Prototype app | `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Deployed. Older than the `ops-app/` source on the branch. |
+| Operations app | `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 17 runs `ops-app/` from `main` at `2960ffb`, reading the new service with the ops key, since 2026-11-03. The first rep Confirm, LD01080, was sent from it. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |

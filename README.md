@@ -6,7 +6,7 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Slice 3 of 5 done.** A real web call on 2026-11-03 passed MC and code, found a dry van out of Kentucky, countered twice and ended in a reservation: LD01080 at 575, `RESERVED`, with nothing sent to the TMS. The rep's Confirm and the dashboard come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
+**Slice 4 of 5 done.** A real web call on 2026-11-03 passed MC and code, found a dry van out of Kentucky, countered twice and reserved LD01080 at 575. The owner then confirmed it as the rep in the operations app, which sent one `LOAD_BOOK` and got back a TMS reference with status `PENDING`, saved as `ACK_PENDING` with every byte of the reply. QA suites, KPIs and the demo come next. See the [build plan](ARCHITECTURE.md#15-build-plan).
 
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
 

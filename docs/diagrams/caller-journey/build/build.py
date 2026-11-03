@@ -2,7 +2,9 @@
 from pathlib import Path
 import json
 from pypdf import PdfReader, PdfWriter
-from rendering import Page, C, OUT
+from rendering import Page, C, OUT, PAGES
+
+HERE = Path(__file__).resolve().parent
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
 STEPS = [
@@ -200,12 +202,12 @@ def main():
     issues=blueprint()+sequence()+nested()
     writer=PdfWriter()
     for stem in ['01-caller-blueprint','02-call-sequence','03-nested-systems-map']:
-        reader=PdfReader(OUT/f'{stem}.pdf');assert len(reader.pages)==1;writer.add_page(reader.pages[0])
+        reader=PdfReader(PAGES/f'{stem}.pdf');assert len(reader.pages)==1;writer.add_page(reader.pages[0])
     writer.add_metadata({'/Title':'My successful call: three systems views','/Subject':'Implemented main 2678845, not a live-call guarantee'})
     with (OUT/'caller-journey-three-views.pdf').open('wb') as f:writer.write(f)
-    (OUT/'trace.json').write_text(json.dumps({'source_commit':'2678845','call_steps':STEPS,'shape_meanings':{'C':'call moment','B':'build slice','file':'code','capsule':'transient data','cylinder':'saved state'},'render_issues':issues},indent=2)+'\n')
-    template=(OUT/'viewer-template.html').read_text()
-    (OUT/'index.html').write_text(template.replace('TRACE_DATA_PLACEHOLDER',(OUT/'trace.json').read_text().strip()))
+    (HERE/'trace.json').write_text(json.dumps({'source_commit':'2678845','call_steps':STEPS,'shape_meanings':{'C':'call moment','B':'build slice','file':'code','capsule':'transient data','cylinder':'saved state'},'render_issues':issues},indent=2)+'\n')
+    template=(HERE/'viewer-template.html').read_text()
+    (OUT/'index.html').write_text(template.replace('TRACE_DATA_PLACEHOLDER',(HERE/'trace.json').read_text().strip()))
     if issues:raise SystemExit('\n'.join(issues))
     print('Built three single-page SVG/PDF pairs and the three-page combined PDF.')
 

@@ -8,7 +8,8 @@ from reportlab.lib import colors
 from reportlab.lib.pagesizes import A3, landscape
 from reportlab.pdfbase.pdfmetrics import stringWidth
 
-OUT = Path(__file__).resolve().parent
+OUT = Path(__file__).resolve().parent.parent
+PAGES = OUT / 'pages'
 W, H = 1680, 1188
 C = {'ink':'#14283F','muted':'#52647A','line':'#CBD5E1','paper':'#FFFFFF',
      'hr':'#713EB5','hrbg':'#F5F0FC','svc':'#14786B','svcbg':'#EDF8F4',
@@ -19,7 +20,7 @@ C = {'ink':'#14283F','muted':'#52647A','line':'#CBD5E1','paper':'#FFFFFF',
 class Page:
     def __init__(self, stem, title, desc):
         self.stem, self.svg, self.issues = stem, [], []
-        self.pdf = canvas.Canvas(str(OUT / f'{stem}.pdf'), pagesize=landscape(A3))
+        self.pdf = canvas.Canvas(str(PAGES / f'{stem}.pdf'), pagesize=landscape(A3))
         self.pdf.setTitle(title)
         self.pdf.setAuthor('Tech-Challenge documentation')
         self.pdf.scale(landscape(A3)[0]/W, landscape(A3)[1]/H)
@@ -117,7 +118,7 @@ class Page:
     def footer(self):
         self.text(44,1169,'Source: main 2678845. File paths are relative to service/ unless marked. C1-C7 are call moments; B1-B5 are build slices. Money is illustrative, not a live trace.',10.9,C['muted'])
         self.text(44,1183,'Shared I/O: api.py routes JSON; adapters/twin.py version-checks SQL writes. TMS [B1]: client.py query/get -> protocol.py encode_request/parse_reply -> mapping.py to_summary/to_load.',10.8,C['muted'])
-        self.svg.append('</svg>');(OUT/f'{self.stem}.svg').write_text('\n'.join(self.svg)+'\n')
+        self.svg.append('</svg>');(PAGES/f'{self.stem}.svg').write_text('\n'.join(self.svg)+'\n')
         self.pdf.showPage();self.pdf.save()
         return self.issues
 

@@ -1,5 +1,6 @@
 """The operations snapshot: derived outcomes, each call's reservation, and KPIs on real calls."""
 
+import asyncio
 from datetime import timedelta
 from typing import Any
 
@@ -152,3 +153,25 @@ def test_a_twin_failure_is_reported_as_unavailable() -> None:
     r = rig()
     r.twin.statuses.extend([500])
     assert r.get("/ops/snapshot") == {"status": "temporarily_unavailable", "http": 503}
+
+
+def test_a_call_that_changes_mc_after_passing_its_code_still_counts_as_code_passed() -> None:
+    r = reserved()
+    assert r.post("/carriers/verify", mc="MC-1515")["status"] == "eligible"
+    assert r.row()["verified_at"] is None
+    snapshot = r.get("/ops/snapshot")
+    assert snapshot["calls"][0]["code_passed"] is True
+    kpis = snapshot["kpis"]
+    assert (kpis["code_passed"], kpis["handoffs"], kpis["northstar"]) == (1, 1, 1)
+
+
+def test_dashboards_asking_together_share_one_refresh() -> None:
+    r = reserved()
+    count = len(r.twin.statements)
+
+    async def twelve() -> list[Any]:
+        return list(await asyncio.gather(*(r.dashboard.snapshot() for _ in range(12))))
+
+    snapshots = asyncio.run(twelve())
+    assert len(r.twin.statements) == count + 2
+    assert all(snapshot is snapshots[0] for snapshot in snapshots)

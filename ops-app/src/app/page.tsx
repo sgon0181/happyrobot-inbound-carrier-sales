@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 import { AppShell } from "@/components/app-shell";
+import { AutoRefresh } from "@/components/auto-refresh";
 import { RepActions } from "@/components/rep-actions";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -127,9 +128,9 @@ function Overview({ kpis, generatedAt }: { kpis: Kpis; generatedAt: string | nul
   const outcomes = Object.entries(kpis.outcomes).sort((a, b) => b[1] - a[1]);
   return (
     <section className="flex flex-col gap-3">
-      <div className="flex items-center gap-2">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-sm font-medium">Real calls</h2>
-        <span className="text-xs text-muted-foreground">As of {fmtTime(generatedAt)}</span>
+        <AutoRefresh generatedAt={generatedAt} />
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatTile icon={<IconTarget />} label="Northstar" value={kpis.northstar === null ? "n/a" : `${Math.round(kpis.northstar * 100)}%`} description="Reserved handoffs per code-passed call: the leg the agent owns." />
@@ -159,6 +160,7 @@ function EventList({ events }: { events: EventRow[] }) {
         {events.map((e, i) => (
           <li key={`${e.seq ?? i}`}>
             {fmtTime(e.at).slice(11, 16)} {na(e.action)} {[e.status, e.state, e.reason, e.rep].filter(Boolean).join(" ")}
+            {e.detail ? <span className="text-muted-foreground"> ({e.detail})</span> : null}
           </li>
         ))}
       </ol>
@@ -232,7 +234,7 @@ function CallLog({ title, calls }: { title: string; calls: Call[] }) {
     <Card>
       <CardHeader>
         <CardTitle>{title}</CardTitle>
-        <CardDescription>Each call&apos;s outcome, derived when read, with its events: the audit trail.</CardDescription>
+        <CardDescription>Each call&apos;s outcome, derived when read, with its events: the audit trail of MCs, loads, offers, rounds and agreed rates.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="max-h-[40rem] min-h-0 overflow-auto">

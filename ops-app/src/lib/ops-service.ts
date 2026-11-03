@@ -21,7 +21,22 @@ export type EventRow = {
   state: string | null;
   rep: string | null;
   reason: string | null;
+  detail: string | null; // the business fields: MC, load, rate, offers, round, TMS answer
 };
+
+// Event fields an operator needs to reconstruct a call or a booking, by label.
+const EVENT_DETAIL: [string, string][] = [
+  ["mc", "MC"],
+  ["call_id", "call"],
+  ["load_id", "load"],
+  ["rate", "rate"],
+  ["offer", "offer"],
+  ["round", "round"],
+  ["tries_left", "tries left"],
+  ["reference", "ref"],
+  ["tms_status", "TMS"],
+  ["load_status", "TMS load"],
+];
 
 export type Booking = {
   loadId: string;
@@ -113,6 +128,19 @@ export function redactText(text: string, max = 2_000): string {
     );
 }
 
+function eventDetail(e: Json): string | null {
+  const parts = EVENT_DETAIL.flatMap(([key, label]) => {
+    const value = str(e[key], 80);
+    return value === null ? [] : [`${label} ${value}`];
+  });
+  const offers = Object.entries(obj(e.offers)).flatMap(([load, offer]) => {
+    const amount = num(offer);
+    return /^[A-Za-z0-9_-]{1,32}$/.test(load) && amount !== null ? [`${load} ${amount}`] : [];
+  });
+  if (offers.length) parts.push(`offers ${offers.join(", ")}`);
+  return parts.length ? parts.join(", ") : null;
+}
+
 function events(v: unknown): EventRow[] {
   return list(v)
     .slice(-100)
@@ -126,6 +154,7 @@ function events(v: unknown): EventRow[] {
         state: str(e.state, 40),
         rep: str(e.rep, 200),
         reason: str(e.reason, 80),
+        detail: eventDetail(e),
       };
     });
 }
@@ -278,8 +307,14 @@ export type ActionReply = {
   reference: string | null;
   tmsStatus: string | null;
   loadStatus: string | null;
+  sendStep: string | null;
+  sendError: string | null;
+  sendBytes: number | null;
   sendSha256: string | null;
+  rawReply: string | null; // every byte the TMS sent, as latin-1 text, kept whole
 };
+
+const MAX_RAW_REPLY = 300_000; // above the service's own 256 KiB bound on a reply
 
 export async function postRepAction(
   loadId: string,
@@ -310,7 +345,11 @@ export async function postRepAction(
       reference: str(body.reference, 80),
       tmsStatus: str(body.tms_status, 40),
       loadStatus: str(body.load_status, 40),
+      sendStep: str(obj(body.send).step, 20),
+      sendError: str(obj(body.send).error, 60),
+      sendBytes: num(obj(body.send).bytes),
       sendSha256: str(obj(body.send).sha256, 64),
+      rawReply: str(body.raw_reply, MAX_RAW_REPLY),
     },
   };
 }

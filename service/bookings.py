@@ -65,7 +65,9 @@ class Bookings:
 
         def edit(current: Data | None) -> tuple[Data | None, Data | None]:
             row = current or {"state": "UNCLAIMED"}
-            if row.get("claim_id") == claim_id and row.get("state") not in FREE:
+            # Rows reserved before booking rows kept claim IDs belong to their call.
+            legacy = "claim_id" not in row and row.get("call_id") == call_id
+            if (row.get("claim_id") == claim_id or legacy) and row.get("state") not in FREE:
                 return None, current
             voided = row.get("void_claims", [])
             if claim_id in voided:

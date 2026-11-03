@@ -330,6 +330,18 @@ def test_a_retry_finishes_the_first_attempt_from_its_booking() -> None:
     assert r.row()["agreement"]["rate"] == 1850 and r.row()["accepting"] is None
 
 
+def test_a_booking_reserved_before_claim_ids_is_recovered_not_voided() -> None:
+    r = offered()
+    stranded(r, booked=True)
+    _, legacy = r.twin.tables["bookings"]["LD09001"]
+    legacy.pop("claim_id")  # the row as 857212d wrote it
+    r.board.records = [make_load(MAX_BUY="1800", RATE="1500")]  # today's cap is below 1850
+    assert counter(r, 1850) == {"status": "agreed", "load_id": "LD09001", "rate": 1850, "http": 200}
+    assert r.row()["agreement"]["rate"] == 1850 and r.row()["accepting"] is None
+    booking = r.twin.data("bookings", "LD09001")
+    assert (booking["state"], booking.get("void_claims")) == ("RESERVED", None)
+
+
 def test_a_claim_without_a_booking_is_dropped_and_priced_afresh() -> None:
     r = offered()
     stranded(r, booked=False)

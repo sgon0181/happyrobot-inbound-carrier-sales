@@ -202,7 +202,9 @@ def _save(send_id: str, fields: Data, now: datetime) -> Edit:
         events = row.get("events", [])
         if any(event.get("send_id") == send_id and event["action"] == "sent" for event in events):
             return None, None
-        detail = {"send_id": send_id, **{k: v for k, v in fields.items() if k != "raw_reply"}}
+        # The event keeps the whole receipt, raw bytes included, because a later
+        # reservation of a freed load starts the row's own fields afresh (INV-10).
+        detail = {"send_id": send_id, **fields}
         return row | fields | {"events": with_event(row, now, "sent", detail)}, None
 
     return edit

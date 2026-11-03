@@ -5,6 +5,7 @@ and KPIs count real calls only (D-21). The snapshot is cached for 5 seconds, bec
 Twin allows about 4 statements a second and every open dashboard polls it.
 """
 
+import asyncio
 import statistics
 from collections import Counter
 from collections.abc import Callable
@@ -32,17 +33,23 @@ class Dashboard:
     def __init__(self, twin: Twin, now: Callable[[], datetime] = lambda: datetime.now(UTC)) -> None:
         self.twin, self.now = twin, now
         self._cached: tuple[datetime, Reply] | None = None
+        self._refreshing = asyncio.Lock()
 
     async def snapshot(self) -> Reply:
-        """Two statements, one per table, at most once every 5 seconds."""
-        now = self.now()
-        if self._cached is not None and now < self._cached[0]:
-            return self._cached[1]
-        calls = await self.twin.get_all("calls")
-        bookings = await self.twin.get_all("bookings")
-        snapshot = build_snapshot(calls, bookings, now)
-        self._cached = (now + CACHE, snapshot)
-        return snapshot
+        """Two statements, one per table, at most once every 5 seconds.
+
+        Dashboards that ask together share one refresh, so they cannot crowd out voice
+        requests on Twin's 4 statements a second.
+        """
+        async with self._refreshing:
+            now = self.now()
+            if self._cached is not None and now < self._cached[0]:
+                return self._cached[1]
+            calls = await self.twin.get_all("calls")
+            bookings = await self.twin.get_all("bookings")
+            snapshot = build_snapshot(calls, bookings, now)
+            self._cached = (now + CACHE, snapshot)
+            return snapshot
 
     def forget(self) -> None:
         """Drop the cached snapshot, so a rep sees their own action at once."""
@@ -100,6 +107,15 @@ def outcome(data: Data, booking: Data | None, now: datetime) -> str:
     return "in_progress"
 
 
+def code_passed(data: Data) -> bool:
+    """Whether the call ever passed its code. A later MC change clears verified_at but
+    not the milestone, which its events keep, so the northstar's denominator holds.
+    """
+    events = data.get("events") or []
+    passed = any((e.get("action"), e.get("status")) == ("verify_code", "verified") for e in events)
+    return passed or bool(data.get("verified_at"))
+
+
 def kpis(calls: list[Data]) -> Data:
     """Section 14's measures over real calls. PENDING is never counted as confirmed."""
     real = [call for call in calls if call["cohort"] == "real"]
@@ -107,8 +123,8 @@ def kpis(calls: list[Data]) -> Data:
     waits = [wait for call in real if (wait := _first_offer_seconds(call)) is not None]
     return {
         "calls": len(real),
-        "code_passed": _count(real, "verified_at"),
-        **_handoff_kpis(handed, _count(real, "verified_at")),
+        "code_passed": _count(real, "code_passed"),
+        **_handoff_kpis(handed, _count(real, "code_passed")),
         "outcomes": dict(Counter(call["outcome"] for call in real)),
         "median_seconds_to_first_offer": statistics.median(waits) if waits else None,
         "closed_with_summary": _count(real, "closed_at"),
@@ -143,7 +159,12 @@ def _call(key: str, row: Row, booking: Data | None, now: datetime) -> Data:
     data = row.data
     cohort = "synthetic" if key in SYNTHETIC_ROWS else data.get("cohort")
     fields = {name: data.get(name) for name in CALL_FIELDS}
-    derived = {"cohort": cohort, "outcome": outcome(data, booking, now), "booking": booking}
+    derived = {
+        "cohort": cohort,
+        "code_passed": code_passed(data),
+        "outcome": outcome(data, booking, now),
+        "booking": booking,
+    }
     return {"id": key, "version": row.version, **fields, **derived}
 
 

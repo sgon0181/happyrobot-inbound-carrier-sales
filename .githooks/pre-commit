@@ -1,11 +1,15 @@
 #!/bin/sh
 # Refuse a commit that fails make check, the same gate CI runs on every push.
+# It checks exactly what is staged, copied out of the index, so unstaged edits or
+# untracked files cannot make a commit pass that would fail on its own.
 # Install once per clone with `make hooks`. Skip only knowingly: git commit --no-verify.
-[ -f .venv/bin/activate ] && . .venv/bin/activate
-make check >/tmp/make-check-$$.log 2>&1 || {
-    tail -30 /tmp/make-check-$$.log
-    echo "pre-commit: make check failed, commit refused."
-    rm -f /tmp/make-check-$$.log
+root=$(git rev-parse --show-toplevel)
+staged=$(mktemp -d)
+trap 'rm -rf "$staged"' EXIT
+git checkout-index --all --prefix="$staged/"
+[ -f "$root/.venv/bin/activate" ] && . "$root/.venv/bin/activate"
+(cd "$staged" && make check) >"$staged/make-check.log" 2>&1 || {
+    tail -30 "$staged/make-check.log"
+    echo "pre-commit: make check failed on the staged files, commit refused."
     exit 1
 }
-rm -f /tmp/make-check-$$.log

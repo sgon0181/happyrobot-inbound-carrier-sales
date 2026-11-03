@@ -11,6 +11,7 @@ import pytest
 
 from service.adapters.tms.client import Sent
 from service.adapters.tms.protocol import InvalidRequest
+from service.bookings import Bookings
 from service.rep_actions import _save, classify
 from service.tests.fake_tms import make_load
 from service.tests.rig import AGENT, OPS, PENDING_RECEIPT, START, Rig, rig, sent
@@ -215,6 +216,22 @@ def test_only_a_complete_matching_receipt_is_acknowledged(
 ) -> None:
     receipt = classify(outcome, "LD09001")
     assert (receipt.state, receipt.reason) == (state, reason)
+
+
+def test_a_refused_send_keeps_its_whole_receipt_after_the_load_is_reserved_again() -> None:
+    r = reserved()
+    refusal = b"ERR|CODE:INVALID_RATE|MSG:AGREED_RATE must be a positive integer\r\n"
+    r.board.receipt = sent(refusal)
+    assert act(r, "confirm")["state"] == "FAILED"
+    held = asyncio.run(
+        Bookings(r.desk.twin).reserve(
+            "LD09001", claim_id="c2", call_id="next", mc="1515", rate=1800, cohort="real", now=START
+        )
+    )
+    assert held is not None and held["raw_reply"] is None  # the new reservation starts afresh
+    [receipt] = [event for event in booking(r)["events"] if event["action"] == "sent"]
+    assert receipt["raw_reply"].encode("latin-1") == refusal
+    assert receipt["send"]["sha256"] == hashlib.sha256(refusal).hexdigest()
 
 
 def test_a_receipt_save_retries_through_a_twin_outage() -> None:

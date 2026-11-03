@@ -1,8 +1,8 @@
 """A fake TMS for tests: a real local TCP server that speaks the protocol and injects faults.
 
 It follows observed behaviour, not only the handbook: search also returns PENDING
-loads, and an unknown load is NOT_FOUND (docs/tms-contract.md). LOAD_BOOK is added
-in slice 4.
+loads, an unknown load is NOT_FOUND, and a booking is acknowledged PENDING with a
+reference (docs/tms-contract.md). It never touches the real TMS.
 """
 
 import asyncio
@@ -74,6 +74,8 @@ class FakeTMS:
         self.board = {load["LOAD_ID"]: load for load in loads}
         self.faults = deque(faults)
         self.requests: list[str] = []  # every request received, token hidden
+        self.booked_status = "PENDING"  # what a booking turns into; BOOKED was never observed
+        self.book_reply: bytes | None = None  # a recorded reply to answer LOAD_BOOK with
         self.port = 0
         self._server: asyncio.Server | None = None
         self._handlers: set[asyncio.Task[None]] = set()
@@ -133,7 +135,24 @@ class FakeTMS:
         if command == "LOAD_GET":
             load = self.board.get(fields.get("LOAD_ID", ""))
             return _line(load, tuple(load)) + b"END\r\n" if load else NOT_FOUND
+        if command == "LOAD_BOOK":
+            return self.book_reply or self._book(fields)
         return b"ERR|CODE:UNKNOWN_CMD|MSG:unknown command\r\n"
+
+    def _book(self, fields: dict[str, str]) -> bytes:
+        load = self.board.get(fields.get("LOAD_ID", ""))
+        if load is None:
+            return NOT_FOUND
+        if not re.fullmatch(r"[1-9][0-9]*(\.00)?", fields.get("AGREED_RATE", "")):
+            return b"ERR|CODE:INVALID_RATE|MSG:AGREED_RATE must be a positive integer\r\n"
+        if load["STATUS"] != "OPEN":
+            return b"ERR|CODE:ALREADY_BOOKED|MSG:Already booked by this token\r\n"
+        load["STATUS"] = self.booked_status
+        receipt = {"LOAD_ID": load["LOAD_ID"], "BOOKING_REF": "FAKE0001"}
+        stamp = {"STATUS": self.booked_status, "TIMESTAMP": "20261103010203"}
+        return (
+            _line(receipt | stamp, ("LOAD_ID", "BOOKING_REF", "STATUS", "TIMESTAMP")) + b"END\r\n"
+        )
 
     def _query(self, fields: dict[str, str]) -> bytes:
         filters = {
@@ -161,7 +180,7 @@ def _line(load: dict[str, str], keys: tuple[str, ...]) -> bytes:
 
 def client_for(
     tms: FakeTMS, *, token: str = TOKEN, budget: float = 1.5, attempt: float = 0.25
-) -> TmsClient:
+) -> TmsClient:  # a booking gets the read budget too, so a silent fault ends quickly
     """A client with short timeouts, pointed at the fake."""
     settings = TmsSettings(
         host="127.0.0.1",
@@ -169,6 +188,7 @@ def client_for(
         token=token,
         read_budget_seconds=budget,
         attempt_seconds=attempt,
+        book_seconds=budget,
     )
     return TmsClient(settings)
 

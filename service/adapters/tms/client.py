@@ -1,10 +1,11 @@
-"""TMS client for reads: one request per fresh connection, bounded retries inside a time budget.
+"""TMS client: one request per fresh connection, and reads retried inside a time budget.
 
-Reads change nothing, so a fault is retried. LOAD_BOOK arrives in slice 4 with the
-rep's Confirm, and it will never be retried (INV-7).
+Reads change nothing, so a fault is retried. LOAD_BOOK spends a load for good, so it is
+sent once and never retried, and everything it left behind is kept (INV-7, INV-10).
 """
 
 import asyncio
+import hashlib
 import random
 import re
 from collections.abc import Mapping
@@ -13,6 +14,7 @@ from dataclasses import dataclass, field
 
 from service.adapters.tms.mapping import to_load, to_summary
 from service.adapters.tms.protocol import (
+    InvalidRequest,
     MalformedReply,
     Reply,
     check_bounds,
@@ -40,6 +42,29 @@ class TmsSettings:
     read_budget_seconds: float = 6.0  # everything a read may take, retries included
     attempt_seconds: float = 2.0
     read_attempts: int = 3
+    book_seconds: float = 10.0  # the one LOAD_BOOK exchange, connecting included
+
+
+@dataclass
+class Wire:
+    """How far one exchange got, kept even when it fails part way."""
+
+    step: str = "connect"  # then send, receive, and received once reading stops
+    received: bytes = b""
+
+
+@dataclass(frozen=True)
+class Sent:
+    """What one LOAD_BOOK left behind: the step reached, the error type, every byte."""
+
+    step: str
+    error: str | None  # the exception's type, never its message
+    raw: bytes
+    reply: Reply | None  # None unless the reply was complete and well formed
+
+    @property
+    def sha256(self) -> str:
+        return hashlib.sha256(self.raw).hexdigest()
 
 
 class TmsClient:
@@ -81,6 +106,24 @@ class TmsClient:
             raise TmsUnavailable("TMS lookup returned the wrong record.")
         return to_load(reply.records[0])
 
+    async def book(self, load_id: str, mc: str, rate: int) -> Sent:
+        """Send LOAD_BOOK once on one fresh connection. Never retried, whatever happens.
+
+        A request we refuse to build raises InvalidRequest before anything is sent.
+        Otherwise this never raises: a fault is returned with the step it reached.
+        """
+        if type(rate) is not int or rate <= 0 or not mc.isdigit():
+            raise InvalidRequest("A booking needs a positive whole rate and a numeric MC.")
+        fields: dict[str, str | int] = {"LOAD_ID": load_id, "MC_NUM": mc, "AGREED_RATE": rate}
+        request = encode_request("LOAD_BOOK", self.settings.token, fields)
+        wire = Wire()
+        try:
+            async with asyncio.timeout(self.settings.book_seconds):
+                reply = parse_reply(await self._exchange(request, wire))
+        except (TimeoutError, OSError, MalformedReply) as error:
+            return Sent(wire.step, type(error).__name__, wire.received, None)
+        return Sent(wire.step, None, wire.received, reply)
+
     async def _read(
         self, command: str, fields: Mapping[str, str | int], *, echo: bool = False
     ) -> Reply:
@@ -98,7 +141,7 @@ class TmsClient:
                 break
             try:
                 async with asyncio.timeout(min(settings.attempt_seconds, remaining)):
-                    raw = await self._exchange(request)
+                    raw = await self._exchange(request, Wire())
                 reply = parse_reply(raw, echo=echo)
             except (TimeoutError, OSError, MalformedReply):
                 continue
@@ -106,20 +149,25 @@ class TmsClient:
                 return reply
         raise TmsUnavailable("The TMS did not answer in time.")
 
-    async def _exchange(self, request: bytes) -> bytes:
-        """One request on a fresh connection. Stops at a whole reply, without waiting for close."""
+    async def _exchange(self, request: bytes, wire: Wire) -> bytes:
+        """One request on a fresh connection. Stops at a whole reply, without waiting for close.
+
+        The wire records each step before it starts and every byte as it arrives.
+        """
         reader, writer = await asyncio.open_connection(self.settings.host, self.settings.port)
         try:
+            wire.step = "send"
             writer.write(request)
             await writer.drain()
-            buffer = b""
-            while not frame_complete(buffer):
+            wire.step = "receive"
+            while not frame_complete(wire.received):
                 chunk = await reader.read(4096)
                 if not chunk:
                     break
-                buffer += chunk
-                check_bounds(buffer)
-            return buffer
+                wire.received += chunk
+                check_bounds(wire.received)
+            wire.step = "received"
+            return wire.received
         finally:
             writer.close()
             with suppress(OSError, TimeoutError):

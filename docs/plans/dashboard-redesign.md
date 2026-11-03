@@ -1,6 +1,6 @@
 # Plan: operations dashboard redesign
 
-Status: **proposed**, for the owner's and Codex's review. Nothing here is built yet.
+Status: **approved** by the owner on 2026-11-03, with the five recommended decisions below. Not built yet; the PDF compliance audit runs first.
 
 ## Goal
 
@@ -83,10 +83,10 @@ Today the rep sees a load ID and a rate, and cannot judge the deal without the l
 - Publishing the App is done in HappyRobot by the owner or Codex, as Build 17 was.
 - Estimate: about a day of work across the seven commits.
 
-## Decisions for the owner
+## Decisions, approved 2026-11-03
 
-1. Approve the small `selling.py` change in piece 1.
-2. Separate pages with a rail (recommended) or one long page as now.
-3. Central Time for all times (recommended for a Chicago team) or UTC.
-4. Show the posted rate next to the agreed rate to reps (recommended; the ceiling stays out either way).
-5. Run this before the PDF compliance audit, after it, or alongside it.
+1. The small `selling.py` change in piece 1: approved.
+2. Separate pages with an icon rail, not one long page.
+3. Central Time for every time shown, labelled "CT".
+4. Reps see the posted rate next to the agreed rate; the ceiling stays out.
+5. The PDF compliance audit runs first; pieces 1 and 2 may follow it directly, since the audit cannot change them.

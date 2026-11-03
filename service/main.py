@@ -56,7 +56,7 @@ def build(settings: Settings) -> FastAPI:
     return create_app(
         calls=calls,
         sales=sales,
-        dashboard=Dashboard(twin),
+        dashboard=Dashboard(twin, live_booking=settings.live_booking),
         desk=RepActions(
             twin=twin, tms=tms, live=settings.live_booking, blocked=settings.blocked_loads
         ),

@@ -31,8 +31,14 @@ BOOKING_FIELDS = (
 
 
 class Dashboard:
-    def __init__(self, twin: Twin, now: Callable[[], datetime] = lambda: datetime.now(UTC)) -> None:
-        self.twin, self.now = twin, now
+    def __init__(
+        self,
+        twin: Twin,
+        *,
+        live_booking: bool,
+        now: Callable[[], datetime] = lambda: datetime.now(UTC),
+    ) -> None:
+        self.twin, self.now, self.live_booking = twin, now, live_booking
         self._cached: tuple[datetime, Reply] | None = None
         self._refreshing = asyncio.Lock()
         self._generation = 0  # rises on every forget, so a refresh begun before it is not kept
@@ -50,7 +56,7 @@ class Dashboard:
             generation = self._generation
             calls = await self.twin.get_all("calls")
             bookings = await self.twin.get_all("bookings")
-            snapshot = build_snapshot(calls, bookings, now)
+            snapshot = build_snapshot(calls, bookings, now, live_booking=self.live_booking)
             if generation == self._generation:  # no rep action landed while it was read
                 self._cached = (now + CACHE, snapshot)
             return snapshot
@@ -61,13 +67,16 @@ class Dashboard:
         self._cached = None
 
 
-def build_snapshot(calls: dict[str, Row], bookings: dict[str, Row], now: datetime) -> Reply:
+def build_snapshot(
+    calls: dict[str, Row], bookings: dict[str, Row], now: datetime, *, live_booking: bool = False
+) -> Reply:
     held = handoffs(bookings)
     shown = [_call(key, row, held.get(key), now) for key, row in calls.items()]
     shown.sort(key=lambda call: call["started_at"] or "", reverse=True)
     queue = [_booking(key, row, calls) for key, row in bookings.items()]
     return {
         "status": "ok",
+        "live_booking": live_booking,
         "generated_at": now.isoformat(),
         "kpis": kpis(shown),
         "turned_away": turned_away(shown),

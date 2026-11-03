@@ -33,3 +33,11 @@ test('operational labels preserve pending, final, and unknown distinctions', () 
   assert.match(nextAction('UNKNOWN'), /Never resend/);
   assert.match(label('future_status'), /Future status/);
 });
+
+test('unknown or malformed send mode stays unknown rather than enabling Confirm', () => {
+  const base = { status: 'ok', calls: [], bookings: [] };
+  assert.equal(projectSnapshot(base).liveBooking, null);
+  assert.equal(projectSnapshot({ ...base, live_booking: 'true' }).liveBooking, null);
+  assert.equal(projectSnapshot({ ...base, live_booking: false }).liveBooking, false);
+  assert.equal(projectSnapshot({ ...base, live_booking: true }).liveBooking, true);
+});

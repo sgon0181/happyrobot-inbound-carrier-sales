@@ -183,7 +183,7 @@ def rig(
         pricing_secret=b"p" * 24,
         blocked=BLOCKED,
     )
-    dashboard = Dashboard(rows.twin, now=clock)
+    dashboard = Dashboard(rows.twin, live_booking=live_booking, now=clock)
     desk = RepActions(
         twin=rows.twin,
         tms=board,

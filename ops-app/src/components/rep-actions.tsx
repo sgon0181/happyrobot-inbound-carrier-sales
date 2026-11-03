@@ -49,11 +49,13 @@ export function RepActions({
   version,
   actions,
   confirmText,
+  confirmDisabledReason = null,
 }: {
   loadId: string;
   version: number;
   actions: RepAction[];
   confirmText: string;
+  confirmDisabledReason?: string | null;
 }) {
   const router = useRouter();
   const [pending, setPending] = useState<RepAction | null>(null);
@@ -61,7 +63,9 @@ export function RepActions({
   if (actions.length === 0) return <span className="text-xs text-muted-foreground">No action</span>;
 
   async function submit(action: RepAction) {
-    // A confirm sends LOAD_BOOK, which spends the load for good: ask once more.
+    // The page can disable sends; the authenticated service still decides.
+    if (action === "confirm" && confirmDisabledReason !== null) return;
+    // A confirm sends once with no supported cancellation: ask once more.
     if (action === "confirm" && !window.confirm(confirmText)) return;
     setPending(action);
     try {
@@ -92,13 +96,14 @@ export function RepActions({
   }
 
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
+      {confirmDisabledReason && actions.includes("confirm") ? <p className="w-full text-xs">{confirmDisabledReason}</p> : null}
       {actions.map((action) => (
         <Button
           key={action}
           size="sm"
           variant={action === "confirm" ? "default" : "outline"}
-          disabled={pending !== null}
+          disabled={pending !== null || (action === "confirm" && confirmDisabledReason !== null)}
           onClick={() => submit(action)}
         >
           {pending === action ? <Spinner data-icon="inline-start" /> : null}

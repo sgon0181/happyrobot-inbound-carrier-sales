@@ -82,6 +82,7 @@ export type Lane = {
 };
 
 export type Snapshot = {
+  liveBooking: boolean | null;
   generatedAt: string | null;
   kpis: Kpis;
   turnedAway: Lane[];
@@ -221,6 +222,7 @@ export function projectSnapshot(body: unknown): Snapshot | null {
   )
     return null;
   return {
+    liveBooking: typeof b.live_booking === "boolean" ? b.live_booking : null,
     generatedAt: str(b.generated_at, 40),
     kpis: projectKpis(b.kpis),
     turnedAway: list(b.turned_away).map((raw) => {

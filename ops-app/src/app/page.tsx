@@ -11,6 +11,7 @@ import {
 } from "@tabler/icons-react";
 
 import { AppShell } from "@/components/app-shell";
+import { SendMode } from "@/components/send-mode";
 import { AutoRefresh } from "@/components/auto-refresh";
 import { ReceiptPanels } from "@/components/receipt-panels";
 import { RepQueue } from "@/components/rep-queue";
@@ -76,18 +77,21 @@ export default async function HomePage() {
         </Alert>
       ) : (
         <>
+          <SendMode liveBooking={result.snapshot.liveBooking} />
           <Overview kpis={result.snapshot.kpis} />
           <RepQueue
             title="Reservations awaiting a rep"
             description="The carrier agreed and nothing has been sent. Confirm sends once to the TMS; Decline releases this reservation."
             rows={newestFirst(result.snapshot.bookings.filter((b) => b.cohort === "real" && b.state === "RESERVED"), (b) => b.updatedAt)}
             now={now}
+            liveBooking={result.snapshot.liveBooking}
           />
           <RepQueue
             title="Sent and closed bookings"
             description="The TMS status and reference as the TMS returned them. PENDING is an acknowledgement, never a confirmation. UNKNOWN may have landed and is never resent."
             rows={newestFirst(result.snapshot.bookings.filter((b) => b.cohort === "real" && b.state !== "RESERVED"), (b) => b.updatedAt)}
             now={now}
+            liveBooking={result.snapshot.liveBooking}
           />
           <CallLog title="Call log" calls={newestFirst(result.snapshot.calls.filter((c) => c.cohort === "real"), (c) => c.startedAt)} />
           <TurnedAway lanes={result.snapshot.turnedAway} />
@@ -96,6 +100,7 @@ export default async function HomePage() {
             description="Synthetic calls. Kept out of every KPI above."
             rows={newestFirst(result.snapshot.bookings.filter((b) => b.cohort !== "real"), (b) => b.updatedAt)}
             now={now}
+            liveBooking={result.snapshot.liveBooking}
           />
           <CallLog title="Test calls" calls={newestFirst(result.snapshot.calls.filter((c) => c.cohort !== "real"), (c) => c.startedAt)} />
         </>

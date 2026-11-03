@@ -194,3 +194,11 @@ def test_a_refresh_read_before_a_rep_action_is_not_cached_after_it() -> None:
     count = len(r.twin.statements)
     r.get("/ops/snapshot")
     assert len(r.twin.statements) == count + 2  # read afresh, not the outdated refresh
+
+
+def test_send_mode_is_explicit_in_the_authenticated_snapshot() -> None:
+    for enabled in (False, True):
+        r = rig(live_booking=enabled)
+        assert r.get("/ops/snapshot")["live_booking"] is enabled
+        assert r.get("/ops/snapshot", key=AGENT)["http"] == 401
+        assert r.board.sends == []

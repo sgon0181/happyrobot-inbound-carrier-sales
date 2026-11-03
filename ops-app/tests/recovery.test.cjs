@@ -89,3 +89,30 @@ test('mobile state follows media changes and removes its listener on unmount', a
     delete global.window;
   }
 });
+
+test('disabled Confirm cannot send, while Decline stays available', async () => {
+  let sends = 0;
+  global.fetch = async () => { sends++; return { ok: true, json: async () => ({ status: 'released' }) }; };
+  global.window = { confirm: () => { throw new Error('Disabled Confirm opened its prompt'); } };
+  const overrides = { 'next/navigation': { useRouter: () => ({ refresh() {} }) },
+    sonner: { toast: { success() {}, error() {} } }, '@/components/ui/button': { Button: button }, '@/components/ui/spinner': ui };
+  const { RepActions } = loadTs('src/components/rep-actions.tsx', overrides);
+  let tree;
+  try {
+    await act(async () => { tree = Renderer.create(React.createElement(RepActions, {
+      loadId: 'LD09001', version: 1, actions: ['confirm', 'decline'], confirmText: 'Fixture', confirmDisabledReason: 'Sends off',
+    })); });
+    const buttons = tree.root.findAllByType('button');
+    const confirm = buttons.find((b) => b.children.includes('Confirm'));
+    const decline = buttons.find((b) => b.children.includes('Decline'));
+    assert.equal(confirm.props.disabled, true);
+    assert.equal(decline.props.disabled, false);
+    await act(async () => { confirm.props.onClick(); });
+    assert.equal(sends, 0);
+    await act(async () => { decline.props.onClick(); });
+    assert.equal(sends, 1);
+  } finally {
+    if (tree) await act(async () => tree.unmount());
+    delete global.window; delete global.fetch;
+  }
+});

@@ -28,11 +28,13 @@ export function RepQueue({
   description,
   rows,
   now,
+  liveBooking,
 }: {
   title: string;
   description: string;
   rows: Booking[];
   now: number;
+  liveBooking: boolean | null;
 }) {
   return (
     <Card className="min-w-0">
@@ -97,7 +99,8 @@ export function RepQueue({
                           loadId={b.loadId}
                           version={b.version}
                           actions={allowedActions(b, now)}
-                          confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
+                          confirmDisabledReason={liveBooking === true ? null : liveBooking === false ? "Booking sends are off. Confirm is disabled." : "Send mode unavailable. Confirm is disabled."}
+                    confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
                         />
                       </TableCell>
                     </TableRow>

@@ -11,7 +11,7 @@ const { RepQueue } = loadTs('src/components/rep-queue.tsx', {
 function render(bookings) {
   const snapshot = projectSnapshot({ status: 'ok', calls: [], bookings });
   return renderToStaticMarkup(React.createElement(RepQueue, {
-    title: 'Review reservations', description: 'Fixture', rows: snapshot.bookings, now: 0,
+    title: 'Review reservations', description: 'Fixture', rows: snapshot.bookings, now: 0, liveBooking: false,
   }));
 }
 test('rep can read the carrier, route, timing and both prices without raw platform logs', () => {

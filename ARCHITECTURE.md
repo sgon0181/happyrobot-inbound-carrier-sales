@@ -237,6 +237,8 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 | `POST /bookings/{load_id}/reconcile` | Ops | Read-only TMS check on a stuck or sent booking. Never sends. A `SUBMITTING` row older than 60 seconds becomes `UNKNOWN`. |
 | `GET /health` | Either | Liveness and TMS reachability. |
 
+**Send mode.** The authenticated operations snapshot includes the service live_booking setting. Confirm is disabled while it is false or unavailable; the service independently refuses sends while off.
+
 **Rep actions** send `{version, rep}`: the booking version from the snapshot and the signed-in rep. Like voice requests they answer HTTP 200 with a `status`, such as `stale` when the row has moved on or `live_booking_off`.
 
 **Voice responses** are always HTTP 200 with a `status` field, so the agent can say something sensible. HTTP errors are kept for authentication and malformed requests. Each voice request has a 12 second deadline covering everything it does.

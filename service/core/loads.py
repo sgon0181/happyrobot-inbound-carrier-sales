@@ -80,7 +80,12 @@ def _speech_time(value: datetime | None, display_timezone: tzinfo) -> str | None
     """The App's Central Time policy; the adapter's source-UTC assumption still applies."""
     if value is None:
         return None
-    return value.astimezone(display_timezone).strftime("%B %d, %Y at %I:%M %p Central Time (%Z)")
+    local = value.astimezone(display_timezone)
+    hour = local.hour % 12 or 12
+    period = "AM" if local.hour < 12 else "PM"
+    return (
+        f"{local:%B} {local.day} at {hour}:{local.minute:02d} {period} Central ({local.tzname()})"
+    )
 
 
 def is_offerable(load: LoadSummary, now: datetime, excluded: frozenset[str] = frozenset()) -> bool:

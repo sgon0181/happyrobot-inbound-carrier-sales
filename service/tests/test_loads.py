@@ -96,11 +96,15 @@ def test_the_public_view_is_an_allowlist_without_the_rates() -> None:
 @pytest.mark.parametrize(
     ("pickup", "display"),
     [
-        ("20261115231400", "November 15, 2026 at 05:14 PM Central Time (CST)"),
-        ("20260715231400", "July 15, 2026 at 06:14 PM Central Time (CDT)"),
-        ("20261108050400", "November 07, 2026 at 11:04 PM Central Time (CST)"),
-        ("20261101063000", "November 01, 2026 at 01:30 AM Central Time (CDT)"),
-        ("20261101073000", "November 01, 2026 at 01:30 AM Central Time (CST)"),
+        ("20261115231400", "November 15 at 5:14 PM Central (CST)"),
+        ("20260715231400", "July 15 at 6:14 PM Central (CDT)"),
+        ("20261108050400", "November 7 at 11:04 PM Central (CST)"),
+        ("20261101063000", "November 1 at 1:30 AM Central (CDT)"),
+        ("20261101073000", "November 1 at 1:30 AM Central (CST)"),
+        ("20261108013600", "November 7 at 7:36 PM Central (CST)"),
+        ("20261108010600", "November 7 at 7:06 PM Central (CST)"),
+        ("20261108060000", "November 8 at 12:00 AM Central (CST)"),
+        ("20261108180000", "November 8 at 12:00 PM Central (CST)"),
     ],
 )
 def test_voice_times_match_central_display_including_day_and_dst_changes(

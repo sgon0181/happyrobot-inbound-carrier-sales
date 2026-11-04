@@ -7,7 +7,8 @@ Inbound Carrier Sales lives in the HappyRobot workspace, workflow 01a18119-67a1-
 | [prompt.md](prompt.md) | Historical Version 3 prompt, opening line and six service tools |
 | [prompt-v4.md](prompt-v4.md) | Live Version 5 prompt, with its historical filename retained |
 | [prompt-v6.md](prompt-v6.md) | Unpublished tuning candidate, dependent on the service's time-display fields |
-| [qa-voice-tuning.json](qa-voice-tuning.json) | Current 40 checkpoint definitions/references, per-run grades, prompt iterations and retained corrections/failures |
+| [qa-v6-audit-fixes.json](qa-v6-audit-fixes.json) | Current Version 6 prompt SHA, revised time fixtures, 40 checkpoints twice, and closing follow-up evidence |
+| [qa-voice-tuning.json](qa-voice-tuning.json) | Prior 40 checkpoint definitions/references, per-run grades, prompt iterations and retained corrections/failures through 18e26ba |
 | [qa-voice-tuning-conversations.json](qa-voice-tuning-conversations.json) | Saved synthetic full-text traces, for offline argument/order/closing checks; not voice evidence |
 | [qa-evals.json](qa-evals.json) | Historical 22 checkpoint definitions and as-run fixtures, not current-contract fixtures |
 | [e7-candidate.json](e7-candidate.json), [e7-results.json](e7-results.json) | Six current candidate checkpoints, locks and 18/18 results |

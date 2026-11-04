@@ -2,7 +2,7 @@
 
 Audience: the brokerage's business team, with enough evidence for IT review. Use the customer's repetitive call handling, consistent pricing and reviewable deals as the narrative. Harsha's example is inspiration for clarity, not an architecture to copy.
 
-Record the reviewed release: service 17 from `bf512aa`, live workflow Version 6 and production Carrier Sales App Build 20. Verify Build 20 source provenance and final visual acceptance before recording. Complete the owner voice checklist before recording. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
+Record the reviewed release: service 17 from `bf512aa`, live workflow Version 6 and production Carrier Sales App Build 20. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the final visual check is recorded. Complete the owner voice checklist before recording. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
 
 | Time | Show | Say accurately |
 |---|---|---|
@@ -22,7 +22,7 @@ The native text simulations do not test audio. The human checklist separately co
 
 ## Before recording
 
-Confirm the exact deployed service commit, live workflow version and App build. Check the new callback captures an authorized test call, and review the App at 1280px. Obtain approval to change CALL_COHORT from synthetic to real before the demo. Prefer leaving booking sends off unless a specific rep Confirm is approved. Clear or identify synthetic reservations so they cannot be mistaken for customer work.
+Confirm the exact deployed service commit, live workflow version and App build. Check the callback captures an authorized test call. The current Build 20 visual check at 1280px is recorded in the release evidence. Keep CALL_COHORT synthetic and show the Test view for the demo; a real-cohort demo is optional and requires separate approval. Keep booking sends off. Identify synthetic reservations so they cannot be mistaken for customer work; no cleanup or new send is required.
 
 Finish with these exact customer next steps:
 

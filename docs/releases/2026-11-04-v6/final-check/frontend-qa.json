@@ -1,0 +1,64 @@
+{
+  "verdict": "Passes documented clean-copy build-before-typecheck order. No production fix required.",
+  "environment": {
+    "node": "v22.23.4",
+    "npm": "10.9.9",
+    "container": "node:22",
+    "clean_temporary_copy": true,
+    "environment_files_copied": false,
+    "tracked_files_modified": false
+  },
+  "validation": {
+    "install": "pass",
+    "tests": {
+      "passed": 39,
+      "failed": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "errors": 0,
+      "warnings": 3,
+      "warning_locations": [
+        "src/components/app-sidebar.tsx:53",
+        "src/components/app-sidebar.tsx:55",
+        "src/lib/unsaved-receipts.ts:55"
+      ]
+    },
+    "production_build": "pass",
+    "typecheck_after_build": "pass",
+    "production_dependency_audit": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    }
+  },
+  "commands_in_supported_order": [
+    "npm ci --include=dev --no-audit --no-fund",
+    "npm test",
+    "npm run lint",
+    "npm run build",
+    "npm run typecheck",
+    "npm audit --omit=dev --json"
+  ],
+  "source_archive": {
+    "copied_files": 77,
+    "manifest_files": 77,
+    "zip_files": 77,
+    "zip_sha256": "64e3310c280f7d9ba68e2f58637ce1eca9f9f92b0409106f9ec2f3926c6359b2",
+    "zip_manifest_mismatches": [],
+    "zip_extra_files": [],
+    "current_manifest_mismatches": [],
+    "current_extra_files": []
+  },
+  "production_ts_tsx_lines": 4613,
+  "nonblocking_tooling_observation": "Running typecheck before build in a clean checkout fails TS2307 on two PNG imports because generated next-env.d.ts is absent. Documented build-before-typecheck passes. A separately tested optional typecheck script could run next typegen first, but this task does not change source or require a new App release.",
+  "optional_typegen_experiment": {
+    "clean_generated_files_removed": true,
+    "next_typegen": "pass",
+    "following_typecheck": "pass"
+  },
+  "scope": "No live service, TMS or booking request. No key or environment value read, printed or copied. Archive comparison establishes ZIP/current-checkout byte equality, not independent production App source attestation."
+}

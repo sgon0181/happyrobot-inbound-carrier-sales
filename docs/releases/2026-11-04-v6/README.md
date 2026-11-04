@@ -20,7 +20,7 @@ The HTTP probes ran inside the deployed container over loopback. The existing op
 
 ## Evidence and limits
 
-- [Native production Build 20 selection](app20-build.jpg) and [published overview](app20-overview.jpg) establish the App observation. Exact Build 20 source provenance was not independently established. These are point-in-time read-only observations, not a new complete visual or frontend acceptance. The earlier [Build 18 exact-source publication](../2026-11-04/README.md) remains historical evidence.
+- [Native production Build 20 selection](app20-build.jpg) and [published overview](app20-overview.jpg) establish the App observation. Claude's release handover identifies source 48ba398/import 97da4f6, with the owner pressing Production. The 77-file source archive independently matches the current checkout. Exact production source bytes were not independently retrieved. Final read-only 1280px views/panels and clean-container frontend checks are recorded below. The earlier [Build 18 exact-source publication](../2026-11-04/README.md) remains historical evidence.
 - Released bf512aa validation is 487 offline tests, actual 100% coverage over 1650 statements and 406 branches, business branches 256/256. The exact prompt passed 40 checkpoint definitions twice, 80/80 native grades. [Pinned evidence](../../../happyrobot/qa-v6-audit-fixes.json) retains all results and the two full-text follow-ups.
 - The latest 15 workflow runs listed at inspection contained no new human Version 6 call. The latest was the earlier mocked agreement `6f44e94b`. Do not count these simulations as post-release voice acceptance.
 - Complete spoken _hangup._message delivery, proactive disconnect and callback/storage evidence remain open. No fresh LOAD_BOOK is needed to verify them.
@@ -40,4 +40,10 @@ Use the [web-call demo](https://platform.happyrobot.ai/deployments/6oaskq84xpfc)
 
 Retain each run ID, failed attempts and reruns. Review transcript, tool arguments, audio completion, end reason and Twin-backed activity. A saved close record alone is not proof of spoken closing. Never copy an OTP or credential into the report. Existing synthetic reservations can be used for review without being released; releasing a hold remains an owner decision.
 
-After those checks: verify Build 20 source and final visual acceptance, obtain separate approval for any cohort change, finalize reviewer access, regenerate the build-description PDF, record the owner video and approve submission. Publication is complete; acceptance and submission are not.
+After the targeted voice checks: finalize reviewer access, review the regenerated build-description PDF, record the owner video and approve submission. Keep the cohort synthetic for the demo; changing it is optional and needs separate approval. Publication is complete; acceptance and submission are not.
+
+## Final check before owner voice acceptance
+
+The [frontend report](final-check/frontend-qa.json) records 39 passing tests, lint 0 errors / 3 warnings, clean build then typecheck and zero production dependency vulnerabilities. The [visual report](final-check/layout.json) records nine 1280x900 views with no page-level horizontal overflow, disabled Confirm, both detail panels, truthful pending receipt and working refresh. Screenshots are alongside those reports. No rep action was clicked.
+
+The refreshed 3-page build-description PDF and candidate source archive are prepared under submission/ready-to-submit/, which is ignored rather than committed. [The short owner checklist](../../final-owner-checklist.md) gives the remaining calls, video and approvals.

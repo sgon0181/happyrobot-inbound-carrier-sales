@@ -1,0 +1,72 @@
+{
+  "viewport": {
+    "width": 1280,
+    "height": 900
+  },
+  "pages": [
+    {
+      "page": "overview-real",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "overview-test",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "awaiting-test",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "load-panel",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "bookings-real",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "pending-panel",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "calls-test",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "call-panel",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    },
+    {
+      "page": "demand-test",
+      "height": 900,
+      "pageScrollWidth": 1280,
+      "width": 1280
+    }
+  ],
+  "confirmButtonsObserved": 3,
+  "allConfirmDisabled": true,
+  "bookingSendsOff": true,
+  "refresh": "Pause, manual Refresh, Resume verified; displayed snapshot advanced20:35CT to20:38CT, no error.",
+  "limitations": [
+    "No Confirm,Decline or Reconcile clicked.",
+    "Historical missing-field cosmetic wording retained.",
+    "No new voice call or booking."
+  ],
+  "rep_actions_clicked": []
+}

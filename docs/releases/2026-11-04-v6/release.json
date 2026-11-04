@@ -68,11 +68,20 @@
     ],
     "snapshot_loaded": true,
     "booking_sends_off_visible": true,
-    "source_commit": "Not independently established for Build20",
+    "source_commit": "48ba398, reported by Claude release handover; archive matches current checkout",
     "published_by_this_task": false,
     "prior_build18_provenance": "../2026-11-04/release.json",
     "screenshot": "app20-build.jpg",
-    "visual_limit": "Point-in-time read-only header and dashboard observation, not a full Build20 acceptance or source-import verification."
+    "visual_limit": "Read-only final check at1280x900 of all5views, Real/Test, load and call panels, disabled Confirm and historical pending receipt; no rep action or live recovery fault tested.",
+    "reported_source_commit": "48ba39803c23de190903773ffe42d0073105f2ae",
+    "reported_import_commit": "97da4f6",
+    "reported_publication": "Owner pressed Production, per Claude release handover section5a",
+    "source_commit_independently_attested_in_production": false,
+    "source_archive_files": 77,
+    "source_archive_sha256": "64e3310c280f7d9ba68e2f58637ce1eca9f9f92b0409106f9ec2f3926c6359b2",
+    "source_archive_matches_checkout": true,
+    "final_visual_evidence": "final-check/layout.json",
+    "frontend_qa": "final-check/frontend-qa.json"
   },
   "qa": {
     "tests": 487,
@@ -97,5 +106,24 @@
     "reservation_changes": false,
     "LOAD_BOOK": false
   },
-  "credential_handling": "No credential value printed or committed. The existing ops key was used inside the deployed container for read-only authenticated probes; no credentials were changed."
+  "credential_handling": "No credential value printed or committed. The existing ops key was used inside the deployed container for read-only authenticated probes; no credentials were changed.",
+  "submission_pdf": {
+    "source": "docs/build-description.md",
+    "output": "submission/build-description.pdf",
+    "pages": 3,
+    "sha256": "c2476f0b41500a6ee1d1f67967dc27b29cbfabb362d6e3600f49ef826470b201",
+    "source_sha256": "dc2a0b145ee622b5ec4ffcf1f47b11375dddd891d56e7fa3d89c1aeb9325b22e",
+    "rendered_pages_inspected": 3,
+    "clickable_links": 8
+  },
+  "reviewer_access": {
+    "verified_date": "2026-11-04",
+    "repository_private": true,
+    "default_branch": "main",
+    "collaborators": [
+      "sgon0181"
+    ],
+    "pending_invitations": 0,
+    "invited_by_this_task": false
+  }
 }

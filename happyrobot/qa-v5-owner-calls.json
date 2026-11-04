@@ -1,0 +1,118 @@
+{
+  "source": "Read-only HappyRobot monitor_runs outputs, agent persistent01a18610-1987-7762-8f43-9f83863b1c85",
+  "version_id": "01a1a34d-6974-734a-8375-e4740d5807cd",
+  "window_utc": "2026-11-03T22:10:00Z to22:53:00Z",
+  "review_scope": "Transcripts, tool arguments/results and end metadata. Audio was not listened to. No new call or live action initiated. OTPs/credentials/raw transcripts excluded.",
+  "rows": [
+    {
+      "id": "703513be-c0dc-4913-88c2-37f5a8073047",
+      "seconds": 28,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": true,
+      "scenario": "Inactive MC 145678",
+      "tool_outcome": "registration_not_active, close_call closed; no load",
+      "known_speech_slip": "Correct refusal explanation. A caller turn followed the saved close before _hangup, so not proactive-closing acceptance."
+    },
+    {
+      "id": "f00eaae5-5c64-4dc9-8ec8-93007e1e4d5a",
+      "seconds": 166,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": false,
+      "scenario": "Eligible authority/code; lane changes; reefer Arizona to Texas",
+      "tool_outcome": "LD01100 agreed at2050 after counter2050 round1; close_call closed",
+      "known_speech_slip": "Counter2050 was described as final although service returned counter. drive in caused invalid_search before recovery; pitch clocks lacked a zone label. Truthful mocked handoff was recorded."
+    },
+    {
+      "id": "4b43a111-ad74-40bd-ae4f-fef3115672c1",
+      "seconds": 95,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": false,
+      "scenario": "Eligible authority/code; flatbed Florida to New York",
+      "tool_outcome": "LD01056 agreed at3275; close_call closed",
+      "known_speech_slip": "Truthful mocked senior-rep handoff, no final-booking claim. No additional rate-interpretation slip identified in this readback; pitch clocks lacked a zone label."
+    },
+    {
+      "id": "bdfb3886-82f2-4152-90c9-3a7447d71128",
+      "seconds": 98,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": true,
+      "scenario": "Eligible authority/code; flatbed Massachusetts to California",
+      "tool_outcome": "LD01101 agreed at6300; close_call closed",
+      "known_speech_slip": "Compound6300 and25 submitted as6300 without clarification. Truthful mocked handoff, but agreement is not an amount-correctness pass. Caller turn followed close; pitch clocks lacked zone label."
+    },
+    {
+      "id": "9bdcc04b-fd99-4aea-8a7c-6bb1e01cdc33",
+      "seconds": 74,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": false,
+      "scenario": "Caller corrected MC138329 to138328; code; dry van Maine to Georgia",
+      "tool_outcome": "Initial ineligible result superseded by eligible carrier; no_match; close_call closed",
+      "known_speech_slip": "Self-correction recovered; drive in caused invalid_search before dry-van retry. No reservation or false booking claim."
+    },
+    {
+      "id": "36b0c336-8944-4ebf-aabb-591f26c830ff",
+      "seconds": 29,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": true,
+      "scenario": "Inactive MC134652",
+      "tool_outcome": "registration_not_active; close_call closed; no load",
+      "known_speech_slip": "Correct refusal, then idle filler Are you still there before caller farewell and _hangup. Closing defect retained."
+    },
+    {
+      "id": "44c300e3-74cf-4ef6-afca-11cb500bbb31",
+      "seconds": 31,
+      "end": "user_disconnected",
+      "close_record": false,
+      "hangup_tool": false,
+      "caller_turn_after_close": false,
+      "scenario": "Eligible MC999999, caller ended during verification",
+      "tool_outcome": "eligible, code sent; no verify_code, search, negotiation or close_call",
+      "known_speech_slip": "Incomplete call, not verification success. User disconnect is explicit; no agreement claim."
+    },
+    {
+      "id": "e228f6af-e2e2-482f-b996-cac43ba44cd6",
+      "seconds": 34,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": true,
+      "scenario": "Unknown MC99999999, readback and confirmation",
+      "tool_outcome": "not_found; close_call closed; no load",
+      "known_speech_slip": "Correct digit readback/refusal explanation; caller turn occurred after close before _hangup, so no proactive-closing pass."
+    },
+    {
+      "id": "8c48df03-7faf-41be-8d65-06b79529a42e",
+      "seconds": 208,
+      "end": "user_disconnected",
+      "close_record": true,
+      "hangup_tool": false,
+      "caller_turn_after_close": true,
+      "scenario": "Eligible authority/code; multiple searches; reefer Michigan to Georgia",
+      "tool_outcome": "LD01105 first counter1550 round1 then agreed1600; close_call closed",
+      "known_speech_slip": "Compound1600 and25 submitted as1600 before clarification; later caller correction did not change locked agreement. Farewell reopened with further-help question, no _hangup. Pitch clocks lacked zone label."
+    },
+    {
+      "id": "4ac79d3a-5878-43d9-82f3-b90a3d1ebcb1",
+      "seconds": 156,
+      "end": "agent_hung_up",
+      "close_record": true,
+      "hangup_tool": true,
+      "caller_turn_after_close": true,
+      "scenario": "Eligible authority/code; flatbed Montana to Arizona; repeated asks and failure",
+      "tool_outcome": "LD01102 counter1675 round1, repeated2200 asks hold1775 round2; garbled2000200 consumes round3 final1900; next2100 yields negotiation_failed; close_call closed",
+      "known_speech_slip": "Unchanged1775 called new repeatedly. Garbled ask was not clarified. Failure closed without handoff, but caller turn followed close before _hangup; pitch clocks lacked zone label."
+    }
+  ]
+}

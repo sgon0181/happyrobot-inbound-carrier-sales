@@ -9,8 +9,8 @@ Do not send, push, invite reviewers or submit without owner approval. The review
 | Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed source `bf512aa` pushed with owner approval; release-docs commit remains local for review; reviewer invitations pending |
 | HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/alj9n98f66df | Version 6 live since 2026-11-04; prompt SHA-256 `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`; voice checklist pending |
 | Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 6; current-version voice acceptance pending |
-| Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 20 observed; redesigned dashboard loads, exact source provenance and final visual acceptance still need verification |
-| Build description | docs/build-description.md; export in submission/build-description.pdf | Review current release facts and regenerate the PDF from the updated Markdown before submission |
+| Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 20, source 48ba398 per Claude; 77-file archive and final 1280px views/panels verified; reviewer-account access remains to check |
+| Build description | docs/build-description.md; export in submission/build-description.pdf | Refreshed 3-page PDF generated and all pages visually checked; update only if acceptance changes the claims |
 | Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
 
 Repository privacy was verified read-only on GitHub on 2026-11-03: private, default branch main, only the owner listed as collaborator, zero pending invitations. No invitations were sent. Repository access and HappyRobot workspace access are separate; validate both with the reviewers' own accounts. Do not share service keys.
@@ -48,10 +48,10 @@ The shared demo inbox is an approved demonstration exception, not proof of carri
 
 1. Completed with owner approval: Claude reviewed bf512aa and its prompt, then pushed source `bf512aa`. The release-docs commit is local until a separate read-only review and owner approval of its push.
 2. Completed by Claude: deploy service release 17, then publish workflow Version 6, verify healthy service, authenticated snapshot and missing-key rejection on `/calls/ended`. Booking sends remain off.
-3. Historical: Codex published Carrier Sales App Build 18 from `8b0e483` and recorded its visual checks. The App now shows production Build 20 with the redesigned dashboard. Confirm exact Build 20 source and final visual acceptance before the video; do not republish without approval. No booking action was clicked in this verification.
-4. Complete the owner voice checklist on exact live Version 6, with separately authorized email delivery. Keep hostile tests synthetic and booking sends off. Preserve run IDs and check the end report in Twin-backed records.
+3. Historical: Codex published Carrier Sales App Build 18 from `8b0e483` and recorded its visual checks. The App now shows production Build 20 with the redesigned dashboard. Claude's handover records source 48ba398/import 97da4f6; the 77-file archive matches and final views/panels at 1280px were independently checked. Do not republish without approval. No booking action was clicked in this verification.
+4. Complete the three targeted calls in final-owner-checklist.md on exact live Version 6, with separately authorized email delivery. Keep hostile tests synthetic and booking sends off. Preserve run IDs and check the end report in Twin-backed records.
 5. Before a real-cohort demo, separately approve changing CALL_COHORT back to real. Any demo booking send needs its own approval for the selected load. Historical LD01080 already supplies a PENDING receipt example; no new send is required for voice or hostile testing.
 6. Obtain reviewer handles from the candidate portal, approve invitations, grant agreed repository access and verify acceptance. Verify the workflow and App open for their HappyRobot accounts too.
-7. Regenerate and review the build-description PDF, record the owner video, insert its URL, review the email and separately approve submission.
+7. Review the regenerated build-description PDF, record the owner video, insert its URL, review the email and separately approve submission.
 
 All six earlier test reservations have decline events dated 2026-11-04 Sydney. At visual review, five remain Released; LD01100 has since been reserved again by a later synthetic call, with its prior decline preserved in history. The new reservation was left untouched. Decline releases the local reservation; it is not an external TMS cancellation.

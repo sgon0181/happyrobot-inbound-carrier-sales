@@ -6,14 +6,14 @@ The dashboard for the operations manager and senior reps, built on the HappyRobo
 
 The app verifies the signed-in user with the platform, then calls the service from its own server with the ops key ([D-30](../docs/decisions.md)). The key never reaches the browser, and the app never reads Twin or talks to the TMS. The service holds every rule; the app only shows its snapshot and forwards a rep's actions.
 
-The layout follows the TMS screens brokerage reps already use, with Uber Freight's as the reference (familiar, not copied). A left rail switches between pages, each in the URL (`/?view=...&scope=test`), and a Real/Test switch picks which calls are shown. Test calls never enter the service's KPIs.
+The layout follows the TMS screens brokerage reps already use, with Uber Freight's as the reference (familiar, not copied). A left rail switches between pages, each in the URL (`/?view=...&scope=test`). The visible Real calls / Test calls switch applies to the whole view, with an all-recorded-history label. Test calls never enter the service's business KPIs.
 
-- **Overview:** the service's KPI strip for real calls; **Needs attention** (unknown or stuck sends, then reservations waiting for a rep with their age, then calls without closing notes); a **call-to-booking funnel** for the calls shown; the Awaiting rep queue; outcomes; and unmatched demand. The page refreshes every 15 seconds while visible, with Refresh and Pause.
+- **Overview:** current work first: reservations awaiting review, unknown submissions, pending acknowledgements and final TMS confirmations. Urgent submission alerts precede the reservation queue. Missing closing notes follow it. Historical call results explain conversion with its numerator, denominator and demo-sample limitation; Test view shows test history only. The mixed call/booking funnel is removed. Outcomes and unmatched demand follow. The page refreshes every 15 seconds while visible, with Refresh and Pause.
 - **Awaiting rep:** `RESERVED` bookings, one line per load (carrier and MC, lane, pickup, agreed and posted rate, status), with Confirm and Decline on the row. Confirm asks once more, because it spends the load, and is disabled while sends are off.
 - **Bookings:** sent and closed bookings with the TMS status and reference exactly as returned. `ACK_PENDING` and `UNKNOWN` offer Reconcile, as does a `SUBMITTING` row older than a minute.
 - **Calls:** each call's carrier, whether it passed the code, lane asked, outcome and rounds, agreement and closing notes.
 - **Demand:** lanes asked for when nothing matched.
-- **Side panels:** a load ID or call time opens the full record: cargo, payment versus posted, TMS evidence, the next action, and the event timeline with raw codes kept for audit.
+- **Side panels:** a load ID or call time opens the full record. The reservation's next action, carrier, lane and agreed payment appear first. Cargo, payment versus posted and TMS evidence follow. The timeline uses business labels, formatted prices and Central Time; technical codes and references remain expandable. Missing historical terms remain explicit.
 
 Tables fit a 1280px laptop without sideways scrolling; detail moves to the side panel rather than widening the row.
 

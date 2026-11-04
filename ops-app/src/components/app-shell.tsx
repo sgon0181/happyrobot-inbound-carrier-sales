@@ -8,7 +8,8 @@ import {
 import { AppSidebar, type NavCounts } from "@/components/app-sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
-import type { Scope, View } from "@/lib/views";
+import Link from "next/link";
+import { viewHref, type Scope, type View } from "@/lib/views";
 
 export function AppShell({
   title,
@@ -43,7 +44,22 @@ export function AppShell({
             ) : null}
             <div className="ml-auto">{actions}</div>
           </header>
-          <div className="mx-auto flex w-full max-w-[90rem] min-w-0 flex-1 flex-col gap-5 p-4 lg:p-6">{children}</div>
+          <div className="mx-auto flex w-full max-w-[90rem] min-w-0 flex-1 flex-col gap-5 p-4 lg:p-6">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold">{scope === "test" ? "Test activity" : "Real activity"}</p>
+                <p className="mt-1 text-xs text-muted-foreground">All recorded history{scope === "test" ? ". Excluded from business performance." : ". Test calls excluded."}</p>
+              </div>
+              <nav aria-label="Activity scope" className="flex gap-1 rounded-lg border bg-card p-1 text-sm">
+                {(["real", "test"] as Scope[]).map((s) => (
+                  <Link key={s} href={viewHref(view ?? "overview", s)} aria-current={(scope ?? "real") === s ? "page" : undefined} className={`rounded-md px-3 py-1.5 ${(scope ?? "real") === s ? "bg-foreground text-background" : "text-muted-foreground hover:bg-muted"}`}>
+                    {s === "real" ? "Real calls" : "Test calls"}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+            {children}
+          </div>
         </SidebarInset>
       </SidebarProvider>
       <Toaster />

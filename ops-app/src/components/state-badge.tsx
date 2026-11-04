@@ -38,13 +38,13 @@ export function StatusPill({ code, className }: { code: string | null; className
   return (
     <span
       className={cn(
-        "inline-flex max-w-full items-center gap-1.5 rounded-full px-2 py-0.5 text-xs font-medium whitespace-nowrap",
+        "inline-flex max-w-full items-start gap-1.5 rounded-lg px-2 py-0.5 text-xs font-medium whitespace-normal",
         STYLE[tone],
         className,
       )}
     >
-      <i aria-hidden className="size-1.5 shrink-0 rounded-full" />
-      <span className="truncate">{label(code)}</span>
+      <i aria-hidden className="mt-1 size-1.5 shrink-0 rounded-full" />
+      <span className="min-w-0 break-words">{label(code)}</span>
     </span>
   );
 }

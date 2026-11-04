@@ -5,7 +5,9 @@ import { ReceiptPanels } from "@/components/receipt-panels";
 import { RepQueue } from "@/components/rep-queue";
 import { CallLog } from "@/components/call-log";
 import { TurnedAway, lanesFrom } from "@/components/turned-away";
-import { Attention, Funnel, KpiStrip, Outcomes, attention } from "@/components/overview";
+import { Attention, Outcomes, attention } from "@/components/overview";
+import { CallResults } from "@/components/call-results";
+import { CurrentWork } from "@/components/current-work";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { requireAppUser } from "@/lib/auth";
 import { describeFailure, getSnapshot } from "@/lib/ops-service";
@@ -16,7 +18,7 @@ export const dynamic = "force-dynamic";
 
 const PAGE_TITLE = "Carrier Sales";
 const SUBTITLE: Record<View, string> = {
-  overview: "What needs a rep, and where calls stop",
+  overview: "Review reservations, check submissions and follow call outcomes",
   reservations: "Agreed by the carrier, nothing sent yet",
   bookings: "Sent once, with the TMS reply as returned",
   calls: "Every recorded call and its outcome",
@@ -95,6 +97,9 @@ function Page({
   const waiting = bookings.filter((b) => b.state === "RESERVED");
   const sent = bookings.filter((b) => b.state !== "RESERVED");
   const lanes = scope === "real" ? snapshot.turnedAway : lanesFrom(calls);
+  const items = attention(bookings, calls, now, scope);
+  const urgent = items.filter((item) => item.code === "UNKNOWN" || item.code === "SUBMITTING");
+  const missingNotes = items.filter((item) => item.code === "ended_without_close");
   const queue = (
     <RepQueue
       title="Awaiting rep"
@@ -128,12 +133,11 @@ function Page({
     default:
       return (
         <>
-          <KpiStrip kpis={snapshot.kpis} />
-          <div className="grid gap-5 xl:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-            <Attention items={attention(bookings, calls, now, scope)} />
-            <Funnel calls={calls} bookings={bookings} />
-          </div>
+          <CurrentWork bookings={bookings} scope={scope} />
+          {urgent.length ? <Attention items={urgent} /> : null}
           {queue}
+          {missingNotes.length ? <Attention items={missingNotes} title="Call records needing follow-up" description="Some ended or inactive calls have no closing notes. Review the recorded activity before relying on their outcome." /> : null}
+          <CallResults calls={calls} kpis={scope === "real" ? snapshot.kpis : null} />
           <div className="grid gap-5 xl:grid-cols-2">
             <Outcomes calls={calls} />
             <TurnedAway lanes={lanes} />

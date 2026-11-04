@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import {
-  IconFilter,
   IconHandStop,
   IconLayoutDashboard,
   IconMapPin,
@@ -71,27 +70,6 @@ export function AppSidebar({ view, scope, counts = {} }: { view?: View; scope?: 
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup className="mt-auto pb-4 group-data-[collapsible=icon]:hidden">
-          <SidebarGroupLabel>
-            <IconFilter className="mr-1 size-3.5" /> Calls shown
-          </SidebarGroupLabel>
-          <SidebarGroupContent className="px-2">
-            <div className="grid grid-cols-2 rounded-lg bg-sidebar-accent p-0.5 text-xs font-medium">
-              {(["real", "test"] as Scope[]).map((s) => (
-                <Link
-                  key={s}
-                  href={viewHref(view ?? "overview", s)}
-                  className={`rounded-md px-2 py-1.5 text-center ${shown === s ? "bg-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
-                >
-                  {s === "real" ? "Real" : "Test"}
-                </Link>
-              ))}
-            </div>
-            <p className="mt-2 px-1 text-[0.6875rem] leading-snug text-muted-foreground">
-              Test calls never count in the KPIs. Switch to review them.
-            </p>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>

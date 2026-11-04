@@ -28,7 +28,7 @@ const COLUMNS: [string, string][] = [
   ["Carrier", "w-[16%]"],
   ["Lane", ""],
   ["Pickup", "w-[8rem]"],
-  ["Rate", "w-[6.5rem]"],
+  ["Agreed rate", "w-[6.5rem]"],
   ["Status", "w-[10.5rem]"],
   ["Action", "w-[8rem]"],
 ];
@@ -178,8 +178,14 @@ function BookingSheet({ booking: b, liveBooking, now }: { booking: Booking; live
       }
       description={nextAction(b.state)}
     >
+      <SheetSection title="Next action">
+        <p className="text-sm font-medium">{na(b.carrierName)}: {na(load?.origin)} to {na(load?.destination)}</p>
+        <p className="text-lg font-semibold">{fmtUsd(b.rate)} <span className="text-sm font-normal text-muted-foreground">agreed carrier payment</span></p>
+        <p className="text-sm">{nextAction(b.state)}</p>
+        <Actions booking={b} now={now} liveBooking={liveBooking} />
+      </SheetSection>
       <SheetSection title="Carrier">
-        <Facts items={[["Carrier", na(b.carrierName)], ["MC", na(b.mc)], ["Call", <span key="c" className="font-mono text-xs">{na(b.callId)}</span>]]} />
+        <Facts items={[["Carrier", na(b.carrierName)], ["MC", na(b.mc)]]} />
       </SheetSection>
       <SheetSection title="Load">
         <Facts
@@ -211,7 +217,7 @@ function BookingSheet({ booking: b, liveBooking, now }: { booking: Booking; live
       <SheetSection title="TMS">
         <Facts
           items={[
-            ["TMS status", label(b.tmsStatus)],
+            ["TMS status", b.state === "RESERVED" ? "Not submitted" : label(b.tmsStatus)],
             ["Reference", na(b.reference)],
             ["Reason", label(b.reason)],
             ["Rep", na(b.rep)],
@@ -221,9 +227,10 @@ function BookingSheet({ booking: b, liveBooking, now }: { booking: Booking; live
           ]}
         />
       </SheetSection>
-      <SheetSection title="Next action">
-        <Actions booking={b} now={now} liveBooking={liveBooking} />
-      </SheetSection>
+      <details className="text-xs text-muted-foreground">
+        <summary className="cursor-pointer">Call reference</summary>
+        <p className="mt-2 break-all font-mono">{na(b.callId)}</p>
+      </details>
       <SheetSection title="Activity">
         <EventList events={b.events} />
       </SheetSection>

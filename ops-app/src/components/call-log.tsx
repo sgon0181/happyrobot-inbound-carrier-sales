@@ -69,7 +69,7 @@ export function CallLog({ title, calls }: { title: string; calls: Call[] }) {
                     <TableCell className={cell}>
                       <p className="line-clamp-2 font-medium">{na(c.carrierName)}</p>
                       <p className={sub}>
-                        MC {na(c.mc)} · {c.codePassed ? "code passed" : "no code"}
+                        MC {na(c.mc)} · {c.codePassed ? "email code verified" : "email not verified"}
                       </p>
                     </TableCell>
                     <TableCell className={cell}>
@@ -126,11 +126,11 @@ function CallSheet({ call: c }: { call: Call }) {
       <SheetSection title="Call">
         <Facts
           items={[
-            ["Started", fmtTime(c.startedAt)],
+            ["First activity", fmtTime(c.startedAt)],
             ["Closed", fmtTime(c.closedAt)],
             ["Carrier", na(c.carrierName)],
             ["MC", na(c.mc)],
-            ["Code passed", c.verifiedAt ? fmtTime(c.verifiedAt) : c.codePassed ? "Earlier in the call" : "No"],
+            ["Email code verified", c.verifiedAt ? fmtTime(c.verifiedAt) : c.codePassed ? "Earlier in the call" : "No"],
             ["Lane asked", lane(c.search)],
             ["Counter rounds", fmtCount(c.rounds)],
             ["Outcome", label(c.outcome)],

@@ -1,7 +1,7 @@
 import type { EventRow } from "@/lib/event-history";
 import { fmtCount, fmtTime, fmtUsd, label, na } from "@/lib/format";
 
-// The stored activity as a timeline, oldest first, with the raw codes kept for audit.
+// Business activity first; technical identifiers remain available without dominating the timeline.
 export function EventList({ events }: { events: EventRow[] }) {
   if (!events.length) return <p className="text-sm text-muted-foreground">No activity recorded.</p>;
   return (
@@ -26,9 +26,11 @@ export function EventList({ events }: { events: EventRow[] }) {
               <p>Commodity: {na(e.load.commodity)}. Dimensions: {na(e.load.dimensions)}. Notes: {na(e.load.notes)}.</p>
             </div>
           ) : null}
-          <span className="font-mono text-[0.6875rem] text-muted-foreground/80">
-            {[e.action, e.status, e.state].filter(Boolean).join(" / ")}
-          </span>
+          <details className="mt-2 text-muted-foreground">
+            <summary className="cursor-pointer text-[0.6875rem]">Technical details</summary>
+            <p className="mt-1 font-mono text-[0.6875rem] break-all">{[e.action, e.status, e.state].filter(Boolean).join(" / ")}</p>
+            {e.callId ? <p className="mt-1 font-mono text-[0.6875rem] break-all">Call reference: {e.callId}</p> : null}
+          </details>
         </li>
       ))}
     </ol>

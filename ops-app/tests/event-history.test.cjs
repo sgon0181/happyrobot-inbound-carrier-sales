@@ -11,7 +11,7 @@ test('projects actual public_view strings, pitch details and search criteria', (
       offer: 1900, pickup_datetime: '2099-12-31T08:00:00+00:00', weight: 42000,
       notes: 'Appointment required', max_rate: 9876543 }],
   }]);
-  for (const value of ['Dallas, TX', 'Atlanta, GA', '1900', '42000', 'Appointment required', 'DRY_VAN / TX / GA']) {
+  for (const value of ['Dallas, TX', 'Atlanta, GA', '$1,900', '42,000', 'Appointment required', 'Dry van, TX to GA', 'Dec 31, 02:00 CT']) {
     assert.ok(event.detail.includes(value), value);
   }
   assert.ok(!JSON.stringify(event).includes('9876543'));
@@ -25,10 +25,23 @@ test('keeps earlier asks, normalized amounts and terminal outcome without privat
     { action: 'call_ended', status: 'ended', ended_by: 'user', duration_seconds: 52,
       otp: 'private-code', secret: 'private-token' },
   ]);
-  assert.match(history[0].detail, /carrier said 5,000, ask 5000/);
-  assert.match(history[1].detail, /ask 5100/);
-  assert.match(history[2].detail, /ended by user, seconds 52/);
+  assert.match(history[0].detail, /Carrier said: 5,000. Amount checked: \$5,000/);
+  assert.match(history[1].detail, /Amount checked: \$5,100/);
+  assert.match(history[2].detail, /Call ended by: user. Duration in seconds: 52/);
   assert.ok(!JSON.stringify(history).includes('private-'));
+});
+
+test('pitched shipment notes are redacted and use business labels rather than raw fields', () => {
+  const [event] = events([{ loads: [{ load_id: 'LD1', notes: 'Verification code 123456. Maximum rate $98765',
+    pickup_datetime: '2026-11-16T18:56:00Z', equipment_type: 'REEFER', num_of_pieces: 27,
+    max_rate: 87654, secret: 'private-token' }], call_id: 'call-reference' }]);
+  assert.match(event.detail, /Pickup: Nov 16, 12:56 CT/);
+  assert.match(event.detail, /Equipment: Refrigerated/);
+  assert.match(event.detail, /Pieces: 27/);
+  for (const value of ['123456', '98765', '87654', 'private-token', 'pickup_datetime', 'num_of_pieces']) {
+    assert.ok(!JSON.stringify(event).includes(value), value);
+  }
+  assert.equal(event.callId, 'call-reference');
 });
 
 test('keeps each reservation snapshot after the same booking row is freed and reused', () => {

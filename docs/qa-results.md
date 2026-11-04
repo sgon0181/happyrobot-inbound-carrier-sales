@@ -1,6 +1,35 @@
 # QA results
 
-Updated on 2026-11-04 (Sydney). Workflow Version 6 (`alj9n98f66df`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below; current-version human voice acceptance remains open. No new live booking was sent.
+Updated on 2026-11-04 (Sydney). Workflow Version 6 (`alj9n98f66df`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below. Eleven Version 6 calls now supply closing evidence; the remaining amount and notes fixes are in unpublished Version 7. No new live booking was sent.
+
+## Latest owner calls and unpublished amount fix
+
+The owner's 11 Version 6 calls are preserved in [sanitized evidence](../happyrobot/qa-v6-owner-calls.json). All 11 recorded close_call once, _hangup once, no subsequent caller turn, agent_hung_up and saved close/end timestamps in Twin. Three refused carriers ended proactively. Two negotiation failures used the three-round budget and no transfer; repeated asks preserved their round and offer. Central pickup/delivery strings were retained. Audio was not listened to, and checkpoint/text simulations remain separate from these human calls.
+
+| Run prefix | Outcome and material observation |
+|---|---|
+| 498eab57, ebe0e330, 5bacb8fd | Three carrier refusals, correct proactive endings |
+| b4f55923 | LD01116 reserved at 3800 after a prefix; owner intended 3825. Live Version 6 amount defect retained |
+| cc1633ba | LD01112 agreed 2275 and handed off; supplied live-unload and detention notes omitted |
+| e9abb7f3 | LD01100 agreed 2050 after a clear total; clarification suggested a total |
+| 7612f166 | Repeated 2500 preserved 1675 and round 1; caller declined |
+| aa6da4fc | Three distinct rounds, 2650 final, 3700 rejected, correct failed close |
+| 8b481912 | LD01088 pickup November 11 at 1:36 AM and delivery November 13 at 8:36 PM, both Central (CST); caller declined |
+| f8c60cba | LD01102 agreed 1625 after a clear total; clarification suggested 1625 |
+| 3f07545e | Repeated 3000 preserved round 1, final 1075 then failure, correct close |
+
+Four synthetic reservations remain: LD01116@3800, LD01112@2275, LD01100@2050 and LD01102@1625. No TMS booking was sent and no hold was released. A clear carrier ask can produce agreement immediately; the earlier instruction promising only one reservation was incorrect.
+
+The owner-approved fix is [unpublished Version 7](voice-tuning.md): confirm a read-back total only after actual amount clarification, invalidate it on trailing fragments/corrections, and include all supplied operating terms before the offer question. Model, opening, service and workflow graph stay unchanged. Root SHA-256 is `91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b`.
+
+| Layer | Latest result | Limit |
+|---|---|---|
+| Service | 487 tests, 1650/1650 statements, 406/406 branches, 256/256 business branches; strict types/lint pass; Radon B or better | Offline; no production code change |
+| Version 7 checkpoints | 51 definitions twice, 102/102 native grades on the same final root/tool definition | Model grades, not speech or end-to-end proofs; V3 and E2 current copies preserve original definitions |
+| Version 7 full mocked text |2/2 corrected amount/notes sequences, exactly 3825 after readback and yes | 52/53 seconds; both lack recorded final handoff/goodbye, so no complete closing pass |
+| Version 6 human voice | 11 timed transcript/tool/end-record reviews, all proactively ended | Not Version 7, and no audio listening |
+
+[All checkpoint iterations and failures](../happyrobot/qa-v7-amount-confirmation.json) and [both full traces](../happyrobot/qa-v7-conversations.json) remain available. Initial wording 93/102 and focused revision 35/36 exposed over-clarification and were corrected. The final root's original suite 101/102 included an E2 false negative: its actual tools/outage message/goodbye were correct. A replacement E2 first over-required a built-in ending unavailable in checkpoints (0/2), then explicitly graded text/notes and passed 2/2. No prompt changed during that fixture correction. Keep these layers separate. Targeted Version 7 voice checks follow review and approved publication; they are not complete yet.
 
 ## Historical Version 5 baseline
 
@@ -25,11 +54,11 @@ After Claude passed bf512aa, the owner approved push, service deployment and Ver
 
 The native App build selector now shows production Build 20, and the redesigned dashboard loads at the existing alias with sends off. This supersedes the current-build label of 18, while its exact-source publication and visual checks remain historical evidence. A later handover lookup records Build 20 source 48ba398/import 97da4f6, with owner publication. Its77-file archive independently matches the checkout; final read-only 1280px views/panels and clean-container frontend checks are recorded below. Production source bytes were not independently retrieved.
 
-[Release facts, screenshots and the six owner voice checks](releases/2026-11-04-v6/README.md) record the remaining acceptance. No new human Version 6 call was identified in the latest 15 workflow runs at inspection. Full spoken closing, proactive agent_hung_up, no extra caller turn and delivered end-report/storage evidence remain open. The earlier native text simulation failures and checkpoint passes remain separate evidence.
+[Release facts, screenshots and the six owner voice checks](releases/2026-11-04-v6/README.md) record the remaining acceptance. That earlier inspection found no new Version 6 calls. The subsequent 11 owner calls above now establish timed closing, proactive agent_hung_up and stored end-report evidence; audio listening and Version 7 acceptance remain limited as stated above. The earlier native text simulation failures and checkpoint passes remain separate evidence.
 
 ## Current service validation
 
-The released bf512aa time-display, voice-evidence and Claude audit fixes pass make check with 487 tests, actual 100% of 1650 service statements and 406 branches, and 256/256 gated business branches. Runtime Python is 2919 physical lines. This includes ten time-display regressions and 26 offline trace-checker tests. Radon reports no production or tooling function at C or worse. Release 17 contains these changes; 28 deployed runtime source/policy files match the checkout byte-for-byte. Release 16 measurements below remain historical. The latest 40 native checkpoint cases passed twice (80/80 model grades) on root SHA `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`; [audit-fix evidence](../happyrobot/qa-v6-audit-fixes.json) pins every result and the revised time fixtures. The eight audited closing branches now route their explanation through step 6 into _hangup._message. Full-text and voice evidence remain separate and must not be inferred from those grades. See the tuning report and manifests for all failures and the unresolved current-version voice acceptance.
+The released bf512aa time-display, voice-evidence and Claude audit fixes pass make check with 487 tests, actual 100% of 1650 service statements and 406 branches, and 256/256 gated business branches. Runtime Python is 2919 physical lines. This includes ten time-display regressions and 26 offline trace-checker tests. Radon reports no production or tooling function at C or worse. Release 17 contains these changes; 28 deployed runtime source/policy files match the checkout byte-for-byte. Release 16 measurements below remain historical. The live Version 6 prompt's 40 native checkpoint cases passed twice (80/80 model grades) on root SHA `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`; [audit-fix evidence](../happyrobot/qa-v6-audit-fixes.json) pins every result and the revised time fixtures. The eight audited closing branches now route their explanation through step 6 into _hangup._message. Full-text and voice evidence remain separate and must not be inferred from those grades. See the tuning report and manifests for all failures and the remaining Version 7 voice acceptance.
 
 `PATH="$PWD/.venv/bin:$PATH" make check` runs ruff, format checks, `mypy --strict`, tests and coverage. The released baseline had actual 100% coverage (1641 statements, 404 branches), with 254/254 gated business branches. Current release 17 measurements are above. The configured minimum remains 90%; actual 100% is the candidate requirement. `.venv/bin/radon cc service -s -n C -e 'service/tests/*'` returns no production function at C or worse. All production modules are at most 300 physical lines; the released baseline totaled 2896 runtime Python lines. The pre-commit hook tests exactly the staged tree.
 
@@ -308,15 +337,15 @@ Existing transcripts, exact tool results and end metadata were reread through Ha
 | Run | Scenario and service result | End | Retained limitation |
 |---|---|---|---|
 | 703513be | Inactive MC 145678; registration_not_active, close_call closed; no load | agent_hung_up | Correct refusal explanation. A caller turn followed the saved close before _hangup, so not proactive-closing acceptance. |
-| f00eaae5 | Eligible authority/code; lane changes; reefer Arizona to Texas; LD01100 agreed at2050 after counter2050 round1; close_call closed | agent_hung_up | Counter2050 was described as final although service returned counter. drive in caused invalid_search before recovery; pitch clocks lacked a zone label. Truthful mocked handoff was recorded. |
+| f00eaae5 | Eligible authority/code; lane changes; reefer Arizona to Texas; LD01100 agreed at 2050 after counter2050 round 1; close_call closed | agent_hung_up | Counter2050 was described as final although service returned counter. drive in caused invalid_search before recovery; pitch clocks lacked a zone label. Truthful mocked handoff was recorded. |
 | 4b43a111 | Eligible authority/code; flatbed Florida to New York; LD01056 agreed at3275; close_call closed | agent_hung_up | Truthful mocked senior-rep handoff, no final-booking claim. No additional rate-interpretation slip identified in this readback; pitch clocks lacked a zone label. |
 | bdfb3886 | Eligible authority/code; flatbed Massachusetts to California; LD01101 agreed at6300; close_call closed | agent_hung_up | Compound6300 and25 submitted as6300 without clarification. Truthful mocked handoff, but agreement is not an amount-correctness pass. Caller turn followed close; pitch clocks lacked zone label. |
 | 9bdcc04b | Caller corrected MC138329 to138328; code; dry van Maine to Georgia; Initial ineligible result superseded by eligible carrier; no_match; close_call closed | agent_hung_up | Self-correction recovered; drive in caused invalid_search before dry-van retry. No reservation or false booking claim. |
 | 36b0c336 | Inactive MC134652; registration_not_active; close_call closed; no load | agent_hung_up | Correct refusal, then idle filler Are you still there before caller farewell and _hangup. Closing defect retained. |
 | 44c300e3 | Eligible MC999999, caller ended during verification; eligible, code sent; no verify_code, search, negotiation or close_call | user_disconnected | Incomplete call, not verification success. User disconnect is explicit; no agreement claim. |
 | e228f6af | Unknown MC99999999, readback and confirmation; not_found; close_call closed; no load | agent_hung_up | Correct digit readback/refusal explanation; caller turn occurred after close before _hangup, so no proactive-closing pass. |
-| 8c48df03 | Eligible authority/code; multiple searches; reefer Michigan to Georgia; LD01105 first counter1550 round1 then agreed1600; close_call closed | user_disconnected | Compound1600 and25 submitted as1600 before clarification; later caller correction did not change locked agreement. Farewell reopened with further-help question, no _hangup. Pitch clocks lacked zone label. |
-| 4ac79d3a | Eligible authority/code; flatbed Montana to Arizona; repeated asks and failure; LD01102 counter1675 round1, repeated2200 asks hold1775 round2; garbled2000200 consumes round3 final1900; next2100 yields negotiation_failed; close_call closed | agent_hung_up | Unchanged1775 called new repeatedly. Garbled ask was not clarified. Failure closed without handoff, but caller turn followed close before _hangup; pitch clocks lacked zone label. |
+| 8c48df03 | Eligible authority/code; multiple searches; reefer Michigan to Georgia; LD01105 first counter1550 round 1 then agreed1600; close_call closed | user_disconnected | Compound1600 and25 submitted as1600 before clarification; later caller correction did not change locked agreement. Farewell reopened with further-help question, no _hangup. Pitch clocks lacked zone label. |
+| 4ac79d3a | Eligible authority/code; flatbed Montana to Arizona; repeated asks and failure; LD01102 counter1675 round 1, repeated2200 asks hold1775 round2; garbled2000200 consumes round3 final1900; next2100 yields negotiation_failed; close_call closed | agent_hung_up | Unchanged1775 called new repeatedly. Garbled ask was not clarified. Failure closed without handoff, but caller turn followed close before _hangup; pitch clocks lacked zone label. |
 
 ## Final frontend and submission package check
 

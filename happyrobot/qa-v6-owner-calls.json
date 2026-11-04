@@ -1,0 +1,2678 @@
+{
+  "version": 6,
+  "prompt_sha256": "287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5",
+  "scope": "Read-only live transcript and tool review. Verification user turns and code arguments removed. No audio listening claimed.",
+  "calls": [
+    {
+      "run_id": "498eab57-1539-4208-bba0-9e35a1690c8f",
+      "output_id": "2bc626c8-f5b2-4ea2-8f7d-15d0cca7c4c6",
+      "status": "completed",
+      "duration": 19,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a47c-c7ad-7217-ab62-1d8a20f3372c",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 303,
+          "end": 4623
+        },
+        {
+          "id": "9250d235-e30d-43d5-bb1c-f523b8b2a449",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5440,
+          "end": 8620
+        },
+        {
+          "id": "01a1a47c-da5d-79bf-a827-17cd33104a8b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8b18cd8b12495b8caa325320f13bdbc5",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"134652\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+          "tool_call_id": "call_8b18cd8b12495b8caa325320f13bdbc5",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a47c-e134-7e6c-bdeb-795f0e6821ad",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_5700807d326e5a20a70a498b20b7656c",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"MC 134652 is ineligible because registration is not active; no load search was completed.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_5700807d326e5a20a70a498b20b7656c",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a47d-00a1-7d54-b9c6-8217a4b8c703",
+          "role": "assistant",
+          "content": "FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_16053066890b5da9a00e22620b3b1ee0",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 12723,
+          "end": 19203
+        }
+      ]
+    },
+    {
+      "run_id": "ebe0e330-feb4-494b-b0d7-5abb82ebe663",
+      "output_id": "6884ddea-c430-43ef-8fbc-0b9925715ccc",
+      "status": "completed",
+      "duration": 21,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a47d-65da-798c-b9e7-c6f9d521a169",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 318,
+          "end": 4798
+        },
+        {
+          "id": "29d03250-b6f1-4e7a-867b-cc48f0ac5299",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 6459,
+          "end": 10250
+        },
+        {
+          "id": "01a1a47d-7dcd-736d-b664-4914463573bc",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_f1bcfe5793c95c1fbdb19de86828b295",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"134652\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+          "tool_call_id": "call_f1bcfe5793c95c1fbdb19de86828b295",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a47d-8518-716a-b16f-4f96657c04b2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_89f9d583daef5731984ff9cba1037b5a",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"MC 134652 is ineligible because FMCSA does not show active operating authority; no load search completed.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_89f9d583daef5731984ff9cba1037b5a",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a47d-a5eb-7aa4-b5a4-e2c113432e12",
+          "role": "assistant",
+          "content": "FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_9ffd88d34512580baead11840d2ddc50",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 14399,
+          "end": 21199
+        }
+      ]
+    },
+    {
+      "run_id": "b4f55923-72a7-458f-bd71-9004873c6eba",
+      "output_id": "ac4a666e-b867-4057-bc92-b71dd38ee905",
+      "status": "completed",
+      "duration": 134,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a47e-165c-7f24-ab09-5281bd65054e",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 319,
+          "end": 4079
+        },
+        {
+          "id": "addcf27f-dd70-4ef1-a2a0-8a1f8cc40aaf",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 6570,
+          "end": 12290
+        },
+        {
+          "id": "01a1a47e-39d7-72c7-900d-bdbde21481b4",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_7e32e3e9ad4e54b0a29606ebb758346f",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_7e32e3e9ad4e54b0a29606ebb758346f",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a47e-4e74-7870-ac8d-b2b8acb2e35c",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 15319,
+          "end": 18439
+        },
+        {
+          "id": "5db5caad-d91f-4324-bce8-942c84337068",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 18830,
+          "end": 19710
+        },
+        {
+          "id": "01a1a47e-569f-72d5-b6eb-75d854768180",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_601d8de76e20565194aafb7a2ee8694f",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_601d8de76e20565194aafb7a2ee8694f",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a47e-6fd1-74d1-8ab3-e1a843fa4e04",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 23458,
+          "end": 26978
+        },
+        {
+          "id": "01a1a47e-9118-7ce3-8f85-b4352436dc42",
+          "role": "assistant",
+          "content": "Please read back the six-digit code from your email.",
+          "start": 32938,
+          "end": 35498
+        },
+        {
+          "id": "e4645d2b-7ca4-4805-9dfa-dd39719f8033",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 37620,
+          "end": 41210
+        },
+        {
+          "id": "01a1a47e-ab34-780e-87da-024d83f04c19",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a36b3cc3774c5c90a0c841cc7d0e3cdd",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_a36b3cc3774c5c90a0c841cc7d0e3cdd",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a47e-c200-7e5b-bb9c-773d53944540",
+          "role": "assistant",
+          "content": "You\u2019re verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 43778,
+          "end": 48018
+        },
+        {
+          "id": "898e195d-c4db-48f3-9044-7d27fd21ca8d",
+          "role": "user",
+          "content": "I need a flatbed from Louisiana to Massachusetts.",
+          "start": 50320,
+          "end": 53120
+        },
+        {
+          "id": "01a1a47e-d9c0-7f0e-9821-9d3228bc6d98",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c401545e47a755d7ae407b684e3dce5e",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"MA\",\"equipment\":\"flatbed\",\"origin_state\":\"LA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Produce\",\"delivery_datetime\":\"2026-11-05T17:06:00+00:00\",\"delivery_time_display\":\"November 5 at 11:06 AM Central (CST)\",\"destination\":\"Worcester, MA\",\"dimensions\":\"624 x 96 x 108 in\",\"equipment_type\":\"FLATBED\",\"load_id\":\"LD01116\",\"miles\":1347,\"notes\":\"\",\"num_of_pieces\":8,\"offer\":3800,\"origin\":\"Baton Rouge, LA\",\"pickup_datetime\":\"2026-11-04T23:06:00+00:00\",\"pickup_time_display\":\"November 4 at 5:06 PM Central (CST)\",\"weight\":6880}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_c401545e47a755d7ae407b684e3dce5e",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a47f-3c30-77b7-812e-9a5f5a80d1af",
+          "role": "assistant",
+          "content": "I found a flatbed load from Baton Rouge, LA, to Worcester, MA. Pickup is November 4 at 5:06 PM Central (CST), delivery November 5 at 11:06 AM Central (CST). It\u2019s 6,880 pounds of produce, 8 pieces, 1,347 miles. Our offer is $3,800. Does that work?",
+          "start": 56259,
+          "end": 79299
+        },
+        {
+          "id": "e26c0243-af2e-43e3-ba12-e6b8c10e0b3c",
+          "role": "user",
+          "content": "Can you do 3800 and 25",
+          "start": 82700,
+          "end": 85869
+        },
+        {
+          "id": "01a1a47f-6a35-741d-8482-7fe545bb2c69",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount.",
+          "start": 88519,
+          "end": 91079
+        },
+        {
+          "id": "c7b9d923-2f8f-4547-8d24-130cbb501469",
+          "role": "user",
+          "content": "3800 and 25 dollars.",
+          "start": 93600,
+          "end": 96880
+        },
+        {
+          "id": "01a1a47f-8dc0-7ece-aab1-11c9cb9fb170",
+          "role": "assistant",
+          "content": "Please state one complete total dollar amount.",
+          "start": 97859,
+          "end": 100179
+        },
+        {
+          "id": "1cd6fd8b-b068-44a8-ae61-755ad2806ed4",
+          "role": "user",
+          "content": "3000800 and 25 dollars.",
+          "start": 104039,
+          "end": 108329
+        },
+        {
+          "id": "01a1a47f-bc8d-75b6-b569-89e5e601de7b",
+          "role": "assistant",
+          "content": "Please state one complete total dollar amount.",
+          "start": 109599,
+          "end": 112159
+        },
+        {
+          "id": "450bbde7-7164-4a8f-a9f9-c78e9b6bcef3",
+          "role": "user",
+          "content": "3800",
+          "start": 115039,
+          "end": 117200
+        },
+        {
+          "id": "01a1a47f-d993-766d-8486-af60ba03d797",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_15d09d22c37550b18642062f33650d89",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01116\",\"rate\":\"3800\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01116\",\"rate\":3800,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_15d09d22c37550b18642062f33650d89",
+          "name": "negotiate"
+        },
+        {
+          "id": "a7132096-6883-418f-b9bf-888320f122c2",
+          "role": "user",
+          "content": "25 dollars."
+        },
+        {
+          "id": "01a1a47f-e3c2-7126-b84b-bf7e370b246e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_49ccdd1840875bda9a70c21fbd18fafb",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Wrapping this up.\",\"summary\":\"Agreed on service-approved load LD01116 at $3,800; senior rep confirmation is pending.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_49ccdd1840875bda9a70c21fbd18fafb",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a480-13bc-7925-b732-38ec0db5abae",
+          "role": "assistant",
+          "content": "Load LD01116 at $3,800 is agreed. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_6f5dd27c6eb75429bd60a5a6d4bac8c3",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Load LD01116 at $3,800 is agreed. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 123839,
+          "end": 134479
+        }
+      ]
+    },
+    {
+      "run_id": "5bacb8fd-28fd-4733-b27b-8537d93e73c0",
+      "output_id": "14e58943-50b2-4204-b8c9-7e051a70d405",
+      "status": "completed",
+      "duration": 19,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a481-250e-7c46-bc63-eb6d83a712ce",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 318,
+          "end": 4318
+        },
+        {
+          "id": "923443ee-20c6-4b06-942d-ed12a1762af6",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5960,
+          "end": 8039
+        },
+        {
+          "id": "01a1a481-35aa-7411-84c1-52ff87552ac7",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_9705397a7438518489f2d16749421339",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"134652\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+          "tool_call_id": "call_9705397a7438518489f2d16749421339",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a481-3d5c-7dcc-96fd-be6828580370",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_72f240dedf4e53b389d76e7f476c8e44",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"MC 134652 was ineligible because registration is not active; no load search was completed.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_72f240dedf4e53b389d76e7f476c8e44",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a481-605b-7201-b80a-3abc5823b8b6",
+          "role": "assistant",
+          "content": "FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_bfc1902e00d55712be680433bf63e8dc",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"FMCSA doesn't show active operating authority for that MC, so I can't book loads with you today. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 12219,
+          "end": 19499
+        }
+      ]
+    },
+    {
+      "run_id": "cc1633ba-7834-4aed-a0fd-2c6fcc6e1fa5",
+      "output_id": "c53cd8b2-ee41-4ba1-9992-52b7c27f5d38",
+      "status": "completed",
+      "duration": 85,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a481-a408-755a-a11d-b611dfdc97f2",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 315,
+          "end": 4955
+        },
+        {
+          "id": "dd659a9b-1719-47e2-aaa7-ad1dcda3e155",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5899,
+          "end": 8109
+        },
+        {
+          "id": "01a1a481-b511-7005-91cd-1315a7941aca",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a47d9d08ada459eda5c90bf28fe5c2b5",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_a47d9d08ada459eda5c90bf28fe5c2b5",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a481-d07c-7bd9-9a05-0a4cb2480ec3",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 13135,
+          "end": 16335
+        },
+        {
+          "id": "58196f24-8012-47fd-ba03-e63bdbaa033d",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 17370,
+          "end": 18170
+        },
+        {
+          "id": "01a1a481-d96e-75a0-b2c1-e5a14777630b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_31f0541463b35894815eec55982942c2",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_31f0541463b35894815eec55982942c2",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a481-f1c4-75fc-a6d4-722ceebdbed0",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 21655,
+          "end": 24855
+        },
+        {
+          "id": "c52fc6f1-76bb-46e1-8c0d-15b899744a8d",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 26150,
+          "end": 29160
+        },
+        {
+          "id": "01a1a482-04eb-7bbf-8e71-94435c8ead89",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_af029dc5bf425363bda972f454d38f96",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_af029dc5bf425363bda972f454d38f96",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a482-1eb0-7432-abe4-f8dc96af0455",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 31395,
+          "end": 36355
+        },
+        {
+          "id": "8dfcf5de-e778-4af2-82b1-e2860d68ce89",
+          "role": "user",
+          "content": "I need a flat bed. From Colorado to California.",
+          "start": 37060,
+          "end": 40540
+        },
+        {
+          "id": "01a1a482-318c-73f2-9d1d-afe4a9bfb53b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_9de84091e1d556baaf0bf090ce428da5",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"CA\",\"equipment\":\"flatbed\",\"origin_state\":\"CO\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"status\":\"no_match\"}}]}",
+          "tool_call_id": "call_9de84091e1d556baaf0bf090ce428da5",
+          "name": "find_loads"
+        },
+        {
+          "id": "b35acca4-06df-4f84-b9af-b05e8e54c6e0",
+          "role": "user",
+          "content": "Sorry. To Florida."
+        },
+        {
+          "id": "01a1a482-38b3-7192-8e88-a04c84489132",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_e2ceb140bc5957839aa711e65636d7ae",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Checking Colorado to Florida.\",\"dest_state\":\"FL\",\"equipment\":\"flatbed\",\"origin_state\":\"CO\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Lumber\",\"delivery_datetime\":\"2026-11-19T17:39:00+00:00\",\"delivery_time_display\":\"November 19 at 11:39 AM Central (CST)\",\"destination\":\"Tallahassee, FL\",\"dimensions\":\"612 x 96 x 108 in\",\"equipment_type\":\"FLATBED\",\"load_id\":\"LD01112\",\"miles\":1331,\"notes\":\"Live unload. 2H detention free, then $75/h.\",\"num_of_pieces\":23,\"offer\":2275,\"origin\":\"Denver, CO\",\"pickup_datetime\":\"2026-11-16T20:39:00+00:00\",\"pickup_time_display\":\"November 16 at 2:39 PM Central (CST)\",\"weight\":44589}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_e2ceb140bc5957839aa711e65636d7ae",
+          "name": "find_loads"
+        },
+        {
+          "id": "f3f70076-32ef-4aa2-b39f-8531142ab9cd",
+          "role": "user",
+          "content": "Colorado to Florida.",
+          "start": 43590,
+          "end": 44790
+        },
+        {
+          "id": "01a1a482-950c-727d-a24f-18948cda2139",
+          "role": "assistant",
+          "content": "I found a flatbed load from Denver, Colorado, to Tallahassee, Florida: lumber, 44,589 pounds, pickup November 16 at 2:39 PM Central (CST), delivery November 19 at 11:39 AM Central (CST). It pays $2,275. Does that work?",
+          "start": 45775,
+          "end": 66655
+        },
+        {
+          "id": "39b5aa4f-ec0a-4d97-8f89-7af8e94611f4",
+          "role": "user",
+          "content": "Yeah. That works.",
+          "start": 68429,
+          "end": 69310
+        },
+        {
+          "id": "01a1a482-a1e4-782e-b5e8-7d51fcaa4a3a",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_ad5cbbbeee4b5b6ca62d4743d8665d92",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01112\",\"rate\":\"2275\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01112\",\"rate\":2275,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_ad5cbbbeee4b5b6ca62d4743d8665d92",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a482-ac50-7bc0-8c6f-cc787c4e520e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_d99ce17c86f0528cb9122c44ffd25447",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Rate agreed.\",\"summary\":\"Load LD01112 from Denver, CO to Tallahassee, FL agreed at $2,275; senior rep confirmation is pending.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_d99ce17c86f0528cb9122c44ffd25447",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a482-dcc4-7947-96ba-0ee80f5eb2bb",
+          "role": "assistant",
+          "content": "Load LD01112 is agreed at $2,275. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_817c30517fc15f68aaf2f9aeddf2e46a",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Load LD01112 is agreed at $2,275. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 74455,
+          "end": 85015
+        }
+      ]
+    },
+    {
+      "run_id": "e9abb7f3-4774-47d0-b058-d3279c5eb75f",
+      "output_id": "6e99cc85-c53f-4d8e-a6ac-846810483ca4",
+      "status": "completed",
+      "duration": 113,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a483-2528-7ad9-809c-86a0f2a50de1",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 312,
+          "end": 4392
+        },
+        {
+          "id": "b576fdb9-54d3-41ed-a621-db71e1f663f7",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5470,
+          "end": 8960
+        },
+        {
+          "id": "01a1a483-3a56-7337-aa51-8788fb081817",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8f27e2d1ab88518ba9cbf6344e7e1ca2",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_8f27e2d1ab88518ba9cbf6344e7e1ca2",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a483-4e18-789c-acbf-acf338cdbd6b",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 11911,
+          "end": 14871
+        },
+        {
+          "id": "5b5de75f-ecc8-4d7f-922f-294534fedc2b",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 16140,
+          "end": 16460
+        },
+        {
+          "id": "01a1a483-57c6-7c77-8b27-7891d1ce6297",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_e5dacf1e0cbf52de9a609a3e3590d8e3",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_e5dacf1e0cbf52de9a609a3e3590d8e3",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a483-70c7-7b8c-99a8-14b3b9b46a9c",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 20231,
+          "end": 23751
+        },
+        {
+          "id": "51f0ecac-092c-4f42-b16d-ee2aea36e940",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 24710,
+          "end": 27670
+        },
+        {
+          "id": "01a1a483-82ae-754e-a147-afdc922b5aaf",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_2bd7d4b21eb45959834799c6ef4c2e15",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_2bd7d4b21eb45959834799c6ef4c2e15",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a483-99a4-766a-8570-c93e0b7e5bd7",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 29891,
+          "end": 34211
+        },
+        {
+          "id": "f465f2f5-3d5a-4605-8a29-8af9bf895cd3",
+          "role": "user",
+          "content": "I need a reefer from Arizona to Texas.",
+          "start": 38340,
+          "end": 40820
+        },
+        {
+          "id": "01a1a483-b6e8-7f3e-af14-3ccef6519b54",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_0d06ce2a3c3b5dd4b1fc571cac34a521",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"TX\",\"equipment\":\"reefer\",\"origin_state\":\"AZ\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Lumber\",\"delivery_datetime\":\"2026-11-16T17:14:00+00:00\",\"delivery_time_display\":\"November 16 at 11:14 AM Central (CST)\",\"destination\":\"Houston, TX\",\"dimensions\":\"600 x 96 x 108 in\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01100\",\"miles\":939,\"notes\":\"Drop trailer at destination. Appt required.\",\"num_of_pieces\":12,\"offer\":1975,\"origin\":\"Tucson, AZ\",\"pickup_datetime\":\"2026-11-15T23:14:00+00:00\",\"pickup_time_display\":\"November 15 at 5:14 PM Central (CST)\",\"weight\":30777}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_0d06ce2a3c3b5dd4b1fc571cac34a521",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a484-1de7-7d64-9e37-a009b128030d",
+          "role": "assistant",
+          "content": "I found a reefer load from Tucson, AZ, to Houston, TX. Pickup is November 15 at 5:14 PM Central (CST), and delivery is November 16 at 11:14 AM Central (CST). It\u2019s 30,777 pounds of lumber, 12 pieces, with a drop trailer and appointment required. Our offer is $1,975. Does that work?",
+          "start": 43911,
+          "end": 68071
+        },
+        {
+          "id": "b7de3aac-24d7-434c-8b77-d3829805df23",
+          "role": "user",
+          "content": "I need 2000 and 50.",
+          "start": 69340,
+          "end": 71100
+        },
+        {
+          "id": "01a1a484-37ff-7bc0-ba01-0c0e63d58927",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount.",
+          "start": 72111,
+          "end": 74751
+        },
+        {
+          "id": "d8553a9d-c726-4017-9991-114402743866",
+          "role": "user",
+          "content": "I need 2000 and 50. US dollars.",
+          "start": 75810,
+          "end": 79829
+        },
+        {
+          "id": "01a1a484-5b27-7dde-af5b-21d0a07c360d",
+          "role": "assistant",
+          "content": "Please state one complete total dollar amount.",
+          "start": 80951,
+          "end": 83751
+        },
+        {
+          "id": "0e945f81-7dc9-4298-97c9-086e4860e0a8",
+          "role": "user",
+          "content": "2000 and 50.",
+          "start": 86030,
+          "end": 87630
+        },
+        {
+          "id": "01a1a484-8788-756f-b24c-2ce5b8477318",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount, such as \u201ctwo thousand fifty dollars.\u201d",
+          "start": 90311,
+          "end": 95111
+        },
+        {
+          "id": "093779a7-b029-4250-b96e-fa83505cf263",
+          "role": "user",
+          "content": "Okay. 2050 dollars.",
+          "start": 96620,
+          "end": 98540
+        },
+        {
+          "id": "01a1a484-9829-7590-832b-cc9b1431bd6a",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_22207e8512845348b1721fe8889373b3",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01100\",\"rate\":\"2050\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01100\",\"rate\":2050,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_22207e8512845348b1721fe8889373b3",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a484-a2d1-7724-879b-114f5d1e9938",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_88b6e0961ef75d7e8f883d833947902e",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Rate agreed.\",\"summary\":\"Load LD01100 from Tucson, AZ to Houston, TX agreed at $2,050; senior rep confirmation is pending.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_88b6e0961ef75d7e8f883d833947902e",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a484-d10c-715c-aa09-941ec7382908",
+          "role": "assistant",
+          "content": "Load LD01100 agreed at $2,050. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_b6f5e68877f35e4e9ef6a117921350ca",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Load LD01100 agreed at $2,050. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 103691,
+          "end": 113931
+        }
+      ]
+    },
+    {
+      "run_id": "7612f166-4a8e-43bb-a6e8-3d8b4d3a6500",
+      "output_id": "44473f85-728e-49fd-92b2-153d5ec6189b",
+      "status": "completed",
+      "duration": 103,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a485-1251-785c-9970-02f0dc173a1a",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 320,
+          "end": 4560
+        },
+        {
+          "id": "44c91089-1af1-4c1a-a5c7-1b92c5f54560",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5300,
+          "end": 7380
+        },
+        {
+          "id": "01a1a485-202a-7afd-b56b-1d98bf962ff3",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_6d0bd53b38485217996d40a257849067",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_6d0bd53b38485217996d40a257849067",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a485-3399-79fa-b398-204ecf3163ee",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 10359,
+          "end": 13079
+        },
+        {
+          "id": "bad5865e-d07e-46d3-93eb-4e4513d5fc27",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 14850,
+          "end": 15650
+        },
+        {
+          "id": "01a1a485-3ff5-740b-8efd-3eac59d16a20",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a50dd68022ae5d5aa810a2a4b1641266",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_a50dd68022ae5d5aa810a2a4b1641266",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a485-59b9-75ea-b886-779222033628",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 19079,
+          "end": 22839
+        },
+        {
+          "id": "a51e3f48-042c-47cb-aceb-2e4a6d66e024",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 23929,
+          "end": 26289
+        },
+        {
+          "id": "01a1a485-6a56-7182-8b3c-e38fbe93be4e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_dec2de566aaa520399832c7fd5a8a772",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_dec2de566aaa520399832c7fd5a8a772",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a485-81a5-7475-8c8f-0c20af051c94",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 28739,
+          "end": 33059
+        },
+        {
+          "id": "081739cc-2642-4ae1-9829-26b93cc8b779",
+          "role": "user",
+          "content": "I need a flatbed from Montana to Arizona.",
+          "start": 35029,
+          "end": 38149
+        },
+        {
+          "id": "01a1a485-983a-76c6-8594-58dd51d984a2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_1554a7e455e157bca64b58216157404c",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"AZ\",\"equipment\":\"flatbed\",\"origin_state\":\"MT\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-09T00:04:00+00:00\",\"delivery_time_display\":\"November 8 at 6:04 PM Central (CST)\",\"destination\":\"Phoenix, AZ\",\"dimensions\":\"612 x 96 x 108 in\",\"equipment_type\":\"FLATBED\",\"load_id\":\"LD01102\",\"miles\":873,\"notes\":\"Coil load. Coil racks required.\",\"num_of_pieces\":5,\"offer\":1575,\"origin\":\"Billings, MT\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 7 at 11:04 PM Central (CST)\",\"weight\":7482}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_1554a7e455e157bca64b58216157404c",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a486-04d2-7005-9720-0e3dfc08ba1b",
+          "role": "assistant",
+          "content": "I found a flatbed load from Billings, MT, to Phoenix, AZ. Pickup is November 7 at 11:04 PM Central (CST), delivering November 8 at 6:04 PM Central (CST). It\u2019s 7,482 pounds of frozen goods, five pieces, 612 by 96 by 108 inches. Coil racks are required. Our offer is $1,575. Does that work?",
+          "start": 41039,
+          "end": 66639
+        },
+        {
+          "id": "7a01623c-394e-4f38-9344-4a9b5f53e3a1",
+          "role": "user",
+          "content": "Could you say the price again, please?",
+          "start": 67709,
+          "end": 69309
+        },
+        {
+          "id": "01a1a486-243a-71b8-8f00-91856b751ed8",
+          "role": "assistant",
+          "content": "Our offer is $1,575. Does that work?",
+          "start": 70359,
+          "end": 74679
+        },
+        {
+          "id": "7a486060-d0f4-4255-8557-9e95023a460c",
+          "role": "user",
+          "content": "I need 25 hundred.",
+          "start": 75369,
+          "end": 76729
+        },
+        {
+          "id": "01a1a486-2f17-7293-895a-51b0238c26ca",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_f92dbfc58e985a8084db12fa2cd2150b",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"I'll submit that rate.\",\"load_id\":\"LD01102\",\"rate\":\"2500\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1675,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_f92dbfc58e985a8084db12fa2cd2150b",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a486-4991-75f7-af07-8fa38697c801",
+          "role": "assistant",
+          "content": "Our offer is $1,675. Does that work for you?",
+          "start": 79439,
+          "end": 84239
+        },
+        {
+          "id": "1e169610-68e9-47a5-998c-917d97399de1",
+          "role": "user",
+          "content": "I need 25 hundred.",
+          "start": 85629,
+          "end": 86989
+        },
+        {
+          "id": "01a1a486-5ef0-71de-8573-638ea784fa62",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c97a3ac091b3533f9e4f9e7ead121760",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"I'll submit that rate.\",\"load_id\":\"LD01102\",\"rate\":\"2500\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1675,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_c97a3ac091b3533f9e4f9e7ead121760",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a486-7d85-7dbc-a311-ab2b813a1160",
+          "role": "assistant",
+          "content": "Our offer remains $1,675. Would you like to accept that amount?",
+          "start": 91620,
+          "end": 97540
+        },
+        {
+          "id": "f4ec60f1-5042-480e-97ec-a1ea3a12fca2",
+          "role": "user",
+          "content": "No. Thanks, bye.",
+          "start": 98709,
+          "end": 99509
+        },
+        {
+          "id": "01a1a486-88dd-7a7c-bb7a-6517fe60b447",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_419ab9f8d227597eab534ab74ce33c23",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"Discussed load LD01102 from Billings, MT, to Phoenix, AZ. No agreement; caller declined the $1,675 offer.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_419ab9f8d227597eab534ab74ce33c23",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a486-9559-7bfc-806f-678693455d73",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_631a0f23cc295b388e7e20521ccddc43",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 102039,
+          "end": 103639
+        }
+      ]
+    },
+    {
+      "run_id": "aa6da4fc-c0a4-4b88-b5aa-c32b5466848d",
+      "output_id": "dd65f2f6-9035-4ca5-9d18-3da856a2205e",
+      "status": "completed",
+      "duration": 110,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a486-c890-794d-8f3b-2336046b9b03",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 310,
+          "end": 4630
+        },
+        {
+          "id": "62fbb846-bcd6-43de-88dd-23e57aa57518",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 6180,
+          "end": 9030
+        },
+        {
+          "id": "01a1a486-dc1d-74b9-b768-01aee91ba784",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_11378f22e16a542d8300a38c231e7bee",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_11378f22e16a542d8300a38c231e7bee",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a486-efc8-74b4-ada2-0a9d505f7d9d",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 11710,
+          "end": 14670
+        },
+        {
+          "id": "aba68031-7b9c-4543-9b8d-ef9cbbffd2f2",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 15389,
+          "end": 16110
+        },
+        {
+          "id": "01a1a486-f7aa-768a-94dd-abb3e1bed98d",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_de6043a8874d581cbdc8e811fd94e849",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_de6043a8874d581cbdc8e811fd94e849",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a487-1034-7cd2-93ce-2abc05f74d04",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 19210,
+          "end": 22970
+        },
+        {
+          "id": "d49a7c36-1bd0-498d-80bc-24ded6f261f7",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 23250,
+          "end": 26130
+        },
+        {
+          "id": "01a1a487-1f3b-7a68-b229-cf393e408311",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_e826b7b9a37c5ad79f3d967438c2a52b",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_e826b7b9a37c5ad79f3d967438c2a52b",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a487-353c-7f1a-8ce1-cfa99195286f",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 28370,
+          "end": 32450
+        },
+        {
+          "id": "0618da23-af0a-4584-8d63-55721c03c61f",
+          "role": "user",
+          "content": "I need a flatbed from Ohio to Oklahoma.",
+          "start": 33440,
+          "end": 35840
+        },
+        {
+          "id": "01a1a487-4565-729c-b59f-2e0843b28606",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8b2c19fc2b1854cfa6cf810eff74e99c",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"OK\",\"equipment\":\"flatbed\",\"origin_state\":\"OH\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-10T07:11:00+00:00\",\"delivery_time_display\":\"November 10 at 1:11 AM Central (CST)\",\"destination\":\"Oklahoma City, OK\",\"dimensions\":\"516 x 96 x 108 in\",\"equipment_type\":\"FLATBED\",\"load_id\":\"LD01089\",\"miles\":950,\"notes\":\"\",\"num_of_pieces\":9,\"offer\":2100,\"origin\":\"Cleveland, OH\",\"pickup_datetime\":\"2026-11-08T16:11:00+00:00\",\"pickup_time_display\":\"November 8 at 10:11 AM Central (CST)\",\"weight\":35159}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_8b2c19fc2b1854cfa6cf810eff74e99c",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a487-a120-7757-a353-4b08fd703471",
+          "role": "assistant",
+          "content": "I found a flatbed load from Cleveland, Ohio, to Oklahoma City, Oklahoma. Pickup is November 8 at 10:11 AM Central (CST), delivery November 10 at 1:11 AM Central (CST). It\u2019s 35,159 pounds of frozen goods, 9 pieces, and the offer is $2,100. Does that work?",
+          "start": 38710,
+          "end": 60070
+        },
+        {
+          "id": "7105c4e2-8b32-4922-a27a-060c70b27bda",
+          "role": "user",
+          "content": "4000",
+          "start": 62170,
+          "end": 62810
+        },
+        {
+          "id": "01a1a487-aef4-7da3-93a3-9866710a694e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c77a899fe6b356c2ba5ad9668da43226",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01089\",\"rate\":\"4000\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":2275,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_c77a899fe6b356c2ba5ad9668da43226",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a487-c8d0-71a0-b9ab-40247a48d8e2",
+          "role": "assistant",
+          "content": "Our offer is $2,275. Would you like to accept that amount?",
+          "start": 65510,
+          "end": 70230
+        },
+        {
+          "id": "f007a8e3-d4be-41da-b476-2e1eff0bba8e",
+          "role": "user",
+          "content": "39 hundred.",
+          "start": 71280,
+          "end": 72240
+        },
+        {
+          "id": "01a1a487-e48c-7b13-b60a-8ad4cac2d49d",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount.",
+          "start": 74850,
+          "end": 77330
+        },
+        {
+          "id": "ee2277bf-3b71-43aa-a09e-d5c820393f7a",
+          "role": "user",
+          "content": "39 hundred.",
+          "start": 79409,
+          "end": 80450
+        },
+        {
+          "id": "01a1a487-faed-7bc8-a9d2-273bd6ef4f72",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_4ffa1b8046ad529f96a842c046a1e1ae",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that total.\",\"load_id\":\"LD01089\",\"rate\":\"3900\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":2450,\"round\":2,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_4ffa1b8046ad529f96a842c046a1e1ae",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a488-16a0-7ab2-b7ec-4bbebb5c1fe8",
+          "role": "assistant",
+          "content": "Our offer is $2,450. Would you like to accept that amount?",
+          "start": 85191,
+          "end": 90151
+        },
+        {
+          "id": "2fb8504e-ca88-45d3-928f-3ec235e98890",
+          "role": "user",
+          "content": "38 hundred.",
+          "start": 91380,
+          "end": 92260
+        },
+        {
+          "id": "01a1a488-28f7-7aa7-8d67-e3ee9eb69d82",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_f0a63f2b5c73521aba2d94c7c66e2820",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that total.\",\"load_id\":\"LD01089\",\"rate\":\"3800\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":2650,\"round\":3,\"status\":\"final_offer\"}}]}",
+          "tool_call_id": "call_f0a63f2b5c73521aba2d94c7c66e2820",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a488-4210-75b2-b1f5-462d2d51e4fa",
+          "role": "assistant",
+          "content": "Our final offer is $2,650. Does that work for you?",
+          "start": 96710,
+          "end": 101270
+        },
+        {
+          "id": "7d7d8f65-e5e6-4be6-a00b-132377145871",
+          "role": "user",
+          "content": "37 hundred or nothing.",
+          "start": 102060,
+          "end": 103579
+        },
+        {
+          "id": "01a1a488-4d75-79e3-a250-c9fb5a8da952",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_87d4a4842206568b8498b7c5150365a2",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting your final amount.\",\"load_id\":\"LD01089\",\"rate\":\"3700\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"status\":\"negotiation_failed\"}}]}",
+          "tool_call_id": "call_87d4a4842206568b8498b7c5150365a2",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a488-5491-782d-ba61-de3046033608",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c69fc51e6a8150d396791a9740296bd0",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"Discussed load LD01089 from Cleveland, OH, to Oklahoma City, OK; negotiation failed at the caller's $3,700 rate.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_c69fc51e6a8150d396791a9740296bd0",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a488-66c8-7a6d-bbc8-13f109f141cf",
+          "role": "assistant",
+          "content": "We can't meet that rate. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_9e137ebb751550fe83d32227b644b482",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"We can't meet that rate. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 107711,
+          "end": 110671
+        }
+      ]
+    },
+    {
+      "run_id": "8b481912-aa69-43c6-9b3c-64f70b32834f",
+      "output_id": "c1a03261-807f-4614-a176-6765cd865b80",
+      "status": "completed",
+      "duration": 81,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a488-9a38-7516-8219-f62347b48a77",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 322,
+          "end": 4722
+        },
+        {
+          "id": "a3a118eb-0a88-412c-9b22-0a6e1e113968",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5450,
+          "end": 7849
+        },
+        {
+          "id": "01a1a488-a8bd-71b1-b139-70f28bb769ab",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_7a07c223f8d25d1ca3ce4b2bf49933c6",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_7a07c223f8d25d1ca3ce4b2bf49933c6",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a488-bd88-72f8-bbd5-1169e1acc7ec",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 10482,
+          "end": 13762
+        },
+        {
+          "id": "579930c3-89fd-447c-a10d-6680fb52c1e4",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 15090,
+          "end": 15889
+        },
+        {
+          "id": "01a1a488-c80c-7d3a-90d7-5140c66e3a48",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c5884fc3778051a0a30491a64a814146",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_c5884fc3778051a0a30491a64a814146",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a488-e00f-7b95-b005-55f7a1285e07",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 19082,
+          "end": 22602
+        },
+        {
+          "id": "0f5cc8d9-c709-4bfc-9f60-543835bd78cb",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 25029,
+          "end": 27429
+        },
+        {
+          "id": "01a1a488-f5f1-7290-a2d2-5d1411ec6ab5",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a1caffb3672d5a078aa154496f304484",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_a1caffb3672d5a078aa154496f304484",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a489-0d23-7ec9-a7d9-adcea3f86176",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 29982,
+          "end": 34142
+        },
+        {
+          "id": "6f5ff5f4-f1ee-48ec-97d2-614efef279d4",
+          "role": "user",
+          "content": "Well, I need help for a reefer. From Louisiana to Tennessee.",
+          "start": 35270,
+          "end": 39440
+        },
+        {
+          "id": "01a1a489-2472-70ee-b371-8fce444238d8",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_6255e38158335dbd990b0bb467961a34",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane.\",\"dest_state\":\"TN\",\"equipment\":\"reefer\",\"origin_state\":\"LA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Steel Coils\",\"delivery_datetime\":\"2026-11-14T02:36:00+00:00\",\"delivery_time_display\":\"November 13 at 8:36 PM Central (CST)\",\"destination\":\"Nashville, TN\",\"dimensions\":\"576 x 96 x 108 in\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01088\",\"miles\":469,\"notes\":\"\",\"num_of_pieces\":8,\"offer\":975,\"origin\":\"Baton Rouge, LA\",\"pickup_datetime\":\"2026-11-11T07:36:00+00:00\",\"pickup_time_display\":\"November 11 at 1:36 AM Central (CST)\",\"weight\":32996}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_6255e38158335dbd990b0bb467961a34",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a489-7ca0-7ae3-9b64-f06ba8f2a815",
+          "role": "assistant",
+          "content": "I found a reefer load from Baton Rouge to Nashville. Pickup is November 11 at 1:36 AM Central (CST), delivery November 13 at 8:36 PM Central (CST). It\u2019s steel coils, 32,996 pounds, and the offer is $975. Does that work?",
+          "start": 42362,
+          "end": 62682
+        },
+        {
+          "id": "9a6ac1c6-c34f-4704-bf9e-7ccc7f9d4d41",
+          "role": "user",
+          "content": "When's the delivery?",
+          "start": 64959,
+          "end": 65920
+        },
+        {
+          "id": "01a1a489-ab57-7cae-9750-16452dc1ca32",
+          "role": "assistant",
+          "content": "Delivery is November 13 at 8:36 PM Central (CST). Does the $975 offer work?",
+          "start": 66882,
+          "end": 74642
+        },
+        {
+          "id": "d78ce453-4d5f-4bc5-81ae-ee2e8b47d59d",
+          "role": "user",
+          "content": "No. Thanks. Bye.",
+          "start": 75880,
+          "end": 77000
+        },
+        {
+          "id": "01a1a489-b6c8-7d0b-a1bf-6436d002cf50",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_3074497f5f6f5974a0d574b29c52ad2f",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing the call.\",\"summary\":\"Caller declined the $975 offer for load LD01088 from Baton Rouge, LA, to Nashville, TN, and ended the call.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_3074497f5f6f5974a0d574b29c52ad2f",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a489-c584-733b-b221-ada73ec9d253",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_2fe2dd203c2f5c5cb178503c040c970c",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 79262,
+          "end": 81342
+        }
+      ]
+    },
+    {
+      "run_id": "f8c60cba-a55b-462a-9736-f274142fa4d4",
+      "output_id": "3a5277a9-8d34-4b01-bd4c-8b57ebcdb8fd",
+      "status": "completed",
+      "duration": 128,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a48a-1f70-7d13-a988-6953c73cda27",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 299,
+          "end": 4779
+        },
+        {
+          "id": "79ee73eb-54a4-4002-a37d-a430ecb5baa1",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 6140,
+          "end": 8600
+        },
+        {
+          "id": "01a1a48a-312b-784a-ba95-0bfbcdacf371",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_2b1c68245f3b5449a94caa333f3ac2ce",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_2b1c68245f3b5449a94caa333f3ac2ce",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a48a-47d4-7cd3-b0a6-c410b8931232",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 11518,
+          "end": 15118
+        },
+        {
+          "id": "0380478a-ec1d-4f52-a792-33c5fd361c25",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 16289,
+          "end": 17090
+        },
+        {
+          "id": "01a1a48a-51be-7820-8a86-30d20504e9c8",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_6ee28c2cbdbb511382cd9eb135f63aa5",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_6ee28c2cbdbb511382cd9eb135f63aa5",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a48a-6a84-7cff-b573-23745e878630",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 20319,
+          "end": 23999
+        },
+        {
+          "id": "22db6cc5-fb64-4dac-83e1-bab7f5e51549",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 27250,
+          "end": 30050
+        },
+        {
+          "id": "01a1a48a-84bd-71aa-809e-9c959df9edce",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_19bed0efbeeb5b8481f06c497b7435ce",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_19bed0efbeeb5b8481f06c497b7435ce",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a48a-9ba9-7c36-b324-0c13c47229c0",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 32338,
+          "end": 36578
+        },
+        {
+          "id": "2ec07aef-27a2-47c0-a0e4-4cc47c213c17",
+          "role": "user",
+          "content": "I need a flatbed from Montana to Arizona.",
+          "start": 40690,
+          "end": 43489
+        },
+        {
+          "id": "01a1a48a-b96c-780f-a40b-5dafe9f353bd",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_7457a94a11ab51df85021c33681ca6b0",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"AZ\",\"equipment\":\"flatbed\",\"origin_state\":\"MT\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-09T00:04:00+00:00\",\"delivery_time_display\":\"November 8 at 6:04 PM Central (CST)\",\"destination\":\"Phoenix, AZ\",\"dimensions\":\"612 x 96 x 108 in\",\"equipment_type\":\"FLATBED\",\"load_id\":\"LD01102\",\"miles\":873,\"notes\":\"Coil load. Coil racks required.\",\"num_of_pieces\":5,\"offer\":1575,\"origin\":\"Billings, MT\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 7 at 11:04 PM Central (CST)\",\"weight\":7482}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_7457a94a11ab51df85021c33681ca6b0",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a48b-1935-7532-8a8e-19ffcb36ee82",
+          "role": "assistant",
+          "content": "I found a flatbed load from Billings, Montana, to Phoenix, Arizona. Pickup is November 7 at 11:04 PM Central (CST), delivery November 8 at 6:04 PM Central (CST). It\u2019s 7,482 pounds of frozen goods, five pieces, and coil racks are required. Our offer is $1,575. Does that work?",
+          "start": 46239,
+          "end": 68719
+        },
+        {
+          "id": "01a1a48b-316f-7b8c-888f-f6f9a9f453ec",
+          "role": "assistant",
+          "content": "Wou",
+          "start": 74778,
+          "end": 74918
+        },
+        {
+          "id": "ac6e7e0c-eea8-4f7f-94af-c11f68dcdc24",
+          "role": "user",
+          "content": "Let me check.",
+          "start": 74090,
+          "end": 75210
+        },
+        {
+          "id": "01a1a48b-3b94-7dcf-8c0d-9a7b1c6bc725",
+          "role": "assistant",
+          "content": "Sure, take your time.",
+          "start": 75998,
+          "end": 77518
+        },
+        {
+          "id": "02daf1da-a4f1-4b73-bd9b-93fc9b9a0227",
+          "role": "user",
+          "content": "So what did you say the price was?",
+          "start": 83640,
+          "end": 85240
+        },
+        {
+          "id": "01a1a48b-72f9-7153-82ba-a4ee2b9f7b2b",
+          "role": "assistant",
+          "content": "Our offer is $1,575. Would you like to accept that amount?",
+          "start": 86178,
+          "end": 91698
+        },
+        {
+          "id": "298fdab3-cdf6-40f4-9310-eaf93e4d6ff9",
+          "role": "user",
+          "content": "Let's do c 1600 and 25",
+          "start": 92810,
+          "end": 94919
+        },
+        {
+          "id": "01a1a48b-8ea1-72df-add2-58dd7160fab1",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount.",
+          "start": 95898,
+          "end": 98778
+        },
+        {
+          "id": "fc9d6033-ff86-42f3-be70-2f3aff9bb6f6",
+          "role": "user",
+          "content": "1600 and 25",
+          "start": 100399,
+          "end": 103339
+        },
+        {
+          "id": "01a1a48b-b9ad-780f-8fd9-e1b884734c46",
+          "role": "assistant",
+          "content": "Please state one complete total dollar amount, such as \u201c$1,625.\u201d",
+          "start": 104679,
+          "end": 109799
+        },
+        {
+          "id": "3590b706-f585-4fde-af0d-7a268fe21418",
+          "role": "user",
+          "content": "1625 dollars.",
+          "start": 110509,
+          "end": 112829
+        },
+        {
+          "id": "01a1a48b-c87f-768a-a42d-ac1b73d37669",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_693d782c692d5200a92d176d2af706f5",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01102\",\"rate\":\"1625\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01102\",\"rate\":1625,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_693d782c692d5200a92d176d2af706f5",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48b-d3aa-7414-81af-7f9775a6fa5d",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_57bdb5f509ce59739e6fc186e03685e3",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Rate agreed.\",\"summary\":\"Load LD01102 from Billings, MT to Phoenix, AZ agreed at $1,625; senior rep confirmation is pending.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_57bdb5f509ce59739e6fc186e03685e3",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a48c-02f4-7c63-8ea9-a970699443df",
+          "role": "assistant",
+          "content": "Load LD01102 at $1,625 agreed. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_f2479ecb8f375d86a7168a6a230cf690",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Load LD01102 at $1,625 agreed. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.\",\"_message\":\"Load LD01102 at $1,625 agreed. I'm transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 118078,
+          "end": 128558
+        }
+      ]
+    },
+    {
+      "run_id": "3f07545e-841a-424e-9778-f95eda21b0f0",
+      "output_id": "9bbba971-897d-4b32-a0e4-a8746dac3d0e",
+      "status": "completed",
+      "duration": 113,
+      "call_end_event": "agent_hung_up",
+      "messages": [
+        {
+          "id": "01a1a48c-5aa7-72fb-8c0b-23e74f8f10a4",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 311,
+          "end": 4711
+        },
+        {
+          "id": "1272a669-3922-4a7a-ab48-3985326215d6",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 5220,
+          "end": 7460
+        },
+        {
+          "id": "01a1a48c-68bc-7921-9239-8046899129ec",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_25b97c29f6d25d49900be96ccdf8af18",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_25b97c29f6d25d49900be96ccdf8af18",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a48c-7bdb-7503-b468-271b47185938",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 10411,
+          "end": 13211
+        },
+        {
+          "id": "13b6b866-6496-4424-a88c-a2e9d489b027",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 13680,
+          "end": 14400
+        },
+        {
+          "id": "01a1a48c-8339-7382-8a7a-dabb23d2dd99",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_82125c4ce4ba5d5db93316e4ce0448f1",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_82125c4ce4ba5d5db93316e4ce0448f1",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a48c-9c33-7b7a-bc4d-6009a30b0f72",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "start": 17571,
+          "end": 21491
+        },
+        {
+          "id": "52878b8e-c49b-48e8-87a4-1d69d29be0d8",
+          "role": "user",
+          "content": "[verification utterance omitted]",
+          "start": 22930,
+          "end": 24690
+        },
+        {
+          "id": "01a1a48c-ab24-7597-9749-20425afc55e0",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_51e52bff9504578aaea08314c6919eca",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_51e52bff9504578aaea08314c6919eca",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a48c-c23e-7f22-842f-d1ba9622ced8",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "start": 26831,
+          "end": 31231
+        },
+        {
+          "id": "e127eae5-2d0e-47b5-b926-c520692d70ac",
+          "role": "user",
+          "content": "I run a refrigerated trailer from Louisiana to Tennessee.",
+          "start": 34210,
+          "end": 37570
+        },
+        {
+          "id": "01a1a48c-ddf6-74d0-8365-2fd3bb72e001",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_aa1c43d344b65ea7836113fc5a8376a0",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"TN\",\"equipment\":\"reefer\",\"origin_state\":\"LA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Steel Coils\",\"delivery_datetime\":\"2026-11-14T02:36:00+00:00\",\"delivery_time_display\":\"November 13 at 8:36 PM Central (CST)\",\"destination\":\"Nashville, TN\",\"dimensions\":\"576 x 96 x 108 in\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01088\",\"miles\":469,\"notes\":\"\",\"num_of_pieces\":8,\"offer\":975,\"origin\":\"Baton Rouge, LA\",\"pickup_datetime\":\"2026-11-11T07:36:00+00:00\",\"pickup_time_display\":\"November 11 at 1:36 AM Central (CST)\",\"weight\":32996}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_aa1c43d344b65ea7836113fc5a8376a0",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a48d-2fb2-7efb-bb0b-01339b3b1e6c",
+          "role": "assistant",
+          "content": "I found a reefer load from Baton Rouge to Nashville. Pickup is November 11 at 1:36 AM Central (CST), delivery November 13 at 8:36 PM Central (CST). It\u2019s steel coils, 32,996 pounds, 8 pieces. Our offer is $975. Does that work?",
+          "start": 40291,
+          "end": 59251
+        },
+        {
+          "id": "1227460d-e943-499f-a34e-1c38989d31fc",
+          "role": "user",
+          "content": "No. I need it to be 3000",
+          "start": 61770,
+          "end": 63690
+        },
+        {
+          "id": "01a1a48d-442d-727c-afcf-53f3d8514129",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_82dc3359e9475919baf8f8b243ef6acf",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01088\",\"rate\":\"3000\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1000,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_82dc3359e9475919baf8f8b243ef6acf",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48d-5943-71f6-8f69-6d15604ddf99",
+          "role": "assistant",
+          "content": "Our offer is $1,000. Would you like to accept that amount?",
+          "start": 66291,
+          "end": 69891
+        },
+        {
+          "id": "461e521a-ce23-4100-bc44-b21c42ef9e14",
+          "role": "user",
+          "content": "3000 again.",
+          "start": 71620,
+          "end": 72820
+        },
+        {
+          "id": "01a1a48d-674b-7808-bde0-9481a11f4f84",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_70be4ad1552f55a8a6fac9a5b3118a92",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting your rate again.\",\"load_id\":\"LD01088\",\"rate\":\"3000\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1000,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_70be4ad1552f55a8a6fac9a5b3118a92",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48d-7de7-74b3-8d87-3fb97647e1ec",
+          "role": "assistant",
+          "content": "Our offer remains $1,000. Would you like to accept that amount?",
+          "start": 75271,
+          "end": 79271
+        },
+        {
+          "id": "617be865-b78e-481f-afa7-5be100a2fed8",
+          "role": "user",
+          "content": "3500",
+          "start": 79860,
+          "end": 81060
+        },
+        {
+          "id": "01a1a48d-8801-7efd-8195-16cf041b638f",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_928b9d4d1f7c5b26a6480481601eb32b",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01088\",\"rate\":\"3500\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1025,\"round\":2,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_928b9d4d1f7c5b26a6480481601eb32b",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48d-a2ee-7f1b-8804-7ae61035d7a1",
+          "role": "assistant",
+          "content": "Our offer is $1,025. Would you like to accept that amount?",
+          "start": 83791,
+          "end": 88751
+        },
+        {
+          "id": "436a1535-ff0e-431e-94ff-4935f228325d",
+          "role": "user",
+          "content": "4000",
+          "start": 89829,
+          "end": 90549
+        },
+        {
+          "id": "01a1a48d-b4ea-7092-b615-e695fac1b6a9",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_88d8ddae592951e390d67628c4600330",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01088\",\"rate\":\"4000\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1075,\"round\":3,\"status\":\"final_offer\"}}]}",
+          "tool_call_id": "call_88d8ddae592951e390d67628c4600330",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48d-d02b-72b3-992e-16edc9c85f85",
+          "role": "assistant",
+          "content": "Our final offer is $1,075. Does that work for you?",
+          "start": 95371,
+          "end": 100331
+        },
+        {
+          "id": "93f88094-975e-4167-813d-41c161d4906a",
+          "role": "user",
+          "content": "4500",
+          "start": 101130,
+          "end": 102490
+        },
+        {
+          "id": "01a1a48d-dc1c-7313-b6d3-9ea30744a09a",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_6f447d91be92598c8e90248e6b0f6ead",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"load_id\":\"LD01088\",\"rate\":\"4500\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"status\":\"negotiation_failed\"}}]}",
+          "tool_call_id": "call_6f447d91be92598c8e90248e6b0f6ead",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a48d-f2b3-740a-88f0-8686353bc645",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_f6af7f5a39c7570b95c8a90aeb38d75d",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Closing this call.\",\"summary\":\"Discussed load LD01088 from Baton Rouge, LA to Nashville, TN; negotiation ended without agreement.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_f6af7f5a39c7570b95c8a90aeb38d75d",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a48e-0497-7ac9-a05d-2603c62f2d7e",
+          "role": "assistant",
+          "content": "We can't meet that rate. Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_4bcd38667079523f9c85b383ca1dc867",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"We can't meet that rate. Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 110711,
+          "end": 113751
+        }
+      ]
+    }
+  ],
+  "storage_snapshot": {
+    "generated_at": "2026-11-04T03:21:05.249426+00:00",
+    "live_booking": false,
+    "calls": [
+      {
+        "id": "3f07545e-841a-424e-9778-f95eda21b0f0",
+        "cohort": "synthetic",
+        "outcome": "negotiation_failed",
+        "agreement": null,
+        "booking": null,
+        "rounds": 3,
+        "closed_at": "2026-11-04T03:15:28.852183+00:00",
+        "ended_at": "2026-11-04T03:15:33.421739+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 113,
+        "summary": "Discussed load LD01088 from Baton Rouge, LA to Nashville, TN; negotiation ended without agreement."
+      },
+      {
+        "id": "f8c60cba-a55b-462a-9736-f274142fa4d4",
+        "cohort": "synthetic",
+        "outcome": "agreed_pending_rep",
+        "agreement": {
+          "mc": "138328",
+          "rate": 1625,
+          "load_id": "LD01102"
+        },
+        "booking": {
+          "load_id": "LD01102",
+          "state": "RESERVED",
+          "submitted": false
+        },
+        "rounds": 1,
+        "closed_at": "2026-11-04T03:13:09.884213+00:00",
+        "ended_at": "2026-11-04T03:13:22.062699+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 128,
+        "summary": "Load LD01102 from Billings, MT to Phoenix, AZ agreed at $1,625; senior rep confirmation is pending."
+      },
+      {
+        "id": "8b481912-aa69-43c6-9b3c-64f70b32834f",
+        "cohort": "synthetic",
+        "outcome": "ended_without_agreement",
+        "agreement": null,
+        "booking": null,
+        "rounds": 0,
+        "closed_at": "2026-11-04T03:10:51.415944+00:00",
+        "ended_at": "2026-11-04T03:10:55.313856+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 81,
+        "summary": "Caller declined the $975 offer for load LD01088 from Baton Rouge, LA, to Nashville, TN, and ended the call."
+      },
+      {
+        "id": "aa6da4fc-c0a4-4b88-b5aa-c32b5466848d",
+        "cohort": "synthetic",
+        "outcome": "negotiation_failed",
+        "agreement": null,
+        "booking": null,
+        "rounds": 3,
+        "closed_at": "2026-11-04T03:09:20.779978+00:00",
+        "ended_at": "2026-11-04T03:09:25.363766+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 110,
+        "summary": "Discussed load LD01089 from Cleveland, OH, to Oklahoma City, OK; negotiation failed at the caller's $3,700 rate."
+      },
+      {
+        "id": "7612f166-4a8e-43bb-a6e8-3d8b4d3a6500",
+        "cohort": "synthetic",
+        "outcome": "ended_without_agreement",
+        "agreement": null,
+        "booking": null,
+        "rounds": 1,
+        "closed_at": "2026-11-04T03:07:22.961227+00:00",
+        "ended_at": "2026-11-04T03:07:26.280625+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 103,
+        "summary": "Discussed load LD01102 from Billings, MT, to Phoenix, AZ. No agreement; caller declined the $1,675 offer."
+      },
+      {
+        "id": "e9abb7f3-4774-47d0-b058-d3279c5eb75f",
+        "cohort": "synthetic",
+        "outcome": "agreed_pending_rep",
+        "agreement": {
+          "mc": "138328",
+          "rate": 2050,
+          "load_id": "LD01100"
+        },
+        "booking": {
+          "load_id": "LD01100",
+          "state": "RESERVED",
+          "submitted": false
+        },
+        "rounds": 1,
+        "closed_at": "2026-11-04T03:05:18.538074+00:00",
+        "ended_at": "2026-11-04T03:05:30.599250+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 113,
+        "summary": "Load LD01100 from Tucson, AZ to Houston, TX agreed at $2,050; senior rep confirmation is pending."
+      },
+      {
+        "id": "cc1633ba-7834-4aed-a0fd-2c6fcc6e1fa5",
+        "cohort": "synthetic",
+        "outcome": "agreed_pending_rep",
+        "agreement": {
+          "mc": "138328",
+          "rate": 2275,
+          "load_id": "LD01112"
+        },
+        "booking": {
+          "load_id": "LD01112",
+          "state": "RESERVED",
+          "submitted": false
+        },
+        "rounds": 0,
+        "closed_at": "2026-11-04T03:03:10.122272+00:00",
+        "ended_at": "2026-11-04T03:03:22.496730+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 85,
+        "summary": "Load LD01112 from Denver, CO to Tallahassee, FL agreed at $2,275; senior rep confirmation is pending."
+      },
+      {
+        "id": "5bacb8fd-28fd-4733-b27b-8537d93e73c0",
+        "cohort": "synthetic",
+        "outcome": "carrier_ineligible",
+        "agreement": null,
+        "booking": null,
+        "rounds": 0,
+        "closed_at": "2026-11-04T03:01:36.022825+00:00",
+        "ended_at": "2026-11-04T03:01:45.131601+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 19,
+        "summary": "MC 134652 was ineligible because registration is not active; no load search was completed."
+      },
+      {
+        "id": "b4f55923-72a7-458f-bd71-9004873c6eba",
+        "cohort": "synthetic",
+        "outcome": "agreed_pending_rep",
+        "agreement": {
+          "mc": "138328",
+          "rate": 3800,
+          "load_id": "LD01116"
+        },
+        "booking": {
+          "load_id": "LD01116",
+          "state": "RESERVED",
+          "submitted": false
+        },
+        "rounds": 0,
+        "closed_at": "2026-11-04T03:00:07.561169+00:00",
+        "ended_at": "2026-11-04T03:00:19.931043+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 134,
+        "summary": "Agreed on service-approved load LD01116 at $3,800; senior rep confirmation is pending."
+      },
+      {
+        "id": "ebe0e330-feb4-494b-b0d7-5abb82ebe663",
+        "cohort": "synthetic",
+        "outcome": "carrier_ineligible",
+        "agreement": null,
+        "booking": null,
+        "rounds": 0,
+        "closed_at": "2026-11-04T02:57:32.228577+00:00",
+        "ended_at": "2026-11-04T02:57:40.779589+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 21,
+        "summary": "MC 134652 is ineligible because FMCSA does not show active operating authority; no load search completed."
+      },
+      {
+        "id": "498eab57-1539-4208-bba0-9e35a1690c8f",
+        "cohort": "synthetic",
+        "outcome": "carrier_ineligible",
+        "agreement": null,
+        "booking": null,
+        "rounds": 0,
+        "closed_at": "2026-11-04T02:56:50.289946+00:00",
+        "ended_at": "2026-11-04T02:56:58.496872+00:00",
+        "ended_by": "agent",
+        "duration_seconds": 19,
+        "summary": "MC 134652 is ineligible because registration is not active; no load search was completed."
+      }
+    ],
+    "bookings": [
+      {
+        "load_id": "LD01116",
+        "state": "RESERVED",
+        "call_id": "b4f55923-72a7-458f-bd71-9004873c6eba",
+        "mc": "138328",
+        "rate": 3800,
+        "cohort": "synthetic"
+      },
+      {
+        "load_id": "LD01112",
+        "state": "RESERVED",
+        "call_id": "cc1633ba-7834-4aed-a0fd-2c6fcc6e1fa5",
+        "mc": "138328",
+        "rate": 2275,
+        "cohort": "synthetic"
+      },
+      {
+        "load_id": "LD01100",
+        "state": "RESERVED",
+        "call_id": "e9abb7f3-4774-47d0-b058-d3279c5eb75f",
+        "mc": "138328",
+        "rate": 2050,
+        "cohort": "synthetic"
+      },
+      {
+        "load_id": "LD01102",
+        "state": "RESERVED",
+        "call_id": "f8c60cba-a55b-462a-9736-f274142fa4d4",
+        "mc": "138328",
+        "rate": 1625,
+        "cohort": "synthetic"
+      }
+    ]
+  }
+}

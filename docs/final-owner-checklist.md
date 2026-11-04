@@ -1,22 +1,19 @@
 # Finish and submit
 
-The build is released: reviewed source bf512aa, healthy service release 17, live Version 6 and App Build 20. The remaining work is targeted voice acceptance, your video and final access/submission approvals. No new booking, BOOKED status, capacity benchmark or cohort change is required by the assignment.
+The service and App are released: healthy service release 17, live Version 6 and App Build 20. Your 11 Version 6 calls now establish proactive endings in timed traces and saved end records. One wrong-amount reservation and one omitted-note pitch led to the approved Version 7 fix. That draft is tested but unpublished. Review and approve its publication before the two focused voice checks below. No service deployment is needed. Booking sends stay off and calls stay synthetic.
 
-## 1. Three targeted calls, about 10 minutes
+## 1. Two focused calls after approved Version 7 publication
 
-Open the [web-call demo](https://platform.happyrobot.ai/deployments/6oaskq84xpfc). Leave booking sends off and calls synthetic. Use MC 138328 for the eligible examples, following the actual FMCSA result and reading the emailed code yourself. Do not paste a code into chat or show one in the video.
+Codex should first read current load availability and give you exact lane/load details. Do not reuse a held lane blindly: LD01116, LD01112, LD01100 and LD01102 are held from the latest tests. No hold was released. Use MC 138328 if FMCSA still returns eligible, confirm the carrier name and read the emailed code yourself. Never paste a code into chat or show one in the video.
 
 | Call | What to do | What must happen |
 |---|---|---|
-| A: refusal | Give MC 134652, expected ineligible in the earlier handover | On the actual ineligible result, hear the reason, thanks and goodbye; the agent ends without your farewell, extra turn or idle filler |
-| B: agreement | Verify, request an available lane and listen to the pickup time. Say "1600 and 25". After clarification, give one complete total. If needed, explicitly accept the offer the service actually returns | No partial number is submitted before clarification. Hear the correct named Central time. At agreement, hear the service-approved load ID/rate, mocked senior-rep handoff, thanks and goodbye before the agent hangs up |
-| C: failed negotiation | Verify and find a load. Give a clear ask above its offer, then repeat exactly the same ask once. Continue with distinct asks above each returned offer until negotiation fails | The unchanged offer is described as unchanged. Only a service final_offer is called final. On negotiation_failed, hear a professional refusal and goodbye, no handoff, then agent hangup |
+| A: trailing fragment | On a supplied available load, say "3800 and 25". When asked for a complete total, say only "3800". At the 3800 readback, say "25 dollars". When asked again, say "Three thousand eight hundred twenty-five dollars". At the 3825 readback, first correct it to another complete total to check a fresh readback. Then confirm yes only if you want that ask submitted | No negotiate at 3800 or 25, no inferred 3825. Each completed corrected amount is read back and awaits yes. Only the final confirmed total reaches negotiate. Follow the service's counter or agreement. If agreed, hear load/rate, mocked rep handoff, thanks, goodbye and proactive hangup |
+| B: notes and ordinary acceptance | On a second supplied available load, listen for all operating conditions, exact free detention period and hourly fee where supplied. Give an ordinary clear total or accept the actual offer | Complete notes before the offer question; no note fee added to the quote. A clear initial amount or direct yes reaches negotiate without an extra readback. On agreement, hear the full truthful handoff/closing and agent hangup |
 
-Identical asks do not use another round. Call C therefore needs distinct later asks. Load availability changes; use what the service actually offers. Earlier held synthetic loads can remain held. Claude's handover suggested flatbed MT to AZ and refrigerated LA to TN as alternatives; try different lanes for calls B and C, because call B may reserve its load. Availability is not guaranteed. Avoid relying on earlier held FL to NY, MA to CA and MI to GA loads. Agreement creates a local reservation, not a TMS booking.
+Both calls can create local reservations. A clear ask can be accepted immediately; there is no promise that a counter is harmless to local availability. Booking sends remain off, so neither call submits to the TMS. You may instead decline before confirming an amount when you only want to test clarification. Do not click Confirm or release a hold without separate approval.
 
-Optional fourth short check: correct an MC and interrupt a pitch, then verify recovery. Earlier Version 5 calls cover useful unchanged behavior, but correction/interruption evidence is limited. These targeted calls do not establish every possible conversation.
-
-Tell Codex when you finish, with approximate times or run IDs. Codex will inspect the transcript, exact tool arguments, complete audio delivery, agent_hung_up and stored close/end activity. You do not need to inspect platform logs yourself. Failures and reruns remain in the report; a failed check gets a focused fix before recording.
+Tell Codex when done, with approximate times or run IDs. Codex will inspect exact tool arguments, timing, hangup and stored records; say whether the full closing was audible, because recordings were not retrievable in the latest review. These checks target the two changed behaviors and intact ending. Your successful Version 6 refusal, repetition, failed-negotiation and time checks remain useful evidence. They do not prove every possible conversation.
 
 ## 2. Record the approximately five-minute walkthrough
 
@@ -30,7 +27,7 @@ Keep the explanation simple: the model conducts the conversation, the service en
 
 - Review the refreshed build-description PDF in submission/ready-to-submit/. It is already generated and visually checked.
 - Add your video URL to the candidate portal and the submission record. The prospect summary email is drafted in [submission.md](submission.md).
-- Approve pushing the local documentation commits. Runtime code is already pushed and deployed; no new deployment is needed for these documentation changes.
+- Approve pushing the local documentation commits. Runtime code is already pushed and deployed; no service deployment is needed for the prompt/documentation change. Workflow publication remains a separate approval.
 - Provide/confirm reviewer GitHub handles and approve invitations. The repository is private; the latest read-only access check found only the owner and zero pending invitations. Reviewers also need working HappyRobot workflow/App access. Do not share service keys.
 - Review the portal fields, attach the PDF, provide the private repository URL and optionally the prepared source ZIP if useful or requested, and approve submission. Nothing has been uploaded, sent or submitted automatically.
 
@@ -38,6 +35,6 @@ The portal offers repository URL and code ZIP entry, a walkthrough-video URL and
 
 ## What has already been checked
 
-487 offline service tests, actual 100% service statement/branch coverage, 256/256 business branches, strict types/lint and Radon B or better. The exact live prompt passed 40 checkpoints twice. Frontend clean-copy checks pass with 39 tests, three existing lint warnings, production build then typecheck, and zero production dependency vulnerabilities. All 77 App archive files match the checkout. Published App views and both detail panels were reviewed at 1280x900 with no page-level horizontal overflow and every visible Confirm disabled.
+487 offline service tests, actual 100% service statement/branch coverage, 256/256 business branches, strict types/lint and Radon B or better. The live Version 6 prompt passed 40 checkpoints twice. Unpublished Version 7 passed 51 current checkpoints twice; all failures, fixture corrections and full-text limits are retained. Frontend clean-copy checks pass with 39 tests, three existing lint warnings, production build then typecheck, and zero production dependency vulnerabilities. All 77 App archive files match the checkout. Published App views and both detail panels were reviewed at 1280x900 with no page-level horizontal overflow and every visible Confirm disabled.
 
-The [QA report](qa-results.md), [voice evidence](voice-tuning.md) and [release record](releases/2026-11-04-v6/README.md) preserve versions, failures and limits. The remaining voice acceptance is specific to the changed Version 6 behavior; it does not erase your Version 5 testing or require repeating every earlier automated scenario.
+The [QA report](qa-results.md), [voice evidence](voice-tuning.md) and [release record](releases/2026-11-04-v6/README.md) preserve versions, failures and limits. The remaining voice acceptance targets the changed Version 7 behavior after approved publication. It does not erase your Version 5 and Version 6 testing or require repeating every earlier scenario.

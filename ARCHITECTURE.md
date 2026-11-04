@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Version** | 3.1 candidate, 2026-11-03 |
-| **Status** | Version 6, service release 17 from bf512aa and App Build 20 are live. The reviewed voice/time fixes are released; current-version human voice acceptance remains open. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the published UI was checked. See docs/voice-tuning.md and docs/releases/2026-11-04-v6/README.md. |
+| **Status** | Version 6, service release 17 from bf512aa and App Build 20 are live. Eleven owner Version 6 calls provide timed closing and stored end-event evidence. The remaining amount/notes fix is in unpublished Version 7, awaiting review, approved publication and targeted voice acceptance. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the published UI was checked. See docs/voice-tuning.md and docs/releases/2026-11-04-v6/README.md. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |

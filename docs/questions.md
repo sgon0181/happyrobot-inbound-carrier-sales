@@ -2,13 +2,13 @@
 
 PDF: [challenge brief](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
 
-Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d). Questions 1-3 are intentionally ambiguous: choose and document assumptions. They were not given definitive technical answers. Project assumptions are recorded in [`decisions.md`](decisions.md).
+Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a18873af586e52d). That initial reply asked the candidate to choose and document assumptions for questions 1 to 3. The later email below accepts the demonstrated booking approach. Project assumptions are recorded in [`decisions.md`](decisions.md).
 
 1. **Q:** When should I actually call `LOAD_BOOK`? The PDF says the load is tentatively reserved before the senior rep confirms, but `LOAD_BOOK` commits the booking and I couldn't find a cancellation operation in the handbook. Should I book as soon as the carrier agrees to the rate, or save the pending agreement in Twin and only call `LOAD_BOOK` once the simulated senior rep approves it through the Apps dashboard?
 
    **Reference:** PDF pp. 2-3, Process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
 
-   **A:** Luke: intentionally ambiguous; choose and document an assumption. He did not specify booking timing.
+   **A:** On October 30 Luke left the timing to the candidate. On November 5 he accepted the approach in the November 3 follow-up, described under Q8.
 
    **Our assumption (D-22, replacing D-8):** Reserve the load in Twin at rate agreement, then send `LOAD_BOOK` once when the senior rep confirms. See [`decisions.md`](decisions.md) and [the architecture](../ARCHITECTURE.md#10-reservation-and-confirm).
 
@@ -30,7 +30,7 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
    **Reference:** PDF p. 5, Deliverables items 1, 2, and 5.
 
-   **A:** Present to the brokerage's business team, suitable for a business review.
+   **A:** The October 30 guidance emphasized the brokerage's business team. On November 5 Luke specified both IT and business stakeholders and asked for a working call at volume. The reviewers will evaluate the code, dashboard and demo.
 
 5. **Q:** When you said creativity, what exactly did you mean? Once the requirements are covered, should I focus on creative ways to solve the customer's actual problems, or are you also looking for extra ideas beyond the brief? For example, I had an idea of adding an animated face to the voice agent for a FaceTime-style experience. I could go quite far with something like that, but I'd like to understand whether you'd value that kind of extra feature or prefer that effort to go into making the solution more useful for the client and final end goal of helping the customer make more revenue.
 
@@ -52,12 +52,14 @@ Luke replied on 2026-10-30 (Australia/Sydney): [source email](https://mail.googl
 
 8. **Q:** Is `STATUS:PENDING` expected for my candidate token after `LOAD_BOOK`? What supported action moves an acknowledged request to `BOOKED`? If the sandbox intentionally stops at `PENDING`, what outcome should the demo demonstrate? If needed, could this be routed to the TMS owner?
 
-   **Status:** Sent to Luke by email; awaiting Luke's reply.
+   Earlier probes on the candidate token returned PENDING references. A separate active-carrier attempt lost its receipt and was recorded as UNKNOWN. The documented examples and those observations do not establish a general sandbox rule. [Probe and recovery evidence](tms-contract.md#active-mc-attempt-on-a-real-call)
 
-   **Context:** Four disposable loads tested within fresh `MAX_BUY` values received booking references with `STATUS:PENDING` and remained pending roughly 40 minutes later. All used MC 872144, which FMCSA showed as inactive on 2026-10-31. The handbook shows `BOOKED` but documents no confirmation operation. No real `BOOKED` acknowledgement or transition has been observed. Since that email, one `LOAD_BOOK` on a real call with active MC 138328 lost its reply and ended `UNKNOWN`. LD01077 then read `PENDING` for about 23 minutes with no reference, and seven sends have produced no `BOOKED` ([evidence](tms-contract.md#active-mc-attempt-on-a-real-call)).
+   On November 3, 2026 Santiago described the completed web call and the separate rep-approved TMS submission. The response contained a reference and `STATUS:PENDING`. He proposed saving the carrier agreement in Twin, waiting for the senior rep to authorize one send, and displaying the returned acknowledgement separately from a final booking. He also asked whether there was a supported step to reach `BOOKED`.
 
-   **Reference:** Owner's follow-up email to Luke; PDF pp. 1-3, first-layer scope and process steps 5-6; [LOAD_BOOK](https://fde-challenge-candidate-handbook-production.up.railway.app/spec/load-book/).
+   Luke replied by email on November 5, 2026 at 02:32 Sydney time and accepted proceeding with that approach for the challenge. The rep's Confirm remains the only path to submit the booking. The reply supplied no finalization command or condition and did not establish whether every candidate token returns `PENDING`. The service retains the receipt, reports `ACK_PENDING` and recognizes a final booking only from authoritative `BOOKED` evidence. [November 5 email thread, owner access](https://mail.google.com/mail/u/?authuser=santiagog11999%40gmail.com#all/1a17a9a9aa848990)
 
-   **Current assumption:** Proceed with first-layer automation through verification, matching, negotiation, a tentative reservation and mocked senior-rep handoff. Under D-22 the rep's Confirm sends `LOAD_BOOK` once and preserves the actual reply. Display actual TMS status and do not count a pending acknowledgement as a confirmed booking. No external finalization mechanism is claimed. The timing is our documented choice, not Luke-confirmed behavior, and can be revisited if he answers.
+## Logistics from the same November 5 reply
 
-   **Review before final submission:** Check for Luke's reply, record his answer here, and assess any impact on the implementation, architecture and demo wording. If no reply is available, keep this question open and explicitly review and disclose the remaining assumption. This clarification does not block the build and must not be marked answered without a response.
+1. **Source submission.** Luke accepts the source ZIP through the candidate portal. A private GitHub link is an alternative. HappyRobot assigns a reviewer after submission, and Luke can provide the GitHub account to invite then. The ZIP route needs no GitHub invitation before submission.
+2. **Review and availability.** Reviewers will assess the code, dashboard and demo. Show a working call at volume to IT and business stakeholders. Our evidence pairs the filmed call with 49 completed demo sessions across workflow versions. These sessions measure observed activity and provide no concurrent throughput benchmark. Luke did not say whether reviewers will operate the web call or dashboard themselves and gave no required uptime window.
+3. **Sandbox inventory.** Luke believes inventory is unlikely to be limited and said a few more demo bookings were acceptable. If a limit is encountered, report it to him. No per-candidate quota, reset mechanism or unlimited supply was established.

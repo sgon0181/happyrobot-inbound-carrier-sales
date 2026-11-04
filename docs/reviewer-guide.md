@@ -13,3 +13,5 @@
 | Deployment and responsibilities | [Build description](build-description.md) covers Docker, one-command deployment and system owners. [Decisions](decisions.md) records pricing assumptions and the interpretation of PENDING. |
 
 A supervised pilot can compare dispatcher time and verified calls producing a rep-ready agreement with a comparable staffed shift. Telephony and a staffing baseline are needed to measure missed calls, waiting time and labor impact.
+
+Luke's November 5 guidance asks for a working call at volume for both IT and business stakeholders. Review the filmed agreement and the 49 recorded sessions together. These calls span workflow versions and do not establish concurrent capacity. The source ZIP is accepted through the portal, and a private repository link is an alternative. For that route, the account to invite is supplied after reviewer assignment. [Dated clarification](questions.md)

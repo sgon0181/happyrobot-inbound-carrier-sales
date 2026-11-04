@@ -8,7 +8,7 @@ The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02, and later th
 
 ### D-22: `LOAD_BOOK` is sent at the rep's Confirm, not during the call
 
-Replaces D-8.
+Replaces D-8. On November 5 Luke accepted the approach described in the November 3 follow-up, including one submission at rep confirmation and a separate PENDING acknowledgement. No general sandbox finalization behavior was established. [Q8](questions.md)
 
 - **Why:** the TMS has no cancel and no idempotency key. During a call, that send had to finish inside a 12 second request on a database allowing about 4 statements per second, while the carrier could hang up.
 - **Evidence:** a hang-up during booking made the load unavailable on the observed token, a Twin failure after a real send left no stored reference, and in the model two bookings starting together sent nothing. On LD01094 a load was spent before the caller clearly agreed. The send path took 21 statements, and the code protecting it accounted for much of the size.
@@ -145,7 +145,7 @@ The service keeps call identity and deployment tags on each record. The rep need
 | ID | Question | State | If it fails |
 |---|---|---|---|
 | T-1 | Do Twin version checks and primary keys hold? | Proven on probes and real tables, and on the new `calls` table from Fly on 2026-11-03: insert, version-checked update, and a stale update refused. `id` is the primary key of both tables. | Small Postgres for coordination, justified under PDF p.4 |
-| T-2 | What do `PENDING`, currency and bounds mean? | Open. Asked as [Q8](questions.md). | Show the actual status and disclose the assumption |
+| T-2 | What do `PENDING`, currency and bounds mean? | Q8 answered on November 5 for the demonstrated handling. External finalization is unspecified. Currency and rate bounds remain open under Q3. [Clarifications](questions.md) | Show the actual status and disclose the assumption |
 | T-3 | Can the service deliver codes? | Proven: Gmail SMTP from Fly | |
 | T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype, and on the real workflow on 2026-11-03: the model's tool arguments held only the MC and code, and the Twin row is keyed by the run's ID. | |
 | T-5 | Can the service reach FMCSA? | Proven from Fly `iad`, again by the new service on 2026-11-03. The local machine gets HTTP 403. | Native HTTP node passes the raw result |

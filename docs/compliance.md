@@ -58,7 +58,7 @@ Ten Version 5 owner calls exposed partial amounts, invented final wording and po
 |---|---|---|---|
 | D1 | Prospect email with build and next steps | Corrected prospect text in submission.md, five tailored next steps and links; owner alone handles final submission | Partial: text ready; owner video URL and owner submission remain |
 | D2 | Business/IT build description | Updated build-description.md records this release and the identity, capture, ceiling, PENDING and reliability limits | Qualified: current PDF is generated and visually checked; final portal submission awaits video |
-| D3 | Private repository and reviewer invitations | Private/default-main verified read-only on GitHub; only owner collaborator and zero pending invitations | Partial: owner authorized invitations, but intended reviewer identities have not been provided; source ZIP also prepared for portal review |
+| D3 | Source for reviewer | Source ZIP prepared. Luke accepted portal ZIP upload in the November 5 email. A private repository link is an alternative. | Ready for owner upload. Only the private-link route requires inviting the account assigned after submission. |
 | D4 | Workflow link | Exact Version 8 editor and web-call links in submission.md; Version 8 is live | Qualified: publication complete; reviewer-account access still needs validation |
 | D5 | About-five-minute video, demo, App and QA | walkthrough.md run sheet and required closing next steps | Gap: owner-recorded video and final URL absent |
 
@@ -77,7 +77,7 @@ Ten Version 5 owner calls exposed partial amounts, invented final wording and po
 
 X1 full redesign pieces 3 to 7 requires owner review before further expansion. X2 capacity needs an agreed workload for a pilot, not an assumed 12-call rubric. X3 carrier-experience measures need actual audio/turn evidence. X4 a verbatim transcript is not required for the chosen structured-decision trail; adding one would need retention/redaction decisions. Optional A to C are analyzed separately and remain unimplemented without approval.
 
-The page 1 phrase about confirmed bookings and page 3 rep-confirm step are ambiguous; D-22 follows the explicit tentative-reservation process. No official inventory quota, permanent load-consumption guarantee, finalization command or successful live BOOKED response is invented. Luke's Q8 remains open.
+The page 1 phrase about confirmed bookings and page 3 rep-confirm step are ambiguous; D-22 follows the explicit tentative-reservation process. No official inventory quota, permanent load-consumption guarantee, finalization command or successful live BOOKED response is invented. Luke accepted the demonstrated handling in Q8 on November 5. The underlying external finalization mechanism remains unspecified.
 
 ## Historical Version 4 checkpoint findings
 

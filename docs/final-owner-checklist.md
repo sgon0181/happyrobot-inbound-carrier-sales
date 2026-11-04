@@ -38,10 +38,10 @@ Explain: the model conducts the conversation, the service enforces eligibility/c
 
 ## 3. Owner-controlled submission
 
-- Push reviewed commits and record exact live Version 8/service 17/App 22 facts.
+- Push reviewed commits and record the verified workflow, service and native App release details.
 - Refresh the build-description PDF, prospect summary text, source ZIP and manifest from tracked source only.
 - The owner alone enters portal fields, attaches files and submits. Codex leaves the portal untouched.
-- Preserve a private repository. Reviewer account names are absent from the portal and Luke's latest replies. Include the source ZIP for portal review; invite only identified intended reviewers when their accounts are supplied. Do not guess accounts or share service keys.
+- Upload the prepared source ZIP through the portal. Luke accepted this route on November 5. For the optional private GitHub link, ask Luke for the assigned reviewer's account after submission. Keep service keys private.
 
 Earlier blanket submission approval was withdrawn. The owner controls final portal work. The owner reports a successful normal Version 8 call, without independent transcript/audio review of that latest call. The video URL remains outstanding. No additional booking or reservation cleanup is necessary.
 

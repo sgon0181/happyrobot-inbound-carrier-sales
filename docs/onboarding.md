@@ -10,7 +10,7 @@ Updated 2026-11-04 (Australia/Sydney). The shared starting map for the owner, Cl
 2. [`../ARCHITECTURE.md`](../ARCHITECTURE.md): how the system works.
 3. [`decisions.md`](decisions.md): why it works that way, and what is still open.
 4. [`assignment.md`](assignment.md) and the [assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf): requirements and deliverables.
-5. [`questions.md`](questions.md): Luke's answers, and the unanswered Q8.
+5. [`questions.md`](questions.md): Luke's November 5 acceptance of the PENDING handling, ZIP submission route, reviewer timing and sandbox inventory limits of evidence.
 6. [`tms/README.md`](tms/README.md) and [`tms-contract.md`](tms-contract.md): protocol usage, live observations and spent inventory.
 
 Keep requirements, observed behaviour, assumptions and simulations distinct. The handbook is a field manual with sample transcripts, and a live discrepancy must be recorded with its scope. Reading `PENDING` as any particular business stage is an interpretation, not a confirmed contract.
@@ -19,7 +19,7 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Use the unified carrier-sales workspace and Overview. Build 23 from `147eb49` is the verified performance baseline. Workflow Version 8 and service release 17 power the calls. Video URL and intended reviewer access remain owner steps. |
+| `main` | Use the unified carrier-sales workspace and Overview. Build 23 from `147eb49` is the verified performance baseline. Workflow Version 8 and service release 17 power the calls. The owner adds the video URL and submits the ZIP. A GitHub invite applies if the private-link alternative is chosen after reviewer assignment. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
 | Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
@@ -36,9 +36,9 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
-After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. At that earlier release check, the native App selector showed production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
+After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. At that earlier release check, the native App selector showed production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; that was an access snapshot. Luke later accepted a portal ZIP without a prior GitHub invitation.
 
-Historical Version 7 publication matched reviewed 9d7a149. Version 8 subsequently replaced it under the owner's non-portal release approval, with exact post-publication root and tool readbacks matching eaa2661. No service deployment, App publication or secret change was needed. See releases/2026-11-04-v8/README.md. The owner withdrew portal-writing authorization and handles final submission alone. Do not open, fill, upload to or submit through the portal. Reviewer access completion remains unverified; do not guess reviewer accounts.
+Historical Version 7 publication matched reviewed 9d7a149. Version 8 subsequently replaced it under the owner's non-portal release approval, with exact post-publication root and tool readbacks matching eaa2661. No service deployment, App publication or secret change was needed. See releases/2026-11-04-v8/README.md. The owner withdrew portal-writing authorization and handles final submission alone. Do not open, fill, upload to or submit through the portal. If the private-link alternative is chosen, Luke can provide the reviewer account after submission. HappyRobot workspace access is separate.
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 

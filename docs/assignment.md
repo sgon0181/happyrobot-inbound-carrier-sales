@@ -28,7 +28,7 @@ Mandatory requirements:
 - Authentication on all endpoints. Graceful handling of TMS timeouts and malformed responses.
 - Defined northstar KPIs, scripted standard/edge-case tests, adversarial tests, documented results.
 - Docker containerization and single-command cloud deployment.
-- Private repository with reviewer invitations.
+- The PDF requests a private repository link with reviewer invitations. Luke also accepts a source ZIP uploaded through the portal. If the author chooses a private link instead, Luke can supply the reviewer account after submission. [November 5 email guidance](questions.md)
 
 Deliverables: prospect summary email, IT/business build description, repository link, HappyRobot workflow link, approximately five-minute walkthrough showing live demo, dashboard, and QA results.
 
@@ -62,4 +62,4 @@ Deliverables: prospect summary email, IT/business build description, repository 
 - Booking state is token-scoped; repeated attempts can return `ALREADY_BOOKED`. Exact rate-validation rules are not fully documented.
 - Source discrepancy: PDF describes tentative reservation before senior-rep confirmation; handbook describes `LOAD_BOOK` as committing a booking.
 - Luke delegated the booking and rate ambiguities to the candidate on 2026-10-30. Sending `LOAD_BOOK` at the rep's Confirm (D-22) and the provisional `MAX_BUY` mapping (D-10) are documented assumptions, not confirmed TMS capabilities.
-- Newer owner-recorded evidence in [`questions.md`, Q8](questions.md) reports booking acknowledgements with `STATUS:PENDING`, rather than the handbook's `BOOKED`. Final confirmation behavior is unresolved. The contract now records the bounded live experiments and sanitized fixtures; D-22 reserves at rate agreement, sends at the rep's Confirm, and shows the actual TMS status. No finalization operation is invented.
+- Newer owner-recorded evidence in [`questions.md`, Q8](questions.md) reports booking acknowledgements with `STATUS:PENDING`, rather than the handbook's `BOOKED`. Luke accepted the demonstrated rep-only submission and acknowledged-PENDING handling on November 5. He supplied no supported finalization step, and sandbox-wide behavior remains unverified. The contract now records the bounded live experiments and sanitized fixtures; D-22 reserves at rate agreement, sends at the rep's Confirm, and shows the actual TMS status. No finalization operation is invented.

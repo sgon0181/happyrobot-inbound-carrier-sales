@@ -421,7 +421,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
 | Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, the receipt is logged and shown on the rep's screen. |
 
-**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke's reply on this is still open (Q8).
+**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke accepted proceeding with this handling for the challenge on November 5. He supplied no way to finalize the external booking. [Q8 and limits](docs/questions.md)
 
 **Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because there is no supported cancellation/reset and sends have left lasting token-scoped state in observations. No permanent consumption or quota is established.
 
@@ -532,4 +532,4 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 
 ## 17. Open questions
 
-Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). The material integration question remains Luke's answer on PENDING, currency and bounds (Q8). A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.
+Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). Luke accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.

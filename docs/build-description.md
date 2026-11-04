@@ -34,7 +34,7 @@ Service release 17 passes 487 offline tests with actual 100% coverage of 1650 st
 
 Eleven reviewed Version 6 timed call traces show proactive closing and persisted close/end activity. A later Version 7 call exposed a confirmation bypass; Version 8 makes pending confirmation take priority over direct submission. The owner subsequently reported a successful normal Version 8 call. This latest success is an owner report, not an independent transcript or audio review. Earlier failed runs and reruns remain documented. The text replays lack a recorded spoken farewell, so no complete voice-closing pass is inferred from them.
 
-An earlier real-integration call and rep Confirm produced a reference-bearing PENDING reply, which remains an acknowledgement rather than a final booking. The reviewer guide links the filmed agreement and the separate pending receipt. The owner video URL and reviewer access remain to be finalized.
+An earlier real-integration call and rep Confirm produced a reference-bearing PENDING reply, which remains an acknowledgement rather than a final booking. The reviewer guide links the filmed agreement and the separate pending receipt. The source ZIP accompanies the walkthrough. The candidate supplies the video link when submitting.
 
 ## How it runs and who owns what
 

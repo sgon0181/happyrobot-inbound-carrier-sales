@@ -1,8 +1,10 @@
 # Finish and submit
 
-The reviewed fix is live: workflow Version 7, service release 17 and Carrier Sales App Build 20. The owner has approved the remaining release/submission work. Booking sends stay off and calls stay synthetic. No service redeployment, new booking, BOOKED result, capacity benchmark or cohort change is required to finish this submission.
+The reviewed fix is live: workflow Version 8, service release 17 and Carrier Sales App Build 20. The owner retains sole control of the submission portal. Do not open, fill, upload to or submit through it. The recorded confirmation regression and verification are in [confirmation-fix.md](confirmation-fix.md). Booking sends stay off and calls stay synthetic. No service redeployment, new booking, BOOKED result, capacity benchmark or cohort change is required to finish this submission.
 
-## 1. One final voice call, about three minutes
+## 1. Historical Version 7 test script, superseded
+
+Do not use this script as a new required call. The owner ran the next Version 7 calls and found the confirmation defect, now fixed and verified in Version 8. This contrived high-ask script is retained only as history. Availability below is historical, not a current lane recommendation.
 
 Open the [web-call demo](https://platform.happyrobot.ai/deployments/6oaskq84xpfc). Use MC **138328**, confirm the returned carrier name and read the actual emailed code. Never paste it into chat or show it in the video.
 
@@ -32,17 +34,17 @@ Keep the App on **Test** to show the new synthetic call. Show Confirm disabled. 
 
 Explain: the model conducts the conversation, the service enforces eligibility/code/rate/round rules, Twin stores decisions, and the rep owns submission. A reservation and PENDING acknowledgement are separate from final TMS confirmation. Capacity and financial impact remain unproven.
 
-## 3. Submission preparation handled by Codex
+## 3. Owner-controlled submission
 
-- Push reviewed commits and record exact live Version 7/service 17/App 20 facts.
+- Push reviewed commits and record exact live Version 8/service 17/App 20 facts.
 - Refresh the build-description PDF, prospect summary text, source ZIP and manifest from tracked source only.
-- Fill the portal with the private repository/workflow links, summary and supporting files. Final submission waits for the actual video and the focused call result, not another approval loop.
+- The owner alone enters portal fields, attaches files and submits. Codex leaves the portal untouched.
 - Preserve a private repository. Reviewer account names are absent from the portal and Luke's latest replies. Include the source ZIP for portal review; invite only identified intended reviewers when their accounts are supplied. Do not guess accounts or share service keys.
 
-The owner granted release/submission approval in chat. No additional booking or reservation cleanup is necessary. The final human call and owner video are still outstanding; neither is represented as complete.
+Earlier blanket submission approval was withdrawn. The owner controls final portal work. The video remains outstanding; no video or new post-fix human call is represented as complete. No additional booking or reservation cleanup is necessary.
 
 ## Evidence already available
 
-487 service tests, 1650/1650 statements, 406/406 branches, 256/256 business branches, strict types/lint and Radon B or better. Version 7 has 51 checkpoints twice, 102/102 native grades. Both fully mocked multi-turn traces preserve 3825 and complete operating notes; neither records final spoken closing. Eleven Version 6 human calls show proactive endings and saved close/end records. The current App has 39 frontend tests, a production build/typecheck, three existing lint warnings and zero production dependency vulnerabilities; prior 1280px visual checks show no page-level clipping and disabled Confirm.
+487 service tests, 1650/1650 statements, 406/406 branches, 256/256 business branches, strict types/lint and Radon B or better. Current Version 8 has 59 checkpoints twice, 118/118 native grades and two inspected recording replays with only 1125 submitted after affirmative confirmation. Historical Version 7 had 51 checkpoints twice, 102/102 native grades. Both fully mocked multi-turn traces preserve 3825 and complete operating notes; neither records final spoken closing. Eleven Version 6 human calls show proactive endings and saved close/end records. The current App has 39 frontend tests, a production build/typecheck, three existing lint warnings and zero production dependency vulnerabilities; prior 1280px visual checks show no page-level clipping and disabled Confirm.
 
-[QA](qa-results.md), [voice evidence](voice-tuning.md) and [Version 7 release](releases/2026-11-04-v7/README.md) retain all failures, versions and limits.
+[QA](qa-results.md), [voice evidence](voice-tuning.md) and [Current Version 8 release](releases/2026-11-04-v8/README.md) retain all failures, versions and limits.

@@ -1,4 +1,5 @@
 // Explicit projection of authenticated operations snapshots. Unknown fields stay private.
+import { callPricing } from "@/lib/call-pricing";
 import { events, type EventRow } from "@/lib/event-history";
 import { projectRepLoad } from "@/lib/rep-load";
 export type { RepLoad } from "@/lib/rep-load";
@@ -44,6 +45,8 @@ export type Call = {
   bookingState: string | null;
   bookingLoadId: string | null;
   agreedRate: number | null;
+  openingRate: number | null;
+  foundMatch: boolean;
   search: string | null;
   summary: string | null;
   events: EventRow[];
@@ -133,6 +136,7 @@ function projectCall(raw: unknown): Call[] {
   const id = str(c.id, 128);
   if (!id) return [];
   const booking = obj(c.booking);
+  const bookingLoadId = str(booking.load_id, 64);
   const search = obj(c.search);
   const terms = [search.equipment, search.origin_state, search.dest_state].map(
     (t) => str(t, 32),
@@ -150,7 +154,8 @@ function projectCall(raw: unknown): Call[] {
       rounds: num(c.rounds),
       outcome: str(c.outcome, 60),
       bookingState: str(booking.state, 40),
-      bookingLoadId: str(booking.load_id, 64),
+      bookingLoadId,
+      ...callPricing(c.events, bookingLoadId, c.agreement),
       agreedRate: num(obj(c.agreement).rate),
       search: terms.some(Boolean)
         ? terms.map((t) => t ?? "any").join(" / ")

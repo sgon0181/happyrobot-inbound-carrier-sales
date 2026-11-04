@@ -7,6 +7,8 @@ import { CallLog } from "@/components/call-log";
 import { TurnedAway, lanesFrom } from "@/components/turned-away";
 import { Attention, Outcomes, attention } from "@/components/overview";
 import { CallResults } from "@/components/call-results";
+import { PerformanceOverview, PerformanceRecords } from "@/components/performance";
+import { performance, readGroup } from "@/lib/performance";
 import { CurrentWork } from "@/components/current-work";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { requireAppUser } from "@/lib/auth";
@@ -18,7 +20,8 @@ export const dynamic = "force-dynamic";
 
 const PAGE_TITLE = "Carrier Sales";
 const SUBTITLE: Record<View, string> = {
-  overview: "Review reservations, check submissions and follow call outcomes",
+  overview: "Operations overview",
+  activity: "Review reservations, check submissions and follow call outcomes",
   reservations: "Agreed by the carrier, nothing sent yet",
   bookings: "Sent once, with the TMS reply as returned",
   calls: "Every recorded call and its outcome",
@@ -40,13 +43,16 @@ const inScope = (scope: Scope) => (row: { cohort: string | null }) =>
 export default async function HomePage({ searchParams }: { searchParams?: Params } = {}) {
   // Sign-in is verified with the platform before the service is called.
   await requireAppUser();
-  const { view, scope } = readView((await searchParams) ?? {});
+  const params = (await searchParams) ?? {};
+  const { view, scope } = readView(params);
+  const group = readGroup(params.group);
   const result = await getSnapshot();
   const snapshotTime = result.ok ? Date.parse(result.snapshot.generatedAt ?? "") : 0;
   const now = Number.isFinite(snapshotTime) ? snapshotTime : 0;
   const bookings = result.ok ? newestFirst(result.snapshot.bookings.filter(inScope(scope)), (b) => b.updatedAt) : [];
   const calls = result.ok ? newestFirst(result.snapshot.calls.filter(inScope(scope)), (c) => c.startedAt) : [];
   const waiting = bookings.filter((b) => b.state === "RESERVED");
+  const report = result.ok && view === "overview" ? performance(result.snapshot.calls) : null;
 
   return (
     <AppShell
@@ -54,7 +60,7 @@ export default async function HomePage({ searchParams }: { searchParams?: Params
       subtitle={SUBTITLE[view]}
       view={view}
       scope={scope}
-      counts={{ reservations: waiting.length }}
+      counts={view === "overview" ? {} : { reservations: waiting.length }}
     >
       {/* Outside the snapshot's success branch, so a failed snapshot keeps both. */}
       <div className="flex justify-end">
@@ -68,6 +74,8 @@ export default async function HomePage({ searchParams }: { searchParams?: Params
             Carrier sales service: {describeFailure(result)}. The page keeps retrying every 15 seconds.
           </AlertDescription>
         </Alert>
+      ) : report ? (
+        group ? <PerformanceRecords group={group} report={report} /> : <PerformanceOverview report={report} />
       ) : (
         <>
           <SendMode liveBooking={result.snapshot.liveBooking} />

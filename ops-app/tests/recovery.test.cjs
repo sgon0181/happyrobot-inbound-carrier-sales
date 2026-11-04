@@ -36,6 +36,7 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
   overrides['next/link'] = { __esModule: true, default: ({ href, children }) => React.createElement('a', { href }, children) };
   overrides['@/components/ui/button'] = { Button: button };
   const { default: HomePage } = loadTs('src/app/page.tsx', overrides);
+  const queuePage = () => HomePage({ searchParams: Promise.resolve({ view: 'reservations' }) });
   const booking = { loadId: 'LD09001', version: 1, state: 'RESERVED', cohort: 'real', mc: '138328', rate: 1900, load: null, events: [] };
   const good = (row) => ({ ok: true, snapshot: { liveBooking: true, generatedAt: '2026-11-03T12:00:00Z',
     kpis: { calls: 1, codePassed: 1, handoffs: 1, northstar: 1, repConfirmed: 0, tmsAcknowledged: 0, tmsConfirmed: 0, unknown: 0, outcomes: {}, medianSecondsToFirstOffer: 0, closedWithSummary: 0, endsReported: 0, syntheticCalls: 0 }, turnedAway: [], calls: [], bookings: [row] } });
@@ -43,23 +44,23 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
   const visible = () => JSON.stringify(tree.toJSON()).includes('Keep this copy');
   try {
     snapshot = { ok: false, status: 503 };
-    await act(async () => { tree = Renderer.create(await HomePage()); });
+    await act(async () => { tree = Renderer.create(await queuePage()); });
     assert.equal(timers.size, 1);
     assert.ok(tree.root.findAllByType('button').some((b) => b.children.includes('Refresh')));
     snapshot = good(booking);
-    await act(async () => { tree.update(await HomePage()); });
+    await act(async () => { tree.update(await queuePage()); });
     await act(async () => { tree.root.findAllByType('button').find((b) => b.children.includes('Confirm')).props.onClick(); });
     snapshot = good({ ...booking, state: 'SUBMITTING', version: 2 });
-    await act(async () => { tree.update(await HomePage()); });
+    await act(async () => { tree.update(await queuePage()); });
     await act(async () => { resolveFetch({ ok: true, json: async () => ({ status: 'receipt_not_saved', state: 'ACK_PENDING', reference: 'FIXTURE', rawReply: 'STATUS:PENDING' }) }); });
     assert.equal(backing.size, 1);
     assert.ok(visible());
-    await act(async () => { tree.update(await HomePage()); });
+    await act(async () => { tree.update(await queuePage()); });
     assert.ok(visible());
-    await act(async () => { tree.unmount(); tree = Renderer.create(await HomePage()); });
+    await act(async () => { tree.unmount(); tree = Renderer.create(await queuePage()); });
     assert.ok(visible());
     snapshot = { ok: false, status: 503 };
-    await act(async () => { tree.update(await HomePage()); });
+    await act(async () => { tree.update(await queuePage()); });
     assert.ok(visible());
     assert.equal(timers.size, 1);
     const before = refreshes;

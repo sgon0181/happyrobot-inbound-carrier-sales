@@ -1,6 +1,6 @@
 # Inbound Carrier Sales: build description
 
-For HappyRobot Logistics' business and IT review. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 22 are live. The App uses independently reviewed source `8ff094a`, imported as 80 exact files and visually checked at 1280px. Booking sends remain off and calls remain synthetic. This is a proof of concept; reviewer access and the owner-recorded video URL remain owner delivery steps. The owner alone handles the submission portal. See docs/releases/2026-11-04-dashboard-clarity/README.md for release evidence.
+For HappyRobot Logistics' business and IT review. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 22 are live. Build 22 used reviewed source `8ff094a`. The App source in this package adds the recorded demo performance Overview described below. Booking sends remain off and calls remain synthetic. This is a proof of concept; reviewer access and the owner-recorded video URL remain owner delivery steps. The owner alone handles the submission portal. See docs/releases/2026-11-04-dashboard-clarity/README.md for release evidence.
 
 ## Customer problem and scope
 
@@ -24,7 +24,7 @@ Twin stores structured service activity: authority decisions, code delivery outc
 
 This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. The deployed end-report route and live Version 8 callback can record pre-tool calls when the callback is delivered; delivery is not guaranteed. No external database or general-purpose logging framework is used.
 
-The App leads with reservations awaiting rep review and current submission states. Historical call results are separate, with explicit Real/Test scope and all-recorded-history labels. Reservation conversion shows both its percentage and numerator/denominator; test traffic does not enter business performance. Activity uses readable prices, shipment times and negotiation rounds, with technical references expandable. Recording coverage and service timing are secondary diagnostics. Definitions are in kpis.md. Carrier payment and concessions are not brokerage revenue or profit.
+The dashboard uses 49 recorded inbound demo calls across workflow versions. Of 36 calls that passed email verification, 29 found a matching load and 19 produced a reservation for a rep to review. Seven verified calls stopped before a match and ten matched without an agreement. The median agreed payment was $50 above the first offer on the same load, measured on all 19 agreements. The Overview links these figures to individual calls. Desk activity separates the real and test queues for current rep work. See kpis.md for definitions and source coverage.
 
 ## Evidence
 

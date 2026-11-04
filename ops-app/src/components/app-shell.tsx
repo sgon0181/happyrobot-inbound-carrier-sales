@@ -39,13 +39,13 @@ export function AppShell({
               <h1 className="truncate text-base font-semibold">{title}</h1>
               {subtitle ? <p className="truncate text-xs text-muted-foreground">{subtitle}</p> : null}
             </div>
-            {scope === "test" ? (
+            {view !== "overview" && scope === "test" ? (
               <span className="rounded-full bg-status-act/12 px-2 py-0.5 text-xs font-medium text-status-act">Test calls</span>
             ) : null}
             <div className="ml-auto">{actions}</div>
           </header>
           <div className="mx-auto flex w-full max-w-[90rem] min-w-0 flex-1 flex-col gap-5 p-4 lg:p-6">
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            {view !== "overview" && <div className="flex flex-wrap items-center justify-between gap-3">
               <div>
                 <p className="text-sm font-semibold">{scope === "test" ? "Test activity" : "Real activity"}</p>
                 <p className="mt-1 text-xs text-muted-foreground">All recorded history{scope === "test" ? ". Excluded from business performance." : ". Test calls excluded."}</p>
@@ -57,7 +57,7 @@ export function AppShell({
                   </Link>
                 ))}
               </nav>
-            </div>
+            </div>}
             {children}
           </div>
         </SidebarInset>

@@ -88,7 +88,7 @@ test('unknown send mode disables Confirm without disabling Decline', () => {
   assert.doesNotMatch(decline[1], /\sdisabled(?:=|\s|$)/);
 });
 
-test('Test overview does not receive real-only KPIs and keeps current work ahead of results', async () => {
+test('Test desk activity does not receive real-only KPIs and keeps current work ahead of results', async () => {
   const realOps = loadTs('src/lib/ops-service.ts');
   const stub = ({ children }) => React.createElement('div', null, children);
   const snapshot = { liveBooking: false, generatedAt: '2026-11-04T10:00:00Z', kpis,
@@ -100,7 +100,7 @@ test('Test overview does not receive real-only KPIs and keeps current work ahead
     '@/components/app-shell': { AppShell: stub }, '@/components/auto-refresh': { AutoRefresh: stub },
     '@/components/receipt-panels': { ReceiptPanels: stub },
   });
-  const html = renderToStaticMarkup(await HomePage({ searchParams: Promise.resolve({ scope: 'test' }) }));
+  const html = renderToStaticMarkup(await HomePage({ searchParams: Promise.resolve({ view: 'activity', scope: 'test' }) }));
   assert.ok(html.includes('Test call results'));
   assert.ok(!html.includes('33%'));
   assert.ok(!html.includes('Historically approved for submission'));

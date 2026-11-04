@@ -3,6 +3,7 @@
 import Link from "next/link";
 import {
   IconHandStop,
+  IconListDetails,
   IconLayoutDashboard,
   IconMapPin,
   IconPhoneCall,
@@ -28,6 +29,7 @@ import { VIEW_TITLE, viewHref, type Scope, type View } from "@/lib/views";
 
 const ICON: Record<View, React.ReactNode> = {
   overview: <IconLayoutDashboard />,
+  activity: <IconListDetails />,
   reservations: <IconHandStop />,
   bookings: <IconTruckDelivery />,
   calls: <IconPhoneCall />,

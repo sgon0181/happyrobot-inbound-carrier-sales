@@ -1,6 +1,23 @@
 # KPI definitions
 
-Scope: only call rows whose stored cohort is real. Synthetic calls stay visible separately. CALL_COHORT is currently synthetic on Fly, so current test calls must not be presented as customer traffic. A deploy check historically stamped real is explicitly excluded.
+## Recorded demo call overview
+
+The Overview answers three questions for the operations manager. How often do verified calls produce a reservation? Where do calls stop? How far does the carrier payment move from the opening offer?
+
+HappyRobot listed 50 inbound sessions for workflow `01a18119-67a1-79a3-b220-369aa359d4fb` from November 2 through 4, 2026. The retained [session inventory](../ops-app/src/lib/demo-voice-runs.ts) comes from the November 4 export at 14:22 UTC. HappyRobot marked 49 sessions completed and one missed with zero connected seconds. All 49 completed runs matched Twin call IDs across workflow versions. The missed session has no Twin call row and is excluded from the completed sample. The 30 text sessions and service deployment check are outside the cohort. New calls remain available in Desk activity and the Calls page. To extend this dated report, reconcile a fresh inbound inventory before updating its IDs and dates.
+
+| Measure | Calculation | Reconciled result |
+|---|---|---|
+| Verified calls with a reservation, the business North Star | Distinct calls with a historical reservation and successful email verification divided by all calls with successful verification. Released reservations retain the original agreement. | 19 of 36, 53% rounded |
+| Call outcomes | Count calls with a Twin row, verification, a successful load search, and a historical reservation. Each call counts once per stage. Matching records that the service returned freight. | 49 recorded, 36 verified, 29 matched, 19 reserved |
+| Where verified calls stopped | Verified calls without a reservation, divided by whether their history contains a successful search. Review the calls to establish the reason. | 7 without a match, 10 matched without an agreement |
+| Rate above opening offer | Median of agreed rate minus opening rate, using the first successful search event for the same load on the same call. Both prices and matching agreement and historical reservation IDs must be present. | $50, with recorded pairs on all 19 agreements |
+
+The report reads the first appearance of the agreed load in the full call event history. Seven opening prices came from the older offers map, and twelve from load entries in newer search events. The current offers map changes during negotiation. The payment difference measures price movement and does not establish brokerage margin. The underlying drills link each count to calls and show the two prices for each agreement. These cross-version demonstration results do not estimate current customer performance.
+
+## Desk activity and service diagnostics
+
+The following measures use only call rows whose stored cohort is real. Synthetic calls stay visible separately. CALL_COHORT is currently synthetic on Fly, so current test calls must not be presented as customer traffic. A deploy check historically stamped real is explicitly excluded.
 
 | Display | API field | Definition and limits |
 |---|---|---|
@@ -26,4 +43,4 @@ The API retains historical names for compatibility; display labels above are the
 
 ## Current work versus historical results
 
-The overview's current work cards count current booking rows in the selected scope: RESERVED, UNKNOWN, ACK_PENDING and CONFIRMED. Historical call results count calls and retain prior reservations after release or load-row reuse. They are intentionally separate sections, not stages of one funnel. Test overview shows its own historical call counts without real business performance or a conversion percentage. All views cover all recorded history; no today-only range is implied.
+Desk activity's current work cards count current booking rows in the selected scope: RESERVED, UNKNOWN, ACK_PENDING and CONFIRMED. Historical call results count calls and retain prior reservations after release or load-row reuse. They are intentionally separate sections, not stages of one funnel. Test desk activity shows its own historical call counts without real business performance or a conversion percentage. Desk activity and the rep queues cover all recorded history in the selected scope.

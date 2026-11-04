@@ -1,18 +1,17 @@
 # Walkthrough outline, approximately five minutes
 
-Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+The walkthrough uses the recorded Version 8 call, service release 17 and the Overview of reconciled demo calls. The prior App Build 22 is documented in the [dashboard release](releases/2026-11-04-dashboard-clarity/README.md).
 
 Audience: the brokerage's business team, with enough evidence for IT review. Use the customer's repetitive call handling, consistent pricing and reviewable deals as the narrative. Harsha's example is inspiration for clarity, not an architecture to copy.
 
-Record the reviewed release: service 17 from `bf512aa`, live workflow Version 8 and production Carrier Sales App Build 22. App source 8ff094a has an exact 80-file import and recorded visual checks. Use the successful Version 8 call the owner reports as the demo segment; no repeat of the superseded stress-call script is required. Label a recorded live call honestly. Independent transcript/audio review of that latest call is not claimed. Your Version 6 tests do not need repeating. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
+The opening 3:24 covers the problem, the live Version 8 web call, the rep reservation, the recorded negotiation and the pending TMS receipt. Use the new performance Overview for section 7.
 
-| Time | Show | Say accurately |
+| Time | Show | Explain |
 |---|---|---|
-| 0:00 to 0:25 | The problem and system overview | This PoC automates qualification, matching and negotiation; the rep owns booking submission |
-| 0:25 to 2:30 | A HappyRobot web call | MC/name confirmation, authority, authorized emailed code, lane/equipment, an explicit counter or acceptance through negotiate, mocked handoff and clean close |
-| 2:30 to 3:30 | The operations App | Carrier, lane, schedule, posted/agreed payment, asks and responses, notes, send mode and next action. Missing historical details say Not recorded |
-| 3:30 to 4:15 | QA package and results | Actual service count/coverage, seeds, checkpoint repetitions, complete simulations and human calls as separate layers. Show retained failures and the E7 follow-up |
-| 4:15 to 5:00 | Five next steps | Agree pricing/TMS contract; trusted contacts; capacity/conversation validation; supervised pilot; then telephony/notifications |
+| 3:24 to 3:48 | Overview of recorded demo calls | Of 49 calls, 36 verified, 29 found freight and 19 reached an agreement. Inspect losses before and after a match. The median agreed rate was $50 above the opening offer. |
+| 3:48 to 4:09 | The service pricing rule | The recorded $975 opening and $1,000 agreement show how the service authorizes a rate within the round limit. |
+| 4:09 to 4:45 | The saved test and QA results | Describe the misheard price, required confirmation and measured regression. Distinguish mocked text checkpoints from voice calls. |
+| 4:45 to 5:00 | The supervised pilot | Compare dispatch time and verified calls reaching agreement against the desk baseline. |
 
 ## Demonstration boundaries
 

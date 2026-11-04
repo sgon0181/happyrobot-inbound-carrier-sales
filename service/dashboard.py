@@ -26,7 +26,7 @@ CALL_FIELDS = (
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
-    *("raw_reply", "send", "reason", "events", "load"),
+    *("send", "reason", "load"),
 )
 
 
@@ -193,7 +193,11 @@ def _booking(key: str, row: Row, calls: dict[str, Row]) -> Data:
     call = calls.get(str(row.data.get("call_id")))
     matched = call is not None and call.data.get("mc") == row.data.get("mc")
     carrier = call.data.get("carrier_name") if matched and call is not None else None
-    return {"load_id": key, "version": row.version, "carrier_name": carrier} | {
+    # Keep wire bytes in restricted Twin evidence, including receipts from earlier claims.
+    events = [
+        {k: v for k, v in event.items() if k != "raw_reply"} for event in row.data.get("events", [])
+    ]
+    return {"load_id": key, "version": row.version, "carrier_name": carrier, "events": events} | {
         name: row.data.get(name) for name in BOOKING_FIELDS
     }
 

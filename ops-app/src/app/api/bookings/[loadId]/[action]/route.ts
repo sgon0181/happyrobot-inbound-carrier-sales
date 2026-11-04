@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { canManageBookings } from "@/lib/rep-access";
 import { getVerifiedApiUser } from "@/lib/auth";
 import { describeFailure, LOAD_ID_RE, postRepAction, type RepAction } from "@/lib/ops-service";
 
@@ -20,6 +21,8 @@ export async function POST(
   const user = await getVerifiedApiUser();
   if (!user) return reply({ error: "Unauthorized" }, 401);
 
+  if (!canManageBookings(user.sub)) return reply({ error: "Senior rep access required" }, 403);
+
   // JSON only, which also keeps plain cross-site form posts out.
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) {
     return reply({ error: "Unsupported content type" }, 415);
@@ -36,8 +39,7 @@ export async function POST(
   }
 
   // The rep comes only from the verified session, never from the request.
-  const rep = (user.email || user.sub || "").trim();
-  if (!rep) return reply({ error: "Unauthorized" }, 401);
+  const rep = user.sub;
 
   const result = await postRepAction(loadId, action as RepAction, version, rep);
   if (!result.ok) return reply({ error: `Action failed (${describeFailure(result)})` }, 502);

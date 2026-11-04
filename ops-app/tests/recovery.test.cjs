@@ -28,6 +28,7 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
   const overrides = {
     'next/navigation': { useRouter: () => router },
     sonner: { toast: { success() {}, error() {} } },
+    '@/lib/rep-access': { canManageBookings: () => true },
     '@/lib/auth': { requireAppUser: async () => ({ user: {} }) },
     '@/lib/ops-service': { ...realOps, getSnapshot: async () => snapshot },
     '@/components/app-shell': { AppShell: stub }, '@tabler/icons-react': icons,

@@ -16,7 +16,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Path, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.params import Depends as Dependency
 from fastapi.responses import JSONResponse, Response
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
 
 from service.adapters.tms.client import TmsUnavailable
@@ -78,7 +78,17 @@ class Ended(Voice):
 
 class Negotiate(Voice):
     load_id: str = Field(max_length=32)
-    rate: str = Field(max_length=32)  # the carrier's ask, as the agent heard it
+    rate: str = Field(max_length=32)  # complete ask, or "decline" on a final refusal
+    after_final_offer: bool = False
+
+    @field_validator("after_final_offer", mode="before")
+    @classmethod
+    def explicit_response(cls, value: object) -> bool:
+        if value in (None, "", False, "false"):
+            return False
+        if value is True or value == "true":
+            return True
+        raise ValueError("Expected true or false.")
 
 
 class RepAction(BaseModel):
@@ -149,7 +159,11 @@ def _voice_routes(
 
     @app.post("/negotiate", dependencies=[agent])
     async def negotiate(body: Negotiate) -> Reply:
-        return await voice(sales.negotiate(body.run_id, body.load_id, body.rate))
+        return await voice(
+            sales.negotiate(
+                body.run_id, body.load_id, body.rate, after_final=body.after_final_offer
+            )
+        )
 
     @app.post("/calls/close", dependencies=[agent])
     async def close(body: Close) -> Reply:

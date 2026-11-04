@@ -10,8 +10,8 @@ import { viewHref, platformRun } from "@/lib/views";
 const box = "rounded-xl border bg-card p-5";
 const labels = "text-xs font-medium text-muted-foreground";
 
-export function ReservationReview({ booking: b, call: c, now, live }: {
-  booking?: Booking; call?: Call; now: number; live: boolean | null;
+export function ReservationReview({ booking: b, call: c, now, live, canManage }: {
+  booking?: Booking; call?: Call; canManage: boolean; now: number; live: boolean | null;
 }) {
   const load = b?.load;
   const loadId = b?.loadId ?? c?.bookingLoadId;
@@ -40,7 +40,8 @@ export function ReservationReview({ booking: b, call: c, now, live }: {
       </div>
       {gap !== null && <p className="mb-2 text-sm">{gap === 0 ? "Agreed at the opening offer." : `Agreed ${fmtUsd(Math.abs(gap))} ${gap < 0 ? "below" : "above"} the opening offer.`}</p>}
       <p className="text-sm">{b ? nextAction(state) : "Historical agreement. Current load ownership has changed."}</p>
-      {b && <div className="mt-2"><BookingActions booking={b} liveBooking={live} now={now} /></div>}
+      {b && !canManage && <p className="mt-2 text-sm text-muted-foreground">View only. A designated senior rep can act on this reservation.</p>}
+      {b && canManage && <div className="mt-2"><BookingActions booking={b} liveBooking={live} now={now} /></div>}
     </div>
     {b && <div className={box}><SheetSection title="Booking and shipment">
       <Facts items={[["TMS status", submissionStatus(b.state, b.reason, b.tmsStatus)], ["Reference", na(b.reference)],

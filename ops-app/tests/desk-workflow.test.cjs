@@ -34,7 +34,7 @@ test('home lists the current owner and a history link; its direct review shows m
   assert.ok(home.includes('Opened $975')); assert.ok(home.includes('Review reservation'));
   assert.ok(!home.includes('Activity scope'));
   const hp = await page(source,{view:'reservations',load:'LD1',run:current});
-  for (const s of ['Fixture Freight','$975','$1,000','Originating call timeline',platformRun(current),'Confirm is disabled']) assert.ok(hp.includes(s),s);
+  for (const s of ['Fixture Freight','$975','$1,000','Originating call timeline',platformRun(current),'View only']) assert.ok(hp.includes(s),s);
 });
 test('a superseded agreement on a reused load opens only the originating history and has no mutating controls', async () => {
   const hp = await page(source,{view:'reservations',load:'LD1',run:old});

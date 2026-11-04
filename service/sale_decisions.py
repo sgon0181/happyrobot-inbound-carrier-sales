@@ -8,6 +8,8 @@ from datetime import datetime
 
 from service.adapters.twin import Data
 from service.calls import Decide, Reply, is_verified
+from service.core.loads import same_shipment
+from service.core.models import Load
 from service.core.money import parse_ask
 from service.core.negotiation import Action, Step, respond
 from service.core.pricing import Terms
@@ -16,6 +18,8 @@ from service.core.pricing import Terms
 def refusal(data: Data, load_id: str) -> Reply | None:
     """Why this counter cannot be negotiated, from the call's own row."""
     agreement, claim = data["agreement"], data["accepting"]
+    if (data["closed_at"] or data.get("ended_at")) and claim is None:
+        return {"status": "call_closed"}
     if not is_verified(data):
         return {"status": "not_verified"}
     if agreement is not None:
@@ -43,29 +47,56 @@ def drop(load_id: str) -> Decide:
     return decide
 
 
-def answer_counter(load_id: str, ask: str, terms: Terms) -> Decide:
+def answer_counter(load: Load, ask: str, terms: Terms, after_final: bool) -> Decide:
     """The counter's answer, from the row as it is at the moment of writing."""
 
     def decide(data: Data, now: datetime) -> Reply:
+        load_id = load.load_id
         refused = refusal(data, load_id)
         if refused is not None:
             return refused
         if data["accepting"] is not None:  # another request on this load is accepting now
             return {"status": "busy"}
-        amount = parse_ask(ask)
-        offer = min(max(int(data["offers"][load_id]), terms.opening), terms.cap)  # INV-1
-        last = data["last_counter"]
-        if last and amount is not None and (last["load_id"], last["ask"]) == (load_id, amount):
-            data["offers"][load_id] = offer  # the same ask uses no round (D-26), at today's bound
-            return {**last["reply"], "offer": offer} if "offer" in last["reply"] else last["reply"]
-        step = respond(terms, data["rounds"], offer, ask)
-        data["rounds"] = step.rounds_used
-        reply = _apply(data, load_id, step)
-        if amount is not None and step.action is not Action.ACCEPT:
-            data["last_counter"] = {"load_id": load_id, "ask": amount, "reply": reply}
-        return reply
+        if not same_shipment(load, data.get("shipments", {}).get(load_id)):
+            data["offers"].pop(load_id)
+            data["last_counter"] = None
+            data.get("lowest_asks", {}).pop(load_id, None)
+            return _unavailable(data, load_id) | {
+                "message": "The shipment changed. Let me check the lane again."
+            }
+        return _price_ask(data, load_id, ask, terms, after_final)
 
     return decide
+
+
+def _price_ask(data: Data, load_id: str, ask: str, terms: Terms, after_final: bool) -> Reply:
+    amount = parse_ask(ask)
+    offer = min(max(int(data["offers"][load_id]), terms.opening), terms.cap)  # INV-1
+    last = data["last_counter"]
+    if (
+        after_final
+        and last
+        and last["load_id"] == load_id
+        and last["reply"]["status"] == "final_offer"
+    ) and ((amount is not None and amount > offer) or ask == "decline"):
+        return _apply(data, load_id, Step(Action.FAILED, None, data["rounds"]))
+    prior = data.setdefault("lowest_asks", {}).get(load_id)
+    if amount is not None:
+        data["lowest_asks"][load_id] = amount if prior is None else min(prior, amount)
+    if last and amount is not None and (last["load_id"], last["ask"]) == (load_id, amount):
+        data["offers"][load_id] = offer  # the same ask uses no round (D-26), at today's bound
+        return {**last["reply"], "offer": offer} if "offer" in last["reply"] else last["reply"]
+    step = respond(terms, data["rounds"], offer, ask)
+    # A higher ask on unchanged freight cannot earn more than the carrier already requested.
+    # A lower standing ask is not acceptance: quote it and wait for the carrier to agree.
+    if prior is not None and step.rate is not None and step.rate > prior:
+        action = Action.FINAL_OFFER if step.rounds_used == len(terms.targets) else Action.COUNTER
+        step = Step(action, prior, step.rounds_used)
+    data["rounds"] = step.rounds_used
+    reply = _apply(data, load_id, step)
+    if amount is not None and step.action is not Action.ACCEPT:
+        data["last_counter"] = {"load_id": load_id, "ask": amount, "reply": reply}
+    return reply
 
 
 def _apply(data: Data, load_id: str, step: Step) -> Reply:

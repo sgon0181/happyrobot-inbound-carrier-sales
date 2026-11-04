@@ -52,7 +52,7 @@ export function Attention({ items, title = "Needs your review", description = "S
       </CardHeader>
       <CardContent className="px-0">
         {!items.length ? (
-          <p className="px-6 py-8 text-center text-sm text-muted-foreground">Nothing needs a rep right now.</p>
+          <p className="px-6 py-8 text-center text-sm text-muted-foreground">No records in this queue.</p>
         ) : (
           <ul className="divide-y">
             {items.map((item) => (

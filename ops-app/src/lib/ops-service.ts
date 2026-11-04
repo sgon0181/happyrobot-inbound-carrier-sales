@@ -78,10 +78,9 @@ export type ActionReply = {
   sendError: string | null;
   sendBytes: number | null;
   sendSha256: string | null;
-  rawReply: string | null; // every byte the TMS sent, as latin-1 text, kept whole
+ // every byte the TMS sent, as latin-1 text, kept whole
 };
 
-const MAX_RAW_REPLY = 300_000; // above the service's own 256 KiB bound on a reply
 
 export async function postRepAction(
   loadId: string,
@@ -116,7 +115,7 @@ export async function postRepAction(
       sendError: str(obj(body.send).error, 60),
       sendBytes: num(obj(body.send).bytes),
       sendSha256: str(obj(body.send).sha256, 64),
-      rawReply: str(body.raw_reply, MAX_RAW_REPLY),
+
     },
   };
 }

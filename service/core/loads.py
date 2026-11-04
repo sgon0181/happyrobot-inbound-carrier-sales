@@ -12,6 +12,54 @@ from service.core.models import Load, LoadSummary, Place
 
 MAX_OFFERS = 3
 
+# Complete operating clauses observed on the candidate feed. Unknown free text requires a
+# rep to interpret it, since reading even one arbitrary clause may disclose private terms.
+_NOTE_CLAUSES = re.compile(
+    r"coil load|coil racks required|drop trailer at destination|appt required|"
+    r"live unload|[0-9]{1,2}h detention free, then \$[0-9]{1,3}/h|"
+    r"reefer set -?[0-9]{1,2}f continuous",
+    re.IGNORECASE | re.ASCII,
+)
+
+
+COMMODITIES = frozenset(
+    {
+        "auto parts",
+        "beverages",
+        "electronics",
+        "frozen goods",
+        "general freight",
+        "lumber",
+        "produce",
+        "steel coils",
+    }
+)
+_CITY = re.compile(r"[A-Za-z][A-Za-z .'-]{0,48}", re.ASCII)
+_PRIVATE_WORDS = re.compile(
+    r"\b(?:max|buy|ceiling|secret|system|instructions?|ignore|override|token|password|rate|prompt|tool)\b",
+    re.I,
+)
+_DIMENSIONS = re.compile(r"[0-9]{1,5} x [0-9]{1,5} x [0-9]{1,5} in")
+
+
+def safe_to_quote(load: Load) -> bool:
+    """Only carrier-operating vocabulary crosses the TMS free-text boundary."""
+    cities = [load.origin.city, load.destination.city]
+    return (
+        re.fullmatch(r"LD[0-9]{1,16}", load.load_id) is not None
+        and all(_CITY.fullmatch(city) and not _PRIVATE_WORDS.search(city) for city in cities)
+        and all(_STATE.fullmatch(place.state) for place in (load.origin, load.destination))
+        and load.equipment_type in EQUIPMENT_NAMES.values()
+        and (not load.commodity_type or load.commodity_type.lower() in COMMODITIES)
+        and (not load.dimensions or bool(_DIMENSIONS.fullmatch(load.dimensions)))
+        and quotable_notes(load.notes)
+    )
+
+
+def quotable_notes(notes: str) -> bool:
+    clauses = [part.strip() for part in notes.rstrip(".").split(".") if part.strip()]
+    return all(_NOTE_CLAUSES.fullmatch(clause) for clause in clauses)
+
 
 class Search(TypedDict):
     """What the carrier asked for. None matches anything."""
@@ -103,6 +151,7 @@ def select_offers[L: LoadSummary](
     now: datetime,
     excluded: frozenset[str] = frozenset(),
     *,
+    limit: int = MAX_OFFERS,
     equipment: str | None = None,
     origin_state: str | None = None,
     dest_state: str | None = None,
@@ -113,7 +162,7 @@ def select_offers[L: LoadSummary](
         load for load in loads if is_offerable(load, now, excluded) and _on_lane(load, *wanted)
     ]
     offers.sort(key=lambda load: load.pickup_datetime or now)  # always set once offerable
-    return offers[:MAX_OFFERS]
+    return offers[:limit]
 
 
 def _on_lane(
@@ -150,11 +199,19 @@ def _place(place: Place) -> str:
     return f"{place.city}, {place.state}"
 
 
-def reservation_view(load: Load) -> dict[str, object]:
-    """Load terms for a rep, captured at reservation. Neither ceiling nor model inputs."""
+def shipment_terms(load: Load) -> dict[str, object]:
+    """Carrier-facing shipment conditions whose change requires new consent."""
     return {
-        "origin": {"city": load.origin.city, "state": load.origin.state},
-        "destination": {"city": load.destination.city, "state": load.destination.state},
+        "origin": {
+            "city": load.origin.city,
+            "state": load.origin.state,
+            "zip": load.origin.zip_code,
+        },
+        "destination": {
+            "city": load.destination.city,
+            "state": load.destination.state,
+            "zip": load.destination.zip_code,
+        },
         "pickup_datetime": load.pickup_datetime and load.pickup_datetime.isoformat(),
         "delivery_datetime": load.delivery_datetime and load.delivery_datetime.isoformat(),
         "equipment_type": load.equipment_type,
@@ -164,5 +221,16 @@ def reservation_view(load: Load) -> dict[str, object]:
         "num_of_pieces": load.num_of_pieces,
         "dimensions": load.dimensions,
         "notes": load.notes,
-        "loadboard_rate": load.loadboard_rate,
     }
+
+
+def reservation_view(load: Load) -> dict[str, object]:
+    """Capture exactly what the rep reviews, including the separately identified posted rate."""
+    return shipment_terms(load) | {"loadboard_rate": load.loadboard_rate}
+
+
+def same_shipment(load: Load, recorded: object) -> bool:
+    """An incomplete pre-proposal quote cannot authorize an irreversible send."""
+    return isinstance(recorded, dict) and all(
+        key in recorded and recorded[key] == value for key, value in shipment_terms(load).items()
+    )

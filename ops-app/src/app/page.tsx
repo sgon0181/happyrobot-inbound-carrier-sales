@@ -9,9 +9,11 @@ import { Attention, attention } from "@/components/overview";
 import { DemandReport } from "@/components/demand-report";
 import { ReservationReview } from "@/components/reservation-review";
 import { RecordSearch, filterBookings, filterCalls, type Filters } from "@/components/record-search";
+import { CurrentDesk } from "@/components/current-desk";
 import { PerformanceOverview, PerformanceRecords } from "@/components/performance";
 import { performance, readGroup } from "@/lib/performance";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { canManageBookings } from "@/lib/rep-access";
 import { requireAppUser } from "@/lib/auth";
 import { describeFailure, getSnapshot } from "@/lib/ops-service";
 import type { Booking, Call, Snapshot } from "@/lib/snapshot";
@@ -27,7 +29,7 @@ const subtitle: Record<View, string> = {
   demand: "Freight requested by verified carriers",
 };
 type Params = Promise<Record<string, string | string[] | undefined>>;
-type Props = { view: View; filters: Filters; snapshot: Snapshot; calls: Call[]; bookings: Booking[]; now: number };
+type Props = { view: View; filters: Filters; snapshot: Snapshot; canManage: boolean; calls: Call[]; bookings: Booking[]; now: number };
 
 function workRows(snapshot: Snapshot) {
   // The service supplies new workflow rows immediately. Recorded-trial metrics use the native inventory.
@@ -41,13 +43,14 @@ function workRows(snapshot: Snapshot) {
 }
 
 export default async function HomePage({ searchParams }: { searchParams?: Params } = {}) {
-  await requireAppUser();
+  const { user } = await requireAppUser();
   const params = (await searchParams) ?? {};
   const view = readView(params);
   const result = await getSnapshot();
   const rows = result.ok ? workRows(result.snapshot) : { calls: [], bookings: [] };
   const time = result.ok ? Date.parse(result.snapshot.generatedAt ?? "") : 0;
   const group = readGroup(params.group);
+  const desk = params.period === "desk" && !group;
   const report = result.ok && view === "overview" ? performance(rows.calls) : null;
   return <AppShell title={VIEW_TITLE[view]} subtitle={subtitle[view]} view={view}
     counts={{ reservations: rows.bookings.filter(b => b.state === "RESERVED").length }}
@@ -55,15 +58,21 @@ export default async function HomePage({ searchParams }: { searchParams?: Params
     <ReceiptPanels />
     {!result.ok ? <Alert variant="destructive"><AlertTitle>Snapshot unavailable</AlertTitle>
       <AlertDescription>Carrier sales service: {describeFailure(result)}. Retrying every 15 seconds.</AlertDescription></Alert>
-      : report ? (group ? <PerformanceRecords group={group} report={report} /> : <PerformanceOverview report={report} />)
-      : <Workspace filters={workspaceFilters(params)} view={view} snapshot={result.snapshot} {...rows} now={Number.isFinite(time) ? time : 0} />}
+      : report ? (group ? <PerformanceRecords group={group} report={report} /> : <>
+        <nav aria-label="Overview reports" className="flex gap-4 border-b pb-2 text-sm">
+          <Link aria-current={!desk ? "page" : undefined} className={!desk ? "font-semibold underline" : ""} href="/?view=overview">Recorded trial</Link>
+          <Link aria-current={desk ? "page" : undefined} className={desk ? "font-semibold underline" : ""} href="/?view=overview&period=desk">Current desk</Link>
+        </nav>
+        {desk ? <CurrentDesk {...rows} now={Number.isFinite(time) ? time : 0} /> : <PerformanceOverview report={report} />}
+      </>)
+      : <Workspace canManage={canManageBookings(user.sub)} filters={workspaceFilters(params)} view={view} snapshot={result.snapshot} {...rows} now={Number.isFinite(time) ? time : 0} />}
   </AppShell>;
 }
 
-function Review({ filters, bookings, calls, now, snapshot }: Props) {
+function Review({ filters, bookings, calls, now, snapshot, canManage }: Props) {
   const b = bookings.find(b => b.loadId === filters.load && (!filters.run || filters.run === b.callId));
   const c = calls.find(c => c.id === (b?.callId ?? filters.run) && c.bookingLoadId === filters.load);
-  return <ReservationReview booking={b} call={c} now={now} live={snapshot.liveBooking} />;
+  return <ReservationReview canManage={canManage} booking={b} call={c} now={now} live={snapshot.liveBooking} />;
 }
 
 function BookingList({ view, bookings, calls, filters, now, snapshot }: Props) {
@@ -72,7 +81,7 @@ function BookingList({ view, bookings, calls, filters, now, snapshot }: Props) {
   const list = bookings.filter(b => pending ? b.state === "RESERVED" : b.state !== "RESERVED" && (b.state !== "RELEASED" || b.reference || b.sendStep));
   const byRun = new Map(calls.map(c => [c.id, c]));
   const prior = calls.filter(c => Boolean(c.bookingLoadId));
-  const filtered = filterBookings(list, filters, byRun);
+  const filtered = filterBookings(filters.bucket === "desk" ? list.filter(b => b.cohort === "real") : list, filters, byRun);
   const urgent = pending ? [] : attention(list, [], now).filter(i => i.code === "SUBMITTING" || i.code === "UNKNOWN");
   const historyRows = filterCalls(prior, { ...filters, status: "" }).filter(c => !filters.status || c.bookingState === filters.status);
   return <>

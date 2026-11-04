@@ -85,6 +85,9 @@ function LostCalls({ groups }: { groups: Performance["groups"] }) {
           </Link>
         ))}
       </div>
+      <div className="border-t py-3 text-sm"><strong>Agreement after a match</strong>
+        <p>{groups.matched.length ? Math.round(100 * groups.matched.filter(c => c.bookingLoadId !== null).length / groups.matched.length) + "%" : "No rate yet"} · {groups.matched.filter(c => c.bookingLoadId !== null).length} of {groups.matched.length} matched calls reached a reservation.</p>
+      </div>
       <div className="border-t pt-3">
         <Link href={groupHref("final-limit")} className={`text-sm font-semibold hover:underline ${focus}`}>{groups["final-limit"].length} exhausted the final offer</Link>
         <p className="mt-1 text-xs text-muted-foreground">Among <Link className="underline" href={groupHref("negotiated")}>{groups.negotiated.length} calls that reached negotiation</Link>. Review the recorded price decisions.</p>
@@ -112,7 +115,7 @@ export function PerformanceOverview({ report }: { report: Performance }) {
         <div className="text-sm"><strong>Median call duration</strong><span className="ml-2">{sessionTime(report.medianSeconds)} across recorded calls · {sessionTime(report.medianReservedSeconds)} on agreements</span></div>
         {latest && <Link href={recordHref("reservations", latest.bookingLoadId, latest.id)} className="text-sm font-semibold underline underline-offset-4">Review latest agreement · {latest.bookingLoadId}</Link>}
       </div>
-      <p className="text-xs text-muted-foreground">{report.sessionCount} inbound demo sessions. HappyRobot marked {report.completedCount} completed and one missed. Twin has records for {report.groups.recorded.length} completed calls.</p>
+      <p className="text-xs text-muted-foreground">{report.sessionCount} inbound demo sessions. HappyRobot marked {report.completedCount} completed and {report.sessionCount - report.completedCount} missed. Twin has records for {report.groups.recorded.length} completed calls. These trials repeat carriers and span workflow versions. {report.topCarrierCount > 0 && <>{report.topCarrierCount} of {report.groups.reserved.length} agreements belong to the most frequent recorded MC.</>}</p>
     </section>
   );
 }
@@ -125,6 +128,10 @@ export function PerformanceRecords({ report, group }: { report: Performance; gro
     <section className="min-w-0 space-y-4">
       <Link href="/?view=overview" className="text-sm font-medium underline underline-offset-4">Back to performance</Link>
       <p className="text-sm text-muted-foreground">Recorded demo calls · {dateRange}</p>
+      {group === "unmatched" && <div className={panel + " p-5"}>
+        <h2 className="font-semibold">Why no match was recorded</h2>
+        <p className="mt-2 text-sm">{rows.filter(c => c.noMatchSeen).length} had an empty search · {rows.filter(c => !c.searchAttempted).length} never reached search · {rows.filter(c => c.searchAttempted && !c.noMatchSeen).length} had a different search outcome.</p>
+      </div>}
       {group === "paired" && <div className={`${panel} overflow-x-auto p-4`}>
         <h2 className="font-semibold">Counteroffers before agreement</h2>
         <p className="mt-1 text-sm text-muted-foreground">Agent counteroffers across {agreements.length} reservations. Accepting the carrier’s first ask uses zero counteroffers.</p>

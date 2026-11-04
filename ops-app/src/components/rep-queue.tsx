@@ -159,7 +159,7 @@ export function BookingActions({
       loadId={b.loadId}
       version={b.version}
       actions={actions}
-      confirmDisabledReason={b.cohort === "synthetic" && liveBooking === true ? "Demo reservation. Booking sends are off for this record." : confirmReason(liveBooking, short)}
+      confirmDisabledReason={b.cohort !== "real" && liveBooking === true ? "Historical or unclassified reservation. Booking sends are off for this record." : confirmReason(liveBooking, short)}
       confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
     />
   );

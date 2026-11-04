@@ -70,6 +70,7 @@ class Sent:
 class TmsClient:
     def __init__(self, settings: TmsSettings) -> None:
         self.settings = settings
+        self._read_slots = asyncio.Semaphore(3)  # per process, inside the read deadline
 
     async def echo(self) -> None:
         """Prove the TMS is reachable and accepts our token. DEBUG_ECHO skips fault injection."""
@@ -141,7 +142,8 @@ class TmsClient:
                 break
             try:
                 async with asyncio.timeout(min(settings.attempt_seconds, remaining)):
-                    raw = await self._exchange(request, Wire())
+                    async with self._read_slots:
+                        raw = await self._exchange(request, Wire())
                 reply = parse_reply(raw, echo=echo)
             except (TimeoutError, OSError, MalformedReply):
                 continue

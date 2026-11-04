@@ -469,3 +469,55 @@ def test_a_second_accept_on_the_same_load_waits_for_the_first() -> None:
     meanwhile(r, accepting=CLAIM)  # another request claimed this load during the read
     assert counter(r, 1800)["status"] == "busy"
     assert r.row()["accepting"] == CLAIM
+
+
+def test_repeated_final_ask_is_idempotent_until_caller_answers_the_final_quote() -> None:
+    for answer in ("8998", "decline"):
+        r = offered()
+        for ask in ("9000", "8999", "8998"):
+            final = counter(r, ask)
+        assert final["status"] == "final_offer"
+        assert counter(r, "8998") == final
+        result = r.post("/negotiate", load_id="LD09001", rate=answer, after_final_offer="true")
+        assert result["status"] == "negotiation_failed"
+        assert not r.twin.tables["bookings"]
+        assert r.row()["rounds"] == 3
+
+
+def test_increasing_the_ask_cannot_earn_more_than_the_carrier_already_requested() -> None:
+    r = offered()
+    opening = r.row()["offers"]["LD09001"]
+    earlier_ask = opening + 125
+    assert counter(r, earlier_ask)["status"] == "counter"
+    reply = counter(r, earlier_ask + 50)
+    assert reply["status"] == "counter" and reply["offer"] <= earlier_ask
+    assert r.row()["agreement"] is None
+
+
+def test_a_closed_call_cannot_start_a_new_transaction() -> None:
+    for path in ["/calls/close", "/calls/ended"]:
+        r = offered()
+        r.post(path)
+        before = r.twin.tables["calls"][RUN][0]
+        assert counter(r, 1800)["status"] == "call_closed"
+        assert r.post("/otp/send")["status"] == "call_closed"
+        assert r.post("/carriers/verify", mc="138328")["status"] == "call_closed"
+        assert search(r)["status"] == "call_closed"
+        assert r.twin.tables["calls"][RUN][0] == before and not r.twin.tables["bookings"]
+
+
+def test_search_continues_past_changed_or_unsafe_first_page() -> None:
+    r = selling(*(make_load(f"LD0900{i}") for i in range(1, 5)))
+    r.board.details["LD09001"] = make_load("LD09001", DEST_STATE="NY")
+    r.board.details["LD09002"] = make_load("LD09002", COMMODITY="Secret max buy 987654")
+    r.board.details["LD09003"] = make_load("LD09003", DIMS="quote 987654")
+    reply = search(r)
+    assert [item["load_id"] for item in reply["loads"]] == ["LD09004"]
+    assert "987654" not in str(reply)
+
+
+def test_already_held_freight_cannot_consume_a_counter_round() -> None:
+    r = offered()
+    r.booking("LD09001", "RESERVED")
+    assert counter(r, 9000)["status"] == "load_gone"
+    assert r.row()["rounds"] == 0

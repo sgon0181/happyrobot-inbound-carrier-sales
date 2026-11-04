@@ -127,6 +127,10 @@ def test_a_tms_outage_before_sending_leaves_the_reservation_to_retry() -> None:
     [
         ({"STATUS": "PENDING"}, "load_not_open"),
         ({"PICKUP_DT": "20261102110000"}, "load_not_open"),  # passed by START
+        ({"DEST_STATE": "NY"}, "shipment_changed"),
+        ({"ORIG_ZIP": "75202"}, "shipment_changed"),
+        ({"EQTYPE": "REEFER"}, "shipment_changed"),
+        ({"PICKUP_DT": "20271102110000"}, "shipment_changed"),
         ({"MAX_BUY": "1825"}, "ceiling_below_rate"),
         ({"MAX_BUY": ""}, "ceiling_below_rate"),
         (None, "load_gone"),
@@ -207,6 +211,16 @@ TWO_RECORDS = PENDING_RECEIPT.replace(b"END\r\n", b"") + PENDING_RECEIPT
         (sent(PENDING_RECEIPT.replace(b"LD09001", b"LD09002")), "UNKNOWN", "unexpected_receipt"),
         (sent(PENDING_RECEIPT.replace(b"FIXTURE01", b"")), "UNKNOWN", "unexpected_receipt"),
         (sent(PENDING_RECEIPT.replace(b"PENDING ", b"HELD    ")), "UNKNOWN", "unexpected_receipt"),
+        (
+            sent(PENDING_RECEIPT.replace(b"|TIMESTAMP:20261103010203", b"")),
+            "UNKNOWN",
+            "unexpected_receipt",
+        ),
+        (
+            sent(PENDING_RECEIPT.replace(b"20261103010203", b"20260231000000")),
+            "UNKNOWN",
+            "unexpected_receipt",
+        ),
         (sent(TWO_RECORDS), "UNKNOWN", "unexpected_receipt"),
         (sent(b"END\r\n"), "UNKNOWN", "unexpected_receipt"),
     ],
@@ -263,7 +277,8 @@ def test_a_receipt_twin_never_takes_is_shown_to_the_rep_and_logged(
         len(PENDING_RECEIPT),
     )
     assert booking(r)["state"] == "SUBMITTING"
-    assert "FIXTURE01" in caplog.text
+    assert reply["send"]["sha256"] in caplog.text
+    assert "FIXTURE01" not in caplog.text and "raw_reply" not in reply
 
 
 def test_a_receipt_that_landed_is_not_written_twice() -> None:
@@ -393,3 +408,19 @@ def test_only_the_ops_key_can_act() -> None:
         )
         assert response.status_code == 401
     assert r.board.sends == []
+
+
+@pytest.mark.parametrize("cohort", ["synthetic", "", None])
+def test_only_a_record_stamped_real_can_reach_the_tms(cohort: str | None) -> None:
+    r = reserved()
+    booking(r)["cohort"] = cohort
+    r.board.reading = lambda _: pytest.fail("record guard must precede TMS access")
+    assert act(r, "confirm")["status"] == "record_read_only"
+    assert booking(r)["state"] == "RESERVED"
+    assert not r.board.sends
+
+
+def test_raw_receipts_stay_in_twin_and_never_enter_the_ops_snapshot() -> None:
+    r = reserved()
+    assert act(r, "confirm")["state"] == "ACK_PENDING"
+    assert "raw_reply" in booking(r) and "raw_reply" not in str(r.get("/ops/snapshot"))

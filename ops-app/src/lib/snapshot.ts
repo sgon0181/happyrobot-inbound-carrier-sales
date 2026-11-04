@@ -39,6 +39,7 @@ export type Call = ReturnType<typeof callMilestones> & {
   startedAt: string | null;
   sessionAt: string | null;
   closedAt: string | null;
+  endedAt: string | null;
   mc: string | null;
   carrierName: string | null;
   verifiedAt: string | null;
@@ -151,6 +152,7 @@ function projectCall(raw: unknown): Call[] {
       startedAt: str(c.started_at, 40),
       sessionAt: nativeStartedAt.get(id) ?? str(c.started_at, 40),
       closedAt: str(c.closed_at, 40),
+      endedAt: str(c.ended_at, 40),
       mc: str(c.mc, 32),
       carrierName: str(c.carrier_name, 120),
       verifiedAt: str(c.verified_at, 40),

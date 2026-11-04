@@ -67,3 +67,20 @@ def test_live_booking_is_on_only_when_set_to_true() -> None:
 def test_a_bad_load_id_in_the_blocked_list_is_refused() -> None:
     with pytest.raises(SettingsError):
         blocked_loads('{"version": "x", "spent": ["LD1", "DROP TABLE"]}')
+
+
+def test_parse_private_contact_roster_without_echoing_addresses() -> None:
+    assert load_settings(ENV).contacts is None
+    assert load_settings(ENV | {"OTP_CONTACTS_JSON": "{}"}).contacts == {}
+    contacts = '{"138328":"carrier@example.test"}'
+    settings = load_settings(ENV | {"OTP_CONTACTS_JSON": contacts})
+    assert settings.contacts == {"138328": "carrier@example.test"}
+    assert "carrier@example.test" not in repr(settings)
+    for invalid in [
+        "bad",
+        '{"001":"carrier@example.test"}',
+        '{"12":"a@example.com,b@example.com"}',
+    ]:
+        with pytest.raises(SettingsError, match="OTP_CONTACTS_JSON") as caught:
+            load_settings(ENV | {"OTP_CONTACTS_JSON": invalid})
+        assert invalid not in str(caught.value)

@@ -1,3 +1,5 @@
+import { demoVoiceRunIds } from "@/lib/demo-voice-runs";
+
 // Current work is unified across the service's deployment tags. Old scope bookmarks still resolve.
 export const VIEWS = ["reservations", "overview", "bookings", "calls", "demand"] as const;
 export type View = (typeof VIEWS)[number];
@@ -28,5 +30,5 @@ export function workspaceFilters(params: Params) {
 export const isRunId = (id: string | null | undefined): id is string =>
   typeof id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id);
 export function platformRun(id: string | null | undefined) {
-  return isRunId(id) ? `https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/runs?run_id=${id}` : null;
+  return isRunId(id) && demoVoiceRunIds.has(id) ? `https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/runs?run_id=${id}` : null;
 }

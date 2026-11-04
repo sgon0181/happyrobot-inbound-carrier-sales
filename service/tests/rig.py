@@ -39,7 +39,7 @@ class FakeMailer:
         self.codes: list[str] = []
         self.fail = fail
 
-    async def send(self, code: str) -> None:
+    async def send(self, code: str, mc: str) -> None:
         if self.fail:
             raise EmailFailed("down")
         self.codes.append(code)

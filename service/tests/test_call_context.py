@@ -156,10 +156,10 @@ def test_email_completion_belongs_to_the_mc_that_requested_it(
     assert r.post("/carriers/verify", mc="138328")["status"] == "eligible"
     send = FakeMailer.send
 
-    async def delayed(self: FakeMailer, code: str) -> None:
+    async def delayed(self: FakeMailer, code: str, mc: str) -> None:
         assert r.post("/carriers/verify", mc="777777")["status"] == "eligible"
         self.fail = fails
-        await send(self, code)
+        await send(self, code, mc)
 
     monkeypatch.setattr(FakeMailer, "send", delayed)
     assert r.post("/otp/send")["status"] == "superseded"
@@ -178,12 +178,12 @@ def test_a_resend_with_identical_digits_still_supersedes_the_older_delivery(
     send = FakeMailer.send
     deliveries = 0
 
-    async def delayed(self: FakeMailer, code: str) -> None:
+    async def delayed(self: FakeMailer, code: str, mc: str) -> None:
         nonlocal deliveries
         deliveries += 1
         if deliveries == 1:
             assert r.post("/otp/send")["status"] == "sent"
-        await send(self, code)
+        await send(self, code, mc)
 
     monkeypatch.setattr(FakeMailer, "send", delayed)
     assert r.post("/otp/send")["status"] == "superseded"

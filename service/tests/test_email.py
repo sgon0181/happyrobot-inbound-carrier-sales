@@ -2,6 +2,7 @@
 
 import asyncio
 import smtplib
+from dataclasses import replace
 from email.message import EmailMessage
 from typing import Any, ClassVar
 
@@ -43,7 +44,7 @@ def _reset() -> None:
 
 
 def test_the_code_goes_to_the_configured_inbox_only() -> None:
-    asyncio.run(CodeMailer(SETTINGS, FakeSmtp).send("123456"))
+    asyncio.run(CodeMailer(SETTINGS, FakeSmtp).send("123456", "138328"))
     message = FakeSmtp.sent[0]
     assert (message["To"], message["From"], message["Subject"]) == (
         "inbox@example.test",
@@ -66,6 +67,14 @@ def test_the_code_goes_to_the_configured_inbox_only() -> None:
 def test_a_failed_send_is_reported_without_the_password(error: Exception) -> None:
     FakeSmtp.fail_with = error
     with pytest.raises(EmailFailed) as caught:
-        asyncio.run(CodeMailer(SETTINGS, FakeSmtp).send("123456"))
+        asyncio.run(CodeMailer(SETTINGS, FakeSmtp).send("123456", "138328"))
     assert "app-password" not in str(caught.value)
     assert "app-password" not in repr(SETTINGS)
+
+
+def test_carrier_specific_roster_does_not_fall_back_to_demo_inbox() -> None:
+    mail = CodeMailer(replace(SETTINGS, contacts={"138328": "approved@example.test"}), FakeSmtp)
+    asyncio.run(mail.send("432100", "138328"))
+    with pytest.raises(EmailFailed):
+        asyncio.run(mail.send("432101", "138329"))
+    assert [msg["To"] for msg in FakeSmtp.sent] == ["approved@example.test"]

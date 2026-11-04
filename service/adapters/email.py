@@ -23,7 +23,8 @@ class EmailFailed(Exception):
 class EmailSettings:
     user: str
     credential: str = field(repr=False)
-    inbox: str
+    inbox: str = field(repr=False)
+    contacts: dict[str, str] | None = field(default=None, repr=False)
     host: str = "smtp.gmail.com"
     port: int = 465
     timeout_seconds: float = 5.0
@@ -36,14 +37,18 @@ class CodeMailer:
         self.settings = settings
         self._smtp = smtp
 
-    async def send(self, code: str) -> None:
-        await asyncio.to_thread(self._send, code)
+    async def send(self, code: str, mc: str) -> None:
+        contacts = self.settings.contacts
+        recipient = self.settings.inbox if contacts is None else contacts.get(mc)
+        if not recipient:
+            raise EmailFailed("No trusted recipient for this carrier.")
+        await asyncio.to_thread(self._send, code, recipient)
 
-    def _send(self, code: str) -> None:
+    def _send(self, code: str, recipient: str) -> None:
         settings = self.settings
         message = EmailMessage()
         message["From"] = settings.user
-        message["To"] = settings.inbox
+        message["To"] = recipient
         message["Subject"] = SUBJECT
         message.set_content(f"Your verification code is {code}. It expires in five minutes.")
         try:

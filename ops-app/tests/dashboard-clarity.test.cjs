@@ -22,13 +22,13 @@ const { ReservationReview } = loadTs('src/components/reservation-review.tsx', ov
 const booking = { loadId: 'LD1', version: 1, state: 'RESERVED', carrierName: 'Fixture Carrier', rate: 2750, events: [] };
 
 test('review shows the agreement and next action before the full record', () => {
-  const html = render(ReservationReview, { booking, live: false, now: 0 });
+  const html = render(ReservationReview, { booking, canManage: true, live: false, now: 0 });
   assert.ok(html.indexOf('Agreed rate') < html.indexOf('Booking and shipment'));
   for (const text of ['$2,750', 'Not submitted', 'Originating call timeline', 'Confirm is disabled']) assert.ok(html.includes(text), text);
 });
 
 test('unknown send mode disables Confirm without disabling Decline in review', () => {
-  const html = render(ReservationReview, { booking, live: null, now: 0 });
+  const html = render(ReservationReview, { booking, canManage: true, live: null, now: 0 });
   assert.match(html, /Send mode unavailable/);
   assert.match(html, /disabled=""[^>]*>Confirm/);
   assert.doesNotMatch(html.match(/<button([^>]*)>Decline<\/button>/)[1], /\sdisabled(?:=|\s|$)/);

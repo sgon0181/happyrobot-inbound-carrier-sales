@@ -16,11 +16,12 @@ from datetime import UTC, datetime, timedelta
 from typing import Protocol
 
 from service.adapters.tms.client import Sent, TmsUnavailable
+from service.adapters.tms.mapping import parse_timestamp
 from service.adapters.tms.protocol import InvalidRequest
 from service.adapters.twin import Data, Row, Twin, TwinUnavailable
 from service.bookings import with_event
 from service.calls import Reply
-from service.core.loads import is_offerable
+from service.core.loads import is_offerable, same_shipment
 from service.core.models import Load
 
 STALE_SEND = timedelta(seconds=60)  # a SUBMITTING row this old lost the request sending it
@@ -72,11 +73,13 @@ class RepActions:
         row = await self._current(load_id, version, "RESERVED")
         if not isinstance(row, Row):
             return row
+        if row.data.get("cohort") != "real":
+            return {"status": "record_read_only"}
         try:
             load = await self.tms.get(load_id)
         except TmsUnavailable:
             return {"status": "tms_unavailable"}  # still RESERVED, nothing sent: retry
-        reason = recheck(load, row.data["rate"], self.now(), self.blocked)
+        reason = recheck(load, row.data, self.now(), self.blocked)
         if reason is not None:
             failed = {"state": "FAILED", "reason": reason, "rep": rep}
             written = await self._write(load_id, row, "recheck_failed", failed)
@@ -162,17 +165,24 @@ class RepActions:
                 return reply
             except TwinUnavailable:
                 continue
-        log.error("Booking receipt for %s not saved: %s", load_id, fields)
-        return reply | {"status": "receipt_not_saved"} | fields
+        log.error(
+            "Booking receipt not saved for %s: state=%s sha256=%s",
+            load_id,
+            receipt.state,
+            sent.sha256,
+        )
+        return reply | {"status": "receipt_not_saved", "send": evidence}
 
 
-def recheck(load: Load | None, rate: int, now: datetime, blocked: frozenset[str]) -> str | None:
+def recheck(load: Load | None, booking: Data, now: datetime, blocked: frozenset[str]) -> str | None:
     """Why the load can no longer be booked at this rate, or None if it still can (INV-1)."""
     if load is None:
         return "load_gone"
     if not is_offerable(load, now, blocked):
         return "load_not_open"
-    if load.max_rate is None or load.max_rate < rate:
+    if not same_shipment(load, booking.get("load")):
+        return "shipment_changed"
+    if load.max_rate is None or load.max_rate < booking["rate"]:
         return "ceiling_below_rate"
     return None
 
@@ -189,7 +199,12 @@ def classify(sent: Sent, load_id: str) -> Receipt:
     records = sent.reply.records
     record = records[0] if len(records) == 1 else {}
     status, reference = record.get("STATUS"), record.get("BOOKING_REF") or None
-    if record.get("LOAD_ID") != load_id or reference is None or status not in RECEIPT_STATES:
+    if (
+        record.get("LOAD_ID") != load_id
+        or reference is None
+        or status not in RECEIPT_STATES
+        or parse_timestamp(record.get("TIMESTAMP")) is None
+    ):
         return Receipt("UNKNOWN", "unexpected_receipt", reference, status)
     return Receipt(RECEIPT_STATES[status], None, reference, status)
 

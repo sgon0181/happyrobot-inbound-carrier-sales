@@ -53,7 +53,10 @@ export function performance(calls: Call[]) {
     unmatched: verified.filter((c) => !c.foundMatch && c.bookingLoadId === null),
     "no-agreement": matched.filter((c) => c.bookingLoadId === null),
   };
+  const counts = new Map<string, number>();
+  for (const c of reserved) if (c.mc) counts.set(c.mc, (counts.get(c.mc) ?? 0) + 1);
   return {
+    topCarrierCount: Math.max(0, ...counts.values()),
     groups,
     completedCount: demoVoiceRunIds.size,
     sessionCount: new Set([...demoVoiceRunIds, missedVoiceRunId]).size,

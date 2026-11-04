@@ -30,7 +30,10 @@ def build(settings: Settings) -> FastAPI:
     twin = Twin(TwinSettings(api_key=settings.twin_api_key, org_id=settings.twin_org_id))
     fmcsa = Fmcsa(FmcsaSettings(api_key=settings.fmcsa_api_key))
     email = EmailSettings(
-        user=settings.email_user, credential=settings.email_credential, inbox=settings.demo_inbox
+        user=settings.email_user,
+        credential=settings.email_credential,
+        inbox=settings.demo_inbox,
+        contacts=settings.contacts,
     )
     tms = TmsClient(
         TmsSettings(host=settings.tms_host, port=settings.tms_port, token=settings.tms_token)

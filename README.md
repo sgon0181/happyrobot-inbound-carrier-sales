@@ -2,23 +2,11 @@
 
 A voice agent for HappyRobot Logistics, a freight brokerage. Carriers call in, get verified, hear matching loads and negotiate a rate. A senior rep then confirms the booking from an operations dashboard, with no dispatcher involved in the first leg of the call.
 
-[Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
+**Friday review proposal.** Start with the [review and release guide](docs/proposal.md) and [five-minute demo cues](docs/proposal-demo.md). The proposal runs a stricter senior rep desk, protects the carrier's quoted shipment, and includes an isolated peak-shift exercise. Source on this branch can differ from what a hosted link shows.
 
-The filmed call cleared the authority and code checks and agreed a rate on LD01088. The pricing service authorized the $25 increase on the first ask. The rep reviews that reservation before any booking request. A transaction with a PENDING TMS receipt remains pending.
+The [hosted reservations](https://carrier-sales-santiago.happyrobot.dev/) belong to the released baseline. The [filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) links its $975 opening, $1,000 agreement and recording. A different web call, [LD01080](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f), has the reference-bearing PENDING receipt from the actual sandbox. Luke approved keeping that acknowledgement separate from a final booking.
 
-Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 fix is now live and passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](docs/confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
-
-Use the [review guide](docs/reviewer-guide.md) to map the proof to the requirements. This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
-
-## Status
-
-**Released proof of concept; owner acceptance and submission pending.** Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and the authenticated native Carrier Sales App form the deployed proof of concept. Booking sends remain off and the call cohort remains synthetic. The App includes structured activity, rep review, send-mode controls and receipt recovery. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
-
-An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
-
-The owner's ten Version 5 test calls exposed incorrect rate interpretation, premature final-offer wording, repeated offers and closing problems. Service release 17 and historical Version 6 introduced the reviewed fixes. [Voice tuning](docs/voice-tuning.md) now records 11 Version 6 human calls with proactive endings and persisted close/end records. Version 7 addressed split amounts and operating notes, but the next owner call exposed a confirmation bypass. Version 8 fixes that bypass using the actual recording, 118/118 checkpoints and two mocked conversation replays. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. Audio recognition and physical timing are not proven by mocked tests. [Current release verification](docs/releases/2026-11-04-v8/README.md) records the live confirmation fix; the [prior release](docs/releases/2026-11-04-v7/README.md) retains App Build 20 provenance and visual checks. Follow [the short finish checklist](docs/final-owner-checklist.md) for the remaining voice, video and submission steps.
-
-A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
+[Workflow Version 8](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc) is the published voice baseline. Its [recording regression](docs/confirmation-fix.md) documents a real misheard-price defect. The proposal voice candidate and its separate test evidence are identified in the review guide.
 
 ## How it works
 

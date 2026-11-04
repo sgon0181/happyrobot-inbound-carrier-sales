@@ -13,7 +13,16 @@ from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import Data
 from service.bookings import Bookings
 from service.calls import CallRows, Decide, Reply, Unchanged, answer, is_verified, set_outcome
-from service.core.loads import Search, public_view, reservation_view, search_terms, select_offers
+from service.core.loads import (
+    MAX_OFFERS,
+    Search,
+    public_view,
+    reservation_view,
+    safe_to_quote,
+    search_terms,
+    select_offers,
+    shipment_terms,
+)
 from service.core.models import Load, LoadSummary
 from service.core.money import parse_ask
 from service.core.pricing import PricingPolicy, Terms, price_load
@@ -59,18 +68,22 @@ class Sales:
         search = search_terms(equipment, origin_state, dest_state)
         if search is None:
             return await self.rows.step(run_id, "find_loads", answer("invalid_search"))
-        if not is_verified(await self.rows.read(run_id)):  # before any load detail is fetched
+        source = await self.rows.read(run_id)
+        if source["closed_at"] or source.get("ended_at"):
+            return {"status": "call_closed"}
+        if not is_verified(source):  # before any load detail is fetched
             return await self.rows.step(run_id, "find_loads", answer("not_verified"))
         try:
             loads = await self._open_loads(search)
         except TmsUnavailable:
-            failed = _searched(search, set_outcome("tms_unavailable"))
+            failed = _searched(search, source["mc"], set_outcome("tms_unavailable"))
             return await self.rows.step(run_id, "find_loads", failed, {"search": dict(search)})
-        priced = [(load, terms) for load in loads if (terms := self._terms(load))]
+        quotable = [load for load in loads if safe_to_quote(load)]
+        priced = [(load, terms) for load in quotable if (terms := self._terms(load))]
 
         def decide(data: Data, now: datetime) -> Reply:
             if not priced:  # a load we cannot price is never offered (D-11)
-                status = "pricing_review_required" if loads else "no_match"
+                status = _no_offer_status(loads, quotable)
                 if data["outcome"] != "negotiation_failed":
                     data["outcome"] = status
                 return {"status": status}
@@ -79,6 +92,7 @@ class Sales:
                 data["outcome"] = None
             for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
                 kept = data["offers"].get(load.load_id, terms.opening)
+                data.setdefault("shipments", {})[load.load_id] = shipment_terms(load)
                 data["offers"][load.load_id] = min(max(kept, terms.opening), terms.cap)
             views = [
                 public_view(
@@ -89,10 +103,12 @@ class Sales:
             return {"status": "found", "loads": views}  # its event keeps what was pitched
 
         return await self.rows.step(
-            run_id, "find_loads", _searched(search, decide), {"search": dict(search)}
+            run_id, "find_loads", _searched(search, source["mc"], decide), {"search": dict(search)}
         )
 
-    async def negotiate(self, run_id: str, load_id: str, ask: str) -> Reply:
+    async def negotiate(
+        self, run_id: str, load_id: str, ask: str, *, after_final: bool = False
+    ) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).
 
         The load is read again each time, so every number is checked against today's
@@ -126,7 +142,7 @@ class Sales:
         if priced is None:
             return await log(drop(load_id))
         load, terms = priced
-        reply = await log(answer_counter(load_id, ask, terms))
+        reply = await log(answer_counter(load, ask, terms, after_final))
         if reply["status"] != "accepting":
             return reply
         held = await self.bookings.reserve(
@@ -154,6 +170,8 @@ class Sales:
 
     async def _fresh_terms(self, load_id: str) -> tuple[Load, Terms] | None:
         """Today's terms for the load, or None if it is gone, blocked or cannot be priced."""
+        if await self.bookings.held([load_id]):
+            return None
         load = await self.board.get(load_id)
         if load is None or not select_offers([load], self.rows.now(), self.blocked):
             return None
@@ -170,12 +188,24 @@ class Sales:
             limit=SEARCH_LIMIT,
         )
         excluded = self.blocked | await self.bookings.held(load.load_id for load in found)
-        picked = select_offers(found, now, excluded, **search)
-        reads = await asyncio.gather(*(self._read(load.load_id) for load in picked))
-        if picked and all(isinstance(read, TmsUnavailable) for read in reads):
-            raise TmsUnavailable("No load details could be read.")
-        details = [read for read in reads if isinstance(read, Load)]
-        return select_offers(details, self.rows.now(), excluded, **search)  # rechecked as read
+        candidates = select_offers(found, now, excluded, limit=SEARCH_LIMIT, **search)
+        usable: list[Load] = []
+        seen: list[Load] = []
+        unavailable = False
+        for start in range(0, len(candidates), MAX_OFFERS):
+            picked = candidates[start : start + MAX_OFFERS]
+            reads = await asyncio.gather(*(self._read(load.load_id) for load in picked))
+            unavailable |= any(isinstance(read, TmsUnavailable) for read in reads)
+            details = [read for read in reads if isinstance(read, Load)]
+            for load in select_offers(details, self.rows.now(), excluded, **search):
+                seen.append(load)
+                if safe_to_quote(load) and self._terms(load):
+                    usable.append(load)
+            if len(usable) >= MAX_OFFERS:
+                break
+        if not seen and unavailable:
+            raise TmsUnavailable("No usable load details could be read.")
+        return usable[:MAX_OFFERS] or seen[:MAX_OFFERS]
 
     async def _read(self, load_id: str) -> Load | TmsUnavailable | None:
         """One load's details. One failed read skips that load rather than the search."""
@@ -189,13 +219,19 @@ class Sales:
         return price_load(load.load_id, load.loadboard_rate, load.max_rate, policy, secret)
 
 
-def _searched(search: Search, decide: Decide) -> Decide:
+def _searched(search: Search, mc: str, decide: Decide) -> Decide:
     """Record what was asked, but only on a call that is still verified when it is written."""
 
     def guarded(data: Data, now: datetime) -> Reply | Unchanged:
-        if not is_verified(data):
+        if not is_verified(data) or data["mc"] != mc:
             return {"status": "not_verified"}
         data["search"] = dict(search)
         return decide(data, now)
 
     return guarded
+
+
+def _no_offer_status(loads: list[Load], quotable: list[Load]) -> str:
+    if quotable:
+        return "pricing_review_required"
+    return "shipment_review_required" if loads else "no_match"

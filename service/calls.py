@@ -13,7 +13,7 @@ from typing import Any, Protocol
 
 from service.adapters.email import EmailFailed
 from service.adapters.fmcsa import Fmcsa, FmcsaUnavailable
-from service.adapters.twin import Data, Twin
+from service.adapters.twin import Data, Row, Twin
 from service.core import codes
 from service.core.carrier_policy import assess, normalize_mc
 
@@ -32,7 +32,7 @@ Decide = Callable[[Data, datetime], Reply | Unchanged]
 
 
 class Mailer(Protocol):
-    async def send(self, code: str) -> None: ...
+    async def send(self, code: str, mc: str) -> None: ...
 
 
 class CallRows:
@@ -49,19 +49,42 @@ class CallRows:
         return _complete(row.data if row else None, self.cohort, self.now())
 
     async def step(
-        self, run_id: str, action: str, decide: Decide, detail: Data | None = None
+        self,
+        run_id: str,
+        action: str,
+        decide: Decide,
+        detail: Data | None = None,
+        *,
+        previous: Row | None = None,
     ) -> Reply:
-        """Apply one decision and its event to the call's row, in one version-checked write.
+        edit = self._transition(action, decide, detail)
+        if previous is not None:
+            changed, result = edit(previous.data)
+            if changed is not None and await self.twin.update(
+                "calls", run_id, previous.version, changed
+            ):
+                return result
+        return await self.twin.change("calls", run_id, edit)
 
-        The event keeps the call's MC after the step, any detail of what was asked, such
-        as the carrier's ask, and the step's result, which never holds a code. Some results
-        are internal, such as checking and code_issued, so events record what the service
-        decided, not every word the agent said.
-        """
+    async def start_lookup(self, run_id: str, mc: str) -> tuple[Reply, Row | None]:
+        """An initial call uses one INSERT. On collision, honor the persisted call state."""
+        choose = _select(mc)
+        data, reply = self._transition("verify_carrier", choose, None)(None)
+        if data is not None and await self.twin.insert("calls", run_id, data):
+            return reply, Row(1, data)
+        return await self.step(run_id, "verify_carrier", choose), None
+
+    def _transition(
+        self, action: str, decide: Decide, detail: Data | None
+    ) -> Callable[[Data | None], tuple[Data | None, Reply]]:
         now = self.now()
 
         def edit(current: Data | None) -> tuple[Data | None, Reply]:
             data = _complete(current, self.cohort, now)
+            terminal = data["closed_at"] or data.get("ended_at")
+            settling = action == "negotiate" and bool(data["accepting"])
+            if terminal and action not in ("close", "call_ended") and not settling:
+                return None, {"status": "call_closed"}
             reply = decide(data, now)
             if isinstance(reply, Unchanged):
                 return None, reply.reply
@@ -73,7 +96,7 @@ class CallRows:
             data["events"].append({"seq": len(data["events"]) + 1, **event})
             return data, reply
 
-        return await self.twin.change("calls", run_id, edit)
+        return edit
 
 
 class Calls:
@@ -84,15 +107,17 @@ class Calls:
         mc = normalize_mc(mc_text)
         if mc is None:
             return await self.rows.step(run_id, "verify_carrier", answer("invalid_mc"))
-        selected = await self.rows.step(run_id, "verify_carrier", _select(mc))  # before FMCSA
-        if selected["status"] == "carrier_locked":
+        selected, previous = await self.rows.start_lookup(run_id, mc)
+        if selected["status"] != "checking":
             return selected
         lookup = selected["lookup"]
         try:
             authority = assess(await self.fmcsa.carriers(mc))
         except FmcsaUnavailable:
             unavailable = set_outcome("fmcsa_unavailable")
-            return await self.rows.step(run_id, "verify_carrier", _latest(lookup, unavailable))
+            return await self.rows.step(
+                run_id, "verify_carrier", _latest(lookup, unavailable), previous=previous
+            )
 
         def decide(data: Data, now: datetime) -> Reply:
             data["carrier_name"], data["eligible"] = authority.carrier_name, authority.eligible
@@ -104,7 +129,9 @@ class Calls:
                 return {"status": "not_found"}
             return {"status": "ineligible", "reason": authority.reason}
 
-        return await self.rows.step(run_id, "verify_carrier", _latest(lookup, decide))
+        return await self.rows.step(
+            run_id, "verify_carrier", _latest(lookup, decide), previous=previous
+        )
 
     async def send_code(self, run_id: str) -> Reply:
         code = codes.new_code()  # made before the write, which may be retried
@@ -124,7 +151,7 @@ class Calls:
             return reply
         status = "sent"
         try:  # the send is already counted, so a failure is never silently retried
-            await self.mailer.send(code)
+            await self.mailer.send(code, reply["mc"])
         except EmailFailed:
             status = "send_failed"
         delivery = {"mc": reply["mc"], "send_number": reply["send_number"], "delivery": status}
@@ -233,7 +260,7 @@ def _select(mc: str) -> Decide:
                 return Unchanged({"status": "carrier_locked"})
             _store_code(data, codes.for_new_mc(_code_state(data)))
             data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
-            data.update(offers={}, outcome=None)  # the earlier carrier's outcome is not this one's
+            data.update(offers={}, shipments={}, lowest_asks={}, last_counter=None, outcome=None)
         data["lookup"] += 1
         return {"status": "checking", "lookup": data["lookup"]}
 

@@ -129,7 +129,7 @@ export function submissionStatus(state: string | null, reason: string | null, re
   if (state === "RESERVED" || state === "RELEASED") return "Not submitted";
   if (state === "UNKNOWN") return "Outcome unknown";
   if (state === "FAILED") {
-    if (["load_gone", "load_not_open", "ceiling_below_rate", "not_sent"].includes(reason ?? "")) return "Not submitted";
+    if (["load_gone", "load_not_open", "shipment_changed", "ceiling_below_rate", "not_sent"].includes(reason ?? "")) return "Not submitted";
     if (["invalid_rate", "unknown_load", "not_found"].includes(reason ?? "")) return "Rejected by TMS";
     return "Submission evidence unavailable";
   }

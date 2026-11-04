@@ -36,6 +36,7 @@ class Settings:
     pricing_secret: bytes = field(repr=False)
     email_user: str
     email_credential: str = field(repr=False)
+    contacts: dict[str, str] | None = field(repr=False)
     demo_inbox: str  # the one inbox codes go to, never an address a caller gives (D-12)
     cohort: str  # stamped on each new call, so KPIs can count real calls only (D-21)
     live_booking: bool  # each LOAD_BOOK spends a load for good, so this stays off until slice 4
@@ -58,6 +59,7 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         pricing_secret=read.secret("PRICING_SECRET").encode(),
         email_user=read.email("OTP_EMAIL_USER"),
         email_credential=read.text("OTP_EMAIL_CREDENTIAL"),
+        contacts=read.contacts(),
         demo_inbox=read.email("DEMO_OTP_EMAIL"),
         cohort=read.choice("CALL_COHORT", COHORTS, default="real"),
         live_booking=read.choice("LIVE_BOOKING", {"true", "false"}, default="false") == "true",
@@ -102,6 +104,25 @@ class _Reader:
         if value and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value):
             self.problems.append(f"{name} is not an email address")
         return value
+
+    def contacts(self) -> dict[str, str] | None:
+        """Optional broker-maintained pilot roster. Never accept a destination from the call."""
+        raw = self.env.get("OTP_CONTACTS_JSON")
+        if raw is None:
+            return None
+        try:
+            mapping = json.loads(raw)
+            if isinstance(mapping, dict) and all(
+                re.fullmatch(r"[1-9][0-9]{0,7}", mc)
+                and isinstance(address, str)
+                and re.fullmatch(r"[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", address)
+                for mc, address in mapping.items()
+            ):
+                return dict(mapping)
+        except ValueError:
+            pass
+        self.problems.append("OTP_CONTACTS_JSON must map canonical MC numbers to single addresses")
+        return None
 
     def port(self, name: str) -> int:
         value = self.text(name)

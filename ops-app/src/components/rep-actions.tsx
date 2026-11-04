@@ -56,6 +56,8 @@ function describe(r: ActionReply): { ok: boolean; text: string } {
       return { ok: false, text: "This booking changed since your screen loaded. Review it again." };
     case "not_allowed":
       return { ok: false, text: `Not available while the booking is ${r.state}.` };
+    case "record_read_only":
+      return { ok: false, text: "Historical or unclassified reservation. No booking request was sent." };
     case "live_booking_off":
       return { ok: false, text: "Live booking is off, so nothing was sent to the TMS." };
     case "tms_unavailable":

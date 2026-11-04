@@ -1,6 +1,8 @@
 # Submission candidate
 
-The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads, access grants or submission are authorized. Workflow Version 8 is live, with service release 17 and App Build 20 unchanged. [Verification and limits](confirmation-fix.md) cover the recorded confirmation regression. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. The walkthrough video URL and reviewer access remain to be finalized.
+Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+
+The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads, access grants or submission are authorized. Workflow Version 8 and service release 17 are unchanged; App Build 22 is live. [Verification and limits](confirmation-fix.md) cover the recorded confirmation regression. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. The walkthrough video URL and reviewer access remain to be finalized.
 
 ## Links and files
 
@@ -9,7 +11,7 @@ The owner controls final submission and explicitly directed Codex to leave the p
 | Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed Version 8 source and release records are pushed; the refreshed package manifest pins its exact source commit. Repository remains private; intended reviewer accounts have not been provided |
 | HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/kvexhw5fzj4y | Version 8 live since 2026-11-04; prompt SHA-256 `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`; 118/118 locked checkpoints and two complete mocked recording replays |
 | Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 8; owner reports successful normal demo call, not independently reviewed |
-| Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 20, source 48ba398 per Claude; 77-file archive and final 1280px views/panels verified; reviewer-account access remains to check |
+| Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 22, reviewed source 8ff094a; exact 80-file import and 1280px views/panels checked; reviewer-account access remains to check |
 | Build description | docs/build-description.md; export in submission/build-description.pdf | PDF regenerated from corrected Version 8 source and visually checked; exact source/PDF hashes are in the local package manifest |
 | Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
 

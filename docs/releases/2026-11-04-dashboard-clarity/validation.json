@@ -1,0 +1,59 @@
+{
+  "source_commit": "8ff094a86c08ec2fe9bda6f89cb0b2166aabbdd7",
+  "scope": "Dashboard clarity only; no service, voice workflow, pricing, authentication, secret or booking-rule changes.",
+  "frontend": {
+    "environment": "Clean temporary copy, node:22 container",
+    "tests": {
+      "passed": 49,
+      "failed": 0
+    },
+    "lint": {
+      "errors": 0,
+      "existing_warnings": 3
+    },
+    "production_build": "passed, Next.js 16.4.4",
+    "typecheck": "passed after build",
+    "production_dependency_vulnerabilities": 0,
+    "commands": [
+      "npm ci --include=dev --no-audit --no-fund",
+      "npm test",
+      "npm run lint",
+      "npm run build",
+      "npm run typecheck",
+      "npm audit --omit=dev --json"
+    ]
+  },
+  "service": {
+    "command": "make check, temporary checkout with tracked fixtures",
+    "tests_passed": 487,
+    "statements_covered": 1650,
+    "statements_total": 1650,
+    "branches_covered": 406,
+    "branches_total": 406,
+    "business_branches_covered": 256,
+    "business_branches_total": 256,
+    "ruff": "passed",
+    "mypy_strict": "passed",
+    "maximum_radon_complexity": 10,
+    "maximum_radon_rank": "B"
+  },
+  "production_lines": {
+    "python": 2919,
+    "app_ts_tsx": 4666,
+    "largest_custom_app_module": 239,
+    "baseline_template_sidebar": 726
+  },
+  "independent_review": "No findings on 7262be4 or the 8ff094a empty-string correction; separate read-only Codex review.",
+  "source_archive": {
+    "files": 80,
+    "sha256": "9637503ce08e43680d95cf6c04ed007423ee2b2d6bdb4625251044fee67a1e9a",
+    "environment_files_in_archive": false
+  },
+  "limits": [
+    "Three existing frontend lint warnings and the unchanged template sidebar size remain.",
+    "No production capacity or every-call-capture guarantee is added.",
+    "No new voice eval or human call is needed to validate this frontend-only change.",
+    "No Confirm, Decline, Reconcile or LOAD_BOOK action used for live verification."
+  ],
+  "initial_clarity_commit": "7262be4810a12b744fa98f573039ee78fa88a527"
+}

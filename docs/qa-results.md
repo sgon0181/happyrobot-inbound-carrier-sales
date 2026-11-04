@@ -1,10 +1,13 @@
 # QA results
 
-Current release checked on 2026-11-04 (Sydney): workflow Version 8 (`kvexhw5fzj4y`), service release 17 from `bf512aa` and Carrier Sales App Build 20. Booking sends remain off and calls remain synthetic. The confirmation fix and release record are reviewed and pushed. [Current release](releases/2026-11-04-v8/README.md) and [specific correction](confirmation-fix.md) identify the exact prompt and limits. The owner reports a successful normal Version 8 demo call; no independent transcript/audio review of that latest call is claimed. The owner controls the submission portal, which is not part of this documentation refresh.
+Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+
+Current release checked on 2026-11-04 (Sydney): workflow Version 8 (`kvexhw5fzj4y`), service release 17 from `bf512aa` and Carrier Sales App Build 22. Booking sends remain off and calls remain synthetic. The confirmation fix and release record are reviewed and pushed. [Current release](releases/2026-11-04-v8/README.md) and [specific correction](confirmation-fix.md) identify the exact prompt and limits. The owner reports a successful normal Version 8 demo call; no independent transcript/audio review of that latest call is claimed. The owner controls the submission portal, which is not part of this documentation refresh.
 
 | Current layer | Result | Limit |
 |---|---|---|
 | Automated service | 487 tests; 1650/1650 statements, 406/406 branches, business branches 256/256; strict mypy/ruff pass, Radon B or better | Offline integration doubles and loopback fault servers |
+| Operations App clarity | 49 frontend tests; lint 0 errors and 3 existing warnings; build, typecheck and production audit pass | Node 22, exact 80-file import; published visual checks without booking actions |
 | Version 8 focused regression | Eight recording-derived cases three times, 24/24 on the final root; unchanged V7 baseline 16/24 | Native model grades, all six external actions mocked |
 | Version 8 full checkpoint suite | 59 definitions twice, 118/118 on the same frozen root/tool | Checkpoints do not measure speech or callback delivery |
 | Version 8 complete mocked replay | Two completed conversations, only 1125 submitted after corrected readback and explicit Yes | All seven external actions mocked; text ending has no recorded farewell, so not a complete voice-closing pass |

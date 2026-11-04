@@ -1,5 +1,7 @@
 # Onboarding
 
+Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+
 Updated 2026-11-04 (Australia/Sydney). The shared starting map for the owner, Claude Code and Codex. A Git clone includes everything tracked here. It does not include browser sessions, local `.env`, ignored evidence or MCP authentication.
 
 ## Read first
@@ -17,7 +19,7 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Reviewed confirmation fix eaa2661 and release record 9924e66 are pushed. Version 8 is live; service release 17 from bf512aa and App Build 20 are unchanged. The App source 48ba398 is reported by Claude and its archive/visual checks are recorded. The owner reports a successful normal Version 8 call; independent review of that call is not claimed. Final video URL and reviewer access remain owner steps. |
+| `main` | Dashboard clarity source `7262be4` and missing-field correction `8ff094a` are independently reviewed. App Build 22 is live; workflow Version 8 and service release 17 remain unchanged. Video URL and intended reviewer access remain owner steps. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
 | Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
@@ -29,12 +31,12 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 |---|---|---|
 | Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 8 (`kvexhw5fzj4y`, UUID `01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) live since 2026-11-04, replacing Version 7. Prompt SHA-256: `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Historical owner-call evidence retained; unpublished on 2026-11-04. |
-| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 20 verified in the native build selector on 2026-11-04; redesigned dashboard and booking-sends-off state observed. Claude's release handover identifies source 48ba398/import 97da4f6; its 77-file archive matches the checkout. Final 1280px views/panels and disabled Confirm were independently checked. Build 18 source and visual provenance remain historical evidence. |
+| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 22, reviewed source `8ff094a`, 80-file exact import. Action-first overview, explicit Real/Test scope, explained conversion and readable activity. Booking sends remain off. See [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
-After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. The native App selector now shows production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
+After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. At that earlier release check, the native App selector showed production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
 
 Historical Version 7 publication matched reviewed 9d7a149. Version 8 subsequently replaced it under the owner's non-portal release approval, with exact post-publication root and tool readbacks matching eaa2661. No service deployment, App publication or secret change was needed. See releases/2026-11-04-v8/README.md. The owner withdrew portal-writing authorization and handles final submission alone. Do not open, fill, upload to or submit through the portal. Reviewer access completion remains unverified; do not guess reviewer accounts.
 

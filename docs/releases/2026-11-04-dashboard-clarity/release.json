@@ -1,0 +1,61 @@
+{
+  "date_sydney": "2026-11-04",
+  "app": {
+    "name": "Carrier Sales",
+    "build": 22,
+    "slug": "codex-lab-carrier-sales-v24",
+    "url": "https://carrier-sales-santiago.happyrobot.dev",
+    "source_commit": "8ff094a86c08ec2fe9bda6f89cb0b2166aabbdd7",
+    "initial_clarity_commit": "7262be4810a12b744fa98f573039ee78fa88a527",
+    "source_files": 80,
+    "source_archive_sha256": "9637503ce08e43680d95cf6c04ed007423ee2b2d6bdb4625251044fee67a1e9a",
+    "initial_import_commit": "2a6cede5f136590f5fa21144994ec5cb6e51d253",
+    "initial_build": 21,
+    "import_commit": "1b317c6d4ccfe2bf2d142cc5f2f8a19052cae03d",
+    "source_default_service": "https://happyrobot-carrier-sales-sg.fly.dev",
+    "native_build_selector_verified": true,
+    "final_missing_field_text_verified_live": true
+  },
+  "unchanged": {
+    "workflow_version": 8,
+    "workflow_slug": "kvexhw5fzj4y",
+    "service_release": 17,
+    "service_commit": "bf512aaae9d1ce6c21600bd2f4f744633ccc229b",
+    "live_booking": false,
+    "call_cohort": "synthetic",
+    "secrets_changed": false
+  },
+  "owner_authorization": "Approve, do an improvement plan based on relevance, communication, visual hierarchy and logical things the user will want to see, based on the PDF, ship and let me know when done.",
+  "portal_interaction": false,
+  "live_booking_actions": 0,
+  "validation": "validation.json",
+  "visual": {
+    "viewport": [
+      1280,
+      900
+    ],
+    "real_scope": true,
+    "test_scope": true,
+    "explicit_real_conversion": "1 of 3 email-verified calls, 33%",
+    "test_business_conversion_absent": true,
+    "test_queue_confirms": 9,
+    "test_queue_confirms_disabled": 9,
+    "page_horizontal_overflow": false,
+    "booking_actions_clicked": 0,
+    "local_screenshots": "submission/local-history/dashboard-clarity/",
+    "screenshots": [
+      "app22-overview-real.jpg",
+      "app22-call-activity.jpg",
+      "app22-build.jpg",
+      "app22-overview-test.jpg",
+      "app22-results-real.jpg"
+    ]
+  },
+  "exports": {
+    "build_description_md_sha256": "359494d2108f047a1db6b4e89998053d26f1ba561f85fcf38374db416b6bb4b0",
+    "build_description_pdf_sha256": "a52472a795af3c6df70ddaa8a827687148e75116fd3f751d3bef9ee6db43e0a6",
+    "build_description_pages": 2,
+    "recording_guide_app_build": 22,
+    "source_zip_commit": "Final reviewed documentation commit, pinned in local package-manifest.json"
+  }
+}

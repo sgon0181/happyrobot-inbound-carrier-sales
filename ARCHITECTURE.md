@@ -1,9 +1,11 @@
 # Inbound Carrier Sales: Architecture
 
+Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](docs/releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+
 | | |
 |---|---|
 | **Version** | 3.1, current release documentation checked 2026-11-04 |
-| **Status** | Version 8 (`kvexhw5fzj4y`), service release 17 from bf512aa and App Build 20 are live. Version 8 passes 118/118 locked checkpoints and two inspected mocked recording replays. The owner reports a successful normal Version 8 call; its transcript/audio has not been independently reviewed. Eleven Version 6 calls retain timed closing and stored end-event evidence. Build 20 source 48ba398 is reported by Claude; its archive and published UI have recorded checks. See docs/confirmation-fix.md and docs/releases/2026-11-04-v8/README.md. |
+| **Status** | Version 8 (`kvexhw5fzj4y`), service release 17 from bf512aa and App Build 22 are live. Version 8 passes 118/118 locked checkpoints and two inspected mocked recording replays. The owner reports a successful normal Version 8 call; its transcript/audio has not been independently reviewed. Eleven Version 6 calls retain timed closing and stored end-event evidence. App Build 22 uses reviewed source 8ff094a; its 80-file import and published UI have recorded checks. See docs/confirmation-fix.md and docs/releases/2026-11-04-v8/README.md. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
@@ -429,7 +431,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 
 Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. It verifies the signed-in user, then calls the service from its server with the ops key. The Twin gateway for Apps has been failing (T-7), so the app reads through the service, which also keeps every rule in one place. The ops key never reaches the browser, and the rep's identity comes from the verified session.
 
-- **Overview:** business KPIs first, then the northstar and funnel. Real calls only, with test data shown separately.
+- **Overview:** current reservations and submission states first, then the review queue and call-record follow-up. Historical call results explain reservation conversion with its denominator and scope. Test view contains test history only. Current booking states and historical call milestones are separate; no mixed-unit funnel is shown.
 - **Rep queue:** reservations awaiting a decision, then sent bookings with their actual TMS status and reference.
 - **Call log:** each call's outcome, rounds, summary and events. This is the audit trail the brokerage said it lacks.
 - **Turned-away demand:** lanes carriers asked for when nothing matched.

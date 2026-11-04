@@ -1,6 +1,6 @@
 # Inbound Carrier Sales: build description
 
-For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Claude's release handover identifies Build 20 source as `48ba398`. Its 77-file source archive matches the current App checkout, and the native production build and sends-off dashboard were independently observed. Booking sends remain off and the call cohort remains synthetic. The release checklist is in submission.md. The owner reports a successful normal Version 8 voice call; that report has not been independently checked against its transcript or audio. Reviewer access and the owner video URL remain to be finalized. The owner alone handles the submission portal.
+For HappyRobot Logistics' business and IT review. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 22 are live. The App uses independently reviewed source `8ff094a`, imported as 80 exact files and visually checked at 1280px. Booking sends remain off and calls remain synthetic. This is a proof of concept; reviewer access and the owner-recorded video URL remain owner delivery steps. The owner alone handles the submission portal. See docs/releases/2026-11-04-dashboard-clarity/README.md for release evidence.
 
 ## Customer problem and scope
 
@@ -24,7 +24,7 @@ Twin stores structured service activity: authority decisions, code delivery outc
 
 This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. The deployed end-report route and live Version 8 callback can record pre-tool calls when the callback is delivered; delivery is not guaranteed. No external database or general-purpose logging framework is used.
 
-The App separates real and test calls. Its metrics count recorded calls, reservations, rep approvals, pending acknowledgements, final confirmations, unknown outcomes and unmatched demand. The northstar is recorded reservations per call that ever passed its code. Tool-to-offer time begins at the first service request, excluding greeting and spoken delivery. Complete definitions and missing-data behavior are in kpis.md. Carrier payment and concessions are not brokerage revenue or profit.
+The App leads with reservations awaiting rep review and current submission states. Historical call results are separate, with explicit Real/Test scope and all-recorded-history labels. Reservation conversion shows both its percentage and numerator/denominator; test traffic does not enter business performance. Activity uses readable prices, shipment times and negotiation rounds, with technical references expandable. Recording coverage and service timing are secondary diagnostics. Definitions are in kpis.md. Carrier payment and concessions are not brokerage revenue or profit.
 
 ## Evidence
 
@@ -34,7 +34,7 @@ Service release 17 passes 487 offline tests with actual 100% coverage of 1650 st
 
 Eleven reviewed Version 6 timed call traces show proactive closing and persisted close/end activity. A later Version 7 call exposed a confirmation bypass; Version 8 makes pending confirmation take priority over direct submission. The owner subsequently reported a successful normal Version 8 call. This latest success is an owner report, not an independent transcript or audio review. Earlier failed runs and reruns remain documented. The text replays lack a recorded spoken farewell, so no complete voice-closing pass is inferred from them.
 
-An earlier real-integration call and rep Confirm produced a reference-bearing PENDING reply, which remains an acknowledgement rather than a final booking. Production App Build 20 and its sends-off interface have recorded visual evidence; Build 18 evidence is historical. The owner video URL and reviewer access remain to be finalized.
+An earlier real-integration call and rep Confirm produced a reference-bearing PENDING reply, which remains an acknowledgement rather than a final booking. Production App Build 22 has a verified 80-file source import, 49 passing frontend tests and sends-off visual evidence; earlier App builds remain historical. The owner video URL and reviewer access remain to be finalized.
 
 ## How it runs and who owns what
 

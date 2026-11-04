@@ -24,3 +24,7 @@ The assignment requires an internal HappyRobot App that lets an operations manag
 ## Verification limits
 
 This improves communication of captured records. It does not repair missing activity capture, prove carrier identity from the demo inbox, establish production capacity or prove zero indirect ceiling inference. Publishing the App does not publish a voice workflow or deploy the service.
+
+## Delivery record
+
+Implemented in reviewed commits 7262be4 and 8ff094a. The latter makes empty strings explicit after the live visual check. See [the dashboard release](../releases/2026-11-04-dashboard-clarity/README.md) for publication, validation and remaining limits.

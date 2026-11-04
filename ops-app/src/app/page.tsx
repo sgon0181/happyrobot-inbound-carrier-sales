@@ -1,156 +1,102 @@
+import Link from "next/link";
 import { AppShell } from "@/components/app-shell";
 import { SendMode } from "@/components/send-mode";
 import { AutoRefresh } from "@/components/auto-refresh";
 import { ReceiptPanels } from "@/components/receipt-panels";
 import { RepQueue } from "@/components/rep-queue";
 import { CallLog } from "@/components/call-log";
-import { TurnedAway, lanesFrom } from "@/components/turned-away";
-import { Attention, Outcomes, attention } from "@/components/overview";
-import { CallResults } from "@/components/call-results";
+import { Attention, attention } from "@/components/overview";
+import { DemandReport } from "@/components/demand-report";
+import { ReservationReview } from "@/components/reservation-review";
+import { RecordSearch, filterBookings, filterCalls, type Filters } from "@/components/record-search";
 import { PerformanceOverview, PerformanceRecords } from "@/components/performance";
 import { performance, readGroup } from "@/lib/performance";
-import { CurrentWork } from "@/components/current-work";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { requireAppUser } from "@/lib/auth";
 import { describeFailure, getSnapshot } from "@/lib/ops-service";
 import type { Booking, Call, Snapshot } from "@/lib/snapshot";
-import { VIEW_TITLE, readView, type Scope, type View } from "@/lib/views";
+import { VIEW_TITLE, isRunId, readView, workspaceFilters, type View } from "@/lib/views";
+import { demoVoiceRunIds, missedVoiceRunId } from "@/lib/demo-voice-runs";
 
 export const dynamic = "force-dynamic";
-
-const PAGE_TITLE = "Carrier Sales";
-const SUBTITLE: Record<View, string> = {
-  overview: "Operations overview",
-  activity: "Review reservations, check submissions and follow call outcomes",
-  reservations: "Agreed by the carrier, nothing sent yet",
-  bookings: "Sent once, with the TMS reply as returned",
-  calls: "Every recorded call and its outcome",
-  demand: "Lanes carriers wanted that we could not cover",
+const subtitle: Record<View, string> = {
+  reservations: "Review the agreement before submitting a booking",
+  overview: "Inbound carrier sales performance",
+  bookings: "Submission status and TMS receipts",
+  calls: "Carrier requests, prices and call history",
+  demand: "Freight requested by verified carriers",
 };
-
 type Params = Promise<Record<string, string | string[] | undefined>>;
+type Props = { view: View; filters: Filters; snapshot: Snapshot; calls: Call[]; bookings: Booking[]; now: number };
 
-function toMs(v: string | null): number {
-  const t = v === null ? Number.NaN : Date.parse(v);
-  return Number.isNaN(t) ? Number.NEGATIVE_INFINITY : t;
+function workRows(snapshot: Snapshot) {
+  // The service supplies new workflow rows immediately. Recorded-trial metrics use the native inventory.
+  const calls = snapshot.calls.filter(c => isRunId(c.id) && c.id !== missedVoiceRunId)
+    .sort((a, b) => (b.sessionAt ?? "").localeCompare(a.sessionAt ?? ""));
+  const byId = new Map(calls.map(c => [c.id, c.sessionAt ?? ""]));
+  const time = (b: Booking) => (b.callId && byId.get(b.callId)) || b.updatedAt || "";
+  const bookings = snapshot.bookings.filter(b => !b.callId || isRunId(b.callId) && b.callId !== missedVoiceRunId)
+    .sort((a, b) => time(b).localeCompare(time(a)));
+  return { calls, bookings };
 }
-function newestFirst<T>(rows: T[], at: (r: T) => string | null): T[] {
-  return [...rows].sort((a, b) => toMs(at(b)) - toMs(at(a)));
-}
-const inScope = (scope: Scope) => (row: { cohort: string | null }) =>
-  scope === "real" ? row.cohort === "real" : row.cohort !== "real";
 
 export default async function HomePage({ searchParams }: { searchParams?: Params } = {}) {
-  // Sign-in is verified with the platform before the service is called.
   await requireAppUser();
   const params = (await searchParams) ?? {};
-  const { view, scope } = readView(params);
-  const group = readGroup(params.group);
+  const view = readView(params);
   const result = await getSnapshot();
-  const snapshotTime = result.ok ? Date.parse(result.snapshot.generatedAt ?? "") : 0;
-  const now = Number.isFinite(snapshotTime) ? snapshotTime : 0;
-  const bookings = result.ok ? newestFirst(result.snapshot.bookings.filter(inScope(scope)), (b) => b.updatedAt) : [];
-  const calls = result.ok ? newestFirst(result.snapshot.calls.filter(inScope(scope)), (c) => c.startedAt) : [];
-  const waiting = bookings.filter((b) => b.state === "RESERVED");
-  const report = result.ok && view === "overview" ? performance(result.snapshot.calls) : null;
-
-  return (
-    <AppShell
-      title={view === "overview" ? PAGE_TITLE : `${PAGE_TITLE} · ${VIEW_TITLE[view]}`}
-      subtitle={SUBTITLE[view]}
-      view={view}
-      scope={scope}
-      counts={view === "overview" ? {} : { reservations: waiting.length }}
-    >
-      {/* Outside the snapshot's success branch, so a failed snapshot keeps both. */}
-      <div className="flex justify-end">
-        <AutoRefresh generatedAt={result.ok ? result.snapshot.generatedAt : null} />
-      </div>
-      <ReceiptPanels />
-      {!result.ok ? (
-        <Alert variant="destructive">
-          <AlertTitle>Snapshot unavailable</AlertTitle>
-          <AlertDescription>
-            Carrier sales service: {describeFailure(result)}. The page keeps retrying every 15 seconds.
-          </AlertDescription>
-        </Alert>
-      ) : report ? (
-        group ? <PerformanceRecords group={group} report={report} /> : <PerformanceOverview report={report} />
-      ) : (
-        <>
-          <SendMode liveBooking={result.snapshot.liveBooking} />
-          <Page view={view} scope={scope} snapshot={result.snapshot} bookings={bookings} calls={calls} now={now} />
-        </>
-      )}
-    </AppShell>
-  );
+  const rows = result.ok ? workRows(result.snapshot) : { calls: [], bookings: [] };
+  const time = result.ok ? Date.parse(result.snapshot.generatedAt ?? "") : 0;
+  const group = readGroup(params.group);
+  const report = result.ok && view === "overview" ? performance(rows.calls) : null;
+  return <AppShell title={VIEW_TITLE[view]} subtitle={subtitle[view]} view={view}
+    counts={{ reservations: rows.bookings.filter(b => b.state === "RESERVED").length }}
+    actions={<AutoRefresh generatedAt={result.ok ? result.snapshot.generatedAt : null} />}>
+    <ReceiptPanels />
+    {!result.ok ? <Alert variant="destructive"><AlertTitle>Snapshot unavailable</AlertTitle>
+      <AlertDescription>Carrier sales service: {describeFailure(result)}. Retrying every 15 seconds.</AlertDescription></Alert>
+      : report ? (group ? <PerformanceRecords group={group} report={report} /> : <PerformanceOverview report={report} />)
+      : <Workspace filters={workspaceFilters(params)} view={view} snapshot={result.snapshot} {...rows} now={Number.isFinite(time) ? time : 0} />}
+  </AppShell>;
 }
 
-function Page({
-  view,
-  scope,
-  snapshot,
-  bookings,
-  calls,
-  now,
-}: {
-  view: View;
-  scope: Scope;
-  snapshot: Snapshot;
-  bookings: Booking[];
-  calls: Call[];
-  now: number;
-}) {
-  const live = snapshot.liveBooking;
-  const waiting = bookings.filter((b) => b.state === "RESERVED");
-  const sent = bookings.filter((b) => b.state !== "RESERVED");
-  const lanes = scope === "real" ? snapshot.turnedAway : lanesFrom(calls);
-  const items = attention(bookings, calls, now, scope);
-  const urgent = items.filter((item) => item.code === "UNKNOWN" || item.code === "SUBMITTING");
-  const missingNotes = items.filter((item) => item.code === "ended_without_close");
-  const queue = (
-    <RepQueue
-      title="Awaiting rep"
-      description="The carrier agreed and nothing has been sent. Confirm sends once to the TMS; Decline releases this reservation."
-      rows={waiting}
-      now={now}
-      liveBooking={live}
-      empty="No reservations waiting for a rep."
-    />
-  );
-  const sentTable = (
-    <RepQueue
-      title="Sent and closed"
-      description="The TMS status and reference as the TMS returned them. PENDING is an acknowledgement, never a confirmation. UNKNOWN may have landed and is never resent."
-      rows={sent}
-      now={now}
-      liveBooking={live}
-      empty="No sent or closed bookings in this view."
-    />
-  );
+function Review({ filters, bookings, calls, now, snapshot }: Props) {
+  const b = bookings.find(b => b.loadId === filters.load && (!filters.run || filters.run === b.callId));
+  const c = calls.find(c => c.id === (b?.callId ?? filters.run) && c.bookingLoadId === filters.load);
+  return <ReservationReview booking={b} call={c} now={now} live={snapshot.liveBooking} />;
+}
 
-  switch (view) {
-    case "reservations":
-      return queue;
-    case "bookings":
-      return sentTable;
-    case "calls":
-      return <CallLog title={scope === "real" ? "Calls" : "Test calls"} calls={calls} />;
-    case "demand":
-      return <TurnedAway lanes={lanes} />;
-    default:
-      return (
-        <>
-          <CurrentWork bookings={bookings} scope={scope} />
-          {urgent.length ? <Attention items={urgent} /> : null}
-          {queue}
-          {missingNotes.length ? <Attention items={missingNotes} title="Call records needing follow-up" description="Some ended or inactive calls have no closing notes. Review the recorded activity before relying on their outcome." /> : null}
-          <CallResults calls={calls} kpis={scope === "real" ? snapshot.kpis : null} />
-          <div className="grid gap-5 xl:grid-cols-2">
-            <Outcomes calls={calls} />
-            <TurnedAway lanes={lanes} />
-          </div>
-        </>
-      );
-  }
+function BookingList({ view, bookings, calls, filters, now, snapshot }: Props) {
+  const pending = view === "reservations";
+  const history = pending && filters.bucket === "history";
+  const list = bookings.filter(b => pending ? b.state === "RESERVED" : b.state !== "RESERVED" && (b.state !== "RELEASED" || b.reference || b.sendStep));
+  const byRun = new Map(calls.map(c => [c.id, c]));
+  const prior = calls.filter(c => Boolean(c.bookingLoadId));
+  const filtered = filterBookings(list, filters, byRun);
+  const urgent = pending ? [] : attention(list, [], now).filter(i => i.code === "SUBMITTING" || i.code === "UNKNOWN");
+  const historyRows = filterCalls(prior, { ...filters, status: "" }).filter(c => !filters.status || c.bookingState === filters.status);
+  return <>
+    {urgent.length > 0 && <Attention title="Submission exceptions" items={urgent} />}
+    {pending && <nav aria-label="Reservation lists" className="flex flex-wrap items-center gap-4 text-sm">
+      <Link aria-current={!history ? "page" : undefined} className={history ? "text-muted-foreground underline" : "font-semibold"} href="/">Awaiting rep ({list.length})</Link>
+      <Link aria-current={history ? "page" : undefined} className={history ? "font-semibold" : "text-muted-foreground underline"} href="/?view=reservations&bucket=history">Reservation history ({prior.length})</Link>
+    </nav>}
+    <p className="text-xs text-muted-foreground">Recorded demo activity · New service records appear as calls arrive.</p>
+    <RecordSearch view={view} filters={filters} statuses={history ? prior.map(c => c.bookingState) : list.map(b => b.state)} />
+    {history ? <CallLog title="Reservation history" calls={historyRows} /> : <RepQueue title={pending ? "Awaiting rep review" : "Booking attempts"}
+      description={pending ? "Open the originating call and check the agreed rate. Latest calls appear first." : "Inspect the TMS response, reference and submission history."}
+      rows={filtered} callById={byRun} now={now} liveBooking={snapshot.liveBooking} empty="No records match these filters." />}
+    <SendMode liveBooking={snapshot.liveBooking} />
+  </>;
+}
+
+function Workspace(props: Props) {
+  const { view, filters, calls } = props;
+  if (view === "reservations" || view === "bookings") return filters.load ? <Review {...props} /> : <BookingList {...props} />;
+  if (view === "demand") return <DemandReport calls={calls} bucket={filters.bucket} />;
+  return <>
+    <RecordSearch view="calls" filters={filters} statuses={[...calls.map(c => c.outcome), "missing_close"]} />
+    <CallLog title="Recorded calls" calls={filterCalls(calls, filters)} />
+    <p className="text-xs text-muted-foreground">{calls.filter(c => demoVoiceRunIds.has(c.id)).length} calls match the November demo inventory. New service calls appear as activity is recorded.</p>
+  </>;
 }

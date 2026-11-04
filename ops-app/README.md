@@ -6,16 +6,14 @@ The dashboard for the operations manager and senior reps, built on the HappyRobo
 
 The app verifies the signed-in user with the platform, then calls the service from its own server with the ops key ([D-30](../docs/decisions.md)). The key never reaches the browser, and the app never reads Twin or talks to the TMS. The service holds every rule; the app only shows its snapshot and forwards a rep's actions.
 
-The layout follows the TMS screens brokerage reps already use, with Uber Freight's as the reference (familiar, not copied). A left rail switches between pages, each in the URL (`/?view=...&scope=test`). The visible Real calls / Test calls switch applies to the whole view, with an all-recorded-history label. Test calls never enter the service's business KPIs.
+The default route is Reservations. Its current queue shows live service rows across deployment tags, most recent originating call first. The separate history includes each saved reservation, even when a later call reserved the same load. Open a review by its load and run ID. A stale owner link provides historical call evidence without controls for the current owner's reservation. The native recording link opens HappyRobot with the signed-in user's permissions.
 
-- **Overview:** current work first: reservations awaiting review, unknown submissions, pending acknowledgements and final TMS confirmations. Urgent submission alerts precede the reservation queue. Missing closing notes follow it. Historical call results explain conversion with its numerator, denominator and demo-sample limitation; Test view shows test history only. The mixed call/booking funnel is removed. Outcomes and unmatched demand follow. The page refreshes every 15 seconds while visible, with Refresh and Pause.
-- **Awaiting rep:** `RESERVED` bookings, one line per load (carrier and MC, lane, pickup, agreed and posted rate, status), with Confirm and Decline on the row. Confirm asks once more, because it spends the load, and is disabled while sends are off.
-- **Bookings:** sent and closed bookings with the TMS status and reference exactly as returned. `ACK_PENDING` and `UNKNOWN` offer Reconcile, as does a `SUBMITTING` row older than a minute.
-- **Calls:** each call's carrier, whether it passed the code, lane asked, outcome and rounds, agreement and closing notes.
-- **Demand:** lanes asked for when nothing matched.
-- **Side panels:** a load ID or call time opens the full record. The reservation's next action, carrier, lane and agreed payment appear first. Cargo, payment versus posted and TMS evidence follow. The timeline uses business labels, formatted prices and Central Time; technical codes and references remain expandable. Missing historical terms remain explicit.
+- **Overview** (`/?view=overview`) uses 49 completed Native inbound sessions matched to Twin. Every funnel and exception count links to its calls. Opening and agreed price pairs and actual agent counteroffers are inspectable.
+- **Bookings** lists submitted bookings and the TMS status and reference. Unknown or stale submissions open their own reconciliation record.
+- **Calls** searches MC, carrier, load, lane, outcome and Central date range. It includes the originating run, pricing rounds, actual agent counteroffers and closing notes.
+- **Demand** separates empty searches, verified calls without searches and other unsuccessful searches. Lanes use the final explicit empty search, once per call. An ambiguous legacy lane remains unrecorded.
 
-Tables fit a 1280px laptop without sideways scrolling; detail moves to the side panel rather than widening the row.
+The business formulas and reconciliation evidence are in [KPI definitions](../docs/kpis.md). The dated report, current open work and native evaluation results serve different purposes.
 
 Each action posts the booking version the rep saw ([D-31](../docs/decisions.md)) to `/api/bookings/{load_id}/{action}`. That route takes the rep's identity from the verified session, never from the request, and forwards `{version, rep}` to the service. The rep sees the service's answer, such as `stale` when the row has moved on or `live_booking_off` when sends are disabled. If a send's receipt could not be saved, the whole receipt, raw bytes included, stays in a panel at the top of the page, and in the browser's storage, with Copy and Download, until the rep dismisses it. The panel and the refresh controls stay up even when the snapshot fails.
 

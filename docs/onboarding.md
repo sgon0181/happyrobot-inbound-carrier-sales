@@ -1,6 +1,6 @@
 # Onboarding
 
-Current dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+[Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
 
 Updated 2026-11-04 (Australia/Sydney). The shared starting map for the owner, Claude Code and Codex. A Git clone includes everything tracked here. It does not include browser sessions, local `.env`, ignored evidence or MCP authentication.
 
@@ -19,7 +19,7 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Dashboard clarity source `7262be4` and missing-field correction `8ff094a` are independently reviewed. App Build 22 is live; workflow Version 8 and service release 17 remain unchanged. Video URL and intended reviewer access remain owner steps. |
+| `main` | Use the unified carrier-sales workspace and Overview. Build 23 from `147eb49` is the verified performance baseline. Workflow Version 8 and service release 17 power the calls. Video URL and intended reviewer access remain owner steps. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
 | Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
@@ -31,7 +31,7 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 |---|---|---|
 | Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 8 (`kvexhw5fzj4y`, UUID `01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) live since 2026-11-04, replacing Version 7. Prompt SHA-256: `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Historical owner-call evidence retained; unpublished on 2026-11-04. |
-| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 22, reviewed source `8ff094a`, 80-file exact import. Action-first overview, explicit Real/Test scope, explained conversion and readable activity. Booking sends remain off. See [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). |
+| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Use the published alias for Reservations, Overview, Bookings, Calls and Demand. Reviewed Build 23 introduced the reconciled voice sample. Booking sends remain off. See [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |

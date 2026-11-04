@@ -122,3 +122,16 @@ export function nextAction(state: string | null): string {
     )[state ?? ""] ?? "Review the recorded evidence."
   );
 }
+
+// FAILED covers both a pre-send refusal and a definite rejection from the TMS.
+// A zero-length reply alone cannot prove that the outgoing request was never sent.
+export function submissionStatus(state: string | null, reason: string | null, receipt: string | null) {
+  if (state === "RESERVED" || state === "RELEASED") return "Not submitted";
+  if (state === "UNKNOWN") return "Outcome unknown";
+  if (state === "FAILED") {
+    if (["load_gone", "load_not_open", "ceiling_below_rate", "not_sent"].includes(reason ?? "")) return "Not submitted";
+    if (["invalid_rate", "unknown_load", "not_found"].includes(reason ?? "")) return "Rejected by TMS";
+    return "Submission evidence unavailable";
+  }
+  return label(receipt);
+}

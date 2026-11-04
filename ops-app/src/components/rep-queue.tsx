@@ -1,6 +1,6 @@
+import Link from "next/link";
+import { recordHref } from "@/lib/views";
 import { RepActions } from "@/components/rep-actions";
-import { EventList } from "@/components/ops-events";
-import { DetailSheet, Facts, SheetSection } from "@/components/detail-sheet";
 import { StateBadge } from "@/components/state-badge";
 import {
   Card,
@@ -17,8 +17,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { allowedActions, type Booking } from "@/lib/ops-service";
-import { fmtCount, fmtShort, fmtTime, fmtUsd, label, na, nextAction } from "@/lib/format";
+import { allowedActions, type Booking, type Call } from "@/lib/ops-service";
+import { fmtCount, fmtShort, fmtUsd, label, na, nextAction, submissionStatus } from "@/lib/format";
 
 const TIME_NOTE =
   "The TMS timezone is unspecified. Source timestamps are assumed UTC and displayed in Central Time.";
@@ -47,13 +47,13 @@ export function RepQueue({
   title,
   description,
   rows,
-  now,
-  liveBooking,
+  callById = new Map(),
   empty = "No reservations in this view.",
 }: {
   title: string;
   description: string;
   rows: Booking[];
+  callById?: Map<string, Call>;
   now: number;
   liveBooking: boolean | null;
   empty?: string;
@@ -89,8 +89,8 @@ export function RepQueue({
                 rows.map((b) => (
                   <TableRow key={b.loadId} className="hover:bg-muted/40">
                     <TableCell className={`${cell} pl-6`}>
-                      <BookingSheet booking={b} liveBooking={liveBooking} now={now} />
-                      <p className={sub}>{fmtShort(b.updatedAt)}</p>
+                      <Link href={recordHref(b.state === "RESERVED" ? "reservations" : "bookings", b.loadId, b.callId)} className="font-mono font-semibold underline underline-offset-2">{b.loadId}</Link>
+                      <p className={sub}>Call {fmtShort(b.callId ? callById.get(b.callId)?.sessionAt ?? null : null)}</p>
                     </TableCell>
                     <TableCell className={cell}>
                       <p className="line-clamp-2 font-medium">{na(b.carrierName)}</p>
@@ -117,16 +117,18 @@ export function RepQueue({
                     </TableCell>
                     <TableCell className={cell} title={USD_NOTE}>
                       <p className="font-semibold tabular-nums">{fmtUsd(b.rate)}</p>
-                      <p className="text-xs text-muted-foreground">Posted {fmtUsd(b.load?.postedRate ?? null)}</p>
+                      <p className="text-xs text-muted-foreground">Opened {fmtUsd(b.callId ? callById.get(b.callId)?.openingRate ?? null : null)}</p>
                     </TableCell>
                     <TableCell className={cell}>
                       <StateBadge state={b.state} />
                       {b.state === "RESERVED" ? null : (
-                        <p className="mt-1 text-xs text-muted-foreground">{nextAction(b.state)}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">{b.state === "FAILED" ? submissionStatus(b.state, b.reason, b.tmsStatus) : nextAction(b.state)}</p>
                       )}
                     </TableCell>
                     <TableCell className={`${cell} pr-6`}>
-                      <Actions booking={b} now={now} liveBooking={liveBooking} short />
+                      <Link className="inline-block rounded-md border px-2 py-1.5 text-xs font-semibold hover:bg-muted" href={recordHref(b.state === "RESERVED" ? "reservations" : "bookings", b.loadId, b.callId)}>
+                        {b.state === "RESERVED" ? "Review reservation" : "Review booking"}
+                      </Link>
                     </TableCell>
                   </TableRow>
                 ))
@@ -139,7 +141,7 @@ export function RepQueue({
   );
 }
 
-function Actions({
+export function BookingActions({
   booking: b,
   now,
   liveBooking,
@@ -157,83 +159,8 @@ function Actions({
       loadId={b.loadId}
       version={b.version}
       actions={actions}
-      confirmDisabledReason={confirmReason(liveBooking, short)}
+      confirmDisabledReason={b.cohort === "synthetic" && liveBooking === true ? "Demo reservation. Booking sends are off for this record." : confirmReason(liveBooking, short)}
       confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
     />
-  );
-}
-
-function BookingSheet({ booking: b, liveBooking, now }: { booking: Booking; liveBooking: boolean | null; now: number }) {
-  const load = b.load;
-  const gap = b.rate !== null && load?.postedRate != null ? b.rate - load.postedRate : null;
-  const versus =
-    gap === null ? "Not recorded" : gap === 0 ? "At posted" : `${fmtUsd(Math.abs(gap))} ${gap > 0 ? "above" : "below"} posted`;
-  return (
-    <DetailSheet
-      trigger={b.loadId}
-      title={
-        <span className="flex items-center gap-3">
-          <span className="font-mono">{b.loadId}</span> <StateBadge state={b.state} />
-        </span>
-      }
-      description={nextAction(b.state)}
-    >
-      <SheetSection title="Next action">
-        <p className="text-sm font-medium">{na(b.carrierName)}: {na(load?.origin)} to {na(load?.destination)}</p>
-        <p className="text-lg font-semibold">{fmtUsd(b.rate)} <span className="text-sm font-normal text-muted-foreground">agreed carrier payment</span></p>
-        <p className="text-sm">{nextAction(b.state)}</p>
-        <Actions booking={b} now={now} liveBooking={liveBooking} />
-      </SheetSection>
-      <SheetSection title="Carrier">
-        <Facts items={[["Carrier", na(b.carrierName)], ["MC", na(b.mc)]]} />
-      </SheetSection>
-      <SheetSection title="Load">
-        <Facts
-          items={[
-            ["Lane", `${na(load?.origin)} to ${na(load?.destination)}`],
-            ["Equipment", label(load?.equipment)],
-            ["Pickup", fmtTime(load?.pickup ?? null)],
-            ["Delivery", fmtTime(load?.delivery ?? null)],
-            ["Weight", `${fmtCount(load?.weight ?? null)} lbs`],
-            ["Pieces", fmtCount(load?.pieces ?? null)],
-            ["Miles", fmtCount(load?.miles ?? null)],
-            ["Commodity", na(load?.commodity)],
-            ["Dimensions", na(load?.dimensions)],
-            ["Notes", na(load?.notes)],
-          ]}
-        />
-        <p className="text-xs text-muted-foreground">{TIME_NOTE}</p>
-      </SheetSection>
-      <SheetSection title="Carrier payment">
-        <Facts
-          items={[
-            ["Agreed", <strong key="a">{fmtUsd(b.rate)}</strong>],
-            ["Posted", fmtUsd(load?.postedRate ?? null)],
-            ["Versus posted", versus],
-          ]}
-        />
-        <p className="text-xs text-muted-foreground">{USD_NOTE} Carrier payment, not brokerage revenue.</p>
-      </SheetSection>
-      <SheetSection title="TMS">
-        <Facts
-          items={[
-            ["TMS status", b.state === "RESERVED" ? "Not submitted" : label(b.tmsStatus)],
-            ["Reference", na(b.reference)],
-            ["Reason", label(b.reason)],
-            ["Rep", na(b.rep)],
-            ...(b.sendStep
-              ? ([["Transport", <span key="t" className="font-mono text-xs break-all">{`${b.sendStep} ${b.sendError ?? ""}, ${fmtCount(b.sendBytes)} bytes, sha256 ${b.sendSha256}`}</span>]] as [string, React.ReactNode][])
-              : []),
-          ]}
-        />
-      </SheetSection>
-      <details className="text-xs text-muted-foreground">
-        <summary className="cursor-pointer">Call reference</summary>
-        <p className="mt-2 break-all font-mono">{na(b.callId)}</p>
-      </details>
-      <SheetSection title="Activity">
-        <EventList events={b.events} />
-      </SheetSection>
-    </DetailSheet>
   );
 }

@@ -24,7 +24,7 @@ test('cohort comes from voice run IDs and counts historical reservations across 
     call(d, { code_passed: false }), // duplicate projection
   ]);
   assert.deepEqual(Object.fromEntries(Object.entries(r.groups).map(([k, v]) => [k, v.map(x => x.id)])),
-    { recorded: [a,b,c,d], verified: [a,b,c], matched: [a,b], reserved: [a], paired: [a], unmatched: [c], 'no-agreement': [b] });
+    { 'authority-attempted': [], 'authority-passed': [], issued: [], negotiated: [], 'final-limit': [], recorded: [a,b,c,d], verified: [a,b,c], matched: [a,b], reserved: [a], paired: [a], unmatched: [c], 'no-agreement': [b] });
   assert.equal(r.conversion, 33);
   assert.equal(r.sessionCount, 50);
 });

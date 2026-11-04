@@ -24,7 +24,7 @@ const EVENT_DETAIL: [string, string][] = [
   ["load_id", "Load"],
   ["rate", "Agreed payment"],
   ["offer", "Our offer"],
-  ["round", "Counter round"],
+  ["round", "Pricing round"],
   ["tries_left", "Attempts remaining"],
   ["reference", "Reference"],
   ["tms_status", "TMS"],

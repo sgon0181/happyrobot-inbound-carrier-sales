@@ -1,4 +1,6 @@
 // Explicit projection of authenticated operations snapshots. Unknown fields stay private.
+import { nativeStartedAt } from "@/lib/demo-voice-runs";
+import { callMilestones } from "@/lib/call-milestones";
 import { callPricing } from "@/lib/call-pricing";
 import { events, type EventRow } from "@/lib/event-history";
 import { projectRepLoad } from "@/lib/rep-load";
@@ -31,10 +33,11 @@ export type Booking = {
   events: EventRow[];
 };
 
-export type Call = {
+export type Call = ReturnType<typeof callMilestones> & {
   id: string;
   cohort: Cohort | null;
   startedAt: string | null;
+  sessionAt: string | null;
   closedAt: string | null;
   mc: string | null;
   carrierName: string | null;
@@ -146,6 +149,7 @@ function projectCall(raw: unknown): Call[] {
       id,
       cohort: cohort(c.cohort),
       startedAt: str(c.started_at, 40),
+      sessionAt: nativeStartedAt.get(id) ?? str(c.started_at, 40),
       closedAt: str(c.closed_at, 40),
       mc: str(c.mc, 32),
       carrierName: str(c.carrier_name, 120),
@@ -156,6 +160,7 @@ function projectCall(raw: unknown): Call[] {
       bookingState: str(booking.state, 40),
       bookingLoadId,
       ...callPricing(c.events, bookingLoadId, c.agreement),
+      ...callMilestones(c.events, c.search),
       agreedRate: num(obj(c.agreement).rate),
       search: terms.some(Boolean)
         ? terms.map((t) => t ?? "any").join(" / ")

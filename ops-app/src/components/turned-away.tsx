@@ -16,15 +16,16 @@ import {
 import type { Call, Lane } from "@/lib/snapshot";
 import { label, na } from "@/lib/format";
 
-// Test calls have no service-side demand list, so it is derived the same way from their rows.
+// Attribute only the last explicit empty search. Legacy ambiguous requests share an unknown bucket.
 export function lanesFrom(calls: Call[]): Lane[] {
   const counts = new Map<string, Lane>();
   for (const c of calls) {
-    if (c.outcome !== "no_match" || !c.search) continue;
-    const [equipment, originState, destState] = c.search.split(" / ");
-    const lane = counts.get(c.search) ?? { equipment, originState, destState, calls: 0 };
+    if (!c.codePassed || !c.noMatchSeen || c.foundMatch || c.bookingLoadId) continue;
+    const key = c.noMatchLane ?? "";
+    const [equipment, originState, destState] = key ? key.split(" / ") : [null, null, null];
+    const lane = counts.get(key) ?? { equipment, originState, destState, calls: 0 };
     lane.calls += 1;
-    counts.set(c.search, lane);
+    counts.set(key, lane);
   }
   return [...counts.values()].sort((a, b) => b.calls - a.calls);
 }
@@ -35,7 +36,7 @@ export function TurnedAway({ lanes }: { lanes: Lane[] }) {
     <Card className="gap-0 py-0">
       <CardHeader className="border-b py-4">
         <CardTitle>Unmatched demand <span className="ml-1 font-normal text-muted-foreground tabular-nums">{lanes.length}</span></CardTitle>
-        <CardDescription>Lanes carriers asked for when nothing matched. Demand, not measured revenue.</CardDescription>
+        <CardDescription>One call per last explicit empty search, excluding later matches. Ambiguous legacy lanes show as not recorded.</CardDescription>
       </CardHeader>
       <CardContent className="px-0">
         <Table className="table-fixed">
@@ -53,7 +54,7 @@ export function TurnedAway({ lanes }: { lanes: Lane[] }) {
               </TableRow>
             ) : (
               lanes.map((l) => (
-                <TableRow key={`${l.equipment}-${l.originState}-${l.destState}`}>
+                <TableRow key={JSON.stringify([l.equipment, l.originState, l.destState])}>
                   <TableCell className="px-3 pl-6">{label(l.equipment)}</TableCell>
                   <TableCell className="px-3">{na(l.originState)}</TableCell>
                   <TableCell className="px-3">{na(l.destState)}</TableCell>

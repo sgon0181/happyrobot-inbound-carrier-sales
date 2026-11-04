@@ -136,6 +136,10 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 
 Each original decision's full reasoning is in [architecture v2.5](https://github.com/sgon0181/happyrobot-inbound-carrier-sales/blob/prototype/e2e/ARCHITECTURE.md#12-decisions-and-open-questions).
 
+## Reporting and the rep workspace
+
+The service keeps call identity and deployment tags on each record. The rep needs one queue across available records. The App therefore uses a unified working list while the business report uses a fixed native voice inventory matched by run ID. New service calls appear immediately in the queue and activity views. Extending the dated report requires an audited native inventory. The load ID alone is insufficient for a historical record because a released load may be reserved by another call.
+
 ## Open checks
 
 | ID | Question | State | If it fails |

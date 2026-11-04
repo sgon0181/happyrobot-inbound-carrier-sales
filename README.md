@@ -1,18 +1,18 @@
 # Inbound Carrier Sales
 
-The dashboard source adds a performance Overview of 49 recorded demo calls. It links verified calls, freight matches, reservations and the opening and agreed rates to their call records. [KPI definitions and sample](docs/kpis.md).
+A voice agent for HappyRobot Logistics, a freight brokerage. Carriers call in, get verified, hear matching loads and negotiate a rate. A senior rep then confirms the booking from an operations dashboard, with no dispatcher involved in the first leg of the call.
 
-Previously verified dashboard release: **App Build 22**, reviewed source `8ff094a` (clarity change `7262be4` plus explicit empty-field labels). Workflow Version 8 and service release 17 are unchanged. The 80-file source import, 49 frontend tests, checks and live visual review are in [dashboard release](docs/releases/2026-11-04-dashboard-clarity/README.md). Earlier App build/source descriptions below are historical. No voice retest, cohort change or new booking is required.
+[Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
+
+The filmed call cleared the authority and code checks and agreed a rate on LD01088. The pricing service authorized the $25 increase on the first ask. The rep reviews that reservation before any booking request. A transaction with a PENDING TMS receipt remains pending.
 
 Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 fix is now live and passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](docs/confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
 
-A voice agent for HappyRobot Logistics, a freight brokerage. Carriers call in, get verified, hear matching loads and negotiate a rate. A senior rep then confirms the booking from an operations dashboard, with no dispatcher involved in the first leg of the call.
-
-This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
+Use the [review guide](docs/reviewer-guide.md) to map the proof to the requirements. This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf).
 
 ## Status
 
-**Released proof of concept; owner acceptance and submission pending.** Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 22 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The App includes structured activity, rep review, send-mode controls and receipt recovery. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
+**Released proof of concept; owner acceptance and submission pending.** Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and the authenticated native Carrier Sales App form the deployed proof of concept. Booking sends remain off and the call cohort remains synthetic. The App includes structured activity, rep review, send-mode controls and receipt recovery. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
 
 An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
 

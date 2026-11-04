@@ -1,9 +1,13 @@
 import Link from "next/link";
 import { CallLog } from "@/components/call-log";
+import { recordHref } from "@/lib/views";
 import { fmtShort } from "@/lib/format";
 import { concession, groupHref, groupTitles, usd, type Group, type Performance } from "@/lib/performance";
 
-const steps: Group[] = ["recorded", "verified", "matched", "reserved"];
+const steps: [Group, Group | null][] = [
+  ["recorded", null], ["authority-attempted", "recorded"], ["authority-passed", "authority-attempted"],
+  ["issued", "authority-passed"], ["verified", "issued"], ["matched", "verified"], ["reserved", "matched"],
+];
 const dateRange = "November 2 to 4, 2026";
 const focus = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring";
 const panel = "rounded-xl border bg-card text-card-foreground";
@@ -47,18 +51,19 @@ function Headline({ report }: { report: Performance }) {
 function Funnel({ groups }: { groups: Performance["groups"] }) {
   return (
     <div className={`${panel} p-5 sm:p-6`}>
-      <h3 className="font-semibold">Call outcomes</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Select a stage to review its calls.</p>
+      <h3 className="font-semibold">Qualification and load matching</h3>
+      <p className="mt-1 text-sm text-muted-foreground">Calls reaching each stage, as a share of the prior stage.</p>
       <div className="mt-4 space-y-1">
-        {steps.map((step) => {
+        {steps.map(([step, previous]) => {
           const count = groups[step].length;
+          const denominator = previous ? groups[previous].length : 0;
           return (
-            <Link key={step} href={groupHref(step)} className={`grid grid-cols-[minmax(7.5rem,1fr)_1.3fr_2rem] items-center gap-3 rounded py-2 text-sm hover:bg-muted/40 ${focus}`}>
+            <Link key={step} href={groupHref(step)} className={`grid grid-cols-[minmax(7.5rem,1.5fr)_1fr_5rem] items-center gap-3 rounded py-1 text-sm hover:bg-muted/40 ${focus}`}>
               <span>{groupTitles[step]}</span>
               <span className="h-2 overflow-hidden rounded-full bg-muted" aria-hidden="true">
-                <span className="block h-full rounded-full bg-teal-700 dark:bg-teal-400" style={{ width: `${groups.recorded.length ? 100 * count / groups.recorded.length : 0}%` }} />
+                <span className="block h-full rounded-full bg-teal-700 dark:bg-teal-400" style={{ width: `${previous ? (denominator ? Math.min(100, 100 * count / denominator) : 0) : (count ? 100 : 0)}%` }} />
               </span>
-              <strong className="text-right tabular-nums">{count}</strong>
+              <strong className="text-right tabular-nums">{count} {previous && <span className="font-normal text-muted-foreground">/ {denominator}</span>}</strong>
             </Link>
           );
         })}
@@ -80,17 +85,32 @@ function LostCalls({ groups }: { groups: Performance["groups"] }) {
           </Link>
         ))}
       </div>
+      <div className="border-t pt-3">
+        <Link href={groupHref("final-limit")} className={`text-sm font-semibold hover:underline ${focus}`}>{groups["final-limit"].length} exhausted the final offer</Link>
+        <p className="mt-1 text-xs text-muted-foreground">Among <Link className="underline" href={groupHref("negotiated")}>{groups.negotiated.length} calls that reached negotiation</Link>. Review the recorded price decisions.</p>
+      </div>
     </section>
   );
 }
 
+function sessionTime(seconds: number | null) {
+  if (seconds === null) return "Not recorded";
+  const rounded = Math.round(seconds);
+  return `${Math.floor(rounded / 60)}m ${rounded % 60}s`;
+}
+
 export function PerformanceOverview({ report }: { report: Performance }) {
+  const latest = [...report.groups.reserved].sort((a, b) => (b.sessionAt ?? "").localeCompare(a.sessionAt ?? ""))[0];
   return (
     <section className="space-y-4">
       <Sample />
       <Headline report={report} />
       <div className="grid gap-4 lg:grid-cols-[1.25fr_1fr]">
         <Funnel groups={report.groups} /><LostCalls groups={report.groups} />
+      </div>
+      <div className={`${panel} flex flex-wrap items-center justify-between gap-3 px-5 py-3`}>
+        <div className="text-sm"><strong>Median call duration</strong><span className="ml-2">{sessionTime(report.medianSeconds)} across recorded calls · {sessionTime(report.medianReservedSeconds)} on agreements</span></div>
+        {latest && <Link href={recordHref("reservations", latest.bookingLoadId, latest.id)} className="text-sm font-semibold underline underline-offset-4">Review latest agreement · {latest.bookingLoadId}</Link>}
       </div>
       <p className="text-xs text-muted-foreground">{report.sessionCount} inbound demo sessions. HappyRobot marked {report.completedCount} completed and one missed. Twin has records for {report.groups.recorded.length} completed calls.</p>
     </section>
@@ -99,16 +119,24 @@ export function PerformanceOverview({ report }: { report: Performance }) {
 
 export function PerformanceRecords({ report, group }: { report: Performance; group: Group }) {
   const rows = report.groups[group];
+  const agreements = report.groups.reserved;
+  const unknown = agreements.filter(c => c.counters == null || c.counters > 3).length;
   return (
     <section className="min-w-0 space-y-4">
-      <Link href="/" className="text-sm font-medium underline underline-offset-4">Back to performance</Link>
+      <Link href="/?view=overview" className="text-sm font-medium underline underline-offset-4">Back to performance</Link>
       <p className="text-sm text-muted-foreground">Recorded demo calls · {dateRange}</p>
       {group === "paired" && <div className={`${panel} overflow-x-auto p-4`}>
+        <h2 className="font-semibold">Counteroffers before agreement</h2>
+        <p className="mt-1 text-sm text-muted-foreground">Agent counteroffers across {agreements.length} reservations. Accepting the carrier’s first ask uses zero counteroffers.</p>
+        <dl className="my-3 grid grid-cols-2 gap-2 border-y py-3 sm:grid-cols-4">
+          {[0, 1, 2, 3].map(n => <div key={n}><dt className="text-sm">{n} counteroffer{n === 1 ? "" : "s"}</dt><dd className="font-semibold">{agreements.filter(c => c.counters === n).length} calls</dd></div>)}
+        </dl>
+        {unknown > 0 && <p className="mb-2 text-xs text-muted-foreground">Unclassified counteroffer history: {unknown}.</p>}
         <h2 className="mb-3 font-semibold">Price pairs by call</h2>
         <table className="w-full text-left text-sm tabular-nums">
           <thead><tr className="border-b text-muted-foreground">{["Call", "Load", "Opening", "Agreed", "Change"].map((name) => <th className="py-2 pr-3" key={name}>{name}</th>)}</tr></thead>
           <tbody>{rows.map((c) => <tr className="border-b last:border-0" key={c.id}>
-            <td className="py-2 pr-3">{fmtShort(c.startedAt)}</td><td className="pr-3">{c.bookingLoadId}</td>
+            <td className="py-2 pr-3">{fmtShort(c.startedAt)}</td><td className="pr-3"><Link href={recordHref("reservations", c.bookingLoadId, c.id)} className="underline">{c.bookingLoadId}</Link></td>
             <td>{usd(c.openingRate)}</td><td>{usd(c.agreedRate)}</td><td>{usd(concession(c))}</td>
           </tr>)}</tbody>
         </table>

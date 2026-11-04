@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { recordHref, platformRun } from "@/lib/views";
 import { EventList } from "@/components/ops-events";
 import { DetailSheet, Facts, SheetSection } from "@/components/detail-sheet";
 import { StateBadge, StatusPill } from "@/components/state-badge";
@@ -78,14 +80,15 @@ export function CallLog({ title, calls }: { title: string; calls: Call[] }) {
                     <TableCell className={cell}>
                       <StatusPill code={c.outcome} />
                       <p className="mt-1 text-xs text-muted-foreground">
-                        {fmtCount(c.rounds)} counter round{c.rounds === 1 ? "" : "s"}
+                        {fmtCount(c.counters ?? null)} agent counteroffer{c.counters === 1 ? "" : "s"}
                       </p>
                     </TableCell>
                     <TableCell className={cell}>
                       {c.bookingLoadId ? (
                         <>
-                          <p className="font-mono text-sm">{c.bookingLoadId}</p>
+                          <Link className="font-mono text-sm underline" href={recordHref("reservations", c.bookingLoadId, c.id)}>{c.bookingLoadId}</Link>
                           <p className={sub}>{fmtUsd(c.agreedRate)}</p>
+                          <p className="text-xs text-muted-foreground">{label(c.bookingState)}</p>
                         </>
                       ) : (
                         <span className="text-muted-foreground">None</span>
@@ -123,6 +126,7 @@ function CallSheet({ call: c }: { call: Call }) {
       }
       description={c.summary || "No closing notes recorded."}
     >
+      {platformRun(c.id) && <a href={platformRun(c.id)!} target="_blank" rel="noopener noreferrer" className="text-sm font-medium underline">Open recording and transcript in HappyRobot</a>}
       <SheetSection title="Call">
         <Facts
           items={[
@@ -132,7 +136,8 @@ function CallSheet({ call: c }: { call: Call }) {
             ["MC", na(c.mc)],
             ["Email code verified", c.verifiedAt ? fmtTime(c.verifiedAt) : c.codePassed ? "Earlier in the call" : "No"],
             ["Lane asked", lane(c.search)],
-            ["Counter rounds", fmtCount(c.rounds)],
+            ["Agent counteroffers", fmtCount(c.counters ?? null)],
+            ["Pricing rounds used", fmtCount(c.rounds)],
             ["Outcome", label(c.outcome)],
             ["Call ID", <span key="id" className="font-mono text-xs">{c.id}</span>],
           ]}
@@ -143,6 +148,7 @@ function CallSheet({ call: c }: { call: Call }) {
           <Facts
             items={[
               ["Load", <span key="l" className="font-mono">{c.bookingLoadId}</span>],
+              ["Opening offer", fmtUsd(c.openingRate)],
               ["Agreed rate", fmtUsd(c.agreedRate)],
               ["Booking", <StateBadge key="s" state={c.bookingState} />],
             ]}

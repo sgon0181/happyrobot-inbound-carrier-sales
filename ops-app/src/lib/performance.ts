@@ -1,13 +1,18 @@
 import type { Call } from "@/lib/snapshot";
-import { demoVoiceRunIds, missedVoiceRunId } from "@/lib/demo-voice-runs";
+import { demoVoiceRunIds, missedVoiceRunId, nativeDuration } from "@/lib/demo-voice-runs";
 
 export const groupTitles = {
   recorded: "Recorded calls",
-  verified: "Email verified",
+  "authority-attempted": "Authority checked",
+  "authority-passed": "Operating authority passed",
+  issued: "Email code issued",
+  verified: "Email verification passed",
   matched: "Load matched",
   reserved: "Reservation created",
   unmatched: "Verified without a match",
   "no-agreement": "Matched without an agreement",
+  negotiated: "Reached negotiation",
+  "final-limit": "Final offer exhausted",
   paired: "Opening and agreed rates",
 } as const;
 
@@ -40,6 +45,11 @@ export function performance(calls: Call[]) {
   const paired = reserved.filter((c) => concession(c) !== null);
   const groups: Record<Group, Call[]> = {
     recorded, verified, matched, reserved, paired,
+    "authority-attempted": recorded.filter((c) => c.authorityAttempted),
+    "authority-passed": recorded.filter((c) => c.authorityPassed),
+    issued: recorded.filter((c) => c.codeIssued),
+    negotiated: recorded.filter((c) => c.negotiated),
+    "final-limit": recorded.filter((c) => c.finalLimit && c.bookingLoadId === null),
     unmatched: verified.filter((c) => !c.foundMatch && c.bookingLoadId === null),
     "no-agreement": matched.filter((c) => c.bookingLoadId === null),
   };
@@ -48,6 +58,8 @@ export function performance(calls: Call[]) {
     completedCount: demoVoiceRunIds.size,
     sessionCount: new Set([...demoVoiceRunIds, missedVoiceRunId]).size,
     conversion: verified.length ? Math.round(100 * reserved.length / verified.length) : null,
+    medianSeconds: median(recorded.flatMap((c) => nativeDuration.get(c.id) ?? [])),
+    medianReservedSeconds: median(reserved.flatMap((c) => nativeDuration.get(c.id) ?? [])),
     medianConcession: median(paired.flatMap((c) => concession(c) ?? [])),
   };
 }

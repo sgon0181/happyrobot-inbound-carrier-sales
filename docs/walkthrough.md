@@ -1,34 +1,15 @@
-# Walkthrough outline, approximately five minutes
+# Carrier sales walkthrough
 
-The walkthrough uses the recorded Version 8 call, service release 17 and the Overview of reconciled demo calls. The prior App Build 22 is documented in the [dashboard release](releases/2026-11-04-dashboard-clarity/README.md).
+The retained opening through section 3 ends at 2:03.674. It introduces the problem and records the Version 8 web call. The remaining 2:56.326 takes the viewer from the agreed $1,000 rate to the rep's decision, the wider call history, and evidence for a supervised pilot.
 
-Audience: the brokerage's business team, with enough evidence for IT review. Use the customer's repetitive call handling, consistent pricing and reviewable deals as the narrative. Harsha's example is inspiration for clarity, not an architecture to copy.
-
-The opening 3:24 covers the problem, the live Version 8 web call, the rep reservation, the recorded negotiation and the pending TMS receipt. Use the new performance Overview for section 7.
-
-| Time | Show | Explain |
+| Section | What to show | What the audience should learn |
 |---|---|---|
-| 3:24 to 3:48 | Overview of recorded demo calls | Of 49 calls, 36 verified, 29 found freight and 19 reached an agreement. Inspect losses before and after a match. The median agreed rate was $50 above the opening offer. |
-| 3:48 to 4:09 | The service pricing rule | The recorded $975 opening and $1,000 agreement show how the service authorizes a rate within the round limit. |
-| 4:09 to 4:45 | The saved test and QA results | Describe the misheard price, required confirmation and measured regression. Distinguish mocked text checkpoints from voice calls. |
-| 4:45 to 5:00 | The supervised pilot | Compare dispatch time and verified calls reaching agreement against the desk baseline. |
+| 4 | Reservations, then Review reservation on LD01088 | The rep receives Werner, MC 138328, Baton Rouge to Nashville, and the rate. The original HappyRobot recording and Twin timeline belong to this call. |
+| 5 | The $975 opening and $1,000 agreement, then the pricing rule | The service authorized the carrier's first ask. One pricing decision produced zero agent counteroffers. The voice agent cannot choose the private ceiling. |
+| 6 | Bookings, historical LD01080 and its TMS reference | This separate rep-approved submission returned PENDING. It cannot prove a final booking. The service never blindly resends a booking request. |
+| 7 | Overview, qualification and load matching | Across 49 recorded calls, 37 of 48 authority attempts passed, 36 of 37 issued codes verified, 29 found loads and 19 produced reservations. The North Star is 19 of 36 verified calls. |
+| 8 | Opening and agreed rates, or a specific exception group | The median movement from opening to agreement was $50. Of 24 calls reaching negotiation, three exhausted their final offer. Inspect the calls to find the reason before changing price policy. |
+| 9 | The recorded price-correction defect and QA results | A caller rejected a misheard price. The fix requires corrected readback and confirmation. The focused cases went from 16/24 to 24/24. All 118 mocked text checks passed. Two full text replays still lacked a recorded farewell. |
+| 10 | Pilot and next steps | Supervise a comparable staffed shift, use trusted carrier contacts and compare dispatcher time and rep-ready agreements. |
 
-## Demonstration boundaries
-
-A reservation is not a final booking. PENDING is an acknowledgement. If showing LD01080's saved receipt, identify it as the earlier real rep-confirm example, not the result of the current demo call. Do not click Confirm for a new load without the owner's specific booking approval. No unsupported TMS finalization is invented.
-
-Show calls recorded rather than claiming every call is answered. Explain that the code proves access to the configured demo inbox. Withholding the ceiling is a protection, not proof of zero indirect inference. Do not infer production reliability, margin, revenue or profit from the sample.
-
-The native text simulations do not test audio. The human checklist separately covers greeting, misheard MC, interruptions and closing. Capacity remains unproven unless it is actually measured.
-
-## Before recording
-
-Confirm the exact deployed service commit, live workflow version and App build. Check the callback captures an authorized test call. The current App visual check at 1280px is recorded in the dashboard release evidence. Keep CALL_COHORT synthetic and show the Test view for the demo; a real-cohort demo is optional and requires separate approval. Keep booking sends off. Identify synthetic reservations so they cannot be mistaken for customer work; no cleanup or new send is required.
-
-Finish with these exact customer next steps:
-
-1. Agree pricing assumptions and TMS finalization/cancellation behavior.
-2. Replace the demo inbox with trusted carrier-contact records.
-3. Validate expected capacity and conversation behavior.
-4. Run a supervised pilot with agreed success criteria.
-5. Consider real telephony and notifications after those checks.
+The filmed load and the separate pending receipt have direct links in the [review guide](reviewer-guide.md). The recording should cover the agent's actual words and the saved commercial terms. Keep credentials, OTP digits and the private ceiling out of frame.

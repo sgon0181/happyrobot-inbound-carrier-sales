@@ -3,7 +3,6 @@
 import Link from "next/link";
 import {
   IconHandStop,
-  IconListDetails,
   IconLayoutDashboard,
   IconMapPin,
   IconPhoneCall,
@@ -25,11 +24,10 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { VIEW_TITLE, viewHref, type Scope, type View } from "@/lib/views";
+import { VIEW_TITLE, viewHref, type View } from "@/lib/views";
 
 const ICON: Record<View, React.ReactNode> = {
   overview: <IconLayoutDashboard />,
-  activity: <IconListDetails />,
   reservations: <IconHandStop />,
   bookings: <IconTruckDelivery />,
   calls: <IconPhoneCall />,
@@ -38,10 +36,9 @@ const ICON: Record<View, React.ReactNode> = {
 
 export type NavCounts = Partial<Record<View, number>>;
 
-export function AppSidebar({ view, scope, counts = {} }: { view?: View; scope?: Scope; counts?: NavCounts }) {
+export function AppSidebar({ view, counts = {} }: { view?: View; counts?: NavCounts }) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const shown: Scope = scope ?? "real";
 
   return (
     <Sidebar collapsible="icon">
@@ -64,7 +61,7 @@ export function AppSidebar({ view, scope, counts = {} }: { view?: View; scope?: 
             <SidebarMenu>
               {(Object.keys(VIEW_TITLE) as View[]).map((v) => (
                 <SidebarMenuItem key={v}>
-                  <SidebarMenuButton isActive={(view ?? "overview") === v} tooltip={VIEW_TITLE[v]} render={<Link href={viewHref(v, shown)} />}>
+                  <SidebarMenuButton isActive={(view ?? "reservations") === v} tooltip={VIEW_TITLE[v]} render={<Link href={viewHref(v)} />}>
                     {ICON[v]}
                     <span>{VIEW_TITLE[v]}</span>
                   </SidebarMenuButton>

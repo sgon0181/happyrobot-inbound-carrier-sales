@@ -19,7 +19,7 @@ test('rep can read the carrier, route, timing and both prices without raw platfo
     load: { origin: { city: 'Dallas', state: 'TX' }, destination: { city: 'Atlanta', state: 'GA' },
       pickup_datetime: '2026-11-03T12:00:00Z', delivery_datetime: '2026-11-04T12:00:00Z',
       equipment_type: 'DRY_VAN', loadboard_rate: 2150 } }]);
-  for (const value of ['Fixture Carrier', '138328', 'Dallas, TX', 'Atlanta, GA', '06:00 CT', 'Dry van', '$1,900', '$2,150', 'Awaiting rep']) {
+  for (const value of ['Fixture Carrier', '138328', 'Dallas, TX', 'Atlanta, GA', '06:00 CT', 'Dry van', '$1,900', 'Opened Not recorded', 'Awaiting rep']) {
     assert.ok(html.includes(value), value);
   }
   assert.ok(!html.includes('CODEX LAB'));

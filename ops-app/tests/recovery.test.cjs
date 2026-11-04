@@ -6,7 +6,7 @@ const loadTs = require('./load-ts.cjs');
 const { act } = Renderer;
 global.IS_REACT_ACT_ENVIRONMENT = true;
 
-const stub = ({ children }) => React.createElement('div', null, children);
+const stub = ({ children, actions }) => React.createElement('div', null, actions, children);
 const button = ({ children, ...props }) => React.createElement('button', props, children);
 const ui = new Proxy({}, { get: () => stub });
 const icons = new Proxy({}, { get: () => stub });
@@ -36,7 +36,7 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
   overrides['next/link'] = { __esModule: true, default: ({ href, children }) => React.createElement('a', { href }, children) };
   overrides['@/components/ui/button'] = { Button: button };
   const { default: HomePage } = loadTs('src/app/page.tsx', overrides);
-  const queuePage = () => HomePage({ searchParams: Promise.resolve({ view: 'reservations' }) });
+  const queuePage = () => HomePage({ searchParams: Promise.resolve({ view: 'reservations', load: 'LD09001' }) });
   const booking = { loadId: 'LD09001', version: 1, state: 'RESERVED', cohort: 'real', mc: '138328', rate: 1900, load: null, events: [] };
   const good = (row) => ({ ok: true, snapshot: { liveBooking: true, generatedAt: '2026-11-03T12:00:00Z',
     kpis: { calls: 1, codePassed: 1, handoffs: 1, northstar: 1, repConfirmed: 0, tmsAcknowledged: 0, tmsConfirmed: 0, unknown: 0, outcomes: {}, medianSecondsToFirstOffer: 0, closedWithSummary: 0, endsReported: 0, syntheticCalls: 0 }, turnedAway: [], calls: [], bookings: [row] } });

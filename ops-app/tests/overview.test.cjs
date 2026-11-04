@@ -21,15 +21,15 @@ test('needs attention puts unknown and stuck sends before reservations, and coun
   assert.deepEqual(items.map((i) => i.code), ['UNKNOWN', 'SUBMITTING', 'RESERVED', 'ended_without_close']);
   assert.match(items[2].detail, /Waiting 30 min/);
   assert.match(items[3].title, /^1 call without/);
-  assert.equal(items[0].href, '/?view=bookings');
+  assert.equal(items[0].href, '/?view=bookings&load=LD2');
 });
 
-test('views come from the URL, default to the real overview, and ignore unknown values', () => {
-  assert.deepEqual(readView({}), { view: 'overview', scope: 'real' });
-  assert.deepEqual(readView({ view: 'calls', scope: 'test' }), { view: 'calls', scope: 'test' });
-  assert.deepEqual(readView({ view: 'admin', scope: 'all' }), { view: 'overview', scope: 'real' });
-  assert.equal(viewHref('overview', 'real'), '/');
-  assert.equal(viewHref('reservations', 'test'), '/?view=reservations&scope=test');
+test('landing and legacy links resolve to unified workspaces and group drilldowns', () => {
+  assert.equal(readView({}), 'reservations');
+  assert.equal(readView({ view: 'calls', scope: 'test' }), 'calls');
+  assert.equal(readView({ group: 'paired' }), 'overview');
+  assert.equal(viewHref('overview'), '/?view=overview');
+  assert.equal(viewHref('reservations'), '/');
 });
 
 test('short table times stay in Central Time and never invent a date', () => {
@@ -38,9 +38,9 @@ test('short table times stay in Central Time and never invent a date', () => {
   assert.equal(fmtShort('invalid'), 'Not recorded');
 });
 
-test('test-call demand counts unmatched searches by lane only', () => {
+test('demand counts each verified no-match once even with a later generic closing outcome', () => {
   const lanes = lanesFrom([
-    { outcome: 'no_match', search: 'DRY_VAN / ME / GA' }, { outcome: 'no_match', search: 'DRY_VAN / ME / GA' },
+    { codePassed: true, noMatchSeen: true, outcome: 'ended_without_agreement', noMatchLane: 'DRY_VAN / ME / GA' }, { codePassed: true, noMatchSeen: true, outcome: 'ended_without_agreement', noMatchLane: 'DRY_VAN / ME / GA' },
     { outcome: 'agreed_pending_rep', search: 'FLATBED / FL / NY' }, { outcome: 'no_match', search: null },
   ]);
   assert.deepEqual(lanes, [{ equipment: 'DRY_VAN', originState: 'ME', destState: 'GA', calls: 2 }]);

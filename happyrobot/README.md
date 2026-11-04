@@ -1,5 +1,7 @@
 # HappyRobot workflow
 
+Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 draft fix passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](../docs/confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
+
 Inbound Carrier Sales lives in the HappyRobot workspace, workflow 01a18119-67a1-79a3-b220-369aa359d4fb. Version 7 (67nko7p112j2) is live after owner-approved publication, replacing Version 6 (alj9n98f66df). The workspace is authoritative; these files make the important configuration and evidence reviewable. Eleven Version 6 calls now provide timed closing and stored end-event evidence. A remaining amount-intent failure and omitted notes are addressed in live Version 7; see [the tuning report](../docs/voice-tuning.md).
 
 | File | Contents |

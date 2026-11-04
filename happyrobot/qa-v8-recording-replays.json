@@ -1,0 +1,748 @@
+{
+  "version": "Version 8",
+  "root_prompt_sha256": "53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c",
+  "fixture": "350c38fc-440b-4ea8-9ab2-88276cdb1f58",
+  "safety": "All seven service actions locked to literal outputs and read back before both runs. No service/TMS/email action executed.",
+  "mocks": {
+    "verify_carrier": {
+      "carrier_name": "WERNER ENTERPRISES INC",
+      "status": "eligible"
+    },
+    "send_code": {
+      "status": "sent"
+    },
+    "verify_code": {
+      "status": "verified"
+    },
+    "find_loads": {
+      "status": "found",
+      "loads": [
+        {
+          "load_id": "LD01120",
+          "origin": "Augusta, GA",
+          "destination": "Lexington, KY",
+          "equipment_type": "REEFER",
+          "weight": 20636,
+          "commodity_type": "Produce",
+          "offer": 975,
+          "notes": "Reefer set 38F continuous.",
+          "pickup_time_display": "November 11 at 7:18 PM Central (CST)",
+          "delivery_time_display": "November 13 at 9:18 PM Central (CST)"
+        }
+      ]
+    },
+    "negotiate": {
+      "status": "counter",
+      "offer": 1000,
+      "round": 1
+    },
+    "close_call": {
+      "status": "closed"
+    },
+    "call_ended": {
+      "status": "recorded"
+    }
+  },
+  "runs": [
+    {
+      "run_id": "b01b1a0e-196b-497e-aaa7-05be0fb90a25",
+      "status": "completed",
+      "duration_seconds": 59,
+      "amount_sequence_pass": true,
+      "assertions": [
+        "Exactly one negotiate, LD01120 at1125",
+        "No negotiate at110025",
+        "No plus same digits did not authorize submission",
+        "Corrected1125 readback and explicit affirmative preceded negotiate"
+      ],
+      "observation": "After No plus unchanged digits the agent repeated its readback instead of asking an open total question. The confirmation gate remained pending.",
+      "closing_limit": "close_call and text ending tool recorded, no spoken farewell. This is not a voice closing pass.",
+      "messages": [
+        {
+          "id": "9c4b6c5f-f990-42bd-9a69-48bb81368267",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "timestamp": "2026-11-04T05:17:41Z"
+        },
+        {
+          "id": "01a1a4fd-d629-7715-a899-3b6bc8ebddb0",
+          "role": "user",
+          "content": "Hello.",
+          "timestamp": "2026-11-04T05:17:41Z"
+        },
+        {
+          "id": "01a1a4fd-df17-78b2-8cb2-fa9e623991b8",
+          "role": "user",
+          "content": "138328",
+          "timestamp": "2026-11-04T05:17:43Z"
+        },
+        {
+          "id": "ff6b7ee4-11dc-41e5-a55f-ccc43f1531c3",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:17:45Z",
+          "tool_calls": [
+            {
+              "id": "call_otfWC9wlZHLSlEDaSGR9pCZI",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "bef05653-5530-4c2a-893d-809a258c3bf8",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "timestamp": "2026-11-04T05:17:46Z",
+          "tool_call_id": "call_otfWC9wlZHLSlEDaSGR9pCZI"
+        },
+        {
+          "id": "872114f6-a507-4a1a-b8a1-d0aba5cfb7be",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "timestamp": "2026-11-04T05:17:47Z"
+        },
+        {
+          "id": "01a1a4fd-f628-709b-bc09-3e1e7f52cb1b",
+          "role": "user",
+          "content": "Yes, Werner Enterprises.",
+          "timestamp": "2026-11-04T05:17:49Z"
+        },
+        {
+          "id": "c65b84fa-a85b-4959-bb4b-442b6553cdc4",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:17:51Z",
+          "tool_calls": [
+            {
+              "id": "call_NdKtAc0fIynfgYVDtYfNnQSc",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "6c83ddb6-f716-4777-9c76-279061f687a8",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "timestamp": "2026-11-04T05:17:52Z",
+          "tool_call_id": "call_NdKtAc0fIynfgYVDtYfNnQSc"
+        },
+        {
+          "id": "9cd55e42-3d34-45a6-8317-f649e0b5f39f",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "timestamp": "2026-11-04T05:17:53Z"
+        },
+        {
+          "id": "01a1a4fe-0cf7-7b00-b140-bb4afcd8d78f",
+          "role": "user",
+          "content": "[synthetic code redacted]",
+          "timestamp": "2026-11-04T05:17:55Z"
+        },
+        {
+          "id": "eebc68bd-6ba0-4e0e-8bce-d681d0b5a82f",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:17:57Z",
+          "tool_calls": [
+            {
+              "id": "call_Ce1O3xGcKIWGaela5YUMebGG",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[synthetic code redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "05ffef9d-1373-4b9d-91aa-d81e1a12bb35",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "timestamp": "2026-11-04T05:17:57Z",
+          "tool_call_id": "call_Ce1O3xGcKIWGaela5YUMebGG"
+        },
+        {
+          "id": "2b11a117-dc15-4f6f-9f5f-8d68eb2e6859",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where would you like to pick up and deliver?",
+          "timestamp": "2026-11-04T05:17:59Z"
+        },
+        {
+          "id": "01a1a4fe-2439-78b5-be2b-73ea1f47917d",
+          "role": "user",
+          "content": "Reefer from Georgia to Kentucky.",
+          "timestamp": "2026-11-04T05:18:01Z"
+        },
+        {
+          "id": "7b9a731d-b9e0-4780-af8e-693983bb6bb0",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:03Z",
+          "tool_calls": [
+            {
+              "id": "call_vkKqaPx2yqnpFNrRf0tyhEaj",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"KY\",\"equipment\":\"reefer\",\"origin_state\":\"GA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "3734ac5c-4582-4bea-9b56-b63cdf4f2e01",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Produce\",\"delivery_time_display\":\"November 13 at 9:18 PM Central (CST)\",\"destination\":\"Lexington, KY\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01120\",\"notes\":\"Reefer set 38F continuous.\",\"offer\":975,\"origin\":\"Augusta, GA\",\"pickup_time_display\":\"November 11 at 7:18 PM Central (CST)\",\"weight\":20636}],\"status\":\"found\"}}]}",
+          "timestamp": "2026-11-04T05:18:04Z",
+          "tool_call_id": "call_vkKqaPx2yqnpFNrRf0tyhEaj"
+        },
+        {
+          "id": "96fae59a-eef3-424b-900b-34decc24dee9",
+          "role": "assistant",
+          "content": "I have a reefer load from Augusta, GA, to Lexington, KY: produce, 20,636 pounds. Pickup is November 11 at 7:18 PM Central (CST), and delivery is November 13 at 9:18 PM Central (CST). Reefer set at 38\u00b0F continuous. Our offer is $975. Does that work?",
+          "timestamp": "2026-11-04T05:18:05Z"
+        },
+        {
+          "id": "01a1a4fe-3e7c-7682-89d8-038d65377793",
+          "role": "user",
+          "content": "Somewhere between 1100 and 1150.",
+          "timestamp": "2026-11-04T05:18:08Z"
+        },
+        {
+          "id": "080d170f-c075-430a-9b26-8d33b7929c11",
+          "role": "assistant",
+          "content": "What one complete total dollar amount would you need for this load?",
+          "timestamp": "2026-11-04T05:18:10Z"
+        },
+        {
+          "id": "01a1a4fe-5075-703b-aac2-25239f337a0c",
+          "role": "user",
+          "content": "110025 dollars.",
+          "timestamp": "2026-11-04T05:18:12Z"
+        },
+        {
+          "id": "675a858a-859f-4ac7-9cc1-dd8140ec5d39",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:14Z"
+        },
+        {
+          "id": "01a1a4fe-6248-79d4-ab34-3d3eca2d674d",
+          "role": "user",
+          "content": "Can you say that again?",
+          "timestamp": "2026-11-04T05:18:17Z"
+        },
+        {
+          "id": "5648f496-6167-4090-9049-3a751593b5e0",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:19Z"
+        },
+        {
+          "id": "01a1a4fe-7335-7afa-af6c-e3a570c67400",
+          "role": "user",
+          "content": "No. It is 110025 dollars.",
+          "timestamp": "2026-11-04T05:18:21Z"
+        },
+        {
+          "id": "cbb7c30f-85b4-46b1-a292-1e9145da84bd",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:23Z"
+        },
+        {
+          "id": "01a1a4fe-84d7-7550-bd48-af880aaf93f0",
+          "role": "user",
+          "content": "Yeah, 1125.",
+          "timestamp": "2026-11-04T05:18:26Z"
+        },
+        {
+          "id": "b666a9fd-46e0-4093-8368-934ea6467bf5",
+          "role": "assistant",
+          "content": "Is $1,125 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:28Z"
+        },
+        {
+          "id": "01a1a4fe-963a-756e-82d1-a5595f594109",
+          "role": "user",
+          "content": "Yes, 1125 is the complete total.",
+          "timestamp": "2026-11-04T05:18:30Z"
+        },
+        {
+          "id": "b646e585-b919-41c7-9cf4-55c9ad30571c",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:32Z",
+          "tool_calls": [
+            {
+              "id": "call_kRls3VXcP4Pbtup9p6jTREdP",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD01120\",\"rate\":\"1125\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "99e84efb-9550-4440-88dd-6908403b38f9",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1000,\"round\":1,\"status\":\"counter\"}}]}",
+          "timestamp": "2026-11-04T05:18:33Z",
+          "tool_call_id": "call_kRls3VXcP4Pbtup9p6jTREdP"
+        },
+        {
+          "id": "2bcf55cb-8d9e-4e3a-a2be-b0baf654120e",
+          "role": "assistant",
+          "content": "Our offer is $1,000. Would you like to accept that amount?",
+          "timestamp": "2026-11-04T05:18:34Z"
+        },
+        {
+          "id": "01a1a4fe-ae7b-7d2f-9a32-9c7ac846d03e",
+          "role": "user",
+          "content": "No thanks, I will pass. Goodbye.",
+          "timestamp": "2026-11-04T05:18:36Z"
+        },
+        {
+          "id": "6db944db-1b1f-43c9-a8c0-2a25031acb4d",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:39Z",
+          "tool_calls": [
+            {
+              "id": "call_Bq2JzfTfH7olApI1qYmXHXJr",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"Caller declined the $1,000 offer for load LD01120 from Augusta, GA to Lexington, KY and ended the call.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "95a1db95-0b8a-4c6e-94f2-ec42b0348fe5",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "timestamp": "2026-11-04T05:18:39Z",
+          "tool_call_id": "call_Bq2JzfTfH7olApI1qYmXHXJr"
+        },
+        {
+          "id": "57c2bf34-7890-4348-869a-95d9532386ee",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:40Z",
+          "tool_calls": [
+            {
+              "id": "call_F7HinINpE88GgKoPuFLBt9OQ",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "d8962bd2-ee1f-4416-ad41-88e32282986f",
+          "role": "event",
+          "content": "session_closed",
+          "timestamp": "2026-11-04T05:18:40Z"
+        }
+      ],
+      "tool_calls": [
+        {
+          "index": 3,
+          "name": "verify_carrier",
+          "arguments": {
+            "mc": "138328"
+          }
+        },
+        {
+          "index": 7,
+          "name": "send_code",
+          "arguments": {}
+        },
+        {
+          "index": 11,
+          "name": "verify_code",
+          "arguments": {
+            "code": "[synthetic code redacted]"
+          }
+        },
+        {
+          "index": 15,
+          "name": "find_loads",
+          "arguments": {
+            "dest_state": "KY",
+            "equipment": "reefer",
+            "origin_state": "GA"
+          }
+        },
+        {
+          "index": 29,
+          "name": "negotiate",
+          "arguments": {
+            "load_id": "LD01120",
+            "rate": "1125"
+          }
+        },
+        {
+          "index": 33,
+          "name": "close_call",
+          "arguments": {
+            "summary": "Caller declined the $1,000 offer for load LD01120 from Augusta, GA to Lexington, KY and ended the call."
+          }
+        },
+        {
+          "index": 35,
+          "name": "hr_builtin_tool__end_conversation",
+          "arguments": {}
+        }
+      ]
+    },
+    {
+      "run_id": "824538cf-f394-437c-b87c-75c79a0589c1",
+      "status": "completed",
+      "duration_seconds": 59,
+      "amount_sequence_pass": true,
+      "assertions": [
+        "Exactly one negotiate, LD01120 at1125",
+        "No negotiate at110025",
+        "No plus same digits did not authorize submission",
+        "Corrected1125 readback and explicit affirmative preceded negotiate"
+      ],
+      "observation": "After No plus unchanged digits the agent repeated its readback instead of asking an open total question. The confirmation gate remained pending.",
+      "closing_limit": "close_call and text ending tool recorded, no spoken farewell. This is not a voice closing pass.",
+      "messages": [
+        {
+          "id": "b70f3d82-1fbc-4d8d-be30-d9647ed55624",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "timestamp": "2026-11-04T05:18:01Z"
+        },
+        {
+          "id": "01a1a4fe-2209-7318-b079-0112d535fb00",
+          "role": "user",
+          "content": "Hello.",
+          "timestamp": "2026-11-04T05:18:01Z"
+        },
+        {
+          "id": "01a1a4fe-2b8e-7b2b-b7a4-e6035a087477",
+          "role": "user",
+          "content": "138328",
+          "timestamp": "2026-11-04T05:18:03Z"
+        },
+        {
+          "id": "4a0c09aa-d3c1-49c5-9362-9eaf057cfd49",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:05Z",
+          "tool_calls": [
+            {
+              "id": "call_OuA44Jo6XETf9jkYiDz0kYLu",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "c8dc1ac0-06a9-4af0-aad8-0cbd114461eb",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "timestamp": "2026-11-04T05:18:05Z",
+          "tool_call_id": "call_OuA44Jo6XETf9jkYiDz0kYLu"
+        },
+        {
+          "id": "4efb8b40-7443-4730-8004-34a762056c43",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "timestamp": "2026-11-04T05:18:07Z"
+        },
+        {
+          "id": "01a1a4fe-431d-797b-ae47-84ae53de9408",
+          "role": "user",
+          "content": "Yes, Werner Enterprises.",
+          "timestamp": "2026-11-04T05:18:09Z"
+        },
+        {
+          "id": "fff24d4f-9081-49b3-acdd-9accaddb295b",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:11Z",
+          "tool_calls": [
+            {
+              "id": "call_uwkRkdDGtr3r3nvFIQTJv4b7",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "9f5542fe-7d53-4fd7-a6a4-436a4c8c69dc",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "timestamp": "2026-11-04T05:18:11Z",
+          "tool_call_id": "call_uwkRkdDGtr3r3nvFIQTJv4b7"
+        },
+        {
+          "id": "ea8aa1e0-3b6f-41c9-ac83-ecb63708b9d0",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "timestamp": "2026-11-04T05:18:12Z"
+        },
+        {
+          "id": "01a1a4fe-5941-7048-9b62-064d20465494",
+          "role": "user",
+          "content": "[synthetic code redacted]",
+          "timestamp": "2026-11-04T05:18:14Z"
+        },
+        {
+          "id": "f7ee77c3-5f57-43ca-9ac7-3d8f09ebfd85",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:17Z",
+          "tool_calls": [
+            {
+              "id": "call_bmPJ3nA9GEqw7pC3f08R5ErO",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[synthetic code redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "95333199-0d66-49b5-9d1e-dc3f6c6f9a65",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "timestamp": "2026-11-04T05:18:17Z",
+          "tool_call_id": "call_bmPJ3nA9GEqw7pC3f08R5ErO"
+        },
+        {
+          "id": "4429ea21-c9bf-47ab-a09d-0a3311f2eda6",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where would you like to pick up and deliver?",
+          "timestamp": "2026-11-04T05:18:18Z"
+        },
+        {
+          "id": "01a1a4fe-709a-7a67-aa82-afd7b430701a",
+          "role": "user",
+          "content": "Reefer from Georgia to Kentucky.",
+          "timestamp": "2026-11-04T05:18:20Z"
+        },
+        {
+          "id": "a5d68576-e803-4dae-8fef-b53f413dcf86",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:23Z",
+          "tool_calls": [
+            {
+              "id": "call_29x5SVdEMfQTwvLEhTGkBxDT",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"KY\",\"equipment\":\"reefer\",\"origin_state\":\"GA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "67eb815c-2f3c-4ad5-abf6-1acb5bf6826f",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Produce\",\"delivery_time_display\":\"November 13 at 9:18 PM Central (CST)\",\"destination\":\"Lexington, KY\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01120\",\"notes\":\"Reefer set 38F continuous.\",\"offer\":975,\"origin\":\"Augusta, GA\",\"pickup_time_display\":\"November 11 at 7:18 PM Central (CST)\",\"weight\":20636}],\"status\":\"found\"}}]}",
+          "timestamp": "2026-11-04T05:18:23Z",
+          "tool_call_id": "call_29x5SVdEMfQTwvLEhTGkBxDT"
+        },
+        {
+          "id": "b34c8340-470a-4bd3-b94f-b0e7f137a38b",
+          "role": "assistant",
+          "content": "I have a reefer load from Augusta, Georgia, to Lexington, Kentucky: produce, 20,636 pounds. Pickup is November 11 at 7:18 PM Central (CST), and delivery is November 13 at 9:18 PM Central (CST). Reefer set at 38\u00b0F continuous. Our offer is $975. Does that work?",
+          "timestamp": "2026-11-04T05:18:25Z"
+        },
+        {
+          "id": "01a1a4fe-8911-7e87-a100-a76f9a2fd929",
+          "role": "user",
+          "content": "Somewhere between 1100 and 1150.",
+          "timestamp": "2026-11-04T05:18:27Z"
+        },
+        {
+          "id": "9bf260d2-eb7a-41a9-8cb8-ff3980059efb",
+          "role": "assistant",
+          "content": "What one complete total dollar amount would you need for this load?",
+          "timestamp": "2026-11-04T05:18:29Z"
+        },
+        {
+          "id": "01a1a4fe-9c09-78d3-a2d8-e74fc68658f6",
+          "role": "user",
+          "content": "110025 dollars",
+          "timestamp": "2026-11-04T05:18:31Z"
+        },
+        {
+          "id": "a2f43f79-db9a-46a5-942a-65917b2420a0",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:34Z"
+        },
+        {
+          "id": "01a1a4fe-ad53-74a8-b104-5f4ffac9b06e",
+          "role": "user",
+          "content": "Can you say that again?",
+          "timestamp": "2026-11-04T05:18:36Z"
+        },
+        {
+          "id": "6f29f155-0587-4b3f-906b-d54a57266bb7",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:38Z"
+        },
+        {
+          "id": "01a1a4fe-bed0-7d79-b587-2c9327a6117d",
+          "role": "user",
+          "content": "No. It is 110025 dollars.",
+          "timestamp": "2026-11-04T05:18:40Z"
+        },
+        {
+          "id": "4d94f74f-0c97-4d66-8f84-1506ab0b0cea",
+          "role": "assistant",
+          "content": "Is $110,025 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:43Z"
+        },
+        {
+          "id": "01a1a4fe-cfcd-74b6-89cd-9111dd45b3d8",
+          "role": "user",
+          "content": "Yeah, 1125.",
+          "timestamp": "2026-11-04T05:18:45Z"
+        },
+        {
+          "id": "e468418d-b065-445d-8db3-7912332e8edd",
+          "role": "assistant",
+          "content": "Is $1,125 the complete total for this load?",
+          "timestamp": "2026-11-04T05:18:47Z"
+        },
+        {
+          "id": "01a1a4fe-e0e9-70de-89ce-dd2f18e2aac3",
+          "role": "user",
+          "content": "Yes, 1125 is the complete total.",
+          "timestamp": "2026-11-04T05:18:49Z"
+        },
+        {
+          "id": "6c561064-41e5-4c70-82c3-9e1e2ba69bd6",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:52Z",
+          "tool_calls": [
+            {
+              "id": "call_Mrs0bPyKJ5FKZzTuI43rfZGd",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD01120\",\"rate\":\"1125\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ca1e82e2-8245-4a7f-94ab-be5d8fb89c4f",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1000,\"round\":1,\"status\":\"counter\"}}]}",
+          "timestamp": "2026-11-04T05:18:52Z",
+          "tool_call_id": "call_Mrs0bPyKJ5FKZzTuI43rfZGd"
+        },
+        {
+          "id": "e9c8802b-649b-4cbd-9389-f116605881ec",
+          "role": "assistant",
+          "content": "Our offer is $1,000. Would you like to accept that amount?",
+          "timestamp": "2026-11-04T05:18:54Z"
+        },
+        {
+          "id": "01a1a4fe-fa46-7dda-89a3-37eba2349f1e",
+          "role": "user",
+          "content": "No thanks, I will pass. Goodbye.",
+          "timestamp": "2026-11-04T05:18:56Z"
+        },
+        {
+          "id": "b71c0b1f-717f-4968-8be2-94972dfab6b3",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:58Z",
+          "tool_calls": [
+            {
+              "id": "call_uaeJsFibtTM7fGiXMUE0xXvr",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"Caller declined the $1,000 offer for load LD01120 from Augusta, GA to Lexington, KY.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "6491b3b5-6da9-4e18-88b0-c5d8b2e095f4",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "timestamp": "2026-11-04T05:18:59Z",
+          "tool_call_id": "call_uaeJsFibtTM7fGiXMUE0xXvr"
+        },
+        {
+          "id": "41d9f86c-d186-4ba8-80bc-6da4c4c46666",
+          "role": "assistant",
+          "timestamp": "2026-11-04T05:18:59Z",
+          "tool_calls": [
+            {
+              "id": "call_mmnhSyqto6jjYJSHOXlGBpuD",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "66471b05-0db6-4268-84e4-c3eacdd3465d",
+          "role": "event",
+          "content": "session_closed",
+          "timestamp": "2026-11-04T05:19:00Z"
+        }
+      ],
+      "tool_calls": [
+        {
+          "index": 3,
+          "name": "verify_carrier",
+          "arguments": {
+            "mc": "138328"
+          }
+        },
+        {
+          "index": 7,
+          "name": "send_code",
+          "arguments": {}
+        },
+        {
+          "index": 11,
+          "name": "verify_code",
+          "arguments": {
+            "code": "[synthetic code redacted]"
+          }
+        },
+        {
+          "index": 15,
+          "name": "find_loads",
+          "arguments": {
+            "dest_state": "KY",
+            "equipment": "reefer",
+            "origin_state": "GA"
+          }
+        },
+        {
+          "index": 29,
+          "name": "negotiate",
+          "arguments": {
+            "load_id": "LD01120",
+            "rate": "1125"
+          }
+        },
+        {
+          "index": 33,
+          "name": "close_call",
+          "arguments": {
+            "summary": "Caller declined the $1,000 offer for load LD01120 from Augusta, GA to Lexington, KY."
+          }
+        },
+        {
+          "index": 35,
+          "name": "hr_builtin_tool__end_conversation",
+          "arguments": {}
+        }
+      ]
+    }
+  ]
+}

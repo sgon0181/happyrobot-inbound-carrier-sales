@@ -1,5 +1,7 @@
 # Voice tuning and amount confirmation
 
+Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 draft fix passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
+
 Status: Version 7 (`67nko7p112j2`) is live on service release 17 after owner-approved publication. The owner's 11 Version 6 calls now provide timed transcript, tool, end-event and Twin evidence for proactive closing. One amount-intent failure and one omitted operating-note pitch in Version 6 led to the owner-approved fix, now published as [Version 7](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/67nko7p112j2), with no service, model, opening or workflow-structure change. The implementation task did not push, deploy or publish. The later owner-approved publication is recorded in [the Version 7 release](releases/2026-11-04-v7/README.md). No service deployment, secret change or booking was performed.
 
 ## Version 6 owner calls and the Version 7 fix

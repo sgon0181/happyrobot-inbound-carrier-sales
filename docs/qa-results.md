@@ -1,5 +1,7 @@
 # QA results
 
+Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 draft fix passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
+
 Updated on 2026-11-04 (Sydney). Workflow Version 7 (`67nko7p112j2`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below. Eleven Version 6 calls now supply closing evidence; the remaining amount and notes fixes are live in Version 7; one focused voice acceptance call remains. No new live booking was sent.
 
 ## Latest owner calls and published amount fix

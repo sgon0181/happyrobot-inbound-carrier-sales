@@ -65,7 +65,7 @@ function pitchDetail(raw: unknown): string[] {
   const id = str(l.load_id, 32);
   if (!id) return [];
   const details = [
-    `${id}: ${str(l.origin, 100) ?? "not recorded"} to ${str(l.destination, 100) ?? "not recorded"}`,
+    `${id}: ${str(l.origin, 100) || "not recorded"} to ${str(l.destination, 100) || "not recorded"}`,
     `Offer: ${fmtUsd(num(l.offer))}`,
     `Pickup: ${fmtShort(str(l.pickup_datetime, 40))}`,
     `Delivery: ${fmtShort(str(l.delivery_datetime, 40))}`,
@@ -73,9 +73,9 @@ function pitchDetail(raw: unknown): string[] {
     `Weight: ${fmtCount(num(l.weight))} lbs`,
     `Pieces: ${fmtCount(num(l.num_of_pieces))}`,
     `Miles: ${fmtCount(num(l.miles))}`,
-    `Commodity: ${str(l.commodity_type, 120) ?? "Not recorded"}`,
-    `Dimensions: ${str(l.dimensions, 100) ?? "Not recorded"}`,
-    `Notes: ${redactText(str(l.notes, 500) ?? "Not recorded")}`,
+    `Commodity: ${str(l.commodity_type, 120) || "Not recorded"}`,
+    `Dimensions: ${str(l.dimensions, 100) || "Not recorded"}`,
+    `Notes: ${redactText(str(l.notes, 500) || "Not recorded")}`,
   ];
   return [details.join(". ")];
 }

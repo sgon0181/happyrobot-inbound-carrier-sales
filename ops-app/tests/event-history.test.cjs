@@ -44,6 +44,13 @@ test('pitched shipment notes are redacted and use business labels rather than ra
   assert.equal(event.callId, 'call-reference');
 });
 
+test('empty shipment text is explicitly missing rather than an empty label', () => {
+  const [event] = events([{ loads: [{ load_id: 'LD1', origin: '', destination: '',
+    commodity_type: '', dimensions: '', notes: '' }] }]);
+  for (const value of ['not recorded to not recorded', 'Commodity: Not recorded',
+    'Dimensions: Not recorded', 'Notes: Not recorded']) assert.ok(event.detail.includes(value), value);
+});
+
 test('keeps each reservation snapshot after the same booking row is freed and reused', () => {
   const snapshot = (posted, pickup, note) => ({origin:{city:'Dallas',state:'TX'}, destination:{city:'Atlanta',state:'GA'}, loadboard_rate:posted, pickup_datetime:pickup, notes:note, num_of_pieces:14, max_rate:9876543, token:'private-token'});
   const history=events([

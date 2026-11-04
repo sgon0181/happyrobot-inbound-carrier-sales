@@ -1,0 +1,101 @@
+{
+  "verified_at_utc": "2026-11-04T02:22:13Z",
+  "owner_report": "Claude completed the owner-approved push, service deployment, then workflow publication. This task independently verifies resulting state, not publication ordering.",
+  "source": {
+    "main_commit": "bf512aaae9d1ce6c21600bd2f4f744633ccc229b",
+    "github_main_matches": true,
+    "reviewed_commits": [
+      "28f9297",
+      "f2b0e9b",
+      "48ba398",
+      "18e26ba",
+      "bf512aa"
+    ]
+  },
+  "service": {
+    "app": "happyrobot-carrier-sales-sg",
+    "release": 17,
+    "release_status": "complete",
+    "release_created_at_utc": "2026-11-04T02:16:38Z",
+    "image": "registry.fly.io/happyrobot-carrier-sales-sg:deployment-01M6J5EV50MJRR63NBNGMWFD88",
+    "machine": "185d26da3644d8",
+    "region": "iad",
+    "machine_state": "started",
+    "tcp_check": "passing",
+    "runtime_source_files_matched": 28,
+    "runtime_source_files_checked": 28,
+    "mismatches": [],
+    "source_manifest": "service-source-sha256.json",
+    "live_booking": false,
+    "call_cohort": "synthetic",
+    "authenticated_health": {
+      "http_status": 200,
+      "status": "ok",
+      "tms": "reachable"
+    },
+    "authenticated_snapshot": {
+      "http_status": 200,
+      "calls": 28,
+      "bookings": 10,
+      "live_booking": false
+    },
+    "missing_key_calls_ended_http_status": 401,
+    "http_probe_origin": "Inside the deployed container over loopback; public dashboard loads independently checked in the browser."
+  },
+  "workflow": {
+    "id": "01a18119-67a1-79a3-b220-369aa359d4fb",
+    "version": 6,
+    "version_id": "01a1a3b9-fbba-7b32-9567-e7c36fbec762",
+    "slug": "alj9n98f66df",
+    "production_live": true,
+    "published": true,
+    "node_count": 16,
+    "prompt_sha256": "287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5",
+    "matches_reviewed_prompt_fence": true
+  },
+  "app_observation": {
+    "name": "Carrier Sales",
+    "build": 20,
+    "environment": "production",
+    "alias": "https://carrier-sales-santiago.happyrobot.dev",
+    "native_build_selection_verified": true,
+    "redesigned_navigation_visible": [
+      "Overview",
+      "Awaiting rep",
+      "Bookings",
+      "Calls",
+      "Demand"
+    ],
+    "snapshot_loaded": true,
+    "booking_sends_off_visible": true,
+    "source_commit": "Not independently established for Build20",
+    "published_by_this_task": false,
+    "prior_build18_provenance": "../2026-11-04/release.json",
+    "screenshot": "app20-build.jpg",
+    "visual_limit": "Point-in-time read-only header and dashboard observation, not a full Build20 acceptance or source-import verification."
+  },
+  "qa": {
+    "tests": 487,
+    "service_statements": "1650/1650",
+    "service_branches": "406/406",
+    "business_branches": "256/256",
+    "checkpoint_runs": "80/80 native grades,40 cases twice",
+    "evidence": "../../../happyrobot/qa-v6-audit-fixes.json",
+    "post_release_human_voice_acceptance": "pending",
+    "latest_workflow_run_at_inspection": "6f44e94b-a284-4ffe-855e-1253623939f4, the pre-release mocked agreement. No new human Version6 run identified in the latest15 listed runs."
+  },
+  "line_counts": {
+    "runtime_python_physical": 2919,
+    "checkout_app_ts_tsx_physical": 4613
+  },
+  "actions_by_this_task": {
+    "push": false,
+    "deploy": false,
+    "workflow_publish": false,
+    "app_publish": false,
+    "secret_changes": false,
+    "reservation_changes": false,
+    "LOAD_BOOK": false
+  },
+  "credential_handling": "No credential value printed or committed. The existing ops key was used inside the deployed container for read-only authenticated probes; no credentials were changed."
+}

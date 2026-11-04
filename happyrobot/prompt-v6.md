@@ -1,6 +1,6 @@
 # Voice tuning candidate, Version 6
 
-Unpublished Version 6 (`alj9n98f66df`), forked from live Version 5. [Open draft](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/alj9n98f66df). The service time-display change must be deployed before publication. Model and opening line are unchanged. The workflow retains 16 nodes and six service tools. The only retained tool-definition change is negotiate's rate description.
+Live Version 6 (`alj9n98f66df`), forked from the earlier Version 5. [Open version](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/alj9n98f66df). The owner-approved release deployed service 17 before publishing this version; current state was independently verified. See [release evidence](../docs/releases/2026-11-04-v6/README.md). Model and opening line are unchanged. The workflow retains 16 nodes and six service tools. The only retained tool-definition change is negotiate's rate description.
 
 Root prompt SHA-256: `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5` (UTF-8 text inside the fence, without surrounding newlines). After Claude's two audit fixes, the 40 current-contract checkpoints passed twice, 80/80 native model grades. [Pinned rerun evidence](qa-v6-audit-fixes.json). These grades do not establish voice behavior. Spoken closing remains an acceptance blocker. [Evidence, failures and release order](../docs/voice-tuning.md).
 

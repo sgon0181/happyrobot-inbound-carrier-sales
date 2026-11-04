@@ -6,11 +6,11 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 ## Status
 
-**Released proof of concept; owner acceptance and submission pending.** Workflow Version 5 (`zad4fuknryd8`), Fly release 16 from `8b0e483`, and Carrier Sales App Build 18 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The App includes structured activity, rep review, send-mode controls and receipt recovery. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
+**Released proof of concept; owner acceptance and submission pending.** Workflow Version 6 (`alj9n98f66df`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The App includes structured activity, rep review, send-mode controls and receipt recovery. See [compliance](docs/compliance.md), [QA](docs/qa-results.md) and the [release checklist](docs/submission.md).
 
 An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
 
-The owner's ten Version 5 test calls exposed incorrect rate interpretation, premature final-offer wording, repeated offers and closing problems. A local service change and unpublished Version 6 candidate address them. [Voice tuning and its acceptance blocker](docs/voice-tuning.md) records the evidence: closing still requires human voice acceptance, and these changes have not been released.
+The owner's ten Version 5 test calls exposed incorrect rate interpretation, premature final-offer wording, repeated offers and closing problems. Service release 17 and live Version 6 contain the reviewed fixes. [Voice tuning and its acceptance blocker](docs/voice-tuning.md) records the evidence: complete spoken closing and proactive hangup still require current-version human voice acceptance. [Release verification](docs/releases/2026-11-04-v6/README.md) separates deployed service provenance from the observed App Build 20, whose exact source was not independently established.
 
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
 

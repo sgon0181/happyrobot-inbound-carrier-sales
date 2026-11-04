@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Version** | 3.1 candidate, 2026-11-03 |
-| **Status** | Version 5, service release 16 and App Build 18 are released. Owner calls exposed voice defects. The local time-display change and unpublished Version 6 tuning candidate are pending review, release and voice acceptance; see docs/voice-tuning.md. |
+| **Status** | Version 6, service release 17 from bf512aa and App Build 20 are live. The reviewed voice/time fixes are released; current-version human voice acceptance remains open. App Build 20 source provenance is not independently established. See docs/voice-tuning.md and docs/releases/2026-11-04-v6/README.md. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
@@ -364,7 +364,7 @@ Both draws use an HMAC of the policy version, load ID and purpose under a server
 
 **On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
 
-**Reservation context (R4 local candidate).** The fresh detail read used to price an acceptance also supplies an explicit rep-view allowlist. Its lane, dates, equipment, cargo and posted rate are stored on the booking row and its reserved event; the ceiling is excluded. Reusing a released row preserves the previous snapshot in its event. Old rows have no reconstructed context. A carrier name is joined only while the call MC matches the reservation MC.
+**Reservation context.** The fresh detail read used to price an acceptance also supplies an explicit rep-view allowlist. Its lane, dates, equipment, cargo and posted rate are stored on the booking row and its reserved event; the ceiling is excluded. Reusing a released row preserves the previous snapshot in its event. Old rows have no reconstructed context. A carrier name is joined only while the call MC matches the reservation MC.
 
 **In the app.** Confirm checks the row is still the version the rep saw, re-reads the load, wins a version-checked write to `SUBMITTING`, sends `LOAD_BOOK` once and saves the reply. Decline makes the same version check.
 

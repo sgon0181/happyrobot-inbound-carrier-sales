@@ -1,6 +1,6 @@
 # Inbound Carrier Sales: build description
 
-For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. Workflow Version 5 (`zad4fuknryd8`), Fly release 16 from `8b0e483`, and Carrier Sales App Build 18 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The release checklist is in submission.md; human voice acceptance, reviewer access and the owner video remain open.
+For HappyRobot Logistics' business and IT review. This is a proof-of-concept submission candidate. Workflow Version 6 (`alj9n98f66df`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Exact App Build 20 source provenance has not been independently established; its current dashboard loads and shows sends off. Booking sends remain off and the call cohort remains synthetic. The release checklist is in submission.md; human voice acceptance, reviewer access and the owner video remain open.
 
 ## Customer problem and scope
 
@@ -22,7 +22,7 @@ The TMS has no supported cancellation or idempotency key. A rep's Confirm rechec
 
 Twin stores structured service activity: authority decisions, code delivery outcome, search criteria and returned public pitch details, each heard and normalized carrier ask, response and round, reservation and rep events, closing notes when supplied, and the workflow end report when delivered. State and its event are written together in the same row.
 
-This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. The deployed end-report route and live Version 5 callback can record pre-tool calls when the callback is delivered; delivery is not guaranteed. No external database or general-purpose logging framework is used.
+This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. The deployed end-report route and live Version 6 callback can record pre-tool calls when the callback is delivered; delivery is not guaranteed. No external database or general-purpose logging framework is used.
 
 The App separates real and test calls. Its metrics count recorded calls, reservations, rep approvals, pending acknowledgements, final confirmations, unknown outcomes and unmatched demand. The northstar is recorded reservations per call that ever passed its code. Tool-to-offer time begins at the first service request, excluding greeting and spoken delivery. Complete definitions and missing-data behavior are in kpis.md. Carrier payment and concessions are not brokerage revenue or profit.
 
@@ -30,13 +30,13 @@ The App separates real and test calls. Its metrics count recorded calls, reserva
 
 The layered package in qa-package.md separates service tests, seeded generated inputs, conversation checkpoints, complete HTTP journeys, native model simulations and human voice calls. Current raw totals, versions, failures and reruns are in qa-results.md; they must accompany any presentation of success.
 
-One earlier real-integration call reached agreement and a rep Confirm whose TMS reply was PENDING. The owner's Version 3 transcript also shows name confirmation before code delivery, unmatched searches, an agreement through negotiate, a mocked handoff and clean close. The Version 4 candidate's E7 continuation passed eight repetitions, with ten additional continuation/regression checkpoints passing. The standard full text simulation reached a truthful handoff; the pressure simulation held verification but ended by idle timeout without closing notes. These small samples do not prove broad reliability. The final Version 5 prompt passes 46/46 locked checkpoints, including carrier changes after agreement. App Build 18 has a published visual check recorded in qa-results.md. Human voice acceptance of Version 5, including interruptions and refusal-path closing, remains open.
+One earlier real-integration call reached agreement and a rep Confirm whose TMS reply was PENDING. The owner's Version 3 transcript also shows name confirmation before code delivery, unmatched searches, an agreement through negotiate, a mocked handoff and clean close. The Version 4 candidate's E7 continuation passed eight repetitions, with ten additional continuation/regression checkpoints passing. The standard full text simulation reached a truthful handoff; the pressure simulation held verification but ended by idle timeout without closing notes. These small samples do not prove broad reliability. The current Version 6 prompt passes 80/80 locked checkpoints,40 cases twice, including carrier changes after agreement and the reviewed amount/closing/time fixes. Service release 17 passes 487 offline tests at actual 100% statement/branch coverage. Two current mocked conversations reach close and the text ending tool without another caller turn, but do not record final speech. Historical Build 18 visual evidence is retained; production App Build 20 was observed separately. Human voice acceptance of Version 6, including full closing-message delivery and proactive hangup, remains open.
 
 ## How it runs and who owns what
 
 | Component | Location | Responsibility |
 |---|---|---|
-| Voice workflow | HappyRobot | Version 5 web-call conversation, six service tools and the post-agent end report |
+| Voice workflow | HappyRobot | Version 6 web-call conversation, six service tools and the post-agent end report |
 | Carrier Sales Service | Python 3.12 Docker container on Fly.io | Rules, FMCSA, code email, raw-TCP TMS adapter, Twin writes and rep actions |
 | Twin | HappyRobot | Call and booking rows, each with its own event history |
 | Operations App | HappyRobot Apps | Authenticated review, metrics and rep decisions through the service |

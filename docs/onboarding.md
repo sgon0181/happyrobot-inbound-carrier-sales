@@ -17,24 +17,24 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Released service and App source at `8b0e483`, pushed after owner approval. Release documentation is reviewed and committed separately; see submission.md for remaining acceptance and access steps. |
+| `main` | Reviewed source through `bf512aa` pushed after owner approval. Service release 17 matches its runtime source. App Build 20 is production, with exact source provenance not independently established. Release documentation is reviewed and committed separately; see submission.md for remaining acceptance and access steps. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
-| Who does what | One writer at a time on main. Codex is writing this candidate; Claude reviews afterward. The owner approves every push. |
+| Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
 | Spent loads | Listed in [`tms-contract.md`](tms-contract.md#booking-test-inventory) and [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json). No supported cancel/reset is established; no quota or permanent-consumption claim follows. |
 
 Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez), organization ID `01a17a99-0856-7f88-b09f-4b787e20413c`.
 
 | Platform resource | Identity | State |
 |---|---|---|
-| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 5 (`zad4fuknryd8`, UUID `01a1a34d-6974-734a-8375-e4740d5807cd`) live since 2026-11-04, replacing Version 4. Prompt SHA-256: `db0ae5ad27f4682296471a335e432f747da53727534e4ebc8f9769656da5ecae`. |
+| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 6 (`alj9n98f66df`, UUID `01a1a3b9-fbba-7b32-9567-e7c36fbec762`) live since 2026-11-04, replacing Version 5. Prompt SHA-256: `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Historical owner-call evidence retained; unpublished on 2026-11-04. |
-| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 18, exact `ops-app/` source from `8b0e483`, published and visually checked on 2026-11-04. No lab branding in the visible App. |
+| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 20 verified in the native build selector on 2026-11-04; redesigned dashboard and booking-sends-off state observed. Exact Build 20 source is not independently established. Build 18 source and visual provenance remain historical evidence. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
-Claude pushed `8b0e483`, published Version 5 and deployed Fly release 16 on 2026-11-04 after owner approval. The machine was healthy, snapshot read succeeded, and `/calls/ended` refused a missing key with 401. Codex then published App Build 18 as Carrier Sales and checked its UI. LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
+After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. The native App selector now shows production Build 20; its exact source was not independently established. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 
@@ -60,7 +60,7 @@ The private candidate portal link is in Luke's original "HappyRobot | FDE Techni
 | FMCSA | Use the portal-issued key. Direct requests work from Fly.io and return HTTP 403 from the local machine. |
 | Twin | External SQL needs an organization API key. A Viewer key cannot write. The Apps gateway to Twin has been failing (T-7), so the app reads through the service. |
 | OTP email | Luke approved email to the candidate's demo inbox. `DEMO_OTP_EMAIL` is configuration, never caller input, and is not proof of carrier identity. |
-| Fly.io | The CLI is installed and authenticated. The service is `happyrobot-carrier-sales-sg` at `https://happyrobot-carrier-sales-sg.fly.dev`, one machine in `iad`. Release 16 from `8b0e483` was deployed and healthy on 2026-11-04. |
+| Fly.io | The CLI is installed and authenticated. The service is `happyrobot-carrier-sales-sg` at `https://happyrobot-carrier-sales-sg.fly.dev`, one machine in `iad`. Release 17 from reviewed `bf512aa` is healthy on 2026-11-04, with all 28 runtime source/policy files matching the checkout. |
 
 Local credentials are not part of a clone. Use the owner-managed ignored .env and platform secret settings; do not assume an old prototype worktree is the current source. Secret values and their synchronization were not inspected for this documentation pass. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
 

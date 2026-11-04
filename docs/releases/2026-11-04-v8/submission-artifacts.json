@@ -1,0 +1,66 @@
+{
+  "checked_at_utc": "2026-11-04T09:31:56.183694+00:00",
+  "workflow": {
+    "version": 8,
+    "slug": "kvexhw5fzj4y",
+    "version_id": "01a1a4f6-79a3-7c40-8732-589b3adfdcfd",
+    "prompt_sha256": "53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c",
+    "live_root_and_tool_readback_match": true
+  },
+  "service": {
+    "release": 17,
+    "runtime_source_commit": "bf512aaae9d1ce6c21600bd2f4f744633ccc229b",
+    "live_booking": false
+  },
+  "app_build": 20,
+  "pdf": {
+    "pages": 2,
+    "all_source_blocks_present": true,
+    "all_page_footers_workflow8": true,
+    "pdf_copies_identical": true,
+    "pdf_sha256": "c5a0ab3b7120741ec13de06d4225f0ca1d5c1a3787f23b047a42b3c88ae48806",
+    "markdown_sha256": "dcb0d3f80248d2bcfc8a72c8895d3e9da432dddf4b4427cc3231e32307cd2c00",
+    "all_pages_visually_checked": true,
+    "generated_with": "ReportLab, rendered with Poppler",
+    "source": "docs/build-description.md",
+    "outputs": [
+      "submission/build-description.pdf",
+      "submission/ready-to-submit/build-description.pdf"
+    ]
+  },
+  "package_manifest": "submission/ready-to-submit/package-manifest.json",
+  "source_archive_method": "git archive of final reviewed source commit, per-file byte/hash comparison to git show; final commit and ZIP digest recorded in local manifest",
+  "qa": {
+    "service_tests": 487,
+    "covered_statements": 1650,
+    "total_statements": 1650,
+    "covered_branches": 406,
+    "total_branches": 406,
+    "business_branches": [
+      256,
+      256
+    ],
+    "workflow_checkpoint_grades": [
+      118,
+      118
+    ],
+    "focused_grades": [
+      24,
+      24
+    ],
+    "full_mocked_replays": 2,
+    "workflow_suite_not_rerun_for_docs_refresh": true
+  },
+  "human_voice": {
+    "normal_version8_call": "Owner reported successful in chat",
+    "latest_call_independently_reviewed": false,
+    "split_number_live_retest_verified": false
+  },
+  "scope": "Current release documents and local exports only; historical releases and QA snapshots retain their original versions.",
+  "portal": "Owner-only. No portal interaction, uploads, grants or submission in this refresh.",
+  "production_changes": false,
+  "production_lines": {
+    "python": 2919,
+    "app_typescript_tsx": 4613
+  }
+}

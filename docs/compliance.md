@@ -1,6 +1,6 @@
 # Assignment compliance, submission candidate
 
-Source: [the five-page assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), reread on 2026-11-04. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live. The owner approved non-portal release work and retains sole control of final submission. The portal must remain untouched. Booking sends remain off and calls stay synthetic. The current prompt passes 118/118 locked checkpoints and both recording-derived multi-turn replays. The App's 77-file archive matches the checkout and final 1280px views/panels pass. Audio recognition and physical voice timing remain unproven by these text checks; owner video and reviewer-account access remain open.
+Source: [the five-page assignment PDF](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), reread on 2026-11-04. Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live. The owner approved non-portal release work and retains sole control of final submission. The portal must remain untouched. Booking sends remain off and calls stay synthetic. The current prompt passes 118/118 locked checkpoints and both recording-derived multi-turn replays. The App's 77-file archive matches the checkout and final 1280px views/panels pass. Audio recognition and physical voice timing remain unproven by these text checks; the owner reports a successful normal Version 8 call, without independent transcript/audio review. The owner video URL and reviewer-account access remain open.
 
 Statuses: Met means implemented with the stated evidence. Qualified means demonstrated within a stated interpretation or limit. Partial means a material requirement or acceptance step remains open. Gap means absent. The build is a proof of concept, not a claim of production reliability. [QA results](qa-results.md) retains failures and versions; [submission.md](submission.md) lists the owner approval steps.
 
@@ -56,7 +56,7 @@ Ten Version 5 owner calls exposed partial amounts, invented final wording and po
 
 | # | Deliverable | State | Status |
 |---|---|---|---|
-| D1 | Prospect email with build and next steps | Corrected prospect text in submission.md, five tailored next steps and links; owner approved final submission work | Partial: text ready; portal submission awaits real call/video |
+| D1 | Prospect email with build and next steps | Corrected prospect text in submission.md, five tailored next steps and links; owner alone handles final submission | Partial: text ready; owner video URL and owner submission remain |
 | D2 | Business/IT build description | Updated build-description.md records this release and the identity, capture, ceiling, PENDING and reliability limits | Qualified: current PDF is generated and visually checked; final portal submission awaits video |
 | D3 | Private repository and reviewer invitations | Private/default-main verified read-only on GitHub; only owner collaborator and zero pending invitations | Partial: owner authorized invitations, but intended reviewer identities have not been provided; source ZIP also prepared for portal review |
 | D4 | Workflow link | Exact Version 8 editor and web-call links in submission.md; Version 8 is live | Qualified: publication complete; reviewer-account access still needs validation |
@@ -71,7 +71,7 @@ Ten Version 5 owner calls exposed partial amounts, invented final wording and po
 | R3 activity capture | Structured activity, privacy/reconstruction tests, service route and end callback deployed | All 11 latest Version 6 calls have persisted close/end records. Speech and undelivered events remain outside guarantees |
 | R4 essential dashboard | Carrier Sales Build 20 production observed; redesigned dashboard loads and sends are off. Build 18 acceptance remains historical | Source48ba398 is reported by Claude; archive and final 1280px UI verified. No new send |
 | R5 QA and KPIs | Layers, versions, seeds, counts, failures and definitions documented; actual 100% service coverage | Owner presentation and viewing URL; audio and capacity limits disclosed |
-| R6 handover | Corrected email, build description, links, reviewer instructions and walkthrough outline | Independent review and owner release/submission approval complete; video, identified reviewer access and final portal submission remain |
+| R6 handover | Corrected email, build description, links, reviewer instructions and walkthrough outline | Reviewed release complete; owner reports normal-call success. Video URL, verified reviewer access and owner-only final submission remain |
 
 ## Recommended work, not invented submission requirements
 

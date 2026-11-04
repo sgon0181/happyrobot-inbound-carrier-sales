@@ -2,8 +2,8 @@
 
 | | |
 |---|---|
-| **Version** | 3.1 candidate, 2026-11-03 |
-| **Status** | Version 7, service release 17 from bf512aa and App Build 20 are live. Eleven owner Version 6 calls provide timed closing and stored end-event evidence. The reviewed amount/notes fix is live in Version 7. One focused human voice acceptance call remains. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the published UI was checked. See docs/voice-tuning.md and docs/releases/2026-11-04-v7/README.md. |
+| **Version** | 3.1, current release documentation checked 2026-11-04 |
+| **Status** | Version 8 (`kvexhw5fzj4y`), service release 17 from bf512aa and App Build 20 are live. Version 8 passes 118/118 locked checkpoints and two inspected mocked recording replays. The owner reports a successful normal Version 8 call; its transcript/audio has not been independently reviewed. Eleven Version 6 calls retain timed closing and stored end-event evidence. Build 20 source 48ba398 is reported by Claude; its archive and published UI have recorded checks. See docs/confirmation-fix.md and docs/releases/2026-11-04-v8/README.md. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
@@ -325,7 +325,7 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 ---
 
-**Capture coverage (R3 candidate, not deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, but only after the service deploy and Version 4 publication, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Until that rollout, call counts cover service requests, not all web calls. No start-to-offer timing is inferred from the end webhook's receipt time.
+**Capture coverage (deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, introduced with the deployed service and Version 4, retained in Version 8, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Call counts cover persisted service requests and delivered end reports, not every platform call. No start-to-offer timing is inferred from the end webhook's receipt time.
 
 ## 8. Verification and the one-time code
 
@@ -342,7 +342,7 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 **Search** normalizes lane and equipment, then requires explicit `OPEN`, a future pickup and no active reservation. `LOAD_QUERY` also returns `PENDING` loads, so returned matches are checked locally. Loads on the [blocked list](service/policy/blocked-loads-v1.json) are never offered. Results are ranked by pickup time, and at most three are offered, one at a time. The agent reads notes as written. When nothing matches, the search is recorded on the call.
 
-**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. Missing times stay null. The voice prompt reads these supplied strings instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. This additive service change needs deployment before the corresponding voice draft is published.
+**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. Missing times stay null. The voice prompt reads these supplied strings instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. The service change was deployed in release 17 before Version 6 publication and is retained in Version 8.
 
 **Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. Luke did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
 

@@ -2,7 +2,7 @@
 
 Audience: the brokerage's business team, with enough evidence for IT review. Use the customer's repetitive call handling, consistent pricing and reviewable deals as the narrative. Harsha's example is inspiration for clarity, not an architecture to copy.
 
-Record the reviewed release: service 17 from `bf512aa`, live workflow Version 7 and production Carrier Sales App Build 20. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the final visual check is recorded. Complete the single focused owner voice call before recording. Your Version 6 tests do not need repeating. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
+Record the reviewed release: service 17 from `bf512aa`, live workflow Version 8 and production Carrier Sales App Build 20. Build 20 source 48ba398 is recorded in Claude's release handover; its archive matches the checkout and the final visual check is recorded. Use the successful Version 8 call the owner reports as the demo segment; no repeat of the superseded stress-call script is required. Label a recorded live call honestly. Independent transcript/audio review of that latest call is not claimed. Your Version 6 tests do not need repeating. Never display keys, the expected live code, a private ceiling or a credential-bearing URL. The owner records and chooses the final video URL.
 
 | Time | Show | Say accurately |
 |---|---|---|

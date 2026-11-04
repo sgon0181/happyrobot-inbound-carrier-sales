@@ -1,16 +1,16 @@
 # Submission candidate
 
-The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads or submission are authorized. The narrow confirmation fix is live as Version 8, with service release 17 and App Build 20 unchanged. [Verification and limits](confirmation-fix.md) cover the recorded regression. The owner walkthrough video remains to be supplied; no post-fix human voice pass or completed video is claimed.
+The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads, access grants or submission are authorized. Workflow Version 8 is live, with service release 17 and App Build 20 unchanged. [Verification and limits](confirmation-fix.md) cover the recorded confirmation regression. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. The walkthrough video URL and reviewer access remain to be finalized.
 
 ## Links and files
 
 | Item | Candidate value | Remaining step |
 |---|---|---|
-| Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed source through `9d7a149` is pushed; final release/docs update follows. Repository remains private; intended reviewer accounts have not been provided |
-| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/kvexhw5fzj4y | Version 8 live since 2026-11-04; prompt SHA-256 `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`; 118/118 mocked checkpoints and two inspected replays, audio behavior unproven |
-| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 8; specific confirmation fix verified with recording-derived mocks |
+| Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed Version 8 source and release records are pushed; the refreshed package manifest pins its exact source commit. Repository remains private; intended reviewer accounts have not been provided |
+| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/kvexhw5fzj4y | Version 8 live since 2026-11-04; prompt SHA-256 `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`; 118/118 locked checkpoints and two complete mocked recording replays |
+| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 8; owner reports successful normal demo call, not independently reviewed |
 | Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 20, source 48ba398 per Claude; 77-file archive and final 1280px views/panels verified; reviewer-account access remains to check |
-| Build description | docs/build-description.md; export in submission/build-description.pdf | Refreshed 3-page PDF generated and all pages visually checked; update only if acceptance changes the claims |
+| Build description | docs/build-description.md; export in submission/build-description.pdf | PDF regenerated from corrected Version 8 source and visually checked; exact source/PDF hashes are in the local package manifest |
 | Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
 
 Repository privacy was verified read-only on GitHub on 2026-11-03: private, default branch main, only the owner listed as collaborator, zero pending invitations. No invitations were sent. Repository access and HappyRobot workspace access are separate; validate both with the reviewers' own accounts. Do not share service keys.
@@ -53,10 +53,10 @@ The shared demo inbox is an approved demonstration exception, not proof of carri
 ## Release and access checklist
 
 1. Complete: reviewed prompt fix 9d7a149 published as Version 7 after explicit owner approval; exact root and tool readbacks match. Service release 17 from bf512aa and App Build 20 were not redeployed. Booking sends remain off and calls synthetic.
-2. Complete: Version 8 confirmation correction independently reviewed and published under existing non-portal release approval. Root and tool readbacks match. No extra deployment or booking is needed. Portal authorization was withdrawn.
-3. Specific Version 7 confirmation failure reproduced and corrected using the recording. See confirmation-fix.md for 118/118 checkpoints and both replay sequences. Historical Version 6 voice evidence remains separate; no new complete voice pass is claimed.
+2. Complete: reviewed Version 8 confirmation fix eaa2661 published under existing non-portal release approval, with exact post-publication root/tool readbacks. Service 17 and App 20 unchanged. The owner withdrew portal-writing authorization.
+3. Specific Version 7 confirmation failure reproduced and fixed using the recording. Version 8 passes 118/118 locked checkpoints and two complete mocked replays. The owner reports that the normal Version 8 call worked. No independent transcript/audio review or live split-number retest is claimed. Do not repeat the superseded stress script.
 4. Remaining: owner-recorded approximately five-minute video and its viewing URL. Follow walkthrough.md, hide the emailed code and show the App Test view with Confirm disabled. No cohort flip is required.
 5. Reviewer accounts: the portal and latest Luke email thread do not identify GitHub usernames. A private repository and source ZIP are prepared for submission. Invitations remain pending actual recipient identities; do not guess or make the repository public. HappyRobot reviewer-account access is separately unverified.
-6. Owner only: finalize portal fields and attachments and make the final submission. Codex must not interact with the portal. No completed submission is claimed.
+6. Owner only: finalize portal fields, attachments and final submission. Codex must not interact with the portal. No new upload or completed submission is claimed.
 
 Historical LD01080 already supplies a PENDING receipt example. The latest reviewed synthetic holds include LD01116 at 3800, LD01112 at 2275, LD01100 at 2050 and LD01102 at 1625. Earlier local declines are preserved in booking history. No further cleanup or TMS send is required.

@@ -1,10 +1,22 @@
 # QA results
 
-Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 fix is now live and passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
+Current release checked on 2026-11-04 (Sydney): workflow Version 8 (`kvexhw5fzj4y`), service release 17 from `bf512aa` and Carrier Sales App Build 20. Booking sends remain off and calls remain synthetic. The confirmation fix and release record are reviewed and pushed. [Current release](releases/2026-11-04-v8/README.md) and [specific correction](confirmation-fix.md) identify the exact prompt and limits. The owner reports a successful normal Version 8 demo call; no independent transcript/audio review of that latest call is claimed. The owner controls the submission portal, which is not part of this documentation refresh.
 
-Updated on 2026-11-04 (Sydney). Workflow Version 8 (`kvexhw5fzj4y`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below. Eleven Version 6 calls now supply closing evidence; the remaining amount and notes fixes are live in Version 7; one focused voice acceptance call remains. No new live booking was sent.
+| Current layer | Result | Limit |
+|---|---|---|
+| Automated service | 487 tests; 1650/1650 statements, 406/406 branches, business branches 256/256; strict mypy/ruff pass, Radon B or better | Offline integration doubles and loopback fault servers |
+| Version 8 focused regression | Eight recording-derived cases three times, 24/24 on the final root; unchanged V7 baseline 16/24 | Native model grades, all six external actions mocked |
+| Version 8 full checkpoint suite | 59 definitions twice, 118/118 on the same frozen root/tool | Checkpoints do not measure speech or callback delivery |
+| Version 8 complete mocked replay | Two completed conversations, only 1125 submitted after corrected readback and explicit Yes | All seven external actions mocked; text ending has no recorded farewell, so not a complete voice-closing pass |
+| Latest human call | Owner reports the normal Version 8 demo worked | No independent transcript/audio review; no live speech retest of the split-number edge case |
 
-## Latest owner calls and published amount fix
+[Version 8 evidence](../happyrobot/qa-v8-confirmation-regression.json) retains the failing V7 baseline, unsuccessful first draft and final results. [Both replay traces](../happyrobot/qa-v8-recording-replays.json) retain exact tool arguments and order. Source ZIP, PDF and handoff metadata are refreshed locally from reviewed source; no portal upload or final submission is performed. Owner video URL and reviewer access remain to be finalized.
+
+## Historical Version 7 release baseline
+
+The Version 7 results below describe the earlier release. Its pending-call wording is historical and does not require repeating the superseded stress script.
+
+## Version 6 owner calls and historical Version 7 amount fix
 
 The owner's 11 Version 6 calls are preserved in [sanitized evidence](../happyrobot/qa-v6-owner-calls.json). All 11 recorded close_call once, _hangup once, no subsequent caller turn, agent_hung_up and saved close/end timestamps in Twin. Three refused carriers ended proactively. Two negotiation failures used the three-round budget and no transfer; repeated asks preserved their round and offer. Central pickup/delivery strings were retained. Audio was not listened to, and checkpoint/text simulations remain separate from these human calls.
 

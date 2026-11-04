@@ -4,6 +4,8 @@ Updated on 2026-11-04 (Sydney). Workflow Version 5 (`zad4fuknryd8`), Fly release
 
 ## Released candidate summary
 
+The owner's subsequent ten Version 5 test calls exposed material voice defects despite its checkpoint passes: partial rate agreements, premature final-offer wording, repeated offers and poor endings. The local tuning candidate is recorded in [voice-tuning.md](voice-tuning.md), not released. Closing remains an acceptance blocker. The following table retains the measurements of the released baseline.
+
 | Layer | Result | Boundary |
 |---|---|---|
 | Automated service | 451 tests; 1641 statements and 404 branches, all covered; business gate 254/254 | Offline, fake integrations and loopback fault servers |
@@ -19,9 +21,11 @@ Historical Version 2 checkpoints were 16/19 first-round cases passing, with fail
 
 ## Current service validation
 
-`PATH="$PWD/.venv/bin:$PATH" make check` runs ruff, format checks, `mypy --strict`, tests and coverage. Current actual coverage is 100% statements and branches (1641 statements, 404 branches), with 254/254 gated business branches. The configured minimum remains 90%; actual 100% is the candidate requirement. `.venv/bin/radon cc service -s -n C -e 'service/tests/*'` returns no production function at C or worse. All production modules are at most 300 physical lines; production Python totals 2896 lines. The pre-commit hook tests exactly the staged tree.
+The local time-display and voice-evidence changes now pass make check with 483 tests, actual 100% of 1647 service statements and 406 branches, and 256/256 gated business branches. Runtime Python is 2914 physical lines. This includes six new time-display regressions and 26 offline trace-checker tests. Radon reports no production or tooling function at C or worse. The deployed release 16 measurements below remain historical and do not include these local changes. The latest 40 native checkpoint cases passed twice (80/80 model grades), after documented scoring/fixture corrections; full-text and voice evidence remain separate and must not be inferred from those grades. See the tuning report and manifests for all failures and the unresolved closing checks.
 
-The 451 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
+`PATH="$PWD/.venv/bin:$PATH" make check` runs ruff, format checks, `mypy --strict`, tests and coverage. The released baseline had actual 100% coverage (1641 statements, 404 branches), with 254/254 gated business branches. The local candidate measurements are above. The configured minimum remains 90%; actual 100% is the candidate requirement. `.venv/bin/radon cc service -s -n C -e 'service/tests/*'` returns no production function at C or worse. All production modules are at most 300 physical lines; the released baseline totaled 2896 runtime Python lines. The pre-commit hook tests exactly the staged tree.
+
+The released baseline's 451 tests include code-gate, eligibility/outage, private-field exclusion, pricing, three-round and switching limits, concurrent reservation claims, atomic row events, rep version checks, duplicate-send prevention and receipt recovery faults. `test_journeys.py` adds nine complete HTTP scenarios with booking off. The six-minute expiry clock and 360-second end duration are synthetic fixtures, not latency measurements.
 
 Local carrier-context fixes add 13 regression cases. The first 11 failed before the fixes. They cover carrier locking after agreement and during acceptance, late settlement and agreement replay, persisted cohort classification, and superseded email delivery including identical-digit resends. Verification-loss recovery keeps the original booking and makes no fresh TMS read. Codes and their hashes stay out of the new events and replies; the marked-ceiling scan still passes. These fixes are deployed in service release 16. The owner-approved `carrier_locked` voice contract is implemented in live Version 5, which was tested as the draft recorded below. The historical 44/44 result does not cover the new branch.
 

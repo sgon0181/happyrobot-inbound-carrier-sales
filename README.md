@@ -10,6 +10,8 @@ This is a proof of concept for the [HappyRobot FDE technical challenge](docs/FDE
 
 An earlier real web call on 2026-11-03 passed authority and code, negotiated and reserved LD01080 at 575. The owner's rep Confirm sent one LOAD_BOOK and stored a reference-bearing PENDING reply as ACK_PENDING. That is evidence of acknowledgement, not final confirmation or broad reliability. Booking sends are currently off; new calls are synthetic until the owner approves changing the cohort.
 
+The owner's ten Version 5 test calls exposed incorrect rate interpretation, premature final-offer wording, repeated offers and closing problems. A local service change and unpublished Version 6 candidate address them. [Voice tuning and its acceptance blocker](docs/voice-tuning.md) records the evidence: closing still requires human voice acceptance, and these changes have not been released.
+
 A working prototype that passed a real end-to-end call is kept on branch `prototype/e2e`, as reference.
 
 ## How it works

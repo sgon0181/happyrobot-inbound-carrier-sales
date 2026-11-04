@@ -98,6 +98,13 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **How:** the service adds Central Time speech strings to its public allowlist, retaining the original ISO timestamps. Each string names CST or CDT; absent times remain null. The voice reads the supplied display rather than converting a timestamp itself.
 - **Limits:** this does not validate the TMS source timezone. UTC remains an adapter assumption. The service change must be deployed before publishing the voice draft that depends on these fields; neither release is authorized by this local implementation task.
 
+### D-35: Clarify totals before mutation; make the closing action explicit
+
+- **Why:** Version 5 owner calls turned compound amounts into partial agreements, labeled a first counter final, repeated unchanged offers as new, and reopened farewells.
+- **Candidate:** one clear caller-stated total before negotiate, including confirmation of additions or percentages. Ordinary complete number words remain valid. Final status is scoped to this load and amount. Repeated asks still reach the service and retain D-26; unchanged responses are described as unchanged. The acceptance question is one yes/no question about the stated amount, avoiding an ambiguous yes to accept-or-end.
+- **Closing:** close_call saves notes, not the voice connection. The candidate records the close, then asks the native voice hangup tool to carry the truthful handoff or refusal and farewell in its final-message field. No new booking path or business rule is introduced. A tested closing-module experiment did not improve the refusal and was removed.
+- **Limits and cost:** an extra clarification turn, native model grading limitations and an unresolved human voice closing check. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. This decision is not a claim of a released or accepted voice fix.
+
 ## Earlier decisions
 
 | ID | Decision | Status |

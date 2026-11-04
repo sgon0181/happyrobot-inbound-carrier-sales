@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | **Version** | 3.1 candidate, 2026-11-03 |
-| **Status** | Slices 1 to 4 have live evidence. Local R3 to R6 improvements and QA form the submission candidate; service deployment, Version 4 publication, App publication and owner acceptance remain pending. |
+| **Status** | Version 5, service release 16 and App Build 18 are released. Owner calls exposed voice defects. The local time-display change and unpublished Version 6 tuning candidate are pending review, release and voice acceptance; see docs/voice-tuning.md. |
 | **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
 | **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
@@ -119,9 +119,9 @@ sequenceDiagram
 
     S->>D: Reservation: insert the booking row for this load
     S-->>A: Agreed
-    A-->>C: Rate agreed, a senior rep will confirm, mocked transfer
     A->>S: close(summary)
     S->>D: Save closing time and summary
+    A-->>C: Agreed rate, mocked rep handoff and farewell, then hangup (V6 candidate)
 ```
 
 Then, in the operations app:

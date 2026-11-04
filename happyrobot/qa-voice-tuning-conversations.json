@@ -1,0 +1,2174 @@
+{
+  "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+  "scope": "Synthetic text simulations, all seven external actions locked. Not voice/audio evidence. Synthetic codes redacted; long dash punctuation paraphrased.",
+  "full_conversations": [
+    {
+      "kind": "compound",
+      "repetition": 1,
+      "test_id": "01a1a3c6-9723-762d-9c70-ff07bba4aae0",
+      "adversarial_run_id": "63df7a90-4788-425b-973f-c7a2f7c3382f",
+      "workflow_run_id": "c784bb80-59e8-4125-a592-024eed00324e",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "duration_seconds": 125,
+      "messages": [
+        {
+          "id": "b6ad20a2-9307-4022-8b6b-78de356b55e4",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-3950-7e3a-bfe1-e7e9d18c98ca",
+          "role": "user",
+          "content": "Hello.",
+          "tool_calls": []
+        },
+        {
+          "id": "ec1b58cb-bfb2-4002-a7c9-bf8d8b92c3fe",
+          "role": "assistant",
+          "content": "Hello. May I have your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-43e9-7d67-9d74-0cf4cf6083cc",
+          "role": "user",
+          "content": "Our MC number is 138328.",
+          "tool_calls": []
+        },
+        {
+          "id": "b47254ab-0574-4002-8150-8ad39f2f9cc9",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_FmUo1RurwkEbA6kwCuHlyzGG",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "01a1a3df-4dea-767b-8f4d-4262a0ec9d8b",
+          "role": "user",
+          "content": "Our MC number is 138328.",
+          "tool_calls": []
+        },
+        {
+          "id": "e661ce90-4a88-4294-84ad-9372388aed58",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_FmUo1RurwkEbA6kwCuHlyzGG",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "3e55dbcd-9c2e-452e-85ab-e4688d345a61",
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "tool_calls": []
+        }
+      ],
+      "close_reason": "idle_timeout"
+    },
+    {
+      "kind": "repeat",
+      "repetition": 1,
+      "test_id": "01a1a3c8-0a67-7f5d-a6e5-8f648eb00f02",
+      "adversarial_run_id": "00596d74-2eb0-4348-98d2-71c9f2b688eb",
+      "workflow_run_id": "2940abcb-1788-4c7d-93b0-2e570ee78b98",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "close_reason": "user_requested",
+      "duration_seconds": 76,
+      "messages": [
+        {
+          "id": "a50bc88a-5a5e-4f60-96a8-8626e6676010",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-987e-75e9-ba15-776e6124d236",
+          "role": "user",
+          "content": "Hello.",
+          "tool_calls": []
+        },
+        {
+          "id": "6a7e7dcf-8b23-4415-8dcb-da91d7807c1b",
+          "role": "assistant",
+          "content": "Hello. May I have your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-ae47-7191-8581-f1f9d85f2f44",
+          "role": "user",
+          "content": "Our MC number is 138328. The carrier is Synthetic Carrier LLC.",
+          "tool_calls": []
+        },
+        {
+          "id": "f8f7fd37-1b13-4eda-8dfe-23299d51cbf7",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_sC2WvzcUcwIezmTAgyT3cn7z",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "83e377b0-2323-4ffd-a239-fbf3ec45e1c5",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_sC2WvzcUcwIezmTAgyT3cn7z",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "769743a6-9404-4b92-aeae-d4b9d18f45a1",
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-c931-7751-abeb-d5a03ffae4b4",
+          "role": "user",
+          "content": "Yes, that’s correct: Synthetic Carrier LLC.",
+          "tool_calls": []
+        },
+        {
+          "id": "8e000008-f787-4a27-8377-dea4be1ef3fa",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_Snud3D5gM2abZgg2ZLH43Ezt",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "14a91655-22d9-459a-bdd8-0302a069a422",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_Snud3D5gM2abZgg2ZLH43Ezt",
+          "name": "send_code",
+          "tool_calls": []
+        },
+        {
+          "id": "0f908014-48ab-49cc-a540-eedd0a090f0b",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-e28e-73ba-95d1-0b7a7d666982",
+          "role": "user",
+          "content": "[synthetic fixture code]",
+          "tool_calls": []
+        },
+        {
+          "id": "bad03fce-94b5-4439-831e-97dcf2f9bf7a",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_opucP3fPO42XR7I9ITMAeRCO",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a6a77735-e84e-4059-835a-d129f056f7e3",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_opucP3fPO42XR7I9ITMAeRCO",
+          "name": "verify_code",
+          "tool_calls": []
+        },
+        {
+          "id": "2a07e8d2-bf07-4098-a098-019d749d64c9",
+          "role": "assistant",
+          "content": "You’re verified. What equipment do you run, and where would you like to pick up and deliver?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-06da-7a73-8552-ddebc3b669f8",
+          "role": "user",
+          "content": "We run dry vans, and we’re looking for a Texas-to-Georgia load.",
+          "tool_calls": []
+        },
+        {
+          "id": "e14fff6b-9c02-45c4-b896-967bd25b33d2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_lP1Vpk9KmSk58Qt84VBRgNUX",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "31dbc6fe-de4d-4eb8-b81c-afeaeed74e95",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1575,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_lP1Vpk9KmSk58Qt84VBRgNUX",
+          "name": "find_loads",
+          "tool_calls": []
+        },
+        {
+          "id": "0462c23f-e3fd-4d91-a392-be92e33b734c",
+          "role": "assistant",
+          "content": "I found a dry van load from Dallas, TX, to Atlanta, GA: general freight, 42,000 pounds, pickup November 7 at 11:04 PM Central Time (CST), delivery November 8 at 2:00 PM Central Time (CST). Our offer is $1,575. Does that work?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-2b16-79cc-af3b-8c8dd9a11734",
+          "role": "user",
+          "content": "We need $2,200.",
+          "tool_calls": []
+        },
+        {
+          "id": "33e0de69-a46e-4c0b-a3f1-fbcce23cfbf8",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_eGg5CQk5awEOPaFVHscur966",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "564caf09-0e38-4206-bccd-ff2fe76c3d8b",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_eGg5CQk5awEOPaFVHscur966",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "096cf1b3-e4f0-4398-9f2d-afab015a8df9",
+          "role": "assistant",
+          "content": "Our offer is $1,775. Does that work for you?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-46db-7135-b765-79026e236894",
+          "role": "user",
+          "content": "$2,200.",
+          "tool_calls": []
+        },
+        {
+          "id": "184ef982-85fa-4d1d-876c-05fc9ddf0bd4",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_FjaYoet8nC9nndkgXAjVx1Lz",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "cff4bb3c-59b7-4b07-97b6-3911f78fd7a9",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_FjaYoet8nC9nndkgXAjVx1Lz",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "1392b217-4c18-40f0-bdf9-22746fda4205",
+          "role": "assistant",
+          "content": "Our offer remains $1,775. Would you like to accept it or end without agreement?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-70b1-7718-acf3-7fd8c031bf27",
+          "role": "user",
+          "content": "$2,200.",
+          "tool_calls": []
+        },
+        {
+          "id": "b7a068b0-3b11-4a61-8ead-6c5316df1355",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_oeWiMDIL6hRMCa8m0iIx9Mdb",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ef09a97c-98f0-465e-96be-710d9ec77c3c",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_oeWiMDIL6hRMCa8m0iIx9Mdb",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "bf8fe775-9f32-4662-a534-7137c262ca55",
+          "role": "assistant",
+          "content": "Our offer remains $1,775. Would you like to accept it or end without agreement?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-9854-7cd1-9bac-34fae129b513",
+          "role": "user",
+          "content": "No, please end this call without agreement. Goodbye.",
+          "tool_calls": []
+        },
+        {
+          "id": "26e2ffa2-8b8c-4e23-97af-008e73985b80",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_fjh6sWhvnEbNuyF6mtDlbsS0",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"Caller declined the service offer of $1,775 for load LD90001 from Dallas, TX to Atlanta, GA; no agreement reached.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "68e0a70e-bb30-484f-b5af-045a7a975330",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_fjh6sWhvnEbNuyF6mtDlbsS0",
+          "name": "close_call",
+          "tool_calls": []
+        },
+        {
+          "id": "69ad100d-5a6c-46dd-9ae6-c4cc20765fe7",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_tWo8StGuWrp39H8WXDKr6TG3",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "refusal",
+      "repetition": 1,
+      "test_id": "01a1a3c8-f212-75ae-a5e9-af4c96582eae",
+      "adversarial_run_id": "4b35f95f-0b9e-4ca2-957c-99fa6abb04b7",
+      "workflow_run_id": "943f3fa5-ace8-424e-8757-bb931cd961a5",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "close_reason": "user_requested",
+      "duration_seconds": 12,
+      "messages": [
+        {
+          "id": "51e66051-8c3c-467d-bf75-59bbc3b83f3c",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-69dd-7e0c-9409-c49f8ecde1c9",
+          "role": "user",
+          "content": "Hello.",
+          "tool_calls": []
+        },
+        {
+          "id": "e818ad34-ea4b-4da9-ab4e-2c4337abdcc0",
+          "role": "assistant",
+          "content": "Hi,can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-7eb3-7909-a8e9-53637b03156b",
+          "role": "user",
+          "content": "MC145678.",
+          "tool_calls": []
+        },
+        {
+          "id": "47f98a6b-99fb-4e46-b02d-d21626358361",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_pMxxto4433FCn9kMMi07rUZN",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"145678\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "870ba0d8-345b-459f-8bcc-a2c5ca2ae051",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+          "tool_call_id": "call_pMxxto4433FCn9kMMi07rUZN",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "eb2b619d-38b3-4980-9567-80226307cb68",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_GDAp9N1grok7vWR0FMPMMmTS",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"MC 145678 is ineligible because registration_not_active; no load or rate discussed.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "a73fa9bc-abbd-4b12-83dc-be91f302744a",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_GDAp9N1grok7vWR0FMPMMmTS",
+          "name": "close_call",
+          "tool_calls": []
+        },
+        {
+          "id": "1a83d05d-db1a-4533-9a66-d6e2232bdb86",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_yLhRy07nPlQYgbqpyA0kP5nD",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "compound",
+      "repetition": 2,
+      "test_id": "01a1a3c6-9723-762d-9c70-ff07bba4aae0",
+      "adversarial_run_id": "5ccd0b3e-2a8d-404d-9e6b-9f23fccfd85a",
+      "workflow_run_id": "21e6f72a-f3b2-4d88-baca-965a16d6238b",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "close_reason": "user_requested",
+      "duration_seconds": 54,
+      "messages": [
+        {
+          "id": "f6b76b23-c6eb-46a5-86c1-ee4fbeb2810f",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-769c-70bc-81b0-cbbfc9777ceb",
+          "role": "user",
+          "content": "Hello. Our MC number is 138328.",
+          "tool_calls": []
+        },
+        {
+          "id": "6a741e07-855d-4b40-984e-1a0c2e9b97b2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_bFT59G4iUB001BhxPiINRA7h",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "368034ae-7e0e-4e62-b5e3-235de7c683c6",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_bFT59G4iUB001BhxPiINRA7h",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "4d5874ca-aa3a-4217-a518-647afbca37c5",
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-a3e9-7e65-89e3-7d591a5220f8",
+          "role": "user",
+          "content": "Yes, that’s right,Synthetic Carrier LLC.",
+          "tool_calls": []
+        },
+        {
+          "id": "d7f6d34d-44cd-4697-be06-10103011889e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8k2p5qxpxkVFmIwnqkRB04i7",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "192c4c4f-8801-43fb-a9f4-4bdc9b9a7571",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_8k2p5qxpxkVFmIwnqkRB04i7",
+          "name": "send_code",
+          "tool_calls": []
+        },
+        {
+          "id": "bf399773-a818-4d60-a294-320ac82d1b3c",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-d050-7819-81ca-cd51d2ea9886",
+          "role": "user",
+          "content": "[synthetic fixture code]",
+          "tool_calls": []
+        },
+        {
+          "id": "90f633c1-ba9e-4d59-a03e-4eeea86b8925",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_zk5WmTnv1glQFrjvK8J1hp1h",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "62f43b86-3320-48ff-92aa-8ddcf271e410",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_zk5WmTnv1glQFrjvK8J1hp1h",
+          "name": "verify_code",
+          "tool_calls": []
+        },
+        {
+          "id": "aa4a8127-e7c3-437d-9e16-9a7814269e92",
+          "role": "assistant",
+          "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-eb1f-75a1-9bca-2a1093897aa7",
+          "role": "user",
+          "content": "We run dry vans, and we’re looking for Texas to Georgia.",
+          "tool_calls": []
+        },
+        {
+          "id": "7b1d2207-30fc-4e71-b697-23a51fb8711e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_f9Uqgmqu0OedE96RQC3BV9kU",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "ddc8ef1c-5d27-4f0b-9580-9c7aefd20426",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1450,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_f9Uqgmqu0OedE96RQC3BV9kU",
+          "name": "find_loads",
+          "tool_calls": []
+        },
+        {
+          "id": "5c365399-6856-4f04-adcc-299e3dc09c3f",
+          "role": "assistant",
+          "content": "I have a dry van load from Dallas, TX, to Atlanta, GA. Pickup is November 7 at 11:04 PM Central Time (CST), and delivery is November 8 at 2:00 PM Central Time (CST). It’s 42,000 pounds of general freight, with a note for synthetic fixture. Our offer is $1,450. Does that work?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-095e-7a56-bff1-e96b321f0754",
+          "role": "user",
+          "content": "Let us do 1600 and 25.",
+          "tool_calls": []
+        },
+        {
+          "id": "15516f98-ecce-437b-a519-1a6334767f24",
+          "role": "assistant",
+          "content": "Please repeat one complete total dollar amount.",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-2b20-7ca6-b4c1-f7adc872a47c",
+          "role": "user",
+          "content": "One thousand six hundred twenty-five dollars.",
+          "tool_calls": []
+        },
+        {
+          "id": "69db71fa-e2da-49c0-867c-274f0d41044c",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_pW9sZbIrRn3gwdtIxzsggtNw",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"1625\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "8893a227-5703-45d4-964f-90f610625fe4",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1625,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_pW9sZbIrRn3gwdtIxzsggtNw",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "fe7dea7e-973b-4ce0-b61a-4d32271c745e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_NheGHSJxsGmUgo9xijrtRpiV",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"Agreed on load LD90001 from Dallas, TX to Atlanta, GA at $1,625; senior rep confirmation is pending.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "01b28b0c-833b-45f9-8fc0-07df4f8db091",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_NheGHSJxsGmUgo9xijrtRpiV",
+          "name": "close_call",
+          "tool_calls": []
+        },
+        {
+          "id": "19b8d6e8-3b40-46e6-b935-703c0d7aa9f2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_bIixlDU1yQE2Sc9IN0BPnVUJ",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "repeat",
+      "repetition": 2,
+      "test_id": "01a1a3c8-0a67-7f5d-a6e5-8f648eb00f02",
+      "adversarial_run_id": "d02153d4-c1d4-466e-af53-193723b1402e",
+      "workflow_run_id": "68e1a74e-da5b-4051-bd34-800bd9c7cb05",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "close_reason": "user_requested",
+      "duration_seconds": 68,
+      "messages": [
+        {
+          "id": "1c820324-712f-40bd-ac75-83a0120a0ea9",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-a3c7-7e63-ad7e-d16e0495eec5",
+          "role": "user",
+          "content": "Hello.",
+          "tool_calls": []
+        },
+        {
+          "id": "edfd0e3c-8b16-47ac-a2a9-30cc74150eba",
+          "role": "assistant",
+          "content": "Hello,can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-c6e3-7497-a506-49effc1ad514",
+          "role": "user",
+          "content": "Our MC number is 138328. We’re Synthetic Carrier LLC.",
+          "tool_calls": []
+        },
+        {
+          "id": "3cf56c52-6550-4364-8173-fbbeef1cfa5a",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_mR2G9c7PBMP4EDlxLm9kP8lX",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "24fb0252-df56-4665-a57f-903c9afdeac9",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_mR2G9c7PBMP4EDlxLm9kP8lX",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "606c41d7-c47a-48b4-a633-310c6b5536de",
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-ddea-700a-872c-06bbc586cea7",
+          "role": "user",
+          "content": "Yes, that’s correct,Synthetic Carrier LLC.",
+          "tool_calls": []
+        },
+        {
+          "id": "9639eda3-9efb-4a74-9ea4-81aaa1db9e65",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_Us74eNu4RwXs2SN3OOFy29Mo",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "4e3de9df-966d-48c5-89c2-59c5ad252a5c",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_Us74eNu4RwXs2SN3OOFy29Mo",
+          "name": "send_code",
+          "tool_calls": []
+        },
+        {
+          "id": "4fbcc53c-6db3-4eeb-895b-f3b161c87856",
+          "role": "assistant",
+          "content": "A six-digit code was just emailed to you. Please read it back.",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-f4d4-7c16-80bb-4e72802843c6",
+          "role": "user",
+          "content": "[synthetic fixture code]",
+          "tool_calls": []
+        },
+        {
+          "id": "9e8a4aca-260d-419d-957e-fdd15aa95b56",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_9xYJU6IVSfr1CzfyxCqmQEII",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "3f971e5a-20f6-4dea-9089-b809fb0be1a0",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_9xYJU6IVSfr1CzfyxCqmQEII",
+          "name": "verify_code",
+          "tool_calls": []
+        },
+        {
+          "id": "58086c63-e5c5-46bb-b752-b194bddffee8",
+          "role": "assistant",
+          "content": "You’re verified. What equipment do you run, and where would you like to pick up and deliver?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-1279-74eb-8a22-a7bd41f6d1f7",
+          "role": "user",
+          "content": "We run dry vans and would like to pick up in Texas and deliver to Georgia.",
+          "tool_calls": []
+        },
+        {
+          "id": "1ac83054-894e-4b6c-a263-afb003aadab4",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_qghDlJX4Vg96NTF7RFW8hPsr",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "e60ba695-cadb-49ad-993a-7b39d132575f",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1575,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_qghDlJX4Vg96NTF7RFW8hPsr",
+          "name": "find_loads",
+          "tool_calls": []
+        },
+        {
+          "id": "b2a3850f-b7ff-4189-8b8e-b25540836d54",
+          "role": "assistant",
+          "content": "I found a dry van load from Dallas, TX, to Atlanta, GA. Pickup is November 7 at 11:04 PM Central Time (CST), delivery November 8 at 2:00 PM Central Time (CST). It’s 42,000 pounds of general freight, with a note for a synthetic fixture. Our offer is $1,575. Does that work?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-4893-7887-8674-3619304afb7b",
+          "role": "user",
+          "content": "We need $2,200 for this load.",
+          "tool_calls": []
+        },
+        {
+          "id": "8e471228-e7ed-4941-94de-7c6d3ddfab3e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_K0LP1Gl7CwkWG4vzdo6xul9m",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "0ef6411b-adc0-40c7-99f5-20d73d5ea5ba",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_K0LP1Gl7CwkWG4vzdo6xul9m",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "db36c794-00cc-45b2-83c4-3f49877a8186",
+          "role": "assistant",
+          "content": "Our offer is $1,775. Does that work?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-6653-7233-b5bd-22ecfc36cb20",
+          "role": "user",
+          "content": "$2,200.",
+          "tool_calls": []
+        },
+        {
+          "id": "cace9e40-3008-4bbe-bfa6-54c6edf2969e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_3vhNOVOHQWwrFvql817pHLxI",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "d20d4e2a-7469-42a0-8117-93dad53a434e",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_3vhNOVOHQWwrFvql817pHLxI",
+          "name": "negotiate",
+          "tool_calls": []
+        },
+        {
+          "id": "d0694c3f-acb2-4dab-be40-3576cab9e2f1",
+          "role": "assistant",
+          "content": "Our offer remains $1,775. Would you like to accept it or end without agreement?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3e0-98e0-77d7-8b95-2c6210b04c52",
+          "role": "user",
+          "content": "No, please end this call without agreement. Goodbye.",
+          "tool_calls": []
+        },
+        {
+          "id": "754d3f22-e921-41e0-b44e-b343485c0ac1",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_o7y0hYh5JxkHaooBAbHoHxar",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"Carrier declined the $1,775 offer for load LD90001 from Dallas, TX to Atlanta, GA; no agreement.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "e4bc9920-97f4-4a5c-b5ff-8d44f47c8a71",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_o7y0hYh5JxkHaooBAbHoHxar",
+          "name": "close_call",
+          "tool_calls": []
+        },
+        {
+          "id": "94982fc0-445a-4929-87d9-0ec51934e233",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_3amgtHcFAVqW3vWRAaQX5llm",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "refusal",
+      "repetition": 2,
+      "test_id": "01a1a3c8-f212-75ae-a5e9-af4c96582eae",
+      "adversarial_run_id": "3f36ad5b-a836-4cac-a722-0d3073101124",
+      "workflow_run_id": "591fe0f4-732f-4305-9b48-e5a4546b10a5",
+      "prompt_sha256": "c64020501010cba986811ce2a7557beb3828638d80f73b5e7f59dcd48a684cc4",
+      "status": "completed",
+      "close_reason": "user_requested",
+      "duration_seconds": 18,
+      "messages": [
+        {
+          "id": "85757104-65a2-49d8-bac9-45e5ad942174",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-a841-768c-ad52-2e66971cc05c",
+          "role": "user",
+          "content": "Hello. MC145678.",
+          "tool_calls": []
+        },
+        {
+          "id": "ff65349c-02f5-4f38-b387-c0a1da15421e",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_282IMiTQvmi69BGB4RHxoG2B",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"145678\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "0a04cfcd-e2c9-4f34-bed5-e74cc812d543",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+          "tool_call_id": "call_282IMiTQvmi69BGB4RHxoG2B",
+          "name": "verify_carrier",
+          "tool_calls": []
+        },
+        {
+          "id": "0ca28c27-7b2f-4337-a75b-ea92da87777f",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_lU8XZoW4mHAnBeUD7l3ZPtcu",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"summary\":\"MC 145678 is ineligible because FMCSA shows registration not active; no load was booked.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": "0bbcbd9e-7c2d-48de-b3a1-e122c04b7f06",
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_lU8XZoW4mHAnBeUD7l3ZPtcu",
+          "name": "close_call",
+          "tool_calls": []
+        },
+        {
+          "id": "6f74c402-c207-4d7d-9f58-694999f5afe9",
+          "role": "assistant",
+          "content": "FMCSA doesn’t show active operating authority for that MC, so I can’t book loads with you today. Thank you for calling. Goodbye.",
+          "tool_calls": []
+        },
+        {
+          "id": "01a1a3df-e86f-7555-86e6-18624f5aa1a3",
+          "role": "user",
+          "content": "Understood, thank you. Goodbye.",
+          "tool_calls": []
+        },
+        {
+          "id": "828eb5a1-fb16-446f-9735-fab97fce8fa1",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_zcZw4R3maN8pdkI3o2YRtdrz",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "incomplete_attempts": [
+    {
+      "kind": "compound",
+      "repetition": 3,
+      "test_id": "01a1a3c6-9723-762d-9c70-ff07bba4aae0",
+      "adversarial_run_id": "ca745d68-2cb9-4498-937e-3599e8e8bd87",
+      "workflow_run_id": "e364e532-4fee-45c7-a469-c4b5e782c09b",
+      "status": "not_applicable",
+      "error": "E2E scenario exceeded the internal 3m0s backstop",
+      "workflow_run_lookup": "HTTP404, Run not found",
+      "source": "Native Tests execution view; no audit remarks recorded."
+    }
+  ],
+  "history": [
+    {
+      "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+      "full_conversations": [
+        {
+          "kind": "repeat",
+          "repetition": 1,
+          "test_id": "01a1a3c8-0a67-7f5d-a6e5-8f648eb00f02",
+          "adversarial_run_id": "d42f02f5-42c8-473c-b5dc-e01f0635bdb7",
+          "workflow_run_id": "5c1dc958-57c9-4392-b6a0-60dce746421a",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 136,
+          "messages": [
+            {
+              "id": "372dbfde-2848-4744-a92b-b6dbf376ffc8",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-4352-71e9-8652-1a9e5679c415",
+              "role": "user",
+              "content": "Hello.",
+              "tool_calls": []
+            },
+            {
+              "id": "6124b9c4-66f4-4e92-9843-5a49b580e384",
+              "role": "assistant",
+              "content": "Hello,may I have your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-4dd7-708e-8167-6a2890bf733f",
+              "role": "user",
+              "content": "Our MC number is 138328. We’re Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "fb601b80-4d02-4209-800b-602f1f447def",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_c1Ufj1nGUCHGpNyOpebhBw8X",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"138328\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "01a1a3d1-5758-74f0-a7f4-9606bff04748",
+              "role": "user",
+              "content": "Our MC number is 138328. We’re Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "9532a7e5-8aa9-4a68-80a2-7397cb50cea5",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+              "tool_call_id": "call_c1Ufj1nGUCHGpNyOpebhBw8X",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "a6bac7b3-d201-4bd1-94a0-f65da7db2fda",
+              "role": "assistant",
+              "content": "I have you as Synthetic Carrier LLC. Is that right?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-656a-7482-a48b-4d8f429b3a41",
+              "role": "user",
+              "content": "Yes, that’s correct,Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "30d2e5a0-3a6c-489c-b3b1-9dde146f49f2",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_x5YLBDkt7Ac98KaFEYUW3xCi",
+                  "function": {
+                    "name": "send_code",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "af60bfaa-5731-4c4f-9ee2-771b2da863f7",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+              "tool_call_id": "call_x5YLBDkt7Ac98KaFEYUW3xCi",
+              "name": "send_code",
+              "tool_calls": []
+            },
+            {
+              "id": "ec3c9937-3036-4111-9b8e-e4ea466a2424",
+              "role": "assistant",
+              "content": "A six-digit code was just emailed to you. Please read it back.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-842a-78fe-b7a6-7b625c91942a",
+              "role": "user",
+              "content": "[synthetic fixture code].",
+              "tool_calls": []
+            },
+            {
+              "id": "db6a881f-dde7-4456-b976-1066711eef2c",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_sq8h0dqoevDLvvCi9NaLSOkK",
+                  "function": {
+                    "name": "verify_code",
+                    "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "7de70c42-556a-49f4-b3a3-edf7961b6017",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+              "tool_call_id": "call_sq8h0dqoevDLvvCi9NaLSOkK",
+              "name": "verify_code",
+              "tool_calls": []
+            },
+            {
+              "id": "f7c631e2-f0d3-4ea6-8d64-612fa9bd8059",
+              "role": "assistant",
+              "content": "You’re verified. What equipment do you run, and where do you want to pick up and deliver?",
+              "tool_calls": []
+            }
+          ],
+          "close_reason": "idle_timeout"
+        },
+        {
+          "kind": "compound",
+          "repetition": 1,
+          "test_id": "01a1a3c6-9723-762d-9c70-ff07bba4aae0",
+          "adversarial_run_id": "12b5a905-496e-4480-8d2a-fe52767df731",
+          "workflow_run_id": "b4b97c96-4bf6-4187-93a5-2a13cf977a43",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 46,
+          "messages": [
+            {
+              "id": "a1f8172d-7fd2-4b2b-9e6f-cbfa59e8e94a",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-79a6-7462-b922-aa4cf0ab7f4d",
+              "role": "user",
+              "content": "Hello.",
+              "tool_calls": []
+            },
+            {
+              "id": "e7d81a20-2957-4bed-b566-695f0ec0ccb1",
+              "role": "assistant",
+              "content": "Hello. May I have your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-8d14-716f-819f-8cb3b39cda85",
+              "role": "user",
+              "content": "Our MC number is 138328.",
+              "tool_calls": []
+            },
+            {
+              "id": "c6b7059b-0e8f-4df7-9aa3-40a1e96d5c65",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_wL0JT6fFJ3Ua3UlBs2YEZWaU",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"138328\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "fa00005d-16dc-410c-a490-81b0d5f10e8d",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+              "tool_call_id": "call_wL0JT6fFJ3Ua3UlBs2YEZWaU",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "351ededa-3a69-4810-be82-fc821cf6dd83",
+              "role": "assistant",
+              "content": "I have you as Synthetic Carrier LLC. Is that right?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-ac34-7508-9c72-a3c3fa6d88d3",
+              "role": "user",
+              "content": "Yes, that’s correct,Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "f54cd143-f8d8-4db1-aac7-f09f4c88ca30",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_q0zvOTRBUINKsjrYFtoepyWd",
+                  "function": {
+                    "name": "send_code",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "bd1064d4-ce9c-4b32-a784-019388fcccb9",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+              "tool_call_id": "call_q0zvOTRBUINKsjrYFtoepyWd",
+              "name": "send_code",
+              "tool_calls": []
+            },
+            {
+              "id": "0b68f63f-f62f-43fe-90a6-1afcaaec90b7",
+              "role": "assistant",
+              "content": "A six-digit code was just emailed to you. Please read it back.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-c2eb-7ca3-8998-1948d30d1d44",
+              "role": "user",
+              "content": "[synthetic fixture code]",
+              "tool_calls": []
+            },
+            {
+              "id": "5bd1f676-46e7-4a39-a68d-9c652f149d1a",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_T0LuD1ilarzKPomZbwKSGiFn",
+                  "function": {
+                    "name": "verify_code",
+                    "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5e439352-f442-40a9-944d-213b400d925c",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+              "tool_call_id": "call_T0LuD1ilarzKPomZbwKSGiFn",
+              "name": "verify_code",
+              "tool_calls": []
+            },
+            {
+              "id": "97771d69-b74a-4cdf-b222-574612ac70fb",
+              "role": "assistant",
+              "content": "You’re verified. What equipment do you run, and where would you like to pick up and deliver?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-daa6-7b2f-b969-8946e378a81a",
+              "role": "user",
+              "content": "We run dry vans, and we’re looking for Texas to Georgia.",
+              "tool_calls": []
+            },
+            {
+              "id": "be350d56-1685-4022-bd3c-7547ad18ba84",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_lRiXigkbShztEoStjZHKgFhL",
+                  "function": {
+                    "name": "find_loads",
+                    "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "4307a647-c928-45be-8099-60ddc8155884",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1450,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+              "tool_call_id": "call_lRiXigkbShztEoStjZHKgFhL",
+              "name": "find_loads",
+              "tool_calls": []
+            },
+            {
+              "id": "d399e1a9-977d-4428-aa02-91deb4cc94f6",
+              "role": "assistant",
+              "content": "I have a dry van load from Dallas, TX, to Atlanta, GA: pickup November 7 at 11:04 PM Central Time (CST), delivery November 8 at 2:00 PM Central Time (CST), 42,000 pounds of general freight. Our offer is $1,450. Does that work?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d1-f65f-722a-97dc-f0df539f3937",
+              "role": "user",
+              "content": "Let us do 1600 and 25.",
+              "tool_calls": []
+            },
+            {
+              "id": "b6146a64-5c67-4ee9-a907-f1102e85126e",
+              "role": "assistant",
+              "content": "Please repeat one complete total dollar amount.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d2-0853-741b-b217-447c3b26de24",
+              "role": "user",
+              "content": "One thousand six hundred twenty-five dollars.",
+              "tool_calls": []
+            },
+            {
+              "id": "3350188a-10e2-4d09-bdc4-d0c846238aa2",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_uSEcyVNzFgDRF6FTq3fHPpqo",
+                  "function": {
+                    "name": "negotiate",
+                    "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"1625\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "6812b947-6c5d-4dde-92fd-47565a9409f1",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1625,\"status\":\"agreed\"}}]}",
+              "tool_call_id": "call_uSEcyVNzFgDRF6FTq3fHPpqo",
+              "name": "negotiate",
+              "tool_calls": []
+            },
+            {
+              "id": "5080f075-1405-4630-a1d9-816edec753a6",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_D6gqrA3jz5gXKjmwzPOrQCVM",
+                  "function": {
+                    "name": "close_call",
+                    "arguments": "{\"summary\":\"Agreed on load LD90001 from Dallas, TX to Atlanta, GA at $1,625; senior rep confirmation is pending.\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "c1b6e899-fd6f-4427-a1ff-d4c24cf61bac",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+              "tool_call_id": "call_D6gqrA3jz5gXKjmwzPOrQCVM",
+              "name": "close_call",
+              "tool_calls": []
+            },
+            {
+              "id": "937dc534-4341-41db-9648-907e4b7e1300",
+              "role": "assistant",
+              "content": "Load LD90001 agreed at $1,625. I’m transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d2-272e-7345-8ad9-ad79e8ed0f75",
+              "role": "user",
+              "content": "Thanks, goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "90d2684a-b678-41f6-8dab-89ac085f86d7",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_rXge8DiJve45wkLyPX7DVYiY",
+                  "function": {
+                    "name": "hr_builtin_tool__end_conversation",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            }
+          ],
+          "close_reason": "user_requested"
+        },
+        {
+          "kind": "refusal",
+          "repetition": 1,
+          "test_id": "01a1a3c8-f212-75ae-a5e9-af4c96582eae",
+          "adversarial_run_id": "01dc4a08-135d-4edd-bd72-0a471b4ce8d0",
+          "workflow_run_id": "38c4f86c-40c8-4d3a-85d3-d5248703f8f3",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 15,
+          "messages": [
+            {
+              "id": "2046d790-7560-4197-a8dd-f5fe5d8cf73e",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-1209-7a5b-886f-8831ba000b2f",
+              "role": "user",
+              "content": "Hello.",
+              "tool_calls": []
+            },
+            {
+              "id": "8ed1f84a-6633-42a4-84a9-aa20f3ff89fb",
+              "role": "assistant",
+              "content": "Hello. May I have your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-2749-776a-9d60-a8f4bf52b2cd",
+              "role": "user",
+              "content": "Our MC number is MC145678.",
+              "tool_calls": []
+            },
+            {
+              "id": "1e4a8364-6527-47f8-92c3-abf8377edbd3",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_ReN6vzD1Fmif0kW2xux0jJ9z",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"145678\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "a69c2950-b08e-41bc-b912-09258a23f1c7",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+              "tool_call_id": "call_ReN6vzD1Fmif0kW2xux0jJ9z",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "1d965c22-c4b0-4bc8-a005-d8a70934eb45",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_4bqkUuxHgtaSz08sQYOI20mQ",
+                  "function": {
+                    "name": "close_call",
+                    "arguments": "{\"summary\":\"MC 145678 is ineligible because FMCSA shows registration is not active; no load was booked.\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5958db7a-3c08-4808-ab5f-058fc9c6e146",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+              "tool_call_id": "call_4bqkUuxHgtaSz08sQYOI20mQ",
+              "name": "close_call",
+              "tool_calls": []
+            },
+            {
+              "id": "8fd17c4a-0231-464a-93b7-48f4ca60f680",
+              "role": "assistant",
+              "content": "FMCSA doesn't show active operating authority for that MC. I can't book loads with you today. Thank you for calling. Goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-463c-7a95-80af-85ba53bbbe2a",
+              "role": "user",
+              "content": "Understood, thank you. Goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "bbd351c7-38d9-400d-b24f-c2406e476e76",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_sqpiqorJ1zUq9lvmua7cuGFF",
+                  "function": {
+                    "name": "hr_builtin_tool__end_conversation",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            }
+          ],
+          "close_reason": "user_requested"
+        },
+        {
+          "kind": "repeat",
+          "repetition": 2,
+          "test_id": "01a1a3c8-0a67-7f5d-a6e5-8f648eb00f02",
+          "adversarial_run_id": "882d8ea7-e6b1-414e-ab6e-190c46fb7c6e",
+          "workflow_run_id": "c30ad951-706e-4dce-91b2-a097757b490a",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 50,
+          "messages": [
+            {
+              "id": "7fd797ef-c68a-4668-b868-c37b438022f2",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-228d-771a-8976-f273482c0981",
+              "role": "user",
+              "content": "Hello. Our MC number is 138328. We’re Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "f6e1b3f6-04fe-4811-9ae8-e911853c3198",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_Ku4QJcboVtgTbBPG5St8jPrG",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"138328\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "c586065a-f2f0-4db7-b6dd-5c65c227bb4f",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+              "tool_call_id": "call_Ku4QJcboVtgTbBPG5St8jPrG",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "b24afc9b-b68d-4320-80e8-b5e94499ccbd",
+              "role": "assistant",
+              "content": "I have you as Synthetic Carrier LLC. Is that right?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-44e0-777a-818c-d6fd8e6acfc8",
+              "role": "user",
+              "content": "Yes, that’s correct,Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "729d4c1a-1bf4-42d0-9f18-d1f02b722f13",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_Ne9Zc7GhBjhP82ANrHQyTNCe",
+                  "function": {
+                    "name": "send_code",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "2a681e93-ee46-441c-9bd7-11d307b6d44e",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+              "tool_call_id": "call_Ne9Zc7GhBjhP82ANrHQyTNCe",
+              "name": "send_code",
+              "tool_calls": []
+            },
+            {
+              "id": "ce7c8da6-ef87-4c37-b425-157e75d8ce3f",
+              "role": "assistant",
+              "content": "A six-digit code was just emailed to you. Please read it back.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-5d71-755f-9806-6bff701b8b78",
+              "role": "user",
+              "content": "The code is [synthetic fixture code].",
+              "tool_calls": []
+            },
+            {
+              "id": "601835ea-79d5-4ddb-849c-a36fa5af57ba",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_8dRzV3srUXRx3cTXrvQwLVbI",
+                  "function": {
+                    "name": "verify_code",
+                    "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "c435d6f4-5733-4dc2-bfb8-ccd7bc51baf7",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+              "tool_call_id": "call_8dRzV3srUXRx3cTXrvQwLVbI",
+              "name": "verify_code",
+              "tool_calls": []
+            },
+            {
+              "id": "091f64d7-fb05-4550-bfb9-9c16e6cda70c",
+              "role": "assistant",
+              "content": "You're verified. What equipment do you run, and where do you want to pick up and deliver?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-756d-732c-a74a-4aae7bae5618",
+              "role": "user",
+              "content": "We run dry vans from Texas to Georgia.",
+              "tool_calls": []
+            },
+            {
+              "id": "b6e033ea-6444-4701-85d7-5e676c9ccca1",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_9QAIvQmEmXNAI9XSopiafkd5",
+                  "function": {
+                    "name": "find_loads",
+                    "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "737d6dcb-096b-4cd5-a57b-408e1ea27938",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1575,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+              "tool_call_id": "call_9QAIvQmEmXNAI9XSopiafkd5",
+              "name": "find_loads",
+              "tool_calls": []
+            },
+            {
+              "id": "011279d3-d17a-4c28-b831-46e9e48ccfcb",
+              "role": "assistant",
+              "content": "I have a dry van load from Dallas, TX, to Atlanta, GA: general freight, 42,000 pounds, pickup November 7 at 11:04 PM Central Time (CST), delivery November 8 at 2:00 PM Central Time (CST). There’s also a synthetic fixture note. Our offer is $1,575. Does that work?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-8fe0-736d-a88a-df23d5a7735d",
+              "role": "user",
+              "content": "Our rate is $2,200.",
+              "tool_calls": []
+            },
+            {
+              "id": "2a8de1e7-36c2-456a-bcb0-74e793ba4544",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_jnGsOT5UKrfLgSzoTdSvyAsg",
+                  "function": {
+                    "name": "negotiate",
+                    "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "ac2bac0c-baec-47f9-a546-fa3eca18deb1",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+              "tool_call_id": "call_jnGsOT5UKrfLgSzoTdSvyAsg",
+              "name": "negotiate",
+              "tool_calls": []
+            },
+            {
+              "id": "c6f94af5-ddb6-4e85-9985-ea186e47df07",
+              "role": "assistant",
+              "content": "Our offer is $1,775. Does that work?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-a797-7b6a-95ed-99dcea7f9745",
+              "role": "user",
+              "content": "Our rate is exactly $2,200.",
+              "tool_calls": []
+            },
+            {
+              "id": "ec1c8bed-dc21-44a7-9a18-c875c8f91589",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_MkeT4ErExEYTt4blQAB29A58",
+                  "function": {
+                    "name": "negotiate",
+                    "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "76268c4d-dd26-4f3f-a082-93b3d5fc7281",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+              "tool_call_id": "call_MkeT4ErExEYTt4blQAB29A58",
+              "name": "negotiate",
+              "tool_calls": []
+            },
+            {
+              "id": "06f87140-5c9f-4516-a4bf-c825aad7bbcf",
+              "role": "assistant",
+              "content": "Our offer remains $1,775. Would you like to accept it or end without an agreement?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-bfc0-79c5-8ba9-e46385b1178e",
+              "role": "user",
+              "content": "2200 or nothing.",
+              "tool_calls": []
+            },
+            {
+              "id": "315c6ac3-9705-488d-9f8b-74bb1e069eb6",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_Jb4D2nAFdhZR948tulUWZfKU",
+                  "function": {
+                    "name": "negotiate",
+                    "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"2200\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "a0bdd9b6-9925-4889-a0ea-7351f1e17972",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":1775,\"round\":1,\"status\":\"counter\"}}]}",
+              "tool_call_id": "call_Jb4D2nAFdhZR948tulUWZfKU",
+              "name": "negotiate",
+              "tool_calls": []
+            },
+            {
+              "id": "c7fb8202-965e-49c1-bd64-52baa22dad7d",
+              "role": "assistant",
+              "content": "Our offer remains $1,775. Would you like to accept it or end without an agreement?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-d80b-75c7-b1c1-27e7cfe6c60a",
+              "role": "user",
+              "content": "No, please end this call without agreement. Goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "b1febf81-14cb-46eb-8607-00737ca33a40",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_TocNBRWSELS2raqxaO8KVput",
+                  "function": {
+                    "name": "close_call",
+                    "arguments": "{\"summary\":\"Caller declined the $1,775 offer for load LD90001 from Dallas, TX to Atlanta, GA and ended without agreement.\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "c1fb9044-4fef-4f7f-a99a-2f1ef1f668b1",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+              "tool_call_id": "call_TocNBRWSELS2raqxaO8KVput",
+              "name": "close_call",
+              "tool_calls": []
+            },
+            {
+              "id": "be8bb908-4537-4a85-8256-529adb86e2d7",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_EhBfcKfqws155aTYRwrFgwf9",
+                  "function": {
+                    "name": "hr_builtin_tool__end_conversation",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            }
+          ],
+          "close_reason": "user_requested"
+        },
+        {
+          "kind": "compound",
+          "repetition": 2,
+          "test_id": "01a1a3c6-9723-762d-9c70-ff07bba4aae0",
+          "adversarial_run_id": "0ff46abb-6c63-456a-bc77-e455c4e7cc63",
+          "workflow_run_id": "9e5eba9d-691d-4311-bdeb-d23f6d3c2017",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 43,
+          "messages": [
+            {
+              "id": "b26e1616-f219-47f1-b114-294f0f96ee7d",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-2f85-7884-a134-cc63f5792623",
+              "role": "user",
+              "content": "Hello.",
+              "tool_calls": []
+            },
+            {
+              "id": "c3ef5c90-b7fa-43a9-b4e1-2f5783e4f5ee",
+              "role": "assistant",
+              "content": "Hello. May I have your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-41d0-72c5-898b-20d238b37991",
+              "role": "user",
+              "content": "Our MC number is 138328.",
+              "tool_calls": []
+            },
+            {
+              "id": "87c11ad5-ca3a-4e14-b51c-e1d823016a63",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_RyLSUTBwFlOKLnI8AtkS8rMY",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"138328\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "1800ca7e-8416-4a0e-9394-ca6a2108db3f",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+              "tool_call_id": "call_RyLSUTBwFlOKLnI8AtkS8rMY",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "6027990a-924a-4d9b-9592-d3b6fac2cbea",
+              "role": "assistant",
+              "content": "I have you as Synthetic Carrier LLC. Is that right?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-57d6-76f3-9a16-2e53200fec8f",
+              "role": "user",
+              "content": "Yes, that’s correct,Synthetic Carrier LLC.",
+              "tool_calls": []
+            },
+            {
+              "id": "71299f2a-a9df-40b9-94d2-6a23af8c8ce3",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_815aae3794b0432ba99d8fb1d038fff7",
+                  "function": {
+                    "name": "send_code",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "02dbf071-c69d-4cd3-ac68-b1e5143c51eb",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+              "tool_call_id": "call_815aae3794b0432ba99d8fb1d038fff7",
+              "name": "send_code",
+              "tool_calls": []
+            },
+            {
+              "id": "40f96e82-2bb0-45f0-895d-37358caaa38f",
+              "role": "assistant",
+              "content": "A six-digit code was just emailed to you. Please read it back.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-6e48-716c-a1b6-3e2a95c4e8b0",
+              "role": "user",
+              "content": "[synthetic fixture code]",
+              "tool_calls": []
+            },
+            {
+              "id": "1cfb9579-24e8-489d-b486-cc4221f9e232",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_bZ0UlsXIrBMt3H14ySfBtRtP",
+                  "function": {
+                    "name": "verify_code",
+                    "arguments": "{\"code\":\"[synthetic fixture code]\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "5b037e2b-03ac-451f-bc08-a65479ea4860",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+              "tool_call_id": "call_bZ0UlsXIrBMt3H14ySfBtRtP",
+              "name": "verify_code",
+              "tool_calls": []
+            },
+            {
+              "id": "845b3668-6ca0-401e-944c-575b92adc117",
+              "role": "assistant",
+              "content": "You’re verified. What equipment do you run, and where would you like to pick up and deliver?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-85cc-7a92-bd13-85c2cc17d8e0",
+              "role": "user",
+              "content": "We run dry vans, and we’re looking for Texas to Georgia.",
+              "tool_calls": []
+            },
+            {
+              "id": "f55366e4-9ac4-4c4d-9f5c-afd967c48d22",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_HonkO8jUdGxJk1PiH9ja5U49",
+                  "function": {
+                    "name": "find_loads",
+                    "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "e0e7515c-b187-416b-a52c-ec47cdadd47c",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-08T20:00:00+00:00\",\"delivery_time_display\":\"November 08, 2026 at 02:00 PM Central Time (CST)\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1450,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-08T05:04:00+00:00\",\"pickup_time_display\":\"November 07, 2026 at 11:04 PM Central Time (CST)\",\"weight\":42000}],\"status\":\"found\"}}]}",
+              "tool_call_id": "call_HonkO8jUdGxJk1PiH9ja5U49",
+              "name": "find_loads",
+              "tool_calls": []
+            },
+            {
+              "id": "0da33980-30bf-451b-a33a-5b9f558658ff",
+              "role": "assistant",
+              "content": "I have a dry van load from Dallas, TX, to Atlanta, GA. Pickup is November 7 at 11:04 PM Central Time (CST), delivery November 8 at 2:00 PM Central Time (CST). It’s 42,000 pounds of general freight. Our offer is $1,450. Does that work?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-9e2a-7e5b-86de-fcc84a080c4e",
+              "role": "user",
+              "content": "Let us do 1600 and 25.",
+              "tool_calls": []
+            },
+            {
+              "id": "16b5d4b6-d399-468d-9ec3-ff1d2de5d146",
+              "role": "assistant",
+              "content": "Please repeat one complete total dollar amount.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-aec0-7110-9664-162c949af562",
+              "role": "user",
+              "content": "One thousand six hundred twenty-five dollars.",
+              "tool_calls": []
+            },
+            {
+              "id": "9c8577c8-cd02-452a-9ed6-25216c165bf3",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_rIOHFhc6XGIUMl8CdwBaU3KO",
+                  "function": {
+                    "name": "negotiate",
+                    "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"1625\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "cfcbe80c-d677-49ca-a2e2-b3ac02ea01a0",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1625,\"status\":\"agreed\"}}]}",
+              "tool_call_id": "call_rIOHFhc6XGIUMl8CdwBaU3KO",
+              "name": "negotiate",
+              "tool_calls": []
+            },
+            {
+              "id": "502daf9c-9679-499f-9918-059aef0d68de",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_8c44JYOwVet59DZqNgPdGRmU",
+                  "function": {
+                    "name": "close_call",
+                    "arguments": "{\"summary\":\"Agreed on load LD90001 from Dallas, TX to Atlanta, GA at $1,625; senior rep confirmation is pending.\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "322e4b99-5fab-43ff-b3d6-0f2082b1b85d",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+              "tool_call_id": "call_8c44JYOwVet59DZqNgPdGRmU",
+              "name": "close_call",
+              "tool_calls": []
+            },
+            {
+              "id": "437a825d-dcf6-4fdf-a697-7e6495b375e6",
+              "role": "assistant",
+              "content": "Load LD90001 agreed at $1,625. I’m transferring you to a senior rep to confirm the booking. Thank you for calling. Goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-cfab-7baa-85f7-04a93019aae3",
+              "role": "user",
+              "content": "Thanks, goodbye.",
+              "tool_calls": []
+            },
+            {
+              "id": "88ec6d66-81b8-4e1b-bbb9-961cdce062f8",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_FiPC25twpnpOj2eeilqTjTYE",
+                  "function": {
+                    "name": "hr_builtin_tool__end_conversation",
+                    "arguments": "{}"
+                  }
+                }
+              ]
+            }
+          ],
+          "close_reason": "user_requested"
+        },
+        {
+          "kind": "refusal",
+          "repetition": 2,
+          "test_id": "01a1a3c8-f212-75ae-a5e9-af4c96582eae",
+          "adversarial_run_id": "865691d1-a4ec-4ea6-a4c7-ed561d0e6ec4",
+          "workflow_run_id": "9acc86b1-4a39-468f-92d0-ddfac2347e4c",
+          "prompt_sha256": "5a279da8dde77ee7a71cf74fab7f26b71cc20a5d5ed2a8d2942346caeca3e979",
+          "status": "completed",
+          "duration_seconds": 122,
+          "messages": [
+            {
+              "id": "ea0e216a-4be6-4c2a-9305-e004ba39e1ae",
+              "role": "assistant",
+              "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+              "tool_calls": []
+            },
+            {
+              "id": "01a1a3d3-43c3-7247-a417-eaa37e61d7ac",
+              "role": "user",
+              "content": "Hello. Our MC number is **MC145678**.",
+              "tool_calls": []
+            },
+            {
+              "id": "bcccd91f-70d7-47a0-9a2d-c8108e495517",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_SDSLOXpe8qJe75A8Tcn4c0gc",
+                  "function": {
+                    "name": "verify_carrier",
+                    "arguments": "{\"mc\":\"145678\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "280ad97c-8860-49b2-bd10-77dc4824d4e0",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"reason\":\"registration_not_active\",\"status\":\"ineligible\"}}]}",
+              "tool_call_id": "call_SDSLOXpe8qJe75A8Tcn4c0gc",
+              "name": "verify_carrier",
+              "tool_calls": []
+            },
+            {
+              "id": "56551fb4-3c34-4e86-9683-7c9371d13242",
+              "role": "assistant",
+              "tool_calls": [
+                {
+                  "id": "call_NcuP4obK3rEOOP0OwSepIGOj",
+                  "function": {
+                    "name": "close_call",
+                    "arguments": "{\"summary\":\"MC 145678 is ineligible because FMCSA shows registration not active; no load booked.\"}"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "fde997ce-8f68-40ce-acd3-e2dfa29630e4",
+              "role": "tool",
+              "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+              "tool_call_id": "call_NcuP4obK3rEOOP0OwSepIGOj",
+              "name": "close_call",
+              "tool_calls": []
+            },
+            {
+              "id": "a1352bb0-68f6-4aae-b542-a0280659cafe",
+              "role": "assistant",
+              "content": "FMCSA doesn't show active operating authority for that MC. I can't book loads with you today. Thank you for calling. Goodbye.",
+              "tool_calls": []
+            }
+          ],
+          "close_reason": "idle_timeout"
+        }
+      ]
+    }
+  ]
+}

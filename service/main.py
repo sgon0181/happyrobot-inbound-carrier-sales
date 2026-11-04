@@ -40,7 +40,11 @@ def build(settings: Settings) -> FastAPI:
     )
     rows = CallRows(twin=twin, cohort=settings.cohort)
     calls = Calls(
-        rows=rows, fmcsa=fmcsa, mailer=CodeMailer(email), code_secret=settings.otp_hash_secret
+        rows=rows,
+        fmcsa=fmcsa,
+        mailer=CodeMailer(email),
+        code_secret=settings.otp_hash_secret,
+        trusted_contacts=settings.contacts is not None,
     )
     sales = Sales(
         rows=rows,

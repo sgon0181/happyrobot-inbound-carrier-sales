@@ -16,7 +16,7 @@ function inDates(at: string | null | undefined, f: Filters) {
   return /^\d{4}-\d{2}-\d{2}$/.test(date) && (!f.from || date >= f.from) && (!f.to || date <= f.to);
 }
 export function filterCalls(rows: Call[], f: Filters) {
-  return rows.filter(c => matches(f.query, [c.mc, c.carrierName, c.bookingLoadId, c.search, ...(c.offeredIds ?? []), ...(c.offeredLanes ?? [])]) && inDates(c.sessionAt, f)
+  return rows.filter(c => (f.bucket !== "desk" || c.cohort === "real") && matches(f.query, [c.mc, c.carrierName, c.bookingLoadId, c.search, ...(c.offeredIds ?? []), ...(c.offeredLanes ?? [])]) && inDates(c.sessionAt, f)
     && (!f.status || (f.status === "missing_close" ? missingClose(c) : c.outcome === f.status)));
 }
 export function filterBookings(rows: Booking[], f: Filters, byRun: Map<string, Call>) {

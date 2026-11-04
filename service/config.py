@@ -68,6 +68,10 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
     )
     if settings.agent_api_key and settings.agent_api_key == settings.ops_api_key:
         read.problems.append("AGENT_API_KEY and OPS_API_KEY must differ")
+    if settings.live_booking and (not settings.contacts or read.env.get("CALL_COHORT") != "real"):
+        read.problems.append(
+            "LIVE_BOOKING needs explicit real CALL_COHORT and nonempty OTP_CONTACTS_JSON"
+        )
     if read.problems:
         raise SettingsError("Invalid settings: " + "; ".join(read.problems))
     return settings

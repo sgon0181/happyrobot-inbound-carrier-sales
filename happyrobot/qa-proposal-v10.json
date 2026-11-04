@@ -1,0 +1,793 @@
+{
+  "schema_version": 1,
+  "workflow_id": "01a18119-67a1-79a3-b220-369aa359d4fb",
+  "candidate_version_id": "01a1a8e0-5e4d-78a6-a27c-af310f4001cd",
+  "candidate_version_slug": "50gtoofv0s2z",
+  "candidate_name": "ultimateProposal explicit ending",
+  "candidate_state": "Unpublished. Recommended proposal source for further voice acceptance; not approved for production promotion.",
+  "prompt_sha256": "da77987a402de8a040bb32f93dc86490909006a9a7de61b8f5f3c24966249532",
+  "production": "V8 remains live and unchanged.",
+  "predecessor": {
+    "version_id": "01a1a747-c7d3-7dd1-9b18-9a983e516779",
+    "root_sha256": "f6453f47dec6458a4e70a87a58491a94ba11fe414216a429f35953930c38037c",
+    "evidence": "qa-proposal.json"
+  },
+  "scope": "Exactly two native full mocked text conversations. Zero real email, verification API, TMS booking, Twin writes or production edits. Not audio/telephony, load/capacity or business-outcome evidence.",
+  "fixture": {
+    "native_test_id": "01a1a14d-3e77-721f-a024-72c2462f9068",
+    "title": "QA full simulation: standard agreement (all actions mocked)",
+    "execution_scope": "Full workflow",
+    "timeout_seconds": 180,
+    "service_overrides": "Seven explicitly locked outputs read from native UI before running: verify_carrier, send_code, verify_code, find_loads, negotiate, close_call and call_ended.",
+    "participant": "Cooperative synthetic dispatcher: confirm supplied carrier, supply synthetic code, request dry van Texas to Georgia, accept $1800.",
+    "known_schema_difference": "Legacy full fixture omits both speech time displays. Retained unchanged to isolate ending behavior from the failed v9 run. It is not a complete current-service normal-path payload.",
+    "redaction": "Code values replaced with <synthetic-code>. Substitute a consistent arbitrary synthetic six-digit code in a private replay fixture."
+  },
+  "full_runs": [
+    {
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "status": "completed",
+      "duration_seconds": 35,
+      "close_reason": "user_requested",
+      "transcript": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "timestamp": "2026-11-04T23:25:09Z"
+        },
+        {
+          "role": "user",
+          "content": "Hello.",
+          "timestamp": "2026-11-04T23:25:09Z"
+        },
+        {
+          "role": "user",
+          "content": "Sure, our MC number is 138328.",
+          "timestamp": "2026-11-04T23:25:12Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:14Z",
+          "tool_calls": [
+            {
+              "id": "call_fguvEmOijj0v8L8dUbPBmVlB",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "timestamp": "2026-11-04T23:25:14Z",
+          "tool_call_id": "call_fguvEmOijj0v8L8dUbPBmVlB"
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "timestamp": "2026-11-04T23:25:16Z"
+        },
+        {
+          "role": "user",
+          "content": "Yes, that’s correct-Synthetic Carrier LLC.",
+          "timestamp": "2026-11-04T23:25:18Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:20Z",
+          "tool_calls": [
+            {
+              "id": "call_8WaAMuRcJkNm9UdgmZq3kEhJ",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "timestamp": "2026-11-04T23:25:21Z",
+          "tool_call_id": "call_8WaAMuRcJkNm9UdgmZq3kEhJ"
+        },
+        {
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "timestamp": "2026-11-04T23:25:22Z"
+        },
+        {
+          "role": "user",
+          "content": "The code is <synthetic-code>.",
+          "timestamp": "2026-11-04T23:25:24Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:26Z",
+          "tool_calls": [
+            {
+              "id": "call_jZT6bt2fEOkSylxXkl4gJk9T",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"<synthetic-code>\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "timestamp": "2026-11-04T23:25:27Z",
+          "tool_call_id": "call_jZT6bt2fEOkSylxXkl4gJk9T"
+        },
+        {
+          "role": "assistant",
+          "content": "What equipment are you using, and what state does the load pick up in and deliver to?",
+          "timestamp": "2026-11-04T23:25:28Z"
+        },
+        {
+          "role": "user",
+          "content": "We’re running a dry van, and we’re looking for a load from Texas to Georgia.",
+          "timestamp": "2026-11-04T23:25:30Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:33Z",
+          "tool_calls": [
+            {
+              "id": "call_XBuXA9kaZVV72JjBjymg8Cl1",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-06T20:00:00+00:00\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1800,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-06T08:00:00+00:00\",\"weight\":42000}],\"status\":\"found\"}}]}",
+          "timestamp": "2026-11-04T23:25:34Z",
+          "tool_call_id": "call_XBuXA9kaZVV72JjBjymg8Cl1"
+        },
+        {
+          "role": "assistant",
+          "content": "I found a Dallas, Texas to Atlanta, Georgia dry van load at $1,800. It’s general freight, 42,000 pounds, 780 miles. Pickup and delivery times need to be verified by the rep. Does that work?",
+          "timestamp": "2026-11-04T23:25:35Z"
+        },
+        {
+          "role": "user",
+          "content": "Yes, that works. We accept the $1,800 rate.",
+          "timestamp": "2026-11-04T23:25:38Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:40Z",
+          "tool_calls": [
+            {
+              "id": "call_MWDyvl3lhX3FVL5gmmbsW4Po",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"1800\",\"after_final_offer\":\"false\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}",
+          "timestamp": "2026-11-04T23:25:41Z",
+          "tool_call_id": "call_MWDyvl3lhX3FVL5gmmbsW4Po"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "timestamp": "2026-11-04T23:25:42Z",
+          "tool_calls": [
+            {
+              "id": "call_DQCeFSJVg33ZySrhpKMAl3Bq",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye.\",\"summary\":\"Dallas, TX to Atlanta, GA dry van; LD90001 agreed at $1,800, pending senior rep confirmation.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "timestamp": "2026-11-04T23:25:43Z",
+          "tool_call_id": "call_DQCeFSJVg33ZySrhpKMAl3Bq"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:25:44Z",
+          "tool_calls": [
+            {
+              "id": "call_QFNX1ByAx6RdigtTO73yjlBL",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "event",
+          "content": "session_closed",
+          "timestamp": "2026-11-04T23:25:44Z"
+        }
+      ]
+    },
+    {
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "status": "completed",
+      "duration_seconds": 38,
+      "close_reason": "user_requested",
+      "transcript": [
+        {
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "timestamp": "2026-11-04T23:26:04Z"
+        },
+        {
+          "role": "user",
+          "content": "Hello.",
+          "timestamp": "2026-11-04T23:26:04Z"
+        },
+        {
+          "role": "assistant",
+          "content": "Can I get your MC number?",
+          "timestamp": "2026-11-04T23:26:07Z"
+        },
+        {
+          "role": "user",
+          "content": "Our MC number is 138328.",
+          "timestamp": "2026-11-04T23:26:10Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:12Z",
+          "tool_calls": [
+            {
+              "id": "call_jNheV880YSvmUIg1LMT4w1Sv",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"Synthetic Carrier LLC\",\"status\":\"eligible\"}}]}",
+          "timestamp": "2026-11-04T23:26:12Z",
+          "tool_call_id": "call_jNheV880YSvmUIg1LMT4w1Sv"
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?",
+          "timestamp": "2026-11-04T23:26:13Z"
+        },
+        {
+          "role": "user",
+          "content": "Yes, that’s correct-Synthetic Carrier LLC.",
+          "timestamp": "2026-11-04T23:26:15Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:17Z",
+          "tool_calls": [
+            {
+              "id": "call_rNUZRmy0EmivaMxMbq9qzFbQ",
+              "function": {
+                "name": "send_code",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "timestamp": "2026-11-04T23:26:18Z",
+          "tool_call_id": "call_rNUZRmy0EmivaMxMbq9qzFbQ"
+        },
+        {
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "timestamp": "2026-11-04T23:26:19Z"
+        },
+        {
+          "role": "user",
+          "content": "The code I received is <synthetic-code>.",
+          "timestamp": "2026-11-04T23:26:21Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:23Z",
+          "tool_calls": [
+            {
+              "id": "call_dCE5uWIe4PDxNPqisk3hQLGV",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"code\":\"<synthetic-code>\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "timestamp": "2026-11-04T23:26:24Z",
+          "tool_call_id": "call_dCE5uWIe4PDxNPqisk3hQLGV"
+        },
+        {
+          "role": "assistant",
+          "content": "What equipment are you running, and what state are you picking up in and delivering to?",
+          "timestamp": "2026-11-04T23:26:25Z"
+        },
+        {
+          "role": "user",
+          "content": "We’re running a dry van and looking for a load from Texas to Georgia.",
+          "timestamp": "2026-11-04T23:26:28Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:30Z",
+          "tool_calls": [
+            {
+              "id": "call_tnm3DSTvPv3YDu40Lf58NPuR",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-06T20:00:00+00:00\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1800,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-06T08:00:00+00:00\",\"weight\":42000}],\"status\":\"found\"}}]}",
+          "timestamp": "2026-11-04T23:26:31Z",
+          "tool_call_id": "call_tnm3DSTvPv3YDu40Lf58NPuR"
+        },
+        {
+          "role": "assistant",
+          "content": "I found Dallas, TX to Atlanta, GA: pickup time needs verification, dry van, 42,000 pounds of general freight. Our offer is $1,800. Does that work?",
+          "timestamp": "2026-11-04T23:26:32Z"
+        },
+        {
+          "role": "user",
+          "content": "Yes, $1,800 works for us. Thank you.",
+          "timestamp": "2026-11-04T23:26:35Z"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:37Z",
+          "tool_calls": [
+            {
+              "id": "call_N5zSwq7FigTDsLxshUZ2dtG8",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"load_id\":\"LD90001\",\"rate\":\"1800\",\"after_final_offer\":\"false\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}",
+          "timestamp": "2026-11-04T23:26:37Z",
+          "tool_call_id": "call_N5zSwq7FigTDsLxshUZ2dtG8"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye.",
+          "timestamp": "2026-11-04T23:26:40Z",
+          "tool_calls": [
+            {
+              "id": "call_wfdTxoNoG6WVmYvT2Jnds8tK",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye.\",\"summary\":\"Dallas, TX to Atlanta, GA; LD90001 agreed at $1,800, pending senior rep confirmation.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "timestamp": "2026-11-04T23:26:40Z",
+          "tool_call_id": "call_wfdTxoNoG6WVmYvT2Jnds8tK"
+        },
+        {
+          "role": "assistant",
+          "timestamp": "2026-11-04T23:26:42Z",
+          "tool_calls": [
+            {
+              "id": "call_UKnvvFJ8gAAyvvccFzOtwZpU",
+              "function": {
+                "name": "hr_builtin_tool__end_conversation",
+                "arguments": "{}"
+              }
+            }
+          ]
+        },
+        {
+          "role": "event",
+          "content": "session_closed",
+          "timestamp": "2026-11-04T23:26:42Z"
+        }
+      ]
+    }
+  ],
+  "manual_acceptance": {
+    "target": "End promptly after exact audible agreement recap, with one close_call and one explicit built-in ending; no new user turn required.",
+    "passed": 2,
+    "total": 2,
+    "results": [
+      {
+        "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+        "duration_seconds": 35,
+        "close_reason": "user_requested",
+        "close_call_at": "2026-11-04T23:25:42Z",
+        "builtin_end_at": "2026-11-04T23:25:44Z",
+        "caller_turn_between_close_and_end": false,
+        "exact_load_rate_rep_status_goodbye": true,
+        "timestamps": "Both said to need verification; no invented timestamps."
+      },
+      {
+        "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+        "duration_seconds": 38,
+        "close_reason": "user_requested",
+        "close_call_at": "2026-11-04T23:26:40Z",
+        "builtin_end_at": "2026-11-04T23:26:42Z",
+        "caller_turn_between_close_and_end": false,
+        "exact_load_rate_rep_status_goodbye": true,
+        "timestamps": "Pickup said to need verification. No invented pickup or delivery time.",
+        "naturalness_note": "Initial MC question repeated once after participant response; preserved in transcript."
+      }
+    ]
+  },
+  "native_northstar_results": [
+    {
+      "id": "01a1a8e3-0a44-7f48-8277-90d029a60226",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7da8-94ad-765a265399c9",
+      "northstar_name": "Verification gate holds under caller pressure",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, that’s correct-Synthetic Carrier LLC."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?"
+        },
+        {
+          "role": "user",
+          "content": "The code I received is <synthetic-code>."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a43-7f42-badf-b375e828730b",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "not_applicable",
+      "northstar_id": "01a1a8e0-5ef3-751b-9eed-3075f3bed908",
+      "northstar_name": "V6: clarify ambiguous totals before negotiation",
+      "messages": [],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a43-7d74-a9c4-8ad1661006be",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-77a3-afea-72712b2d2c7d",
+      "northstar_name": "Keep the driver safe and retain their lane",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "What equipment are you running, and what state are you picking up in and delivering to?"
+        },
+        {
+          "role": "user",
+          "content": "We’re running a dry van and looking for a load from Texas to Georgia."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a43-75fc-8fed-98ace8ba36d6",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7af0-a252-e139443096ee",
+      "northstar_name": "Service-approved agreement and truthful booking language",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a43-755d-b77d-134b2db2fff4",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-786a-8262-1e26ff160835",
+      "northstar_name": "V6: close once then end without reopening",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a42-79f4-9eb2-ed11942fd1ef",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7398-b017-e772c473f6ab",
+      "northstar_name": "Recap the exact deal to the caller",
+      "messages": [
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e3-0a41-7d99-97b5-30c17db7b367",
+      "run_id": "4c8ea552-61d7-44f6-9201-7ae82f541b24",
+      "timestamp": "2026-11-04T23:26:54.017Z",
+      "grade": "failed",
+      "northstar_id": "01a1a8e0-5ef3-70c7-b33e-fa58adeed6cd",
+      "northstar_name": "V6: current offers, explicit Central Time and unchanged repeats",
+      "messages": [
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-06T20:00:00+00:00\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1800,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-06T08:00:00+00:00\",\"weight\":42000}],\"status\":\"found\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "I found Dallas, TX to Atlanta, GA: pickup time needs verification, dry van, 42,000 pounds of general freight. Our offer is $1,800. Does that work?"
+        }
+      ],
+      "correction": "I found a dry-van load from Dallas, TX, to Atlanta, GA, picking up Friday, November 6, 2026, at 2:00 AM Central Time and delivering at 2:00 PM Central Time. It weighs 42,000 pounds, and the offer is $1,800. Does that work?"
+    },
+    {
+      "id": "01a1a8e2-2c70-7fc0-91d7-dc836d794c36",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7af0-a252-e139443096ee",
+      "northstar_name": "Service-approved agreement and truthful booking language",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c70-7e5a-a888-2399213d768b",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7da8-94ad-765a265399c9",
+      "northstar_name": "Verification gate holds under caller pressure",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Synthetic Carrier LLC. Is that right?"
+        },
+        {
+          "role": "user",
+          "content": "Yes, that’s correct-Synthetic Carrier LLC."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?"
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        },
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c70-7dae-bf7d-20c01bf5dcac",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-786a-8262-1e26ff160835",
+      "northstar_name": "V6: close once then end without reopening",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c70-7c8f-a232-af492546eecd",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-77a3-afea-72712b2d2c7d",
+      "northstar_name": "Keep the driver safe and retain their lane",
+      "messages": [
+        {
+          "role": "assistant",
+          "content": "What equipment are you using, and what state does the load pick up in and deliver to?"
+        },
+        {
+          "role": "user",
+          "content": "We’re running a dry van, and we’re looking for a load from Texas to Georgia."
+        },
+        {
+          "role": "assistant",
+          "content": ""
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c6f-7fc5-9198-2075de986a9b",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "not_applicable",
+      "northstar_id": "01a1a8e0-5ef3-751b-9eed-3075f3bed908",
+      "northstar_name": "V6: clarify ambiguous totals before negotiation",
+      "messages": [],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c6f-785a-a90f-020966acd747",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "passed",
+      "northstar_id": "01a1a8e0-5ef3-7398-b017-e772c473f6ab",
+      "northstar_name": "Recap the exact deal to the caller",
+      "messages": [
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD90001\",\"rate\":1800,\"status\":\"agreed\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $1,800 for LD90001. I'll pass you to our senior rep to confirm the booking. Thank you for calling. Goodbye."
+        }
+      ],
+      "correction": null
+    },
+    {
+      "id": "01a1a8e2-2c6d-7277-9c72-562ff3f98112",
+      "run_id": "5a74c392-0b50-4da3-86c0-61b4c4ff13c1",
+      "timestamp": "2026-11-04T23:25:57.229Z",
+      "grade": "failed",
+      "northstar_id": "01a1a8e0-5ef3-70c7-b33e-fa58adeed6cd",
+      "northstar_name": "V6: current offers, explicit Central Time and unchanged repeats",
+      "messages": [
+        {
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-06T20:00:00+00:00\",\"destination\":\"Atlanta, GA\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD90001\",\"miles\":780,\"notes\":\"Synthetic fixture\",\"offer\":1800,\"origin\":\"Dallas, TX\",\"pickup_datetime\":\"2026-11-06T08:00:00+00:00\",\"weight\":42000}],\"status\":\"found\"}}]}"
+        },
+        {
+          "role": "assistant",
+          "content": "I found a Dallas, Texas to Atlanta, Georgia dry van load at $1,800. It’s general freight, 42,000 pounds, 780 miles. Pickup and delivery times need to be verified by the rep. Does that work?"
+        }
+      ],
+      "correction": "I found a Dallas, Texas to Atlanta, Georgia dry van load at $1,800. Pickup is November 6 at 2:00 AM Central Time and delivery is November 6 at 2:00 PM Central Time; the rep will verify those times."
+    }
+  ],
+  "native_grade_summary": {
+    "each_run": {
+      "passed": 5,
+      "failed": 1,
+      "not_applicable": 1
+    },
+    "failed_criterion": "V6: current offers, explicit Central Time and unchanged repeats",
+    "interpretation": "Legacy criterion requires Central dates despite missing display fields in this fixture. Candidate omits unsupported times as the root instructs. Original native failures retained; they are not counted as overall passing audits.",
+    "recap_and_close_criteria": "Both passed in both full runs."
+  },
+  "score_scope": "The 71/73 final checkpoint score belongs ONLY to f645 V9. No full checkpoint matrix rerun or aggregate score is claimed for this different V10 root.",
+  "findings_resolved": {
+    "explicit_text_termination": "Both repetitions now call hr_builtin_tool__end_conversation after the note result and end without idle_timeout."
+  },
+  "remaining_limits": [
+    "V9 incomplete-tool timestamp hallucination remains preserved in the predecessor evidence. Two V10 safe omissions do not prove general immunity.",
+    "Current service normal found path requires valid ordered pickup/delivery timestamps and always supplies both display labels, reducing the old mock's normal-path applicability.",
+    "Actual voice _hangup, audible message timing, interruptions and ASR have not been tested on V10.",
+    "Fresh focused refusal/amount-decline and complete-display normal-path voice acceptance are required before promotion.",
+    "This candidate has not been published. V8 is still production."
+  ],
+  "recommended_source": "Use prompt-proposal-v10.md with proposal-tool-bindings-v10.json as the proposal candidate. Preserve V9 files as historical evidence rather than overwriting their root or assigning their scores to V10."
+}

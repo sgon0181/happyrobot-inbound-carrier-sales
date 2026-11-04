@@ -1,5 +1,12 @@
 # HappyRobot workflow
 
+**Proposal checkout.** The [Friday pilot guide](../docs/proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
+The latest experimental source is the [Version 10 prompt](prompt-proposal-v10.md), [bindings](proposal-tool-bindings-v10.json) and [two complete mocked ending replays](qa-proposal-v10.json). Both replays ended promptly after the exact deal recap. This candidate is unpublished, with full regression and real voice acceptance still required. The Version 9 checkpoint score below does not apply to Version 10.
+
+The [Version 9 prompt](prompt-proposal.md), [native tool bindings](proposal-tool-bindings.json) and [candidate QA results](qa-proposal.json) belong to the unpublished proposal. Its final checkpoints passed 71/73, including all fourteen new cases. The two original failed grades and the full-replay time invention and idle-timeout failures are retained. Version 9 is not accepted for promotion. See the [release gates](../docs/proposal-review.md#voice-candidate-evidence).
+
 Current confirmation follow-up: the owner's Version 7 recording exposed a bypass after an explicit No. The narrow Version 8 fix is now live and passes 24/24 focused checks, 118/118 full-suite checkpoints and both mocked recording replays. Pricing is unchanged. See [the correction and its limits](../docs/confirmation-fix.md). The Version 7 acceptance wording below is historical and is superseded by this finding.
 
 Inbound Carrier Sales lives in the HappyRobot workspace, workflow 01a18119-67a1-79a3-b220-369aa359d4fb. Version 8 (kvexhw5fzj4y) is live under the owner's existing release approval, replacing Version 7 (67nko7p112j2). The workspace is authoritative; these files make the important configuration and evidence reviewable. Eleven Version 6 calls now provide timed closing and stored end-event evidence. Historical Version 7 addressed amount intent and notes. The later recorded confirmation bypass is fixed in live Version 8; see [the tuning report](../docs/voice-tuning.md).

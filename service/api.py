@@ -167,11 +167,13 @@ def _voice_routes(
 
     @app.post("/calls/close", dependencies=[agent])
     async def close(body: Close) -> Reply:
-        return await voice(sales.close(body.run_id, body.summary))
+        return await voice(sales.finish(body.run_id, sales.close(body.run_id, body.summary)))
 
     @app.post("/calls/ended", dependencies=[agent])
     async def ended(body: Ended) -> Reply:
-        return await voice(calls.end(body.run_id, body.ended_by, body.duration_seconds))
+        return await voice(
+            sales.finish(body.run_id, calls.end(body.run_id, body.ended_by, body.duration_seconds))
+        )
 
 
 def _ops_routes(app: FastAPI, dashboard: Dashboard, desk: RepActions, ops: Dependency) -> None:

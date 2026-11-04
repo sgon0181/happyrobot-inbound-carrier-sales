@@ -56,6 +56,8 @@ function describe(r: ActionReply): { ok: boolean; text: string } {
       return { ok: false, text: "This booking changed since your screen loaded. Review it again." };
     case "not_allowed":
       return { ok: false, text: `Not available while the booking is ${r.state}.` };
+    case "agreement_incomplete":
+      return { ok: false, text: "No finalized matching agreement. Contact the carrier before making a fresh reservation." };
     case "record_read_only":
       return { ok: false, text: "Historical or unclassified reservation. No booking request was sent." };
     case "live_booking_off":

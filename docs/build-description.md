@@ -1,5 +1,8 @@
 # Inbound Carrier Sales: build description
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 For HappyRobot Logistics' business and IT review. HappyRobot Workflow Version 8 and service release 17 provide the voice and transaction rules. The native Carrier Sales App opens on Reservations. The observer can review the filmed carrier's load and rate, open its original recording and trace the negotiation without searching platform logs. Booking sends are off for this proof of concept.
 
 ## Customer problem and scope

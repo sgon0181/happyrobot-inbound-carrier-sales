@@ -12,6 +12,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime, timedelta
 
 from service.adapters.twin import Data, Row, Twin
+from service.bookings import agreement_recorded
 from service.calls import Reply
 
 CACHE = timedelta(seconds=5)
@@ -26,7 +27,7 @@ CALL_FIELDS = (
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
-    *("send", "reason", "load"),
+    *("send", "reason", "load", "otp_route"),
 )
 
 
@@ -178,6 +179,8 @@ def turned_away(calls: list[Data]) -> list[Data]:
 
 def _call(key: str, row: Row, booking: Data | None, now: datetime) -> Data:
     data = row.data
+    if data.get("accepting") or data.get("agreement_needs_review"):
+        booking = None  # a stranded hold cannot count as an agreement
     cohort = "synthetic" if key in SYNTHETIC_ROWS else data.get("cohort")
     fields = {name: data.get(name) for name in CALL_FIELDS}
     derived = {
@@ -193,13 +196,20 @@ def _booking(key: str, row: Row, calls: dict[str, Row]) -> Data:
     call = calls.get(str(row.data.get("call_id")))
     matched = call is not None and call.data.get("mc") == row.data.get("mc")
     carrier = call.data.get("carrier_name") if matched and call is not None else None
+    held = row.data.get("state") == "RESERVED"
+    complete = agreement_recorded(call.data if call else None, row.data, key)
+    needs_review = held and not complete
     # Keep wire bytes in restricted Twin evidence, including receipts from earlier claims.
     events = [
         {k: v for k, v in event.items() if k != "raw_reply"} for event in row.data.get("events", [])
     ]
-    return {"load_id": key, "version": row.version, "carrier_name": carrier, "events": events} | {
-        name: row.data.get(name) for name in BOOKING_FIELDS
-    }
+    return {
+        "load_id": key,
+        "version": row.version,
+        "carrier_name": carrier,
+        "agreement_needs_review": needs_review,
+        "events": events,
+    } | {name: row.data.get(name) for name in BOOKING_FIELDS}
 
 
 def _first_offer_seconds(call: Data) -> float | None:

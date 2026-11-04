@@ -12,6 +12,8 @@ export type Cohort = "real" | "synthetic";
 export type RepAction = "confirm" | "decline" | "reconcile";
 
 export type Booking = {
+  trustedContact: boolean;
+  agreementNeedsReview: boolean;
   carrierName: string | null;
   load: RepLoad | null;
   loadId: string;
@@ -113,6 +115,8 @@ function projectBooking(raw: unknown): Booking[] {
   return [
     {
       loadId,
+      agreementNeedsReview: b.agreement_needs_review === true,
+      trustedContact: b.otp_route === "trusted_contact",
       version,
       carrierName: str(b.carrier_name, 120),
       load: projectRepLoad(b.load),

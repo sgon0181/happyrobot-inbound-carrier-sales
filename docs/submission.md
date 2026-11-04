@@ -1,5 +1,10 @@
 # Submission candidate
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+Use the [updated prospect email draft](proposal-prospect-email.md) with the [proposal recording cues](proposal-demo.md) when presenting this branch.
+
+
 [Reviewer entry guide](reviewer-guide.md) links the native reservation queue, filmed call, performance dashboard, QA and TMS receipt.
 
 The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads, access grants or submission are authorized. The native App reads the Version 8 call records from service release 17. [Verification and limits](confirmation-fix.md) cover the recorded confirmation regression. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. The owner adds the walkthrough URL and submits the source ZIP. Luke confirmed this route on November 5. A private GitHub link is optional and the reviewer is assigned after submission.

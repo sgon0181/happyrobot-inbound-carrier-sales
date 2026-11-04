@@ -7,6 +7,7 @@ from typing import Any
 import pytest
 from pytest import MonkeyPatch
 
+from service.core.approved_freight import MARKETS
 from service.tests.fake_tms import make_load
 from service.tests.rig import OPS, rig
 from service.tests.test_carrier_policy import ACTIVE, INACTIVE
@@ -31,7 +32,15 @@ def test_full_service_journey_from_code_retry_to_reservation_and_end(
     monkeypatch.setattr("service.calls.codes.new_code", codes.__next__)
     r = rig([ACTIVE | {"legalName": f"Synthetic {equipment} carrier"}], live_booking=False)
     eq = {"dry van": "DRY_VAN", "reefer": "REEFER", "flatbed": "FLATBED"}[equipment]
-    r.board.records = [make_load(EQTYPE=eq, ORIG_STATE=origin, DEST_STATE=destination)]
+    r.board.records = [
+        make_load(
+            EQTYPE=eq,
+            ORIG_STATE=origin,
+            DEST_STATE=destination,
+            ORIG_CITY=MARKETS[origin][0],
+            DEST_CITY=MARKETS[destination][0],
+        )
+    ]
     assert r.post("/carriers/verify", mc=mc)["status"] == "eligible"
     assert r.fmcsa.seen[-1].endswith(f"/{mc}/")
     assert r.post("/otp/send")["status"] == "sent"

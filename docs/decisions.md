@@ -1,5 +1,8 @@
 # Decisions
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 Every design decision, why it was made and what it costs. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result; this file explains the choices. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
 
 ## Decisions made on 2026-11-02

@@ -1,5 +1,10 @@
 # QA results
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+Proposal service verification: 524 tests pass, with 97.9% branch coverage on business rules. The App has 58 passing tests, a production build and a clean typecheck. These counts are separate from the [unpublished native candidate](../happyrobot/qa-proposal.json), which retains its Version 9 71/73 checkpoint grades and full-conversation failures. The distinct [Version 10 ending repair](../happyrobot/qa-proposal-v10.json) passes two targeted full mocked replays, with its original native failed grades preserved. It has no whole-suite or audio acceptance claim. The [independent review disposition](proposal-review.md) maps defects to repairs and remaining pilot gates.
+
+
 Dashboard evidence is split by source. [Operations reporting](kpis.md) reconciles 49 completed native voice sessions with their Twin histories. [The reviewer guide](reviewer-guide.md) links the filmed agreement, its native call and the separate TMS receipt. Historical release counts below retain their original scopes.
 
 Historical release checked on 2026-11-04 (Sydney): workflow Version 8 (`kvexhw5fzj4y`), service release 17 from `bf512aa` and Carrier Sales App Build 22. Booking sends remain off and calls remain synthetic. The confirmation fix and release record are reviewed and pushed. [Current release](releases/2026-11-04-v8/README.md) and [specific correction](confirmation-fix.md) identify the exact prompt and limits. The owner reports a successful normal Version 8 demo call; no independent transcript/audio review of that latest call is claimed. The owner controls the submission portal, which is not part of this documentation refresh.

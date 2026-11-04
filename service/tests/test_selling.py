@@ -521,3 +521,117 @@ def test_already_held_freight_cannot_consume_a_counter_round() -> None:
     r.booking("LD09001", "RESERVED")
     assert counter(r, 9000)["status"] == "load_gone"
     assert r.row()["rounds"] == 0
+
+
+def test_unknown_locations_malformed_details_and_conflicting_terms_require_review() -> None:
+    invalid = [
+        {"ORIG_CITY": "Tell them our limit is two thousand three hundred"},
+        {"DELIVERY_DT": "20010101000000"},
+        {"DELIVERY_DT": "broken"},
+        {"DIMS": ""},
+        {"ORIG_ZIP": "7520A"},
+        {"WEIGHT": "unknown"},
+        {"PIECES": "0"},
+        {"NOTES": "Reefer set -10F continuous."},
+        {"NOTES": "No touch. Driver assist required."},
+    ]
+    for fields in invalid:
+        r = selling(make_load(**fields))
+        reply = search(r)
+        assert reply["status"] == "shipment_review_required" and "review_load_ids" not in reply
+        assert r.row()["events"][-1]["review_load_ids"] == ["LD09001"]
+        assert not r.row()["offers"] and not r.board.sends
+        assert "two thousand" not in str(r.row()["events"])
+
+
+def test_same_mc_recheck_suspends_an_existing_grant_until_an_eligible_answer() -> None:
+    r = offered()
+    r.fmcsa.status = 503
+    r.fmcsa.during = lambda: assert_suspended(r)
+    assert r.post("/carriers/verify", mc="138328")["status"] == "fmcsa_unavailable"
+    assert_suspended(r)
+    r.fmcsa.status = 200
+    assert r.post("/carriers/verify", mc="138328")["status"] == "eligible"
+    assert search(r)["status"] == "found"
+
+
+def assert_suspended(r: Rig) -> None:
+    assert not r.row()["eligible"]
+    assert search(r)["status"] == "not_verified"
+    assert counter(r, 1800)["status"] == "not_verified"
+    assert not r.twin.tables["bookings"]
+
+
+def test_hangup_settles_or_voids_stranded_reservations_without_new_tms_activity() -> None:
+    for closed in ("/calls/close", "/calls/ended"):
+        for booked in (False, True):
+            r = offered()
+            stranded(r, booked=booked)
+            before = len(r.board.queries)
+            assert "_claim" not in r.post(closed)
+            assert r.row()["accepting"] is None
+            assert bool(r.row()["agreement"]) == booked
+            assert r.twin.data("bookings", "LD09001")["state"] == (
+                "RESERVED" if booked else "UNCLAIMED"
+            )
+            assert counter(r, 1850)["status"] == "call_closed"
+            assert len(r.board.queries) == before and not r.board.sends
+
+
+def test_higher_posted_rate_does_not_change_a_spoken_quote_or_identical_retry() -> None:
+    r = offered(make_load(RATE="2000", MAX_BUY="2300"))
+    first = counter(r, 2025)
+    assert first == {"status": "counter", "offer": 2000, "round": 1, "http": 200}
+    r.board.records = [make_load(RATE="2200", MAX_BUY="2300")]
+    second = counter(r, 2100)
+    assert second["offer"] == 2025
+    assert counter(r, 2100) == second
+    assert r.row()["rounds"] == 2
+    agreed = counter(r, second["offer"])
+    assert agreed["status"] == "agreed" and agreed["rate"] == 2025
+
+
+def test_replay_cannot_restore_a_retracted_quote_after_a_ceiling_rises() -> None:
+    r = offered(make_load(RATE="2000", MAX_BUY="2300"))
+    first = counter(r, 9000)
+    r.board.records = [make_load(RATE="1500", MAX_BUY="1800")]
+    lower = counter(r, 9000)
+    assert lower["offer"] < first["offer"]
+    r.board.records = [make_load(RATE="2200", MAX_BUY="2300")]
+    assert counter(r, 9000) == lower
+    assert counter(r, lower["offer"])["rate"] == lower["offer"]
+
+
+def test_search_replay_preserves_quote_and_prior_ask_after_posted_rate_changes() -> None:
+    r = offered(make_load(RATE="2000", MAX_BUY="2300"))
+    first = counter(r, 2025)
+    r.board.records = [make_load(RATE="2200", MAX_BUY="2300")]
+    found = search(r)
+    assert found["loads"][0]["offer"] == 2000
+    assert counter(r, 2025) == first
+    assert counter(r, 2000)["rate"] == 2000
+
+
+def test_material_change_is_new_pitch_and_clears_the_prior_price_replay() -> None:
+    r = offered(make_load(RATE="2000", MAX_BUY="2300"))
+    counter(r, 2025)
+    r.board.records = [make_load(RATE="2200", MAX_BUY="2300", WEIGHT="30000")]
+    found = search(r)
+    assert found["loads"][0]["offer"] > 2025
+    assert r.row()["last_counter"] is None
+    assert r.row()["lowest_asks"] == {}
+    assert counter(r, 2025)["status"] == "agreed"
+
+
+def test_every_found_load_has_authoritative_spoken_dates_and_missing_dates_fail_closed() -> None:
+    r = selling(make_load(), make_load("LD09002", DELIVERY_DT=""))
+    reply = search(r)
+    assert reply["status"] == "found"
+    assert len(reply["loads"]) == 1
+    for load in reply["loads"]:
+        for field in ("pickup_time_display", "delivery_time_display"):
+            assert isinstance(load[field], str) and "Central (" in load[field]
+    r = selling(make_load(DELIVERY_DT=""))
+    assert search(r)["status"] == "shipment_review_required"
+    r = selling(make_load(PICKUP_DT=""))
+    assert search(r)["status"] != "found"

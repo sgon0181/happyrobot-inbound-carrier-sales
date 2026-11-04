@@ -19,8 +19,9 @@ from service.adapters.tms.client import Sent, TmsUnavailable
 from service.adapters.tms.mapping import parse_timestamp
 from service.adapters.tms.protocol import InvalidRequest
 from service.adapters.twin import Data, Row, Twin, TwinUnavailable
-from service.bookings import with_event
+from service.bookings import agreement_recorded, with_event
 from service.calls import Reply
+from service.core.approved_freight import safe_to_quote
 from service.core.loads import is_offerable, same_shipment
 from service.core.models import Load
 
@@ -73,8 +74,11 @@ class RepActions:
         row = await self._current(load_id, version, "RESERVED")
         if not isinstance(row, Row):
             return row
-        if row.data.get("cohort") != "real":
+        if row.data.get("cohort") != "real" or row.data.get("otp_route") != "trusted_contact":
             return {"status": "record_read_only"}
+        call = await self.twin.get("calls", row.data["call_id"])
+        if not self._has_consent(call, row.data, load_id):
+            return {"status": "agreement_incomplete"}
         try:
             load = await self.tms.get(load_id)
         except TmsUnavailable:
@@ -92,6 +96,17 @@ class RepActions:
         self._sending.add(task)  # held, so a closed screen cannot stop the save
         task.add_done_callback(self._sending.discard)
         return await asyncio.shield(task)
+
+    @staticmethod
+    def _has_consent(row: Row | None, booking: Data, load_id: str) -> bool:
+        if row is None:
+            return False
+        call = row.data
+        return (
+            bool(call.get("eligible") and call.get("verified_at"))
+            and call.get("otp_route") == "trusted_contact"
+            and agreement_recorded(call, booking, load_id)
+        )
 
     async def decline(self, load_id: str, version: int, rep: str) -> Reply:
         """Release the reservation the rep saw. Nothing was sent, so the load is free."""
@@ -182,6 +197,8 @@ def recheck(load: Load | None, booking: Data, now: datetime, blocked: frozenset[
         return "load_not_open"
     if not same_shipment(load, booking.get("load")):
         return "shipment_changed"
+    if not safe_to_quote(load):
+        return "shipment_review_required"
     if load.max_rate is None or load.max_rate < booking["rate"]:
         return "ceiling_below_rate"
     return None
@@ -198,6 +215,10 @@ def classify(sent: Sent, load_id: str) -> Receipt:
         return Receipt("FAILED" if code in NOTHING_CREATED else "UNKNOWN", reason=code.lower())
     records = sent.reply.records
     record = records[0] if len(records) == 1 else {}
+    return _received_record(record, load_id)
+
+
+def _received_record(record: dict[str, str], load_id: str) -> Receipt:
     status, reference = record.get("STATUS"), record.get("BOOKING_REF") or None
     if (
         record.get("LOAD_ID") != load_id

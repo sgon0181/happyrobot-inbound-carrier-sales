@@ -11,9 +11,10 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any, Protocol
 
-from service.adapters.email import EmailFailed
+from service.adapters.email import DeliveryLimited, EmailFailed, NoTrustedContact
 from service.adapters.fmcsa import Fmcsa, FmcsaUnavailable
 from service.adapters.twin import Data, Row, Twin
+from service.call_state import code_state, new_call, permits_action, store_code
 from service.core import codes
 from service.core.carrier_policy import assess, normalize_mc
 
@@ -81,27 +82,36 @@ class CallRows:
 
         def edit(current: Data | None) -> tuple[Data | None, Reply]:
             data = _complete(current, self.cohort, now)
-            terminal = data["closed_at"] or data.get("ended_at")
-            settling = action == "negotiate" and bool(data["accepting"])
-            if terminal and action not in ("close", "call_ended") and not settling:
+            if not permits_action(data, action):
                 return None, {"status": "call_closed"}
+            ending = action in ("close", "call_ended")
+            hint = {"_claim": data["accepting"]} if ending and data["accepting"] else {}
             reply = decide(data, now)
             if isinstance(reply, Unchanged):
-                return None, reply.reply
+                return None, reply.reply | hint
             if (current or {}).get("outcome") == FAILED:  # a failed negotiation stays failed
                 data["outcome"] = FAILED
             data["last_activity"] = now.isoformat()
             event = {"at": now.isoformat(), "action": action, "mc": data["mc"]}
             event |= (detail or {}) | reply
             data["events"].append({"seq": len(data["events"]) + 1, **event})
-            return data, reply
+            return data, reply | hint
 
         return edit
 
 
 class Calls:
-    def __init__(self, *, rows: CallRows, fmcsa: Fmcsa, mailer: Mailer, code_secret: bytes) -> None:
+    def __init__(
+        self,
+        *,
+        rows: CallRows,
+        fmcsa: Fmcsa,
+        mailer: Mailer,
+        code_secret: bytes,
+        trusted_contacts: bool = False,
+    ) -> None:
         self.rows, self.fmcsa, self.mailer, self.code_secret = rows, fmcsa, mailer, code_secret
+        self.delivery_route = "trusted_contact" if trusted_contacts else "demo_inbox"
 
     async def verify_carrier(self, run_id: str, mc_text: str) -> Reply:
         mc = normalize_mc(mc_text)
@@ -140,23 +150,33 @@ class Calls:
         def decide(data: Data, now: datetime) -> Reply:
             if not data["eligible"]:
                 return {"status": "not_eligible"}
-            state, result = codes.issue(_code_state(data), hashed, now)
-            _store_code(data, state)
+            state, result = codes.issue(code_state(data), hashed, now)
+            store_code(data, state)
             if result is not codes.Issued.ISSUED:
                 return {"status": result.value}
+            data["otp_route"] = None
             return {"status": "code_issued", "mc": data["mc"], "send_number": state.sends}
 
         reply = await self.rows.step(run_id, "send_code", decide)
         if reply["status"] != "code_issued":
             return reply
-        status = "sent"
+        status, reason = "sent", None
         try:  # the send is already counted, so a failure is never silently retried
             await self.mailer.send(code, reply["mc"])
+        except NoTrustedContact:
+            status, reason = "locked", "no_trusted_contact"
+        except DeliveryLimited:
+            status, reason = "send_limit", "delivery_throttled"
         except EmailFailed:
-            status = "send_failed"
+            status, reason = "send_failed", "smtp_failed"
         delivery = {"mc": reply["mc"], "send_number": reply["send_number"], "delivery": status}
+        if reason:
+            delivery["reason"] = reason
         return await self.rows.step(
-            run_id, "send_code", _delivery(hashed, reply["send_number"], status), delivery
+            run_id,
+            "send_code",
+            _delivery(hashed, reply["send_number"], status, self.delivery_route),
+            delivery,
         )
 
     async def end(self, run_id: str, ended_by: str | None, seconds: float | None) -> Reply:
@@ -183,8 +203,8 @@ class Calls:
         def decide(data: Data, now: datetime) -> Reply:
             if not data["eligible"]:
                 return {"status": "not_eligible"}
-            state, result = codes.check(_code_state(data), hashed, now)
-            _store_code(data, state)  # consuming the code and verifying are one write
+            state, result = codes.check(code_state(data), hashed, now)
+            store_code(data, state)  # consuming the code and verifying are one write
             if result is codes.Checked.VERIFIED:
                 data["verified_at"] = data["verified_at"] or now.isoformat()
             if result is codes.Checked.LOCKED:
@@ -194,36 +214,6 @@ class Calls:
             return {"status": result.value}
 
         return await self.rows.step(run_id, "verify_code", decide)
-
-
-def new_call(cohort: str, now: datetime) -> Data:
-    """A call's row on its first request (architecture section 7)."""
-    return {
-        "cohort": cohort,
-        "started_at": now.isoformat(),
-        "last_activity": now.isoformat(),
-        "closed_at": None,
-        "mc": None,
-        "carrier_name": None,
-        "eligible": False,
-        "authority": None,
-        "otp": _code_fields(codes.CodeState()),
-        "verified_at": None,
-        "lookup": 0,  # counts MC lookups, so only the latest one's result is applied
-        "search": None,
-        "offers": {},  # load ID to the last offer we said
-        "rounds": 0,
-        "last_counter": None,
-        "accepting": None,  # an acceptance claimed before its booking row is written
-        "agreement": None,
-        "policy_version": None,
-        "outcome": None,
-        "summary": None,
-        "ended_at": None,  # from the workflow, after the voice agent finishes
-        "ended_by": None,
-        "duration_seconds": None,
-        "events": [],
-    }
 
 
 def is_verified(data: Data) -> bool:
@@ -258,22 +248,37 @@ def _select(mc: str) -> Decide:
         if data["mc"] != mc:
             if data["agreement"] is not None or data["accepting"] is not None:
                 return Unchanged({"status": "carrier_locked"})
-            _store_code(data, codes.for_new_mc(_code_state(data)))
-            data.update(mc=mc, carrier_name=None, eligible=False, authority=None, verified_at=None)
+            store_code(data, codes.for_new_mc(code_state(data)))
+            data.update(
+                mc=mc,
+                carrier_name=None,
+                eligible=False,
+                authority=None,
+                verified_at=None,
+                otp_route=None,
+            )
             data.update(offers={}, shipments={}, lowest_asks={}, last_counter=None, outcome=None)
+        # Suspend freight access while rechecking even the same MC. Keep its valid OTP.
+        data.update(eligible=False, authority=None)
         data["lookup"] += 1
         return {"status": "checking", "lookup": data["lookup"]}
 
     return decide
 
 
-def _delivery(hashed: str, send_number: int, status: str) -> Decide:
+def _delivery(hashed: str, send_number: int, status: str, route: str) -> Decide:
     """A mail completion belongs to its issuance, even if a newer code has the same digits."""
 
     def decide(data: Data, now: datetime) -> Reply:
         otp = data["otp"]
         current = otp["hash"] == hashed and otp["sends"] == send_number
-        return {"status": status if current else "superseded"}
+        if not current:
+            return {"status": "superseded"}
+        if status == "sent":
+            data["otp_route"] = route
+        elif status in ("locked", "send_limit"):
+            store_code(data, codes.for_new_mc(code_state(data)))
+        return {"status": status}
 
     return decide
 
@@ -283,32 +288,3 @@ def _latest(lookup: int, decide: Decide) -> Decide:
     return lambda data, now: (
         decide(data, now) if data["lookup"] == lookup else {"status": "superseded"}
     )
-
-
-def _code_state(data: Data) -> codes.CodeState:
-    otp = data["otp"]
-    return codes.CodeState(
-        hash=otp["hash"],
-        expires_at=_time(otp["expires_at"]),
-        sends=otp["sends"],
-        failed=otp["failed"],
-        consumed_at=_time(otp["consumed_at"]),
-    )
-
-
-def _store_code(data: Data, state: codes.CodeState) -> None:
-    data["otp"] = _code_fields(state)
-
-
-def _code_fields(state: codes.CodeState) -> Data:
-    return {
-        "hash": state.hash,
-        "expires_at": state.expires_at and state.expires_at.isoformat(),
-        "sends": state.sends,
-        "failed": state.failed,
-        "consumed_at": state.consumed_at and state.consumed_at.isoformat(),
-    }
-
-
-def _time(text: str | None) -> datetime | None:
-    return datetime.fromisoformat(text) if text else None

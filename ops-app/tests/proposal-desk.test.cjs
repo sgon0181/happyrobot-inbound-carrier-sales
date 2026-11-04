@@ -35,3 +35,22 @@ test('mutation authorization only accepts exact assigned platform subjects', asy
     assert.deepEqual(calls, expected === 200 ? [['LD1','confirm',5,'rep-1']] : []);
   }
 });
+
+test('credential callbacks ignore forwarding headers and unsafe writes require an exact origin', () => {
+  const {getExternalOrigin,allowedWriteOrigin}=load('src/lib/request.ts');
+  const saved=process.env.OPS_APP_ORIGIN;
+  try {
+    process.env.OPS_APP_ORIGIN='https://broker.happyrobot.dev';
+    const req={nextUrl:new URL('https://malicious.example/login'),
+      headers:new Headers({'x-forwarded-host':'malicious.example','x-forwarded-proto':'http'})};
+    const app=getExternalOrigin(req);
+    assert.equal(app,'https://broker.happyrobot.dev');
+    assert.equal(allowedWriteOrigin('https://malicious.example',app,''),false);
+    assert.equal(allowedWriteOrigin(null,app,''),false);
+    assert.equal(allowedWriteOrigin('null',app,''),false);
+    assert.equal(allowedWriteOrigin(app,app,''),true);
+    assert.equal(allowedWriteOrigin('https://platform.happyrobot.ai',app,'https://platform.happyrobot.ai'),true);
+  } finally {
+    if(saved===undefined)delete process.env.OPS_APP_ORIGIN;else process.env.OPS_APP_ORIGIN=saved;
+  }
+});

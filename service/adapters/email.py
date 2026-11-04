@@ -7,6 +7,8 @@ only into the email body, so it never enters a HappyRobot run.
 import asyncio
 import smtplib
 import ssl
+import time
+from collections import defaultdict, deque
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from email.message import EmailMessage
@@ -17,6 +19,14 @@ SUBJECT = "HappyRobot Logistics verification code"
 
 class EmailFailed(Exception):
     """The email may or may not have gone. The send still counts against the limit."""
+
+
+class NoTrustedContact(EmailFailed):
+    """No independently enrolled recipient exists for this MC."""
+
+
+class DeliveryLimited(EmailFailed):
+    """This process protected the inbox before calling the SMTP server."""
 
 
 @dataclass(frozen=True, kw_only=True)
@@ -32,17 +42,35 @@ class EmailSettings:
 
 class CodeMailer:
     def __init__(
-        self, settings: EmailSettings, smtp: Callable[..., Any] = smtplib.SMTP_SSL
+        self,
+        settings: EmailSettings,
+        smtp: Callable[..., Any] = smtplib.SMTP_SSL,
+        *,
+        clock: Callable[[], float] = time.monotonic,
     ) -> None:
         self.settings = settings
-        self._smtp = smtp
+        self._smtp, self._clock = smtp, clock
+        self._recent: defaultdict[str, deque[float]] = defaultdict(deque)
 
     async def send(self, code: str, mc: str) -> None:
         contacts = self.settings.contacts
         recipient = self.settings.inbox if contacts is None else contacts.get(mc)
         if not recipient:
-            raise EmailFailed("No trusted recipient for this carrier.")
+            raise NoTrustedContact("No trusted recipient for this carrier.")
+        self._admit(recipient.casefold())
         await asyncio.to_thread(self._send, code, recipient)
+
+    def _admit(self, recipient: str) -> None:
+        # One service process. No await before admission, and failed SMTP sends still count.
+        now = self._clock()
+        windows = ((self._recent[recipient], 4), (self._recent[""], 100))
+        for window, limit in windows:
+            while window and window[0] <= now - 600:
+                window.popleft()
+            if len(window) >= limit:
+                raise DeliveryLimited("Code delivery limit reached.")
+        for window, _ in windows:
+            window.append(now)
 
     def _send(self, code: str, recipient: str) -> None:
         settings = self.settings

@@ -1,5 +1,8 @@
 # KPI definitions
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 ## Recorded demo call overview
 
 The Overview answers three questions for the operations manager. How often do verified calls produce a reservation? Where do calls stop? How far does the carrier payment move from the opening offer?

@@ -1,5 +1,8 @@
 # Carrier sales walkthrough
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 The retained opening through section 3 ends at 2:03.674. It introduces the problem and records the Version 8 web call. The remaining 2:56.326 takes the viewer from the agreed $1,000 rate to the rep's decision, the wider call history, and evidence for a supervised pilot.
 
 | Section | What to show | What the audience should learn |

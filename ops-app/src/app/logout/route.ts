@@ -1,3 +1,4 @@
+import { getExternalOrigin } from "@/lib/request";
 import { NextRequest, NextResponse } from "next/server";
 import {
   APP_REFRESH_COOKIE_NAME,
@@ -7,7 +8,7 @@ import {
 } from "@/lib/auth-cookies";
 
 export async function GET(request: NextRequest) {
-  const response = NextResponse.redirect(new URL("/login", request.url));
+  const response = NextResponse.redirect(new URL("/login", getExternalOrigin(request)));
   response.cookies.set({
     name: APP_TOKEN_COOKIE_NAME,
     value: "",

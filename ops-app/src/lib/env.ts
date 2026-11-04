@@ -27,11 +27,10 @@ export function getServerEnv() {
   };
 }
 
-const DEFAULT_SERVICE_URL = "https://happyrobot-carrier-sales-sg.fly.dev";
 
 /** Server-only. OPS_API_KEY must never be NEXT_PUBLIC, logged or returned. */
 export function getOpsEnv() {
-  const serviceUrl = (process.env.OPS_SERVICE_URL?.trim() || DEFAULT_SERVICE_URL).replace(/\/$/, "");
+  const serviceUrl = (process.env.OPS_SERVICE_URL?.trim() ?? "").replace(/\/$/, "");
   return {
     opsApiKey: process.env.OPS_API_KEY?.trim() ?? "",
     serviceUrl: serviceUrl.startsWith("https://") ? serviceUrl : "",

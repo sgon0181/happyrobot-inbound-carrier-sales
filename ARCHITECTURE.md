@@ -1,5 +1,8 @@
 # Inbound Carrier Sales: Architecture
 
+**Proposal checkout.** The [Friday pilot guide](docs/proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 The carrier sales App opens on the rep queue and exposes the dated voice sample in Overview. [Reviewer guide](docs/reviewer-guide.md) links the filmed call, its originating transaction, commercial metrics and QA evidence.
 
 | | |
@@ -229,7 +232,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 | `POST /carriers/verify` | Agent | Normalizes the MC, checks FMCSA, saves the result. |
 | `POST /otp/send` | Agent | Issues a code once the carrier is eligible. At most 2 per call. |
 | `POST /otp/verify` | Agent | Checks the spoken code. At most 3 failures, then the call is locked. |
-| `POST /loads/search` | Agent | `LOAD_QUERY`, then `LOAD_GET` on up to 3 candidates. Returns allowed fields and our opening offer. |
+| `POST /loads/search` | Agent | `LOAD_QUERY`, then bounded batches of `LOAD_GET` until up to 3 usable matches are found. Returns validated operating fields and the current quote. |
 | `POST /negotiate` | Agent | Applies the negotiation policy. On agreement, reserves the load. |
 | `POST /calls/close` | Agent | Records closing time and summary. Safe to repeat. |
 | `POST /calls/ended` | Agent | Sent by the workflow after the voice agent finishes: who ended the call and how long it lasted. Creates the call's row if no tool ran. Safe to repeat. |
@@ -366,6 +369,10 @@ Both draws use an HMAC of the policy version, load ID and purpose under a server
 
 **On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
 
+**Proposal consent boundary.** Each quote stores its shipment facts, including dispatch ZIPs. Acceptance and rep submission compare the fresh TMS facts. Changed terms require a new pitch and acceptance. A stable shipment retains its spoken price through a repeated search or ask, unless the current cap requires a lower quote. A rising posted rate never silently raises a prior quote. A carrier's own earlier lower ask bounds later counters on those same terms. A changed shipment clears those per-load facts and retains the call-wide round budget.
+
+A booking row is a durable hold. Rep submission additionally requires the source call to have a matching finalized agreement and trusted-contact verification. A terminal webhook can recover a hold whose acceptance write was interrupted, but labels it as requiring carrier follow-up. That hold can be released, cannot be sent and is excluded from the conversion numerator. This is a safety repair, not evidence the caller heard a completed handoff.
+
 **Reservation context.** The fresh detail read used to price an acceptance also supplies an explicit rep-view allowlist. Its lane, dates, equipment, cargo and posted rate are stored on the booking row and its reserved event; the ceiling is excluded. Reusing a released row preserves the previous snapshot in its event. Old rows have no reconstructed context. A carrier name is joined only while the call MC matches the reservation MC.
 
 **In the app.** Confirm checks the row is still the version the rep saw, re-reads the load, wins a version-checked write to `SUBMITTING`, sends `LOAD_BOOK` once and saves the reply. Decline makes the same version check.
@@ -419,7 +426,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | The connection never opens, so no byte left the service | `FAILED`, with `send.step` recording why. The load is free. |
 | Timeout after connecting, malformed reply, `ALREADY_BOOKED` or any other error | `UNKNOWN`, with bytes kept. Never resent. |
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
-| Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, the receipt is logged and shown on the rep's screen. |
+| Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, safe receipt identifiers, state and a digest are retained in the log and rep screen. Raw bytes stay off the browser and application log. A process crash can still lose unpersisted bytes. |
 
 **`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](docs/tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke accepted proceeding with this handling for the challenge on November 5. He supplied no way to finalize the external booking. [Q8 and limits](docs/questions.md)
 
@@ -490,7 +497,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 
 | Gate | Target |
 |---|---|
-| Size | Functions at most 50 lines, modules at most 300 |
+| Size | Functions at most 50 lines, modules at most 300, enforced by `tools/check_service_shape.py` including nested helpers |
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |

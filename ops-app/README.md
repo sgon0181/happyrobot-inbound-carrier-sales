@@ -1,5 +1,10 @@
 # Operations app
 
+**Proposal checkout.** The [Friday pilot guide](../docs/proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
+For the proposal, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the isolated App environment. The service URL has no implicit production fallback. See the [pilot runbook](../docs/proposal.md).
+
 The dashboard for the operations manager and senior reps, built on the HappyRobot Apps Next.js template and mirrored here for review. It is described in [architecture section 11](../ARCHITECTURE.md#11-operations-app).
 
 ## How it works
@@ -31,7 +36,7 @@ Each action posts the booking version the rep saw ([D-31](../docs/decisions.md))
 | Name | Where | Meaning |
 |---|---|---|
 | `OPS_API_KEY` | App secret, server only | The service's ops key. Never `NEXT_PUBLIC`. |
-| `OPS_SERVICE_URL` | App setting, optional | The service's HTTPS address. Defaults to `https://happyrobot-carrier-sales-sg.fly.dev`. |
+| `OPS_SERVICE_URL` | App setting, required | The intended service's HTTPS address. |
 | `HR_PLATFORM_URL`, `NEXT_PUBLIC_ORG_ID`, `NEXT_PUBLIC_APP_SLUG`, `NEXT_PUBLIC_APP_NAME` | Supplied by the platform | Sign-in and app identity, as in the template |
 
 ## Checks

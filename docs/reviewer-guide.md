@@ -1,5 +1,8 @@
 # Reviewing the carrier sales proof of concept
 
+**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+
+
 [Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
 
 | Requirement | Evidence |

@@ -12,6 +12,7 @@ check: lint types test
 lint:
 	ruff check service tools
 	ruff format --check service tools
+	python tools/check_service_shape.py
 
 types:
 	mypy

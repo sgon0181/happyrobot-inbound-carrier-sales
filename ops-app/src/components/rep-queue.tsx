@@ -117,10 +117,12 @@ export function RepQueue({
                     </TableCell>
                     <TableCell className={cell} title={USD_NOTE}>
                       <p className="font-semibold tabular-nums">{fmtUsd(b.rate)}</p>
+                      {b.agreementNeedsReview && <p className="text-xs text-amber-800">Held amount only</p>}
                       <p className="text-xs text-muted-foreground">Opened {fmtUsd(b.callId ? callById.get(b.callId)?.openingRate ?? null : null)}</p>
                     </TableCell>
                     <TableCell className={cell}>
                       <StateBadge state={b.state} />
+                      {b.agreementNeedsReview && <p className="text-xs text-amber-800">Acceptance incomplete</p>}
                       {b.state === "RESERVED" ? null : (
                         <p className="mt-1 text-xs text-muted-foreground">{b.state === "FAILED" ? submissionStatus(b.state, b.reason, b.tmsStatus) : nextAction(b.state)}</p>
                       )}
@@ -159,7 +161,7 @@ export function BookingActions({
       loadId={b.loadId}
       version={b.version}
       actions={actions}
-      confirmDisabledReason={b.cohort !== "real" && liveBooking === true ? "Historical or unclassified reservation. Booking sends are off for this record." : confirmReason(liveBooking, short)}
+      confirmDisabledReason={b.agreementNeedsReview ? "Acceptance incomplete. Check the call and contact the carrier. This hold can be released." : (b.cohort !== "real" || !b.trustedContact) && liveBooking === true ? "This reservation needs a fresh verification through a trusted carrier contact before submission." : confirmReason(liveBooking, short)}
       confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
     />
   );

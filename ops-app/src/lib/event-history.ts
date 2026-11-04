@@ -52,6 +52,8 @@ function eventDetail(e: Json): string | null {
   });
   if (offers.length) parts.push(`Offers: ${offers.join(", ")}`);
   // What was pitched: each load's lane and our offer, from the search's own event.
+  const reviewIds = list(e.review_load_ids).filter(id => typeof id === "string" && /^LD[0-9]{1,16}$/.test(id));
+  if (reviewIds.length) parts.push("Review shipment terms in the TMS for " + reviewIds.join(", "));
   const pitched = list(e.loads).slice(0, 3).flatMap(pitchDetail);
   const search = obj(e.search);
   const lane = [search.equipment, search.origin_state, search.dest_state].map((v) => str(v, 32));

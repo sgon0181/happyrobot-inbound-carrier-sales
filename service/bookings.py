@@ -12,6 +12,18 @@ from service.adapters.twin import Data, Twin
 FREE = frozenset({"FAILED", "RELEASED", "UNCLAIMED"})  # every other state holds the load
 
 
+def agreement_recorded(call: Data | None, booking: Data, load_id: str) -> bool:
+    """A durable hold can precede the call's agreement. A terminal recovery needs rep follow-up."""
+    if not call or call.get("accepting") or call.get("agreement_needs_review"):
+        return False
+    agreement = call.get("agreement") or {}
+    return (
+        agreement.get("load_id") == load_id
+        and agreement.get("mc") == booking.get("mc") == call.get("mc")
+        and agreement.get("rate") == booking.get("rate")
+    )
+
+
 class Bookings:
     def __init__(self, twin: Twin) -> None:
         self.twin = twin
@@ -32,6 +44,7 @@ class Bookings:
         cohort: str,
         now: datetime,
         load: Data | None = None,
+        otp_route: str | None = None,
     ) -> Data | None:
         """Hold the load for this claim. Returns the row if this call holds it, as stored,
         so a retry recovers the first attempt's rate and MC. None if another call holds it,
@@ -48,7 +61,7 @@ class Bookings:
                 return None, current if row.get("call_id") == call_id else None
             attempt = {"call_id": call_id, "claim_id": claim_id, "mc": mc, "rate": rate}
             data = new_booking(call_id, mc, rate, cohort) | {"claim_id": claim_id}
-            data["load"] = load
+            data.update(load=load, otp_route=otp_route)
             data["void_claims"] = row.get("void_claims", [])
             data["events"] = with_event(
                 row, now, "reserved", attempt | {"state": "RESERVED", "load": load}

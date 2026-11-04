@@ -175,7 +175,9 @@ def rig(
     twin, mailer, clock, board = FakeTwin(), FakeMailer(fail=mail_fails), Clock(), FakeBoard()
     rows = CallRows(twin=twin.twin(), cohort="real", now=clock)
     fmcsa = Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fake.reply))
-    calls = Calls(rows=rows, fmcsa=fmcsa, mailer=mailer, code_secret=b"s" * 24)
+    calls = Calls(
+        rows=rows, fmcsa=fmcsa, mailer=mailer, code_secret=b"s" * 24, trusted_contacts=True
+    )
     sales = Sales(
         rows=rows,
         board=board,

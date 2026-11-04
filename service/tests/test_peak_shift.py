@@ -12,6 +12,7 @@ import pytest
 from service import main
 from service.adapters.fmcsa import Fmcsa, FmcsaSettings
 from service.config import load_settings
+from service.core.approved_freight import MARKETS
 from service.tests import rig
 from service.tests.fake_tms import MALFORMED, FakeTMS, client_for, make_load
 from service.tests.fake_twin import FakeTwin
@@ -76,13 +77,25 @@ def test_parallel_journeys_recover_a_bad_read_and_submit_each_load_once(
         twin, inbox = FakeTwin(), Inboxes()
         carrier = rig.FakeFmcsa([ACTIVE], delay=0.01)
         authority = Fmcsa(FmcsaSettings(api_key="fixture"), httpx.MockTransport(carrier.reply))
-        records = [make_load(f"LD9{i:04}", ORIG_STATE=s) for i, s in enumerate(ORIGINS)]
+        records = [
+            make_load(f"LD9{i:04}", ORIG_STATE=s, ORIG_CITY=MARKETS[s][0])
+            for i, s in enumerate(ORIGINS)
+        ]
         async with FakeTMS(records, faults=[MALFORMED]) as wire:
             monkeypatch.setattr(main, "Twin", lambda _: twin.twin())
             monkeypatch.setattr(main, "Fmcsa", lambda _: authority)
             monkeypatch.setattr(main, "CodeMailer", lambda _: inbox)
             monkeypatch.setattr(main, "TmsClient", lambda _: client_for(wire))
-            app = main.build(load_settings(ENV | {"LIVE_BOOKING": "true", "CALL_COHORT": "real"}))
+            app = main.build(
+                load_settings(
+                    ENV
+                    | {
+                        "LIVE_BOOKING": "true",
+                        "CALL_COHORT": "real",
+                        "OTP_CONTACTS_JSON": '{"170000":"fixture@example.test"}',
+                    }
+                )
+            )
             transport = httpx.ASGITransport(app=app)
             async with httpx.AsyncClient(
                 transport=transport, base_url="http://fixture", headers=auth(ENV["AGENT_API_KEY"])

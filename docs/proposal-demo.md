@@ -1,5 +1,7 @@
 # Carrier sales recording cues
 
+This rehearsal uses the known Version 8 recording. The Version 9 and Version 10 candidates remain experimental. Use the filmed workflow until the latest candidate completes its documented voice acceptance gates.
+
 Private rehearsal. The guide voice outside the genuine Version 8 call is synthetic. Record those sections in your own voice before presenting the demo. The redacted call is included as its own editable clip.
 
 The timer follows the rendered rehearsal. Start with a clean tab bar, disable notifications and close the inbox. Open the historical sample and the disposable local simulator in separately labeled tabs. Each is labeled in the video. Use the actual receipt returned during a fresh demonstration.
@@ -88,18 +90,18 @@ The timer follows the rendered rehearsal. Start with a clean tab bar, disable no
 
 **Say**  Testing covered normal agreements, expired codes and callers trying to skip verification. One recording caught the agent negotiating after a caller rejected a misheard price. We made it repeat the corrected total and wait for yes. The same cases went from sixteen passes in twenty-four to all twenty-four. The broader suite passed one hundred eighteen mocked text checks.
 
-## 04:11 to 04:29  Controlled concurrency
+## 04:11 to 04:35  Controlled concurrency
 
 **Show**  Show the separate loopback concurrency run and the counts. Distinguish this from the recorded calls.
 
-**Say**  For the IT team, a separate test ran twelve concurrent API journeys against a local TCP simulator. Twenty-four competing rep approvals produced exactly twelve booking writes. That exercises duplicate sends. Live phone capacity still needs a staffed trial.
+**Say**  Two local exercises tested volume. At the Twin rate limit, fourteen of fifteen simultaneous authority checks timed out. Reducing four statements to two let all fifteen finish. In a separate unpaced run, twelve API journeys and twenty-four competing approvals produced twelve TCP booking writes. The pilot still needs to measure concurrent voice calls.
 
-## 04:29 to 04:48  Pilot decision
+## 04:35 to 04:53  Pilot decision
 
 **Show**  Close on one staffed shift and the measures to compare with ordinary dispatch.
 
 **Say**  For a Monday pilot, I'd connect trusted carrier contacts and keep a rep on every submission. Then compare a similar staffed shift on missed calls, dispatcher minutes and verified calls that turn into reviewed deals. Let's start with one shift and inspect every uncertain send together.
 
-Measured rehearsal duration: 04:48.
+Measured rehearsal duration: 04:53.
 
 The 49 trials span workflow versions. The separate concurrency experiment uses a local TCP simulator. The filmed Werner agreement, second pricing example, historical TMS receipt and rehearsed local reservation each have their own load.

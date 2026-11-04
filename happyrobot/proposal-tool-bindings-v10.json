@@ -1,0 +1,368 @@
+{
+  "workflow_id": "01a18119-67a1-79a3-b220-369aa359d4fb",
+  "candidate_version_id": "01a1a8e0-5e4d-78a6-a27c-af310f4001cd",
+  "candidate_version_slug": "50gtoofv0s2z",
+  "candidate_name": "ultimateProposal explicit ending",
+  "candidate_state": "Unpublished. Recommended proposal source for further voice acceptance; not approved for production promotion.",
+  "prompt_sha256": "da77987a402de8a040bb32f93dc86490909006a9a7de61b8f5f3c24966249532",
+  "production": "V8 remains live and unchanged.",
+  "predecessor": {
+    "version_id": "01a1a747-c7d3-7dd1-9b18-9a983e516779",
+    "root_sha256": "f6453f47dec6458a4e70a87a58491a94ba11fe414216a429f35953930c38037c",
+    "evidence": "qa-proposal.json"
+  },
+  "native_tools": [
+    {
+      "name": "send_code",
+      "node_id": "01a1a8e0-5e60-72a0-860b-1a69205f3498",
+      "definition": {
+        "message": {
+          "type": "none",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": [],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Email a six-digit verification code to the carrier. Call it once, after verify_carrier returns eligible."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e60-72a0-860b-1a69205f3498",
+        "tool_index_hash": "f52f34fded7e0ed2ac36dce9e965dd6cad2da716d1712210649d479dfe49e620"
+      }
+    },
+    {
+      "name": "verify_carrier",
+      "node_id": "01a1a8e0-5e60-7481-b402-5f44cb33ed54",
+      "definition": {
+        "message": {
+          "type": "none",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "mc",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The MC number exactly as the caller said it, digits only."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Check the caller's MC number with FMCSA. Call it once the caller has said their MC number. The returned status decides what happens next."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e60-7481-b402-5f44cb33ed54",
+        "tool_index_hash": "9fc0e0057f286b72946100db0e8c15171243f720da78bb778eeafb85ec8447b0"
+      }
+    },
+    {
+      "name": "close_call",
+      "node_id": "01a1a8e0-5e5f-74d1-935a-80fb24c0fc99",
+      "definition": {
+        "message": {
+          "type": "ai",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "This is the final message the caller hears before the call ends. On agreement, say the exact service-approved load ID and total and that the senior rep will confirm. For any other terminal outcome, briefly say why and mention no handoff. ALWAYS finish this same message with 'Thank you for calling. Goodbye.' Never include private notes, a code, an internal price or an email address."
+                }
+              ]
+            }
+          ]
+        },
+        "end_call": false,
+        "execution": {
+          "async": false,
+          "force_invoke_llm_on_result": false
+        },
+        "parameters": [
+          {
+            "name": "summary",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "One or two sentences: the lane asked for, the load discussed, the final rate or why there was no deal. Never include a verification code."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "bye_headers": [],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Record that the call is ending. Call it once, just before you end any call after verification started."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e5f-74d1-935a-80fb24c0fc99",
+        "tool_index_hash": "11ea929ddbe23284930a5e72f825e7940df523cd1383bb8b74f5a037e5690e2d"
+      }
+    },
+    {
+      "name": "verify_code",
+      "node_id": "01a1a8e0-5e62-7968-8e05-3afd1d1c605e",
+      "definition": {
+        "message": {
+          "type": "none",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "code",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Exactly the digits the caller read, keeping leading zeros. Never guess."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Check the six-digit code the caller read back. The returned status decides what happens next."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e62-7968-8e05-3afd1d1c605e",
+        "tool_index_hash": "139b888963845d3dcae74883bb23d75f5693210ab51a24542ea75e7d74e9ae1f"
+      }
+    },
+    {
+      "name": "find_loads",
+      "node_id": "01a1a8e0-5e62-758a-8d43-ffafefdccba9",
+      "definition": {
+        "message": {
+          "type": "none",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "equipment",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Equipment as the caller said it, such as dry van, reefer or flatbed. Use an empty string if they did not say."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "origin_state",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Two-letter US state code where the load picks up, such as TX. Use an empty string if they did not say."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "dest_state",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Two-letter US state code where the load delivers, such as GA. Use an empty string if they did not say."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Search for loads on the caller's lane once they are verified. The service returns up to three loads with our offer for each."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e62-758a-8d43-ffafefdccba9",
+        "tool_index_hash": "ff091719292cc51da8d7fdc0125e2358d2e8eab9c8e27f094998c9019fde1486"
+      }
+    },
+    {
+      "name": "negotiate",
+      "node_id": "01a1a8e0-5e63-7d0e-9c99-94c29bf6c545",
+      "definition": {
+        "message": {
+          "type": "none",
+          "example": "",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": ""
+                }
+              ]
+            }
+          ]
+        },
+        "parameters": [
+          {
+            "name": "load_id",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "The load_id of the load being discussed, exactly as find_loads returned it."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "rate",
+            "required": true,
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Apply the pending-confirmation gate FIRST. After amount clarification, submit only a total already read back for this load and unambiguously affirmed by the caller. A reply containing a DIFFERENT complete amount is a correction even if it starts Yes: read back that new amount and wait for a fresh affirmative. No followed by the same digits is not confirmation. Yeah, 1125 after a clarification question also needs a readback and a later affirmative. Never negotiate while asking or waiting. With no pending clarification, ordinary clear asks/repeats and acceptance keep their direct behavior. Service-requested retries keep the same confirmed load and rate."
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "name": "after_final_offer",
+            "description": [
+              {
+                "type": "paragraph",
+                "children": [
+                  {
+                    "text": "Boolean flag. Use only the literal string true or false. For a new caller reply after this load's quoted final offer, use true. Otherwise use false. For a plain final refusal the TWO DIFFERENT fields are rate=decline and after_final_offer=true. Never put decline, money or words in this boolean field."
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Send the caller's rate for one offered load, whether they accept our offer or counter. The service answers with a counter, a final offer, an agreement or a failure."
+              }
+            ]
+          }
+        ],
+        "tool_index_id": "tool:01a1a8e0-5e63-7d0e-9c99-94c29bf6c545",
+        "tool_index_hash": "a946f2769a08486933888b8293e71224485d0ca003481df9d72da6639631b32c"
+      }
+    }
+  ],
+  "negotiate_service": {
+    "node_id": "01a1a8e0-5e5c-739b-86b9-a7a5794e292b",
+    "body_raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.load_id}},\"rate\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.rate}},\"after_final_offer\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.after_final_offer}}}"
+  },
+  "close_call_native_setting": {
+    "end_call_after_execution": false,
+    "message_type": "ai",
+    "proof": "v10-ending-state.txt contains reloaded UI readback Value 0. v10-explicit-ending.jpg visibly shows the disabled toggle.",
+    "ending": "Step 6 explicitly invokes the available built-in ending tool after close_call returns. Native text replay exposes hr_builtin_tool__end_conversation; voice uses _hangup.",
+    "voice_limit": "Voice _hangup and its audio timing were not exercised in this bounded text replay."
+  },
+  "native_configuration_scope": "All six native tool definitions and the changed negotiate HTTP body are exact sanitized readbacks. No auth token, headers or resolved credential configuration is exported.",
+  "changes_from_v9": [
+    "Only root step 6 changed.",
+    "close_call End call after execution toggled off and verified after reload.",
+    "All six tool schemas and pricing/verification/after_final_offer body semantics inherited unchanged."
+  ],
+  "editor_url": "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/50gtoofv0s2z"
+}

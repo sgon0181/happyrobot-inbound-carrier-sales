@@ -1,0 +1,7 @@
+Browser tab: 51519339, Title: "Edit Inbound Carrier Sales | FDE - Santiago Gonzalez Alvarez", URL: "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/50gtoofv0s2z?type=tool&node-id=01a1a8e0-5e5f-74d1-935a-80fb24c0fc99".
+1 AXWebArea Edit Inbound Carrier Sales | FDE - Santiago Gonzalez Alvarez, URL: platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/50gtoofv0s2z?type=tool&node-id=01a1a8e0-5e5f-74d1-935a-80fb24c0fc99
+				100 combo box (collapsed) Description: Select version: Version 10, Value: Version 10, ID: base-ui-_R_2qqlubsnriv5uqqtbcnubt5ulb_, Secondary Actions: Expand
+					101 text Version 10
+							310 text End call after execution
+							311 switch Description: End call after execution, Value: 0, ID: base-ui-_r_6e_
+The focused UI element is 1 AXWebArea Edit Inbound Carrier Sales | FDE - Santiago Gonzalez Alvarez, URL: platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/50gtoofv0s2z?type=tool&node-id=01a1a8e0-5e5f-74d1-935a-80fb24c0fc99

@@ -45,7 +45,7 @@ def test_rounds_carry_across_loads_on_a_call() -> None:
 
 @pytest.mark.parametrize(
     ("rounds_used", "current_offer"),
-    [(4, 2300), (-1, 2000), (0, 2400), (0, 1900)],  # too many rounds, or an offer off the terms
+    [(4, 2300), (-1, 2000), (0, 2400), (0, 0)],  # too many rounds, or an offer off the terms
 )
 def test_an_impossible_state_is_refused(rounds_used: int, current_offer: int) -> None:
     with pytest.raises(ValueError):

@@ -60,7 +60,15 @@ def test_an_invalid_setting_is_named_without_its_value(name: str, value: str, pr
 
 
 def test_live_booking_is_on_only_when_set_to_true() -> None:
-    assert load_settings(ENV | {"LIVE_BOOKING": "TRUE"}).live_booking
+    with pytest.raises(SettingsError, match="nonempty OTP_CONTACTS_JSON"):
+        load_settings(ENV | {"LIVE_BOOKING": "TRUE", "CALL_COHORT": "real"})
+    configured = ENV | {
+        "LIVE_BOOKING": "TRUE",
+        "OTP_CONTACTS_JSON": '{"138328":"rep@example.test"}',
+    }
+    with pytest.raises(SettingsError, match="explicit real"):
+        load_settings(configured)
+    assert load_settings(configured | {"CALL_COHORT": "real"}).live_booking
     assert load_settings(ENV | {"CALL_COHORT": "synthetic"}).cohort == "synthetic"
 
 

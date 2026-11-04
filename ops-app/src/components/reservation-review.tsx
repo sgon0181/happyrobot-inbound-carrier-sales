@@ -34,12 +34,12 @@ export function ReservationReview({ booking: b, call: c, now, live, canManage }:
       <p className="mt-1 text-sm">{load ? `${na(load.origin)} to ${na(load.destination)} · ${label(load.equipment)}` : na(c?.search)}</p>
       <div className="my-4 grid grid-cols-2 gap-4 border-y py-3 sm:grid-cols-4">
         {[
-          ["Opening offer", fmtUsd(opening)], ["Agreed rate", fmtUsd(agreed)],
+          ["Opening offer", fmtUsd(opening)], [b?.agreementNeedsReview ? "Held amount" : "Agreed rate", fmtUsd(agreed)],
           ["Agent counteroffers", fmtCount(c?.counters ?? null)], ["Pricing rounds used", fmtCount(c?.rounds ?? null)],
         ].map(([name, value]) => <div key={name}><p className={labels}>{name}</p><p className="mt-1 text-lg font-semibold">{value}</p></div>)}
       </div>
-      {gap !== null && <p className="mb-2 text-sm">{gap === 0 ? "Agreed at the opening offer." : `Agreed ${fmtUsd(Math.abs(gap))} ${gap < 0 ? "below" : "above"} the opening offer.`}</p>}
-      <p className="text-sm">{b ? nextAction(state) : "Historical agreement. Current load ownership has changed."}</p>
+      {gap !== null && !b?.agreementNeedsReview && <p className="mb-2 text-sm">{gap === 0 ? "Agreed at the opening offer." : `Agreed ${fmtUsd(Math.abs(gap))} ${gap < 0 ? "below" : "above"} the opening offer.`}</p>}
+      <p className="text-sm">{b?.agreementNeedsReview ? "A load hold was created, but the originating call has no finished agreement. Check with the carrier before creating a fresh reservation." : b ? nextAction(state) : "Historical agreement. Current load ownership has changed."}</p>
       {b && !canManage && <p className="mt-2 text-sm text-muted-foreground">View only. A designated senior rep can act on this reservation.</p>}
       {b && canManage && <div className="mt-2"><BookingActions booking={b} liveBooking={live} now={now} /></div>}
     </div>

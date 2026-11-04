@@ -24,9 +24,11 @@ const num = (v: unknown): number | null => typeof v === "number" && Number.isFin
 export function projectRepLoad(v: unknown): RepLoad | null {
   if (!v || typeof v !== "object" || Array.isArray(v)) return null;
   const l = obj(v);
-  const place = (p: unknown) =>
-    [str(obj(p).city, 100), str(obj(p).state, 4)].filter(Boolean).join(", ") ||
-    null;
+  const place = (p: unknown) => {
+    const location = [str(obj(p).city, 100), str(obj(p).state, 4)].filter(Boolean).join(", ");
+    const zip = str(obj(p).zip, 5);
+    return [location, zip && /^[0-9]{5}$/.test(zip) ? zip : ""].filter(Boolean).join(" ") || null;
+  };
   return {
     origin: place(l.origin),
     destination: place(l.destination),

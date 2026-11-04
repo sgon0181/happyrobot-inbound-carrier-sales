@@ -9,7 +9,7 @@ import {
   readJwtExpSeconds,
   refreshCookieMaxAgeSec,
 } from "@/lib/auth-cookies";
-import { getExternalOrigin } from "@/lib/request";
+import { allowedWriteOrigin, getExternalOrigin } from "@/lib/request";
 
 const PUBLIC_PREFIXES = [
   "/login",
@@ -21,13 +21,6 @@ const PUBLIC_PREFIXES = [
 const REFRESH_AHEAD_SEC = 120;
 const SAFE_METHODS = new Set(["GET", "HEAD", "OPTIONS"]);
 
-const ALLOWED_ORIGINS = new Set(
-  (process.env.ALLOWED_ORIGINS ?? "")
-    .split(",")
-    .map((origin) => origin.trim().toLowerCase().replace(/\/$/, ""))
-    .filter(Boolean)
-);
-
 // SameSite=None cookies ride along on cross-site form posts, which Lax blocked.
 function isCrossSiteWrite(request: NextRequest): boolean {
   if (!CROSS_SITE_COOKIES || SAFE_METHODS.has(request.method)) return false;
@@ -38,16 +31,14 @@ function isCrossSiteWrite(request: NextRequest): boolean {
   ) {
     return false;
   }
-  const origin = request.headers.get("origin");
-  if (!origin || origin === getExternalOrigin(request)) return false;
-  return !ALLOWED_ORIGINS.has(origin);
+  return !allowedWriteOrigin(request.headers.get("origin"), getExternalOrigin(request), process.env.ALLOWED_ORIGINS);
 }
 
 function deny(request: NextRequest): NextResponse {
   if (request.nextUrl.pathname.startsWith("/api/")) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  return NextResponse.redirect(new URL("/login", request.url));
+  return NextResponse.redirect(new URL("/login", getExternalOrigin(request)));
 }
 
 async function mintRefreshedPair(

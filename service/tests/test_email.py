@@ -8,7 +8,7 @@ from typing import Any, ClassVar
 
 import pytest
 
-from service.adapters.email import SUBJECT, CodeMailer, EmailFailed, EmailSettings
+from service.adapters.email import SUBJECT, CodeMailer, DeliveryLimited, EmailFailed, EmailSettings
 
 SETTINGS = EmailSettings(
     user="sender@example.test", credential="app-password", inbox="inbox@example.test"
@@ -78,3 +78,17 @@ def test_carrier_specific_roster_does_not_fall_back_to_demo_inbox() -> None:
     with pytest.raises(EmailFailed):
         asyncio.run(mail.send("432101", "138329"))
     assert [msg["To"] for msg in FakeSmtp.sent] == ["approved@example.test"]
+
+
+def test_separate_sessions_and_mcs_share_a_recipient_delivery_budget() -> None:
+    now = [0.0]
+    settings = replace(SETTINGS, contacts=dict.fromkeys(["1", "2"], "one@example.test"))
+    mail = CodeMailer(settings, FakeSmtp, clock=lambda: now[0])
+    for mc in ("1", "2", "1", "2"):
+        asyncio.run(mail.send("123456", mc))
+    with pytest.raises(DeliveryLimited):
+        asyncio.run(mail.send("123456", "2"))
+    assert len(FakeSmtp.sent) == 4
+    now[0] = 600
+    asyncio.run(mail.send("123456", "2"))
+    assert len(FakeSmtp.sent) == 5

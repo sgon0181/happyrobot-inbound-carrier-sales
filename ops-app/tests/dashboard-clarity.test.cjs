@@ -33,3 +33,14 @@ test('unknown send mode disables Confirm without disabling Decline in review', (
   assert.match(html, /disabled=""[^>]*>Confirm/);
   assert.doesNotMatch(html.match(/<button([^>]*)>Decline<\/button>/)[1], /\sdisabled(?:=|\s|$)/);
 });
+
+
+test('an incomplete acceptance is labeled as a hold and is releasable without submission', () => {
+  const html = render(ReservationReview, { booking: {...booking, cohort:'real', trustedContact:true,
+    agreementNeedsReview:true}, canManage: true, live: true, now: 0 });
+  assert.match(html, /Held amount/);
+  assert.match(html, /originating call has no finished agreement/);
+  assert.match(html, /This hold can be released/);
+  assert.match(html, /disabled=""[^>]*>Confirm/);
+  assert.doesNotMatch(html.match(/<button([^>]*)>Decline<\/button>/)[1], /\sdisabled(?:=|\s|$)/);
+});

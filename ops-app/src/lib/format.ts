@@ -61,6 +61,10 @@ const LABELS: Record<string, string> = {
   no_match: "No matching load",
   tms_unavailable: "TMS unavailable",
   fmcsa_unavailable: "Authority service unavailable",
+  shipment_review_required: "Shipment terms need review",
+  shipment_changed: "Shipment changed since agreement",
+  no_trusted_contact: "No enrolled carrier contact",
+  delivery_throttled: "Recipient delivery limit reached",
   pricing_review_required: "Pricing review needed",
   negotiation_failed: "Negotiation failed",
   in_progress: "In progress",
@@ -129,7 +133,7 @@ export function submissionStatus(state: string | null, reason: string | null, re
   if (state === "RESERVED" || state === "RELEASED") return "Not submitted";
   if (state === "UNKNOWN") return "Outcome unknown";
   if (state === "FAILED") {
-    if (["load_gone", "load_not_open", "shipment_changed", "ceiling_below_rate", "not_sent"].includes(reason ?? "")) return "Not submitted";
+    if (["load_gone", "load_not_open", "shipment_changed", "shipment_review_required", "ceiling_below_rate", "not_sent"].includes(reason ?? "")) return "Not submitted";
     if (["invalid_rate", "unknown_load", "not_found"].includes(reason ?? "")) return "Rejected by TMS";
     return "Submission evidence unavailable";
   }

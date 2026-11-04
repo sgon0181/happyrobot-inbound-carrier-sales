@@ -38,7 +38,7 @@ test('late receipt survives queue movement, refresh, remount and snapshot outage
   overrides['@/components/ui/button'] = { Button: button };
   const { default: HomePage } = loadTs('src/app/page.tsx', overrides);
   const queuePage = () => HomePage({ searchParams: Promise.resolve({ view: 'reservations', load: 'LD09001' }) });
-  const booking = { loadId: 'LD09001', version: 1, state: 'RESERVED', cohort: 'real', mc: '138328', rate: 1900, load: null, events: [] };
+  const booking = { loadId: 'LD09001', version: 1, state: 'RESERVED', cohort: 'real', trustedContact: true, mc: '138328', rate: 1900, load: null, events: [] };
   const good = (row) => ({ ok: true, snapshot: { liveBooking: true, generatedAt: '2026-11-03T12:00:00Z',
     kpis: { calls: 1, codePassed: 1, handoffs: 1, northstar: 1, repConfirmed: 0, tmsAcknowledged: 0, tmsConfirmed: 0, unknown: 0, outcomes: {}, medianSecondsToFirstOffer: 0, closedWithSummary: 0, endsReported: 0, syntheticCalls: 0 }, turnedAway: [], calls: [], bookings: [row] } });
   let tree;

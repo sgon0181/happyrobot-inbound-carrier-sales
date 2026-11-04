@@ -41,7 +41,8 @@ def respond(
     if rounds_used == MAX_ROUNDS:
         return Step(Action.FAILED, None, rounds_used)
 
-    target, round_number = terms.targets[rounds_used], rounds_used + 1
+    target = max(current_offer, terms.targets[rounds_used])
+    round_number = rounds_used + 1
     if amount <= target:
         return Step(Action.ACCEPT, amount, round_number)
     action = Action.FINAL_OFFER if round_number == MAX_ROUNDS else Action.COUNTER
@@ -54,5 +55,6 @@ def _check(terms: Terms, rounds_used: int, current_offer: int) -> None:
         raise ValueError("Terms need one target per round.")
     if not 0 <= rounds_used <= MAX_ROUNDS:
         raise ValueError("Rounds used is out of range.")
-    if not terms.opening <= current_offer <= terms.cap:
+    # A refreshed posted rate can raise the opening without invalidating a lower spoken quote.
+    if not 0 < current_offer <= terms.cap:
         raise ValueError("The current offer is outside this load's terms.")

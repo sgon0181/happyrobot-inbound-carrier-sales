@@ -34,6 +34,11 @@ export function CurrentDesk({ bookings, calls, now }: { bookings: Booking[]; cal
       <Link className={panel} href="/?view=bookings&status=ACK_PENDING&bucket=desk"><h3 className="text-sm font-semibold">Acknowledged, pending</h3><p className="my-2 text-3xl font-semibold">{pending.length}</p><p className="text-sm text-muted-foreground">Inspect receipts for requests the TMS acknowledged.</p></Link>
       <div className={panel}><h3 className="text-sm font-semibold">Verified calls with a reservation</h3><p className="my-2 text-3xl font-semibold">{verified.length ? Math.round(100*reserved.length/verified.length)+"%" : "No rate yet"}</p><p className="text-sm text-muted-foreground">{reserved.length} of {verified.length} verified · Last 7 days · {recent.length} calls</p></div>
     </div>
+    {calls.some(c => c.cohort === "real" && c.outcome === "shipment_review_required") &&
+      <Link className={panel + " block"} href="/?view=calls&bucket=desk&status=shipment_review_required">
+        <strong>Shipment terms need review</strong>
+        <p className="mt-1 text-sm text-muted-foreground">Open the call timeline for the affected load IDs. Check their operating terms before offering the freight.</p>
+      </Link>}
     <Attention title="Submission exceptions" description="Review ambiguous receipts and stalled submissions before another rep takes action." items={alerts} />
   </section>;
 }

@@ -424,3 +424,30 @@ def test_raw_receipts_stay_in_twin_and_never_enter_the_ops_snapshot() -> None:
     r = reserved()
     assert act(r, "confirm")["state"] == "ACK_PENDING"
     assert "raw_reply" in booking(r) and "raw_reply" not in str(r.get("/ops/snapshot"))
+
+
+@pytest.mark.parametrize("route", [None, "demo_inbox", "unrecognized"])
+def test_enabling_writes_later_cannot_submit_an_old_demo_inbox_reservation(
+    route: str | None,
+) -> None:
+    r = reserved()
+    booking(r)["otp_route"] = route
+    assert act(r, "confirm")["status"] == "record_read_only"
+    assert booking(r)["state"] == "RESERVED" and not r.board.sends
+
+
+def test_rep_cannot_send_an_interrupted_acceptance_even_after_terminal_recovery() -> None:
+    r = reserved()
+    call = r.row()
+    b = booking(r)
+    claim = {"id": b["claim_id"], "mc": b["mc"], "load_id": "LD09001", "rate": b["rate"]}
+    call.update(accepting=claim, agreement=None)
+    assert act(r, "confirm")["status"] == "agreement_incomplete"
+    assert r.post("/calls/ended", ended_by="caller")["status"] == "ended"
+    assert r.row()["agreement_needs_review"] and r.row()["accepting"] is None
+    assert act(r, "confirm")["status"] == "agreement_incomplete"
+    snapshot = r.get("/ops/snapshot")
+    assert snapshot["bookings"][0]["agreement_needs_review"]
+    assert snapshot["calls"][0]["booking"] is None
+    assert not r.board.sends
+    assert act(r, "decline")["status"] == "released"

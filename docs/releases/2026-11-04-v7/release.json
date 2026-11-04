@@ -1,0 +1,49 @@
+{
+  "release_date": "2026-11-04",
+  "owner_approval": "Explicit publication approval, followed by blanket release/submission authorization in chat.",
+  "workflow_id": "01a18119-67a1-79a3-b220-369aa359d4fb",
+  "version_id": "01a1a49e-4218-7d74-894a-ae6280954c29",
+  "version_slug": "67nko7p112j2",
+  "version_name": "Version 7",
+  "live": true,
+  "replaced_version": "Version 6",
+  "source_commit": "9d7a14981acac0c8690c3e790968bbf97853b1b9",
+  "prompt_sha256": "91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b",
+  "post_publish_readback": {
+    "production_points_to_version7": true,
+    "root_matches_reviewed_text": true,
+    "negotiate_schema_matches_reviewed_text": true,
+    "nodes": 16
+  },
+  "service": {
+    "release": 17,
+    "source_commit": "bf512aaae9d1ce6c21600bd2f4f744633ccc229b",
+    "redeployed": false
+  },
+  "app": {
+    "build": 20,
+    "republished": false
+  },
+  "live_booking": false,
+  "call_cohort": "synthetic",
+  "no_LOAD_BOOK": true,
+  "remaining": [
+    "One focused Version 7 human voice acceptance call",
+    "Owner walkthrough video URL",
+    "Reviewer account identification/access",
+    "Final portal submission with complete deliverables"
+  ],
+  "validation": {
+    "service_tests": 487,
+    "service_statements": "1650/1650",
+    "service_branches": "406/406",
+    "business_branches": "256/256",
+    "checkpoint_results": "102/102, 51 cases twice",
+    "full_mocked_text": "2/2 amount/notes checks; 0/2 complete closing passes, no recorded final speech"
+  },
+  "production_lines": {
+    "python": 2919,
+    "app_ts_tsx": 4613
+  },
+  "no_secret_change": true
+}

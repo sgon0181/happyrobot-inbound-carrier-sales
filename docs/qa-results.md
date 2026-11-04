@@ -1,8 +1,8 @@
 # QA results
 
-Updated on 2026-11-04 (Sydney). Workflow Version 6 (`alj9n98f66df`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below. Eleven Version 6 calls now supply closing evidence; the remaining amount and notes fixes are in unpublished Version 7. No new live booking was sent.
+Updated on 2026-11-04 (Sydney). Workflow Version 7 (`67nko7p112j2`), Fly release 17 from `bf512aa`, and Carrier Sales App Build 20 are live as of 2026-11-04 Sydney. Booking sends remain off and the call cohort remains synthetic. The reviewed source was pushed by Claude with owner approval. Published-App screenshots and read-only observations are recorded below. Eleven Version 6 calls now supply closing evidence; the remaining amount and notes fixes are live in Version 7; one focused voice acceptance call remains. No new live booking was sent.
 
-## Latest owner calls and unpublished amount fix
+## Latest owner calls and published amount fix
 
 The owner's 11 Version 6 calls are preserved in [sanitized evidence](../happyrobot/qa-v6-owner-calls.json). All 11 recorded close_call once, _hangup once, no subsequent caller turn, agent_hung_up and saved close/end timestamps in Twin. Three refused carriers ended proactively. Two negotiation failures used the three-round budget and no transfer; repeated asks preserved their round and offer. Central pickup/delivery strings were retained. Audio was not listened to, and checkpoint/text simulations remain separate from these human calls.
 
@@ -20,7 +20,7 @@ The owner's 11 Version 6 calls are preserved in [sanitized evidence](../happyrob
 
 Four synthetic reservations remain: LD01116@3800, LD01112@2275, LD01100@2050 and LD01102@1625. No TMS booking was sent and no hold was released. A clear carrier ask can produce agreement immediately; the earlier instruction promising only one reservation was incorrect.
 
-The owner-approved fix is [unpublished Version 7](voice-tuning.md): confirm a read-back total only after actual amount clarification, invalidate it on trailing fragments/corrections, and include all supplied operating terms before the offer question. Model, opening, service and workflow graph stay unchanged. Root SHA-256 is `91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b`.
+The owner-approved fix is [live Version 7](voice-tuning.md): confirm a read-back total only after actual amount clarification, invalidate it on trailing fragments/corrections, and include all supplied operating terms before the offer question. Model, opening, service and workflow graph stay unchanged. Root SHA-256 is `91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b`.
 
 | Layer | Latest result | Limit |
 |---|---|---|
@@ -29,7 +29,7 @@ The owner-approved fix is [unpublished Version 7](voice-tuning.md): confirm a re
 | Version 7 full mocked text |2/2 corrected amount/notes sequences, exactly 3825 after readback and yes | 52/53 seconds; both lack recorded final handoff/goodbye, so no complete closing pass |
 | Version 6 human voice | 11 timed transcript/tool/end-record reviews, all proactively ended | Not Version 7, and no audio listening |
 
-[All checkpoint iterations and failures](../happyrobot/qa-v7-amount-confirmation.json) and [both full traces](../happyrobot/qa-v7-conversations.json) remain available. Initial wording 93/102 and focused revision 35/36 exposed over-clarification and were corrected. The final root's original suite 101/102 included an E2 false negative: its actual tools/outage message/goodbye were correct. A replacement E2 first over-required a built-in ending unavailable in checkpoints (0/2), then explicitly graded text/notes and passed 2/2. No prompt changed during that fixture correction. Keep these layers separate. Targeted Version 7 voice checks follow review and approved publication; they are not complete yet.
+[All checkpoint iterations and failures](../happyrobot/qa-v7-amount-confirmation.json) and [both full traces](../happyrobot/qa-v7-conversations.json) remain available. Initial wording 93/102 and focused revision 35/36 exposed over-clarification and were corrected. The final root's original suite 101/102 included an E2 false negative: its actual tools/outage message/goodbye were correct. A replacement E2 first over-required a built-in ending unavailable in checkpoints (0/2), then explicitly graded text/notes and passed 2/2. No prompt changed during that fixture correction. Keep these layers separate. Review and publication are complete. One targeted Version 7 human call remains.
 
 ## Historical Version 5 baseline
 

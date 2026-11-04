@@ -1,6 +1,6 @@
 # Voice tuning and amount confirmation
 
-Status: Version 6 (`alj9n98f66df`) remains live on service release 17. The owner's 11 Version 6 calls now provide timed transcript, tool, end-event and Twin evidence for proactive closing. One amount-intent failure and one omitted operating-note pitch remain in that live version. The owner approved a fix, built in unpublished [Version 7](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/67nko7p112j2), with no service, model, opening or workflow-structure change. No push, deployment, publication, secret change or booking was performed in this task.
+Status: Version 7 (`67nko7p112j2`) is live on service release 17 after owner-approved publication. The owner's 11 Version 6 calls now provide timed transcript, tool, end-event and Twin evidence for proactive closing. One amount-intent failure and one omitted operating-note pitch in Version 6 led to the owner-approved fix, now published as [Version 7](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/67nko7p112j2), with no service, model, opening or workflow-structure change. The implementation task did not push, deploy or publish. The later owner-approved publication is recorded in [the Version 7 release](releases/2026-11-04-v7/README.md). No service deployment, secret change or booking was performed.
 
 ## Version 6 owner calls and the Version 7 fix
 
@@ -16,7 +16,7 @@ The LD01112 pitch in `cc1633ba` omitted supplied live-unload and detention terms
 
 Two fully mocked multi-turn simulations on the final draft completed in 52 and 53 seconds. Both pitched live unload, two free detention hours and 75 dollars/hour, then asked for a total, read back 3800, rejected trailing 25, read back 3825 and waited for yes. Each made exactly one negotiate call at 3825, then close_call and the text ending tool. [Saved traces](../happyrobot/qa-v7-conversations.json) preserve the arguments and order. Neither records spoken handoff or goodbye, so neither is a complete closing pass. All seven external actions, including call_ended, were explicitly locked and read back. These tests did not call the service or create a reservation.
 
-After review and owner-approved publication, targeted voice acceptance remains: the split-amount correction with explicit confirmation, an ordinary clear acceptance without extra confirmation, complete operating notes, and intact handoff/goodbye/hangup. Refresh read-only load availability before choosing lanes; four recently used loads are held. No service deployment is needed for this prompt-only change. Publication, push, reservation release and any booking still require the owner's separate approval.
+Publication and independent review are complete. One focused voice call remains, combining: the split-amount correction with explicit confirmation, an ordinary clear acceptance without extra confirmation, complete operating notes, and intact handoff/goodbye/hangup. Refresh read-only load availability before choosing lanes; four recently used loads are held. No service deployment is needed for this prompt-only change. The owner has approved the remaining release and submission work. No additional booking or hold release is needed.
 
 ## Historical Version 6 implementation evidence
 

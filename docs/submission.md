@@ -1,14 +1,14 @@
 # Submission candidate
 
-Do not send, push, invite reviewers or submit without owner approval. The reviewed source has been released with owner approval. Complete the remaining human acceptance, access, video and submission steps below.
+The owner has approved remaining release and submission work. The reviewed fix is live as Version 7, with service release 17 and App Build 20 unchanged. One focused human call and the owner walkthrough video remain; final submission must include those real artifacts rather than claim they are already complete.
 
 ## Links and files
 
 | Item | Candidate value | Remaining step |
 |---|---|---|
-| Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed source `bf512aa` pushed with owner approval; release-docs commit remains local for review; reviewer invitations pending |
-| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/alj9n98f66df | Version 6 live since 2026-11-04; prompt SHA-256 `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`; voice checklist pending |
-| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 6; current-version voice acceptance pending |
+| Private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed source through `9d7a149` is pushed; final release/docs update follows. Repository remains private; intended reviewer accounts have not been provided |
+| HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/67nko7p112j2 | Version 7 live since 2026-11-04; prompt SHA-256 `91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b`; one focused human voice call pending |
+| Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 7; one focused voice acceptance call pending |
 | Operations App | https://carrier-sales-santiago.happyrobot.dev | Carrier Sales, production Build 20, source 48ba398 per Claude; 77-file archive and final 1280px views/panels verified; reviewer-account access remains to check |
 | Build description | docs/build-description.md; export in submission/build-description.pdf | Refreshed 3-page PDF generated and all pages visually checked; update only if acceptance changes the claims |
 | Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
@@ -31,7 +31,13 @@ We tested the rules offline, generated reproducible pricing and negotiation inpu
 
 The next steps are to agree the pricing and TMS finalization assumptions; replace the demo inbox with trusted carrier contacts; validate expected capacity and conversation behavior; run a supervised pilot against agreed success criteria; and then consider real telephony and notifications.
 
-The repository, workflow and dashboard links are above. The build description accompanies the walkthrough. The owner will insert the final video URL before sending this email.
+Review links:
+
+- Web-call demo: https://platform.happyrobot.ai/deployments/6oaskq84xpfc
+- Operations App: https://carrier-sales-santiago.happyrobot.dev
+- Private code repository: https://github.com/sgon0181/happyrobot-inbound-carrier-sales
+
+The build description and source ZIP accompany this submission. The walkthrough viewing URL is supplied with the final portal submission. Reviewer repository invitations remain pending the intended GitHub account names.
 
 Thanks,
 Santiago
@@ -46,12 +52,11 @@ The shared demo inbox is an approved demonstration exception, not proof of carri
 
 ## Release and access checklist
 
-1. Completed with owner approval: Claude reviewed bf512aa and its prompt, then pushed source `bf512aa`. The release-docs commit is local until a separate read-only review and owner approval of its push.
-2. Completed by Claude: deploy service release 17, then publish workflow Version 6, verify healthy service, authenticated snapshot and missing-key rejection on `/calls/ended`. Booking sends remain off.
-3. Historical: Codex published Carrier Sales App Build 18 from `8b0e483` and recorded its visual checks. The App now shows production Build 20 with the redesigned dashboard. Claude's handover records source 48ba398/import 97da4f6; the 77-file archive matches and final views/panels at 1280px were independently checked. Do not republish without approval. No booking action was clicked in this verification.
-4. Complete the three targeted calls in final-owner-checklist.md on exact live Version 6, with separately authorized email delivery. Keep hostile tests synthetic and booking sends off. Preserve run IDs and check the end report in Twin-backed records.
-5. Before a real-cohort demo, separately approve changing CALL_COHORT back to real. Any demo booking send needs its own approval for the selected load. Historical LD01080 already supplies a PENDING receipt example; no new send is required for voice or hostile testing.
-6. Obtain reviewer handles from the candidate portal, approve invitations, grant agreed repository access and verify acceptance. Verify the workflow and App open for their HappyRobot accounts too.
-7. Review the regenerated build-description PDF, record the owner video, insert its URL, review the email and separately approve submission.
+1. Complete: reviewed prompt fix 9d7a149 published as Version 7 after explicit owner approval; exact root and tool readbacks match. Service release 17 from bf512aa and App Build 20 were not redeployed. Booking sends remain off and calls synthetic.
+2. Complete: the owner granted remaining push, release and submission approval. Codex is refreshing release records and the submission package. No extra deployment or booking is needed.
+3. Remaining: one focused Version 7 voice call in final-owner-checklist.md. Version 6 refusal, repetition, failed negotiation and times have human evidence and do not need repeating. Retain the new run ID and Twin close/end records.
+4. Remaining: owner-recorded approximately five-minute video and its viewing URL. Follow walkthrough.md, hide the emailed code and show the App Test view with Confirm disabled. No cohort flip is required.
+5. Reviewer accounts: the portal and latest Luke email thread do not identify GitHub usernames. A private repository and source ZIP are prepared for submission. Invitations remain pending actual recipient identities; do not guess or make the repository public. HappyRobot reviewer-account access is separately unverified.
+6. Finalize the portal's repository/workflow/video fields, prospect summary and PDF/source attachments, then submit under the owner's approval when the real call/video are available. Nothing is described as submitted until the portal confirms it.
 
-All six earlier test reservations have decline events dated 2026-11-04 Sydney. At visual review, five remain Released; LD01100 has since been reserved again by a later synthetic call, with its prior decline preserved in history. The new reservation was left untouched. Decline releases the local reservation; it is not an external TMS cancellation.
+Historical LD01080 already supplies a PENDING receipt example. The latest reviewed synthetic holds include LD01116 at 3800, LD01112 at 2275, LD01100 at 2050 and LD01102 at 1625. Earlier local declines are preserved in booking history. No further cleanup or TMS send is required.

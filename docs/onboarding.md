@@ -17,7 +17,7 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Reviewed source through `bf512aa` pushed after owner approval. Service release 17 matches its runtime source. App Build 20 is production, with source 48ba398 reported by Claude and its 77-file archive verified against the checkout. Release documentation is reviewed and committed separately; see submission.md for remaining acceptance and access steps. |
+| `main` | Reviewed source through `bf512aa` pushed after owner approval. Service release 17 matches its runtime source. App Build 20 is production, with source 48ba398 reported by Claude and its 77-file archive verified against the checkout. Reviewed prompt fix 9d7a149 is now published as Version 7; release documentation records one remaining voice call and video/access steps. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
 | Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
@@ -27,7 +27,7 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 
 | Platform resource | Identity | State |
 |---|---|---|
-| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 6 (`alj9n98f66df`, UUID `01a1a3b9-fbba-7b32-9567-e7c36fbec762`) live since 2026-11-04, replacing Version 5. Prompt SHA-256: `287da98f14bd76fccb6c8846af01d9423b3424d86140fa540245b48fd57deef5`. |
+| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 7 (`67nko7p112j2`, UUID `01a1a49e-4218-7d74-894a-ae6280954c29`) live since 2026-11-04, replacing Version 6. Prompt SHA-256: `91887bf1ecd2710d07446318f80d144eea55c1aec139cf23c0a812b60720b07b`. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Historical owner-call evidence retained; unpublished on 2026-11-04. |
 | Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Production Build 20 verified in the native build selector on 2026-11-04; redesigned dashboard and booking-sends-off state observed. Claude's release handover identifies source 48ba398/import 97da4f6; its 77-file archive matches the checkout. Final 1280px views/panels and disabled Confirm were independently checked. Build 18 source and visual provenance remain historical evidence. |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
@@ -35,6 +35,8 @@ Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdes
 | Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
 
 After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. The native App selector now shows production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; reviewer access still needs approval and validation.
+
+The owner subsequently approved publishing reviewed Version 7 and all remaining release/submission work. The exact prompt and tool readbacks match 9d7a149. No service deployment, App publication or secret change was needed. See releases/2026-11-04-v7/README.md. Reviewer identities are still not supplied; do not guess accounts.
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 

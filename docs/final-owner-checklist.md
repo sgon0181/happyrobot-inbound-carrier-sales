@@ -1,40 +1,48 @@
 # Finish and submit
 
-The service and App are released: healthy service release 17, live Version 6 and App Build 20. Your 11 Version 6 calls now establish proactive endings in timed traces and saved end records. One wrong-amount reservation and one omitted-note pitch led to the approved Version 7 fix. That draft is tested but unpublished. Review and approve its publication before the two focused voice checks below. No service deployment is needed. Booking sends stay off and calls stay synthetic.
+The reviewed fix is live: workflow Version 7, service release 17 and Carrier Sales App Build 20. The owner has approved the remaining release/submission work. Booking sends stay off and calls stay synthetic. No service redeployment, new booking, BOOKED result, capacity benchmark or cohort change is required to finish this submission.
 
-## 1. Two focused calls after approved Version 7 publication
+## 1. One final voice call, about three minutes
 
-Codex should first read current load availability and give you exact lane/load details. Do not reuse a held lane blindly: LD01116, LD01112, LD01100 and LD01102 are held from the latest tests. No hold was released. Use MC 138328 if FMCSA still returns eligible, confirm the carrier name and read the emailed code yourself. Never paste a code into chat or show one in the video.
+Open the [web-call demo](https://platform.happyrobot.ai/deployments/6oaskq84xpfc). Use MC **138328**, confirm the returned carrier name and read the actual emailed code. Never paste it into chat or show it in the video.
 
-| Call | What to do | What must happen |
+The read-only check at 2026-11-04 04:05 UTC found **LD01120**, reefer from **Augusta, Georgia, to Lexington, Kentucky**, OPEN and not locally held. Pickup: **November 11 at 7:18 PM Central (CST)**. Delivery: **November 13 at 9:18 PM Central (CST)**. Expected opening offer: **$975**. Note: **reefer set to 38F continuous**. Availability can change; if the service cannot offer it, Codex supplies a fresh checked lane rather than asking you to improvise.
+
+The initial range deliberately requires clarification. A clear complete number in ordinary words can correctly go directly to negotiate, so do not use a normal 3825 statement to test ambiguity. Wait for the agent's reply between each line:
+
+| When | Say | Expected behavior |
 |---|---|---|
-| A: trailing fragment | On a supplied available load, say "3800 and 25". When asked for a complete total, say only "3800". At the 3800 readback, say "25 dollars". When asked again, say "Three thousand eight hundred twenty-five dollars". At the 3825 readback, first correct it to another complete total to check a fresh readback. Then confirm yes only if you want that ask submitted | No negotiate at 3800 or 25, no inferred 3825. Each completed corrected amount is read back and awaits yes. Only the final confirmed total reaches negotiate. Follow the service's counter or agreement. If agreed, hear load/rate, mocked rep handoff, thanks, goodbye and proactive hangup |
-| B: notes and ordinary acceptance | On a second supplied available load, listen for all operating conditions, exact free detention period and hourly fee where supplied. Give an ordinary clear total or accept the actual offer | Complete notes before the offer question; no note fee added to the quote. A clear initial amount or direct yes reaches negotiate without an extra readback. On agreement, hear the full truthful handoff/closing and agent hangup |
+| Asked for equipment/lane | "Reefer, from Georgia to Kentucky." | Pitch the actual load, supplied times and 38F continuous setting before the offer question |
+| Asked whether the price works | "I need somewhere between thirty-eight hundred and thirty-nine hundred dollars." | Ask for one complete total |
+| Asked for the complete total | "Thirty-eight hundred." | Read back 3800 and ask for confirmation; no negotiate yet |
+| Asked to confirm 3800 | "Twenty-five dollars." | Ask for the complete total again; do not submit either fragment or infer 3825 |
+| Asked again | "Three thousand eight hundred twenty-five dollars." | Read back 3825 and ask for confirmation |
+| Asked to confirm 3825 | "Yes." | Submit exactly 3825 to negotiate |
+| If it counters | "Yes, that works." | Accept the actual service-approved offer, without another amount-clarification loop |
 
-Both calls can create local reservations. A clear ask can be accepted immediately; there is no promise that a counter is harmless to local availability. Booking sends remain off, so neither call submits to the TMS. You may instead decline before confirming an amount when you only want to test clarification. Do not click Confirm or release a hold without separate approval.
+At agreement, hear the approved load/rate, mocked senior-rep handoff, thanks and goodbye, followed by proactive agent hangup. Codex reviews the exact arguments, timed transcript and Twin close/end records. State whether the whole closing was audible, because recordings were unavailable in the last review.
 
-Tell Codex when done, with approximate times or run IDs. Codex will inspect exact tool arguments, timing, hangup and stored records; say whether the full closing was audible, because recordings were not retrievable in the latest review. These checks target the two changed behaviors and intact ending. Your successful Version 6 refusal, repetition, failed-negotiation and time checks remain useful evidence. They do not prove every possible conversation.
+This call may create a local reservation. It does not submit to the TMS while booking sends are off. Your successful Version 6 refusal, repetition, failed-negotiation and time checks still count. Do not repeat that suite. If this focused check passes, stop tuning and record the walkthrough.
 
 ## 2. Record the approximately five-minute walkthrough
 
-Use [the run sheet](walkthrough.md). The sequence is: customer problem, one verified live flow, App reservation and timeline, historical pending receipt, separate QA layers, five practical next steps.
+Use [the run sheet](walkthrough.md). Show the customer problem, a verified live flow, the App's reservation and timeline, the historical PENDING receipt, distinct QA layers and five practical next steps. The recording may include the focused acceptance call if the result is suitable.
 
-Keep the App on **Test** to show your new synthetic call. The **Real calls** KPI cards remain historical and exclude tests. Show Confirm disabled. Use LD01080 in Real Bookings only to illustrate the existing PENDING acknowledgement. Do not send another booking or release a reservation for the video.
+Keep the App on **Test** to show the new synthetic call. Show Confirm disabled. LD01080 in Real Bookings is the earlier PENDING acknowledgement, not a new booking from this demo. Hide the code, keys, private ceiling and credential-bearing portal URL. Record the video and provide its viewing URL.
 
-Keep the explanation simple: the model conducts the conversation, the service enforces authority/code/rate/round rules, Twin stores the decisions, and the rep owns the irreversible submission. PENDING is an acknowledgement, not a finalized booking. This is a tested proof of concept, not a measured claim of production reliability or financial impact.
+Explain: the model conducts the conversation, the service enforces eligibility/code/rate/round rules, Twin stores decisions, and the rep owns submission. A reservation and PENDING acknowledgement are separate from final TMS confirmation. Capacity and financial impact remain unproven.
 
-## 3. Final submission actions
+## 3. Submission preparation handled by Codex
 
-- Review the refreshed build-description PDF in submission/ready-to-submit/. It is already generated and visually checked.
-- Add your video URL to the candidate portal and the submission record. The prospect summary email is drafted in [submission.md](submission.md).
-- Approve pushing the local documentation commits. Runtime code is already pushed and deployed; no service deployment is needed for the prompt/documentation change. Workflow publication remains a separate approval.
-- Provide/confirm reviewer GitHub handles and approve invitations. The repository is private; the latest read-only access check found only the owner and zero pending invitations. Reviewers also need working HappyRobot workflow/App access. Do not share service keys.
-- Review the portal fields, attach the PDF, provide the private repository URL and optionally the prepared source ZIP if useful or requested, and approve submission. Nothing has been uploaded, sent or submitted automatically.
+- Push reviewed commits and record exact live Version 7/service 17/App 20 facts.
+- Refresh the build-description PDF, prospect summary text, source ZIP and manifest from tracked source only.
+- Fill the portal with the private repository/workflow links, summary and supporting files. Final submission waits for the actual video and the focused call result, not another approval loop.
+- Preserve a private repository. Reviewer account names are absent from the portal and Luke's latest replies. Include the source ZIP for portal review; invite only identified intended reviewers when their accounts are supplied. Do not guess accounts or share service keys.
 
-The portal offers repository URL and code ZIP entry, a walkthrough-video URL and file attachments. The assignment still requires a private repository link and reviewer access; a ZIP does not replace that requirement. Its private credential-bearing portal link stays outside the repository. CALL_COHORT can stay synthetic for the demo. Any later cohort or booking-mode change requires separate approval.
+The owner granted release/submission approval in chat. No additional booking or reservation cleanup is necessary. The final human call and owner video are still outstanding; neither is represented as complete.
 
-## What has already been checked
+## Evidence already available
 
-487 offline service tests, actual 100% service statement/branch coverage, 256/256 business branches, strict types/lint and Radon B or better. The live Version 6 prompt passed 40 checkpoints twice. Unpublished Version 7 passed 51 current checkpoints twice; all failures, fixture corrections and full-text limits are retained. Frontend clean-copy checks pass with 39 tests, three existing lint warnings, production build then typecheck, and zero production dependency vulnerabilities. All 77 App archive files match the checkout. Published App views and both detail panels were reviewed at 1280x900 with no page-level horizontal overflow and every visible Confirm disabled.
+487 service tests, 1650/1650 statements, 406/406 branches, 256/256 business branches, strict types/lint and Radon B or better. Version 7 has 51 checkpoints twice, 102/102 native grades. Both fully mocked multi-turn traces preserve 3825 and complete operating notes; neither records final spoken closing. Eleven Version 6 human calls show proactive endings and saved close/end records. The current App has 39 frontend tests, a production build/typecheck, three existing lint warnings and zero production dependency vulnerabilities; prior 1280px visual checks show no page-level clipping and disabled Confirm.
 
-The [QA report](qa-results.md), [voice evidence](voice-tuning.md) and [release record](releases/2026-11-04-v6/README.md) preserve versions, failures and limits. The remaining voice acceptance targets the changed Version 7 behavior after approved publication. It does not erase your Version 5 and Version 6 testing or require repeating every earlier scenario.
+[QA](qa-results.md), [voice evidence](voice-tuning.md) and [Version 7 release](releases/2026-11-04-v7/README.md) retain all failures, versions and limits.

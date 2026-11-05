@@ -1,0 +1,55 @@
+{
+  "files": {
+    "service/config.py": "c366a3cb93642e4cec45ad7fee81145c0c1caced91d46f83ef5492d5acae07d9",
+    "service/rep_actions.py": "b4b8eeeded1a8cd3a767b3d4e79d2cea583ce1de0d16db4b7798a803a2fd7769",
+    "service/selling.py": "915d350663553424e86bdc6312694547b196338fbe5c01798082203984fd2201",
+    "service/sale_decisions.py": "3225a97e2c7bd5107969c8c1a206e40bfdcdd0503712a4ce500c95757af6bcb9",
+    "service/bookings.py": "18188abde1174898431deb334b96eb83e7f9dafbbf3067b6f1c1f02a27e507df",
+    "service/call_state.py": "b19925f41b57780a434f11df7056c6c737e601579bc32305afa15b18c544336b",
+    "service/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/README.md": "2167d4b1e5428a4c1cb03da7dc5ed9ab3c98586f06479530825e0dab6fb0abae",
+    "service/dashboard.py": "2e0fa93db75768e246100bf85d845ff10f9cc9eaad910d20d2ad000a0c94a0db",
+    "service/api.py": "4233d75145105ae6d354719b35d87968cd411cbbbe1b86a597e14b3ca1682431",
+    "service/main.py": "0ec6f672596dd755383c5c799f8c5f2692f8bef1bdf8ae68710bcb1b83759826",
+    "service/calls.py": "d861dff7dea826a5c726cb9e8729cc4277aa4a66f198d6064cdc6b54fbed714e",
+    "service/core/models.py": "4eccb1390f4b46934ebcff546d1fabfb27b80222840a0e1c36df7f0e3b307e87",
+    "service/core/loads.py": "36507d291a9f88b515ea807733a3c00261470cc27b5cc8216b615aa405f25714",
+    "service/core/codes.py": "2679143dbdc78b314402f79633dc0536acdbc69a8abe0d00a9f11079306ce573",
+    "service/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/core/money.py": "7934e4e21955ed28d815670e439766f7b135a1ba150df2360ca6c400fa560329",
+    "service/core/approved_freight.py": "8cb614f45ac190375795895729b137e13d889ca717037a959d328e0e6373e675",
+    "service/core/pricing.py": "49747b441f03820ba3c6b96242af27584cddb0de45e978e53a94328f214a0b7a",
+    "service/core/carrier_policy.py": "deb38db733ff06c1d3aebe80c2b70375c861e47fc66774894e56a9e6ff9b71ec",
+    "service/core/negotiation.py": "7fc2cd6a4f89eb1d13a5c5b8aa6816ccbf72f983882f18beea8bb460679e108d",
+    "service/adapters/twin.py": "550ad79ca06dd801dcd4262b32563fb1934739f53bc43cc480d83a0cc073e710",
+    "service/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/twin_reads.py": "4c6dce07c0d9642736d4c3615fa614a9917618e740c43da9fe0ea9a653d5625a",
+    "service/adapters/fmcsa.py": "31847c2fe7711dfaf8d9c48635d212cb87170fe76c3eb53de1645dc7794fa5c8",
+    "service/adapters/email.py": "c7bc5e4548da5bb59f25a696df507560beb3c6a7d31c3a3a0a23b5b8de74c208",
+    "service/policy/pricing-v1.json": "c17f2055dde316fd6f9249c2eb18947e04ee57ab3e62e15112f9e9f7de538e8d",
+    "service/policy/blocked-loads-v1.json": "1189dbec196532dee93f4368fb3c1295da8ca5c891336a7fcbf1282a40c2c37c",
+    "service/adapters/tms/protocol.py": "41addda305d4ba059d8e45b5c8a7d1fac947fc7ddb6ef163ab2c0792066cea48",
+    "service/adapters/tms/client.py": "157022431f1f8b0cee585b7397a941a130bb340f2bb38ea7adbbe75b6dc764c4",
+    "service/adapters/tms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/tms/mapping.py": "71cccdda49ffc6d308211ca8a4983dc2ce09fa2d935aba1faa2a0460f5836de7",
+    "requirements.txt": "4ccf13f906d142c9d6e13beedc63fea568523e3be51f64b70c7588f7918303ba"
+  },
+  "settings": {
+    "TWIN_ENVIRONMENT": "staging",
+    "LIVE_BOOKING": "false",
+    "CALL_COHORT": "synthetic",
+    "HAPPYROBOT_WORKSPACE_SLUG": "fdesantiagogonzalezalvarez",
+    "HAPPYROBOT_WORKFLOW_ID": "6oaskq84xpfc"
+  },
+  "deployment": {
+    "command": "make deploy APP=happyrobot-proposal-sg APP_URL=https://carrier-sales-proposal-sg.happyrobot.dev/",
+    "service_url": "https://happyrobot-proposal-sg.fly.dev",
+    "authenticated_readiness": {
+      "status": "ok",
+      "tms": "reachable"
+    },
+    "browser_opened_after_readiness": true,
+    "scope": "Isolated proposal service only. Native App hosting and login acceptance are separate.",
+    "matching_runtime_files": 33
+  }
+}

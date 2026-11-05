@@ -1,0 +1,6 @@
+*
+!ops-app/
+!ops-app/**
+ops-app/node_modules/
+ops-app/.next/
+ops-app/.env*

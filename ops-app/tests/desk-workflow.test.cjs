@@ -29,8 +29,8 @@ async function page(data, params) {
   return renderToStaticMarkup(await Home({searchParams:Promise.resolve(params)}));
 }
 test('home lists the current owner and a history link; its direct review shows matching rates, native recording and send guard', async () => {
-  const home = await page(source,{});
-  assert.match(home,/Awaiting rep \(1\)/); assert.match(home,/Reservation history \(2\)/);
+  const home = await page(source,{bucket:'awaiting'});
+  assert.match(home,/Awaiting rep \(1\)/); assert.match(home,/All reservations \(2\)/);
   assert.ok(home.includes('Opened $975')); assert.ok(home.includes('Review reservation'));
   assert.ok(!home.includes('Activity scope'));
   const hp = await page(source,{view:'reservations',load:'LD1',run:current});
@@ -63,12 +63,17 @@ test('filters respect Central day boundaries, offered load IDs and match scope o
   assert.equal(filterBookings([b],f({q:'dallas',status:'RESERVED'}),new Map([[current,c]])).length,1);
   assert.equal(platformRun('invalid'),null);
 });
-test('new service UUIDs appear in the operational log, outside the dated voice funnel', async () => {
+test('new service UUIDs appear in both the operational log and the unified funnel', async () => {
   const future='12345678-1234-1234-1234-123456789abc';
   const data={...source,calls:[...source.calls,{id:future,carrier_name:'Future carrier',cohort:'synthetic'}]};
   assert.ok((await page(data,{view:'calls'})).includes('Future carrier'));
   assert.ok(!(await page(data,{view:'calls'})).includes('Probe'));
-  assert.ok(!(await page(data,{group:'recorded'})).includes('Future carrier'));
+  assert.ok((await page(data,{group:'recorded'})).includes('Future carrier'));
+  const html=await page(data,{view:'overview',period:'desk'});
+  assert.ok(!html.includes('Recorded trial')); assert.ok(!html.includes('Current desk'));
+  assert.ok(html.includes('Reservation status'));
+  assert.ok((await page(data,{view:'calls',bucket:'desk'})).includes('Future carrier'));
+  const all=await page(data,{});assert.ok(all.includes('$500'));assert.ok(all.includes('$1,000'));
 });
 
 test('booking evidence separates preflight, explicit TMS rejection and ambiguous transport', () => {

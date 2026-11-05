@@ -1,15 +1,20 @@
 # QA results
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+## Current readiness proposal
 
-Proposal service verification: 524 tests pass, with 97.9% branch coverage on business rules. The App has 58 passing tests, a production build and a clean typecheck. These counts are separate from the [unpublished native candidate](../happyrobot/qa-proposal.json), which retains its Version 9 71/73 checkpoint grades and full-conversation failures. The distinct [Version 10 ending repair](../happyrobot/qa-proposal-v10.json) passes two targeted full mocked replays, with its original native failed grades preserved. It has no whole-suite or audio acceptance claim. The [independent review disposition](proposal-review.md) maps defects to repairs and remaining pilot gates.
+Current source passes **563 service tests**, with **97.9% business-rule branch coverage**, strict types, lint and module/function/complexity gates. The App passes **65 tests**, lint, production build and typecheck. Its authentication test uses the observed native `id` response, not an invented `sub` fixture.
 
+Version 15 grades **71 passed and three failed out of 74 locked native text checkpoints**. S5, E6 and TRM remain failed in the raw record; their checkpoint-boundary limitations do not justify overwriting grades. The same voice version completed **three overlapping actual WebRTC calls**, one agreement, one corrected-amount decline and one final-offer refusal, all with agent hangup and zero TMS booking sends. Callers were generated diagnostic speech, not human acceptance. Their three-way overlap was 176.78 seconds.
 
-Dashboard evidence is split by source. [Operations reporting](kpis.md) reconciles 49 completed native voice sessions with their Twin histories. [The reviewer guide](reviewer-guide.md) links the filmed agreement, its native call and the separate TMS receipt. Historical release counts below retain their original scopes.
+The paced twelve-call service workloads, database freshness and cancellation tests, actual browser approval, native App source verification and exact one-command deployment have distinct scopes. [Current readiness and raw evidence](readiness.md), [review findings](proposal-review.md), [V15 text grades](../happyrobot/qa-proposal-v15-checkpoints.json) and [actual audio outcomes](../happyrobot/qa-proposal-v15-voice.json) are the current entry points. Main and the published Version 8/Build 24 baseline are preserved. The [owner-only five-minute script](proposal-demo.md) requires a new genuine human call; no final submission video is claimed.
+
+## Historical release evidence
+
+The remaining sections preserve earlier versions, scores, failures and owner reports. Their old totals do not describe the current proposal. [The original 49 completed-call analysis](kpis.md) remains a dated sample; the unified App includes all recorded native rows and newer development activity rather than fixing its denominator at 49.
 
 Historical release checked on 2026-11-04 (Sydney): workflow Version 8 (`kvexhw5fzj4y`), service release 17 from `bf512aa` and Carrier Sales App Build 22. Booking sends remain off and calls remain synthetic. The confirmation fix and release record are reviewed and pushed. [Current release](releases/2026-11-04-v8/README.md) and [specific correction](confirmation-fix.md) identify the exact prompt and limits. The owner reports a successful normal Version 8 demo call; no independent transcript/audio review of that latest call is claimed. The owner controls the submission portal, which is not part of this documentation refresh.
 
-| Current layer | Result | Limit |
+| Historical layer | Result | Limit |
 |---|---|---|
 | Automated service | 487 tests; 1650/1650 statements, 406/406 branches, business branches 256/256; strict mypy/ruff pass, Radon B or better | Offline integration doubles and loopback fault servers |
 | Operations desk, November 5 Sydney | 54 frontend tests, production build and strict typecheck. Independent joins checked all 49 calls and all 19 price pairs. Browser review traced the filmed reservation and its record links. | The trials span workflow versions. Publication and reviewer access have separate records. |

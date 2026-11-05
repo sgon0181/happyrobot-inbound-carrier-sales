@@ -1,0 +1,20 @@
+{
+  "arrivals": 12,
+  "spacing_seconds": 1.5,
+  "think_seconds": 3.0,
+  "outcomes": {
+    "/carriers/verify:eligible": 12,
+    "/otp/send:sent": 12,
+    "/otp/verify:verified": 12,
+    "/loads/search:found": 12,
+    "/negotiate:temporarily_unavailable": 6,
+    "/negotiate:agreed": 6,
+    "/calls/close:closed": 6,
+    "/calls/ended:ended": 6
+  },
+  "sql_statements": 251,
+  "durable_holds": 9,
+  "outstanding_claims": 6,
+  "finalized_agreements": 6,
+  "tms_booking_writes": 0
+}

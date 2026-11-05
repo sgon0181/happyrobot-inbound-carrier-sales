@@ -11,7 +11,7 @@ export type { Booking, Call, Cohort, Kpis, Lane, RepAction, Snapshot } from "@/l
 export { redactText } from "@/lib/redact-text";
 export type { EventRow } from "@/lib/event-history";
 
-const SNAPSHOT_TIMEOUT_MS = 10_000;
+const SNAPSHOT_TIMEOUT_MS = 20_000; // bounded paginated read; independent of the 12s voice deadline
 const ACTION_TIMEOUT_MS = 45_000; // a confirm sends once, then saves for up to about 10 seconds
 const STALE_SEND_MS = 60_000; // a SUBMITTING row this old lost its sender: offer Reconcile
 
@@ -78,7 +78,6 @@ export type ActionReply = {
   sendError: string | null;
   sendBytes: number | null;
   sendSha256: string | null;
- // every byte the TMS sent, as latin-1 text, kept whole
 };
 
 

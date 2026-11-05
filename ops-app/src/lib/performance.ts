@@ -1,3 +1,4 @@
+import { isRunId } from "@/lib/views";
 import type { Call } from "@/lib/snapshot";
 import { demoVoiceRunIds, missedVoiceRunId, nativeDuration } from "@/lib/demo-voice-runs";
 
@@ -9,8 +10,9 @@ export const groupTitles = {
   verified: "Email verification passed",
   matched: "Load matched",
   reserved: "Reservation created",
-  unmatched: "Verified without a match",
-  "no-agreement": "Matched without an agreement",
+  unmatched: "Ended without a match",
+  unresolved: "Verified calls without end evidence",
+  "no-agreement": "Ended after matching without agreement",
   negotiated: "Reached negotiation",
   "final-limit": "Final offer exhausted",
   paired: "Opening and agreed rates",
@@ -34,10 +36,21 @@ function median(values: number[]): number | null {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 }
 
+function duration(call: Call): number | null {
+  const native = nativeDuration.get(call.id);
+  if (native !== undefined) return native;
+  const seconds = call.durationSeconds;
+  return typeof seconds === "number" && Number.isFinite(seconds) && seconds >= 0 ? seconds : null;
+}
+
+function hasEnded(call: Call): boolean {
+  return Boolean(call.endedAt || call.closedAt || demoVoiceRunIds.has(call.id));
+}
+
 export function performance(calls: Call[]) {
-  // The platform inventory defines the cohort. Twin's deployment tag serves a different purpose.
-  const completed = calls.filter((c) => demoVoiceRunIds.has(c.id));
-  const uniqueCalls = new Map(completed.map((c) => [c.id, c]));
+  // Native inventory enriches evidence; it never limits which workflow versions count.
+  const nativeCalls = calls.filter((c) => isRunId(c.id));
+  const uniqueCalls = new Map(nativeCalls.map((c) => [c.id, c]));
   const recorded = [...uniqueCalls.values()];
   const verified = recorded.filter((c) => c.codePassed);
   const matched = verified.filter((c) => c.foundMatch);
@@ -50,19 +63,22 @@ export function performance(calls: Call[]) {
     issued: recorded.filter((c) => c.codeIssued),
     negotiated: recorded.filter((c) => c.negotiated),
     "final-limit": recorded.filter((c) => c.finalLimit && c.bookingLoadId === null),
-    unmatched: verified.filter((c) => !c.foundMatch && c.bookingLoadId === null),
-    "no-agreement": matched.filter((c) => c.bookingLoadId === null),
+    unmatched: verified.filter((c) => hasEnded(c) && !c.foundMatch && c.bookingLoadId === null),
+    unresolved: verified.filter((c) => !hasEnded(c)),
+    "no-agreement": matched.filter((c) => hasEnded(c) && c.bookingLoadId === null),
   };
   const counts = new Map<string, number>();
   for (const c of reserved) if (c.mc) counts.set(c.mc, (counts.get(c.mc) ?? 0) + 1);
   return {
     topCarrierCount: Math.max(0, ...counts.values()),
     groups,
-    completedCount: demoVoiceRunIds.size,
-    sessionCount: new Set([...demoVoiceRunIds, missedVoiceRunId]).size,
+    completedCount: recorded.filter(c => hasEnded(c) && c.id !== missedVoiceRunId).length,
+    sessionCount: recorded.length,
+    missedCount: recorded.filter(c => c.id === missedVoiceRunId).length,
+    durationCount: recorded.filter(c => duration(c) !== null).length,
     conversion: verified.length ? Math.round(100 * reserved.length / verified.length) : null,
-    medianSeconds: median(recorded.flatMap((c) => nativeDuration.get(c.id) ?? [])),
-    medianReservedSeconds: median(reserved.flatMap((c) => nativeDuration.get(c.id) ?? [])),
+    medianSeconds: median(recorded.flatMap((c) => duration(c) ?? [])),
+    medianReservedSeconds: median(reserved.flatMap((c) => duration(c) ?? [])),
     medianConcession: median(paired.flatMap((c) => concession(c) ?? [])),
   };
 }

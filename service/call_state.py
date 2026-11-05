@@ -1,5 +1,6 @@
 """Persisted OTP and call state. Keep private credentials out of service replies."""
 
+import copy
 from datetime import datetime
 
 from service.adapters.twin import Data
@@ -72,3 +73,13 @@ def permits_action(data: Data, action: str) -> bool:
     if action in ("close", "call_ended"):
         return True
     return action in ("negotiate", "claim_recovery") and bool(data["accepting"])
+
+
+def complete_call(
+    current: Data | None, cohort: str, now: datetime, native_workflow: Data | None = None
+) -> Data:
+    """New calls receive trusted integration provenance. Existing rows never acquire it later."""
+    data = new_call(cohort, now) | copy.deepcopy(current or {})
+    if current is None and native_workflow:
+        data["native_workflow"] = dict(native_workflow)
+    return data

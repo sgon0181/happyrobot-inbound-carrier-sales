@@ -30,6 +30,8 @@ class Settings:
     fmcsa_api_key: str = field(repr=False)
     twin_api_key: str = field(repr=False)
     twin_org_id: str
+    twin_environment: str
+    native_workflow: dict[str, str] | None
     agent_api_key: str = field(repr=False)
     ops_api_key: str = field(repr=False)
     otp_hash_secret: bytes = field(repr=False)
@@ -53,6 +55,10 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         fmcsa_api_key=read.text("FMCSA_API_KEY"),
         twin_api_key=read.text("HAPPYROBOT_API_KEY"),
         twin_org_id=read.text("HAPPYROBOT_ORG_ID"),
+        twin_environment=read.choice(
+            "TWIN_ENVIRONMENT", {"production", "staging"}, default="production"
+        ),
+        native_workflow=read.workflow(),
         agent_api_key=read.secret("AGENT_API_KEY"),
         ops_api_key=read.secret("OPS_API_KEY"),
         otp_hash_secret=read.secret("OTP_HASH_SECRET").encode(),
@@ -108,6 +114,18 @@ class _Reader:
         if value and not re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", value):
             self.problems.append(f"{name} is not an email address")
         return value
+
+    def workflow(self) -> dict[str, str] | None:
+        workspace = self.env.get("HAPPYROBOT_WORKSPACE_SLUG", "").strip()
+        workflow = self.env.get("HAPPYROBOT_WORKFLOW_ID", "").strip()
+        if not workspace and not workflow:
+            return None
+        if all(re.fullmatch(r"[A-Za-z0-9_-]{1,80}", value) for value in (workspace, workflow)):
+            return {"workspace": workspace, "workflow_id": workflow}
+        self.problems.append(
+            "HAPPYROBOT_WORKSPACE_SLUG and HAPPYROBOT_WORKFLOW_ID need safe path identifiers"
+        )
+        return None
 
     def contacts(self) -> dict[str, str] | None:
         """Optional broker-maintained pilot roster. Never accept a destination from the call."""

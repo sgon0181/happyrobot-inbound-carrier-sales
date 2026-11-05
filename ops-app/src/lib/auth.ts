@@ -28,6 +28,22 @@ export type AppUser = {
   aud?: string;
 };
 
+/** Normalize only a platform-verified identity. Token claims are never authorization. */
+export function parseAppUser(value: unknown): AppUser | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const body = value as Record<string, unknown>;
+  const subject = (v: unknown): v is string =>
+    typeof v === "string" && /^[A-Za-z0-9][A-Za-z0-9:_-]{0,127}$/.test(v);
+  if (("id" in body && !subject(body.id)) || ("sub" in body && !subject(body.sub))) return null;
+  if (body.id !== undefined && body.sub !== undefined && body.id !== body.sub) return null;
+  const id = body.id ?? body.sub;
+  if (!subject(id)) return null;
+  const text = (key: string, max: number): string | undefined =>
+    typeof body[key] === "string" ? body[key].slice(0, max) : undefined;
+  return { sub: id, email: text("email", 254) ?? "", first_name: text("first_name", 100),
+    last_name: text("last_name", 100), image_url: text("image_url", 2000) };
+}
+
 export type AppTokenPair = {
   token: string;
   refreshToken: string;
@@ -136,7 +152,7 @@ export async function getCurrentUser(
     return null;
   }
 
-  return (await response.json()) as AppUser;
+  return parseAppUser(await response.json().catch(() => null));
 }
 
 /** Route-handler variant of requireAppUser: returns null instead of redirecting. */

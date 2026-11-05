@@ -1,0 +1,50 @@
+name: carrier-sales-local-review
+services:
+  fixture:
+    build:
+      context: .
+      dockerfile: tools/reviewer-fixture.Dockerfile
+    ports:
+      - "127.0.0.1:3081:8081"
+    volumes:
+      - fixture-tls:/fixture-tls
+    networks:
+      - isolated
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8081/ready', timeout=2).read()"]
+      interval: 2s
+      timeout: 3s
+      retries: 20
+  desk:
+    build:
+      context: .
+      dockerfile: tools/reviewer-app.Dockerfile
+    ports:
+      - "127.0.0.1:3080:3000"
+    depends_on:
+      fixture:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      HR_TWIN_ENVIRONMENT: staging
+      HR_PLATFORM_URL: https://fixture:8443
+      OPS_SERVICE_URL: https://fixture:8443/fixture
+      OPS_API_KEY: ops-key-oooooooooooooooooooo
+      OPS_REP_SUBJECTS: local-review-rep
+      NODE_EXTRA_CA_CERTS: /fixture-tls/ca.pem
+      NEXT_PUBLIC_ORG_ID: local-review-fixture
+      NEXT_PUBLIC_APP_NAME: Carrier Sales Local Simulator
+    volumes:
+      - fixture-tls:/fixture-tls:ro
+    networks:
+      - isolated
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/health',{redirect:'manual'}).then(r=>{if(r.status!==401)process.exit(1)}).catch(()=>process.exit(1))"]
+      interval: 3s
+      timeout: 5s
+      retries: 30
+volumes:
+  fixture-tls:
+networks:
+  isolated:
+    driver: bridge

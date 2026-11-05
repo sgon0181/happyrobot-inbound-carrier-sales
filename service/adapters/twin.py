@@ -13,22 +13,24 @@ from typing import Any
 
 import httpx
 
+from service.adapters.twin_reads import MAX_KEYS, ReadBatches
+from service.adapters.twin_reads import TwinUnavailable as TwinUnavailable
+
 URL = "https://platform.happyrobot.ai/api/v2/twin/sql"
 TABLES = frozenset({"calls", "bookings"})
 MAX_ATTEMPTS = 5  # tries at one change before a busy row counts as unavailable
 RATE_LIMIT_RETRIES = 5
+SCAN_PAGE_ROWS = 100
+MAX_SCAN_PAGES = 20
 
 Data = dict[str, Any]
-
-
-class TwinUnavailable(Exception):
-    """Twin failed. A failed write may still have landed, so the next read decides."""
 
 
 @dataclass(frozen=True, kw_only=True)
 class TwinSettings:
     api_key: str = field(repr=False)
     org_id: str
+    environment: str = "production"
     url: str = URL
     seconds_between_statements: float = 0.25
     timeout_seconds: float = 5.0
@@ -48,38 +50,75 @@ class Twin:
         headers = {
             "Authorization": f"Bearer {settings.api_key}",
             "x-organization-id": settings.org_id,
-            "x-twin-environment": "production",
+            "x-twin-environment": settings.environment,
         }
         self._http = httpx.AsyncClient(
             transport=transport, headers=headers, timeout=settings.timeout_seconds
         )
         self._pacer = asyncio.Lock()
         self._next_start = 0.0
+        self._reads: ReadBatches[Row] = ReadBatches(self._read_keys)
 
     async def close(self) -> None:
+        await self._reads.close()
         await self._http.aclose()
 
     async def get(self, table: str, key: str) -> Row | None:
-        sql = f"SELECT version, data FROM {_table(table)} WHERE id = {quote(key)}"  # noqa: S608
-        rows = await self._sql(sql)
-        if not rows:
-            return None
-        if len(rows) != 1:
-            raise TwinUnavailable("Twin returned an invalid row.")
-        return _row(rows[0])
+        return (await self.get_many(table, [key])).get(key)
 
     async def get_many(self, table: str, keys: Iterable[str]) -> dict[str, Row]:
-        """The rows that exist among these keys, read in one statement."""
-        listed = ", ".join(quote(key) for key in dict.fromkeys(keys))
-        if not listed:
-            return {}
-        sql = f"SELECT id, version, data FROM {_table(table)} WHERE id IN ({listed})"  # noqa: S608
-        return {str(row.get("id")): _row(row) for row in await self._sql(sql)}
+        """Fresh reads coalesce while awaiting a SQL slot. Every caller gets its own data."""
+        _table(table)
+        listed = tuple(dict.fromkeys(keys))
+        for key in listed:
+            quote(key)
+            if len(key.encode()) > 512:
+                raise ValueError("Twin row keys must fit within 512 bytes.")
+        chunks = [listed[i : i + MAX_KEYS] for i in range(0, len(listed), MAX_KEYS)]
+        batches = await asyncio.gather(*(self._reads.get(table, keys) for keys in chunks))
+        return {key: row for batch in batches for key, row in batch.items()}
+
+    async def _read_keys(
+        self, table: str, collect: Callable[[], tuple[str, ...]]
+    ) -> dict[str, Row]:
+        wanted: tuple[str, ...] = ()
+
+        def statement() -> str:
+            nonlocal wanted
+            wanted = collect()  # called only after obtaining the next paced SQL slot
+            listed = ", ".join(quote(key) for key in wanted)
+            return (
+                f"SELECT id, version, data FROM {_table(table)} WHERE id IN ({listed})"  # noqa: S608
+                if wanted
+                else ""
+            )
+
+        records = await self._sql(statement)
+        found: dict[str, Row] = {}
+        for record in records:
+            key = record.get("id")
+            if not isinstance(key, str) or key not in wanted or key in found:
+                raise TwinUnavailable("Twin returned unexpected or duplicate row identifiers.")
+            found[key] = _row(record)
+        return found
 
     async def get_all(self, table: str) -> dict[str, Row]:
-        """Every row in the table, read in one statement. For the operations snapshot."""
-        sql = f"SELECT id, version, data FROM {_table(table)}"  # noqa: S608
-        return {str(row.get("id")): _row(row) for row in await self._sql(sql)}
+        """Bounded keyset scan. An incomplete or oversized snapshot is never returned."""
+        found: dict[str, Row] = {}
+        after: str | None = None
+        for _ in range(MAX_SCAN_PAGES):
+            where = "" if after is None else f" WHERE id > {quote(after)}"
+            sql = (
+                f"SELECT id, version, data FROM {_table(table)}{where} "  # noqa: S608
+                f"ORDER BY id LIMIT {SCAN_PAGE_ROWS}"
+            )
+            records = await self._sql(sql)
+            page = _page(records, after)
+            found.update(page)
+            if len(page) < SCAN_PAGE_ROWS:
+                return found
+            after = next(reversed(page))
+        raise TwinUnavailable("Twin snapshot exceeds the bounded scan limit.")
 
     async def insert(self, table: str, key: str, data: Data) -> bool:
         """Create the row at version 1. False if the key already exists."""
@@ -119,10 +158,14 @@ class Twin:
                 return result
         raise TwinUnavailable("The row kept changing, so the write was abandoned.")
 
-    async def _sql(self, sql: str) -> list[Data]:
+    async def _sql(self, sql: str | Callable[[], str]) -> list[Data]:
         """One statement. Only rate-limit refusals are retried; nothing else is."""
         for attempt in range(RATE_LIMIT_RETRIES + 1):
             await self._pace()
+            if callable(sql):
+                sql = sql()
+                if not sql:
+                    return []
             try:
                 response = await self._http.post(self.settings.url, json={"sql": sql})
             except httpx.HTTPError:
@@ -157,20 +200,40 @@ def _table(name: str) -> str:
 def _row(row: Data) -> Row:
     if not isinstance(row.get("data"), dict):
         raise TwinUnavailable("Twin returned an invalid row.")
-    return Row(int(row["version"]), row["data"])
+    try:
+        return Row(int(row["version"]), row["data"])
+    except (KeyError, ValueError, TypeError, OverflowError):
+        raise TwinUnavailable("Twin returned an invalid version.") from None
 
 
 def _jsonb(data: Data) -> str:
     return quote(json.dumps(data, separators=(",", ":"))) + "::jsonb"
 
 
+def _page(records: list[Data], after: str | None) -> dict[str, Row]:
+    found: dict[str, Row] = {}
+    if len(records) > SCAN_PAGE_ROWS:
+        raise TwinUnavailable("Twin returned an oversized scan page.")
+    for record in records:
+        key = record.get("id")
+        if not isinstance(key, str) or (after is not None and key <= after):
+            raise TwinUnavailable("Twin returned an unordered or duplicate scan page.")
+        found[key], after = _row(record), key
+    return found
+
+
 def _rows(response: httpx.Response) -> list[Data]:
     if response.status_code != 200:
         raise TwinUnavailable(f"Twin returned HTTP {response.status_code}.")
     try:
-        rows = response.json()["rows"]
+        body = response.json()
+        rows = body["rows"]
     except (ValueError, KeyError, TypeError):
         raise TwinUnavailable("Twin returned an unreadable reply.") from None
     if not isinstance(rows, list) or not all(isinstance(row, dict) for row in rows):
         raise TwinUnavailable("Twin returned an unreadable reply.")
+    if body.get("truncated", False) is not False or any(
+        key in body and body[key] != len(rows) for key in ("rowCount", "returnedRows")
+    ):
+        raise TwinUnavailable("Twin returned truncated or incomplete data.")
     return rows

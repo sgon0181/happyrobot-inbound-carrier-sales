@@ -1,0 +1,8 @@
+*
+!requirements.txt
+!service/
+!service/**
+!tools/
+!tools/reviewer_fixture.py
+service/**/__pycache__
+service/**/*.pyc

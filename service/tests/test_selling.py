@@ -635,3 +635,49 @@ def test_every_found_load_has_authoritative_spoken_dates_and_missing_dates_fail_
     assert search(r)["status"] == "shipment_review_required"
     r = selling(make_load(PICKUP_DT=""))
     assert search(r)["status"] != "found"
+
+
+def test_a_delayed_retry_on_another_load_keeps_its_quote_and_global_rounds() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    first = counter(r, 9000, "LD09001")
+    second = counter(r, 9100, "LD09002")
+    assert (first["round"], second["round"]) == (1, 2)
+    assert counter(r, 9000, "LD09001") == {**first, "round": 2}
+    assert r.row()["rounds"] == 2
+    assert counter(r, 9100, "LD09002") == second
+
+
+def test_legacy_counter_migrates_before_another_load_replaces_it() -> None:
+    r = offered(make_load("LD09001"), make_load("LD09002"))
+    first = counter(r, 9000, "LD09001")
+    r.row().pop("counter_replies")
+    counter(r, 9100, "LD09002")
+    assert counter(r, 9000, "LD09001") == {**first, "round": 2}
+
+
+def test_older_same_load_request_cannot_buy_another_concession_after_a_new_ask() -> None:
+    r = offered()
+    first = counter(r, 9000)
+    second = counter(r, 9100)
+    repeated = counter(r, 9000)
+    assert repeated == second and r.row()["rounds"] == 2
+    assert len(r.row()["counter_replies"]["LD09001"]) == 2
+    assert counter(r, 9000) == repeated
+    assert first["offer"] < repeated["offer"]  # the existing later quote is still honored
+
+
+def test_delayed_earlier_counter_after_final_reports_current_final_state_without_a_new_round() -> (
+    None
+):
+    r = offered()
+    counter(r, 9000)
+    counter(r, 9100)
+    final = counter(r, 9200)
+    assert final["status"] == "final_offer" and final["round"] == 3
+    assert counter(r, 9000) == final
+    assert counter(r, 9100) == final
+    assert r.row()["rounds"] == 3
+    declined = r.post("/negotiate", load_id="LD09001", rate="9000", after_final_offer="true")
+    assert declined["status"] == "negotiation_failed"
+    assert r.row()["agreement"] is None
+    assert not r.board.sends

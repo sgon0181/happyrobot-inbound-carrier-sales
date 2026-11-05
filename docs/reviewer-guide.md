@@ -1,5 +1,7 @@
 # Reviewing the carrier sales proof of concept
 
+For the current proposal, start with [one-command review and current evidence](readiness.md), then [the five-minute owner script](proposal-demo.md). The historical hosted examples below remain useful but do not identify the development candidate.
+
 **Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
 
 

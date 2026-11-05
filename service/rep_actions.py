@@ -103,7 +103,8 @@ class RepActions:
             return False
         call = row.data
         return (
-            bool(call.get("eligible") and call.get("verified_at"))
+            not call.get("read_only")
+            and bool(call.get("eligible") and call.get("verified_at"))
             and call.get("otp_route") == "trusted_contact"
             and agreement_recorded(call, booking, load_id)
         )
@@ -146,6 +147,8 @@ class RepActions:
         row = await self.twin.get("bookings", load_id)
         if row is None or row.version != version:
             return STALE
+        if row.data.get("read_only"):
+            return {"status": "record_read_only"}
         if row.data.get("state") not in states:
             return {"status": "not_allowed", "state": row.data.get("state")}
         return row

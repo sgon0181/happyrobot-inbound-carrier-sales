@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { recordHref, platformRun } from "@/lib/views";
+import { recordHref } from "@/lib/views";
 import { EventList } from "@/components/ops-events";
 import { DetailSheet, Facts, SheetSection } from "@/components/detail-sheet";
 import { StateBadge, StatusPill } from "@/components/state-badge";
@@ -126,7 +126,7 @@ function CallSheet({ call: c }: { call: Call }) {
       }
       description={c.summary || "No closing notes recorded."}
     >
-      {platformRun(c.id) && <a href={platformRun(c.id)!} target="_blank" rel="noopener noreferrer" className="text-sm font-medium underline">Open recording and transcript in HappyRobot</a>}
+      {c.recordingUrl && <a href={c.recordingUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium underline">Open recording and transcript in HappyRobot</a>}
       <SheetSection title="Call">
         <Facts
           items={[

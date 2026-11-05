@@ -27,7 +27,7 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 def build(settings: Settings) -> FastAPI:
-    twin = Twin(TwinSettings(api_key=settings.twin_api_key, org_id=settings.twin_org_id))
+    twin = _twin(settings)
     fmcsa = Fmcsa(FmcsaSettings(api_key=settings.fmcsa_api_key))
     email = EmailSettings(
         user=settings.email_user,
@@ -38,7 +38,7 @@ def build(settings: Settings) -> FastAPI:
     tms = TmsClient(
         TmsSettings(host=settings.tms_host, port=settings.tms_port, token=settings.tms_token)
     )
-    rows = CallRows(twin=twin, cohort=settings.cohort)
+    rows = CallRows(twin=twin, cohort=settings.cohort, native_workflow=settings.native_workflow)
     calls = Calls(
         rows=rows,
         fmcsa=fmcsa,
@@ -78,3 +78,13 @@ def build(settings: Settings) -> FastAPI:
 
 def create() -> FastAPI:
     return build(load_settings())
+
+
+def _twin(settings: Settings) -> Twin:
+    return Twin(
+        TwinSettings(
+            api_key=settings.twin_api_key,
+            org_id=settings.twin_org_id,
+            environment=settings.twin_environment,
+        )
+    )

@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-11-05T01:09:53.462099+00:00",
+  "launch": "make review",
+  "private_source": "proposal-final-review-ru8k24ag",
+  "source_files": 536,
+  "verified_identity_shape": "id from authenticated /api/apps/me",
+  "browser_confirm": {
+    "dialog_observed": true,
+    "receipt_reference": "FAKE0001",
+    "state": "ACK_PENDING",
+    "rep": "local-review-rep"
+  },
+  "repeat_and_viewer": {
+    "rep": {
+      "http": 200,
+      "body": {
+        "status": "stale",
+        "state": null,
+        "reason": null,
+        "reference": null,
+        "tmsStatus": null,
+        "loadStatus": null,
+        "sendStep": null,
+        "sendError": null,
+        "sendBytes": null,
+        "sendSha256": null
+      }
+    },
+    "viewer": {
+      "http": 403,
+      "body": {
+        "error": "Senior rep access required"
+      }
+    }
+  },
+  "scope": "Disposable local simulator, no real TMS writes",
+  "counts_after_all_checks": {
+    "tcp_booking_commands": 1,
+    "state": "ACK_PENDING"
+  }
+}

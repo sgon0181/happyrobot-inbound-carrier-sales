@@ -1,59 +1,54 @@
-# Inbound Carrier Sales: build description
+# Inbound Carrier Sales: business and IT build description
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
-
-
-For HappyRobot Logistics' business and IT review. HappyRobot Workflow Version 8 and service release 17 provide the voice and transaction rules. The native Carrier Sales App opens on Reservations. The observer can review the filmed carrier's load and rate, open its original recording and trace the negotiation without searching platform logs. Booking sends are off for this proof of concept.
+The current proposal uses voice Version 15 in isolated development, a Python service and one populated HappyRobot Apps workspace backed by Twin. A carrier can be qualified, matched to freight and reach a recorded rate agreement while other calls arrive. A designated senior rep reviews the originating call and controls any TMS submission. Main, the original submission ZIP and the published Version 8/Build 24 baseline are preserved. [Current evidence, configuration and deployment](readiness.md) identify exactly what was tested.
 
 ## Customer problem and scope
 
-The brokerage wants to automate repetitive inbound qualification, matching and negotiation while keeping a senior rep responsible for the booking decision. This candidate demonstrates that first leg through HappyRobot web calls, an integration service and a HappyRobot Apps operations screen. It does not establish production capacity, answer-rate improvement, reduced burnout or financial return.
+The brokerage wants fewer missed opportunities, consistent rate decisions and an audit trail that a rep can use without opening platform logs. The proof of concept automates qualification, matching and negotiation, then leaves the final commitment with the rep. It demonstrates bounded concurrent conversations and traceable decisions. It does not yet measure missed-call reduction, staffing savings, profit or production peak capacity.
 
-1. **Check authority.** Take an MC number, look it up in FMCSA, confirm the returned carrier name with the caller and distinguish refusal from an unavailable service.
-2. **Check the emailed code.** Send a code to the configured demo inbox and check what the caller reads back before discussing loads. This demonstrates the code gate and access to that inbox, not the caller's legal carrier identity.
-3. **Find and price loads.** Read available loads matching equipment and state-level lane preferences. Offer a price within the private ceiling, with at most three counter rounds across the call.
-4. **Record agreement.** Save one tentative reservation at the agreed rate. The agent speaks a mocked handoff to a senior rep. A reservation is not a final TMS booking.
-5. **Rep review.** Show the captured carrier, shipment details, pickup/delivery, posted and agreed payment, negotiation activity and next action. Only the rep's Confirm can submit a booking request. Sends off or unknown mode disables Confirm.
+1. **Verify the caller.** Check FMCSA operating authority, confirm the carrier name and verify an emailed code before discussing freight. An unavailable authority lookup is not an ineligible carrier. The approved demo inbox proves access to that inbox; production needs independently enrolled carrier contacts.
+2. **Match the shipment.** Ask only for missing equipment and lane preferences. Read the TMS, validate the operating fields and quote approved data. Unrecognized instructions, contradictory conditions or incomplete freight require manual review.
+3. **Negotiate consistently.** The service sets prices within the private ceiling and allows at most three counter rounds across the call. Relative or corrected amounts need a complete total and appropriate readback. Duplicate or delayed requests cannot buy another concession. A final refusal ends without handoff.
+4. **Record an agreement.** Save the rate, carrier, load and shipment facts in Twin. The agent speaks the exact approved agreement and a mocked handoff for senior-rep confirmation. This is an internal reservation, not a final TMS booking.
+5. **Review and submit.** The rep opens the reservation with its originating call, prices, shipment and event timeline. Submission rechecks authorization, trusted contact proof, finalized consent, load availability, material shipment facts and the current ceiling. A stale rep action cannot send twice. Imported historical records remain view-only.
 
-## Rules and boundaries
+## Business visibility
 
-The voice model requests actions; the service decides from stored state and fresh TMS reads. Authority, code checks, rate bounds, round counts, reservations and rep version checks are service rules. The model never receives the expected code or raw ceiling. Withholding the field prevents direct field exposure; it does not prove that offers reveal no indirect information. The load-specific cap makes exact inversion harder, while known policy bands still constrain possible ceilings.
+Reservations opens all recorded agreements by default. Awaiting rep is a filter within the same workspace. Overview follows authority, code delivery, verification, matching and reservation, with counts linked to their calls. Active calls contribute stage progress but are kept out of ended-call loss groups. Demand distinguishes an empty search from never reaching search. Bookings separates acknowledgement, final confirmation and uncertain sends.
 
-The TMS has no supported cancellation or idempotency key. A rep's Confirm rechecks the load and ceiling, wins a version-checked state change, then sends once. A timeout or incomplete result is unknown and is never resent. A complete reference-bearing PENDING receipt is an acknowledgement, not final confirmation. No live BOOKED receipt has been observed. No inventory quota or permanent consumption guarantee is inferred from those observations.
+Opening-to-agreed price movement measures payment concessions, not broker profit. The historical 49 completed-call sample contained 36 email-verified calls, 29 matches and 19 reservations, with a $50 median movement above opening. Eighteen agreements belonged to one MC. Those observations helped identify pilot questions; they are not the current dashboard's fixed denominator or representative market results. The combined workspace includes imported history and newer development calls.
 
-## What operations can inspect
+The recording link is constructed only from trusted native workflow provenance or known historical run inventory. Local fixture IDs do not get invented recordings. Platform permissions still govern playback. Twin history is evidence of service decisions, not a substitute for what was actually spoken.
 
-Twin stores structured service activity: authority decisions, code delivery outcome, search criteria and returned public pitch details, each heard and normalized carrier ask, response and round, reservation and rep events, closing notes when supplied, and the workflow end report when delivered. State and its event are written together in the same row.
+## Safety and transaction boundaries
 
-This is sufficient to reconstruct service decisions without raw platform logs; it is not a verbatim recording or proof of what was spoken. Missing notes are shown as missing. End capture depends on the workflow reaching its callback and Twin accepting it. The deployed end-report route and live Version 8 callback can record pre-tool calls when the callback is delivered; delivery is not guaranteed. No external database or general-purpose logging framework is used.
+The model talks; the service decides. Authority, OTP, price bounds, round counts, reservations and rep permissions are enforced independently of prompt compliance. Raw private ceilings and expected codes are excluded from the voice payload. A load-specific cap reduces simple inversion; this does not prove offers reveal no indirect pricing information.
 
-The dashboard uses 49 recorded inbound demo calls across workflow versions. Of 36 calls that passed email verification, 29 found a matching load and 19 produced a reservation for a rep to review. Seven verified calls stopped before a match and ten matched without an agreement. The median agreed payment was $50 above the first offer on the same load, measured on all 19 agreements. The Overview links these figures to individual calls. The rep queue is ordered by originating call time. Historical agreements remain available after a load is released or reused. See kpis.md for definitions and source coverage.
+Material shipment changes require a new pitch and agreement. A hold whose write succeeded but whose agreement did not finish cannot be submitted. The rep can release it and follow up. Both open-work and historical views preserve the difference.
 
-## Evidence
+The TMS has no supported cancellation or idempotency key. Confirm sends once after a version-checked transition. Ambiguous transport becomes UNKNOWN and is never blindly resent. A matching reference, status and valid timestamp are required for a definitive receipt. PENDING means acknowledged; only an authoritative BOOKED receipt becomes confirmed. Luke accepted this separation. Original bytes remain in restricted Twin when saved, while safe receipt identifiers and digests support browser recovery.
 
-The layered package in qa-package.md separates service tests, seeded generated inputs, conversation checkpoints, complete HTTP journeys, native model simulations and human voice calls. Current raw totals, versions, failures and reruns are in qa-results.md; they must accompany any presentation of success.
+App users are verified through HappyRobot's API. The native response's user `id` is normalized into the internal subject and matched to an explicit rep assignment. Missing, malformed or conflicting identities are denied. Body-supplied names and decoded token claims never authorize an action. Production writes also require the exact configured origin. Keys remain server-side.
 
-Service release 17 passes 487 offline tests with actual 100% coverage of 1650 statements and 406 branches. The live Version 8 prompt passes 59 locked text checkpoints twice, 118/118 native model grades. Eight recording-derived cases reproduced the Version 7 confirmation failure before the fix. Two complete mocked Version 8 conversations then submitted exactly 1125 only after a corrected readback and explicit affirmative. All external actions were locked. These results test model responses and tool order, not speech recognition or physical voice timing.
+## Measured evidence
 
-Eleven reviewed Version 6 timed call traces show proactive closing and persisted close/end activity. A later Version 7 call exposed a confirmation bypass; Version 8 makes pending confirmation take priority over direct submission. The owner subsequently reported a successful normal Version 8 call. This latest success is an owner report, not an independent transcript or audio review. Earlier failed runs and reruns remain documented. The text replays lack a recorded spoken farewell, so no complete voice-closing pass is inferred from them.
+- **Actual voice:** Version 15 completed three overlapping WebRTC conversations through real authority checks, approved demo email, safe TMS reads and isolated Twin writes. Scenarios were agreement, corrected-price decline and final-offer refusal. All closed through the agent; no TMS booking was sent. The three-way overlap was 176.78 seconds. Callers were generated diagnostics, so human accent/noise and subjective naturalness still need the owner's new call.
+- **Native text:** 71 passed and three failed out of 74 locked checkpoints. Raw failures remain visible. Their grading-boundary limitations are documented; real audio does not overwrite those scores. Earlier failed prompts and caller-harness errors are retained.
+- **Service and App:** 563 service tests, 97.9% business-rule branch coverage, strict types, lint and enforced size/complexity checks. The App passes 65 tests, lint, production build and typecheck, including the actual native identity response contract.
+- **Controlled pressure:** The original paced twelve-call workload exposed timeouts. Fresh-read batching preserves the four-statement-per-second budget, database freshness and twelve-second voice deadline. Both controlled twelve-call patterns then completed twelve agreements without unfinished claims. A separate test included 500 historical calls, 200 released bookings and dashboard polling. These use fixtures and loopback TCP, not a production capacity benchmark.
+- **Rep action:** The disposable browser exercise produced one simulated PENDING receipt, then refused a stale replay and a viewer action. The native hosting acceptance and final source identity are separately recorded in [readiness](readiness.md).
 
-An earlier real-integration call and rep Confirm produced a reference-bearing PENDING reply, which remains an acknowledgement rather than a final booking. The reviewer guide links the filmed agreement and the separate pending receipt. The source ZIP accompanies the walkthrough. The candidate supplies the video link when submitting.
+## Operation and deployment
 
-## How it runs and who owns what
+| Component | Owner and responsibility |
+| --- | --- |
+| HappyRobot voice workflow | Conversation, native tools, mocked transfer and end report |
+| Python 3.12 service on Fly.io | Rules, authority, email, TCP TMS adapter, Twin events and rep actions |
+| HappyRobot Twin | Versioned call and booking rows with histories |
+| HappyRobot Apps | Authenticated unified desk, metrics and assigned-rep actions |
 
-| Component | Location | Responsibility |
-|---|---|---|
-| Voice workflow | HappyRobot | Version 8 web-call conversation, six service tools and the post-agent end report |
-| Carrier Sales Service | Python 3.12 Docker container on Fly.io | Rules, FMCSA, code email, raw-TCP TMS adapter, Twin writes and rep actions |
-| Twin | HappyRobot | Call and booking rows, each with its own event history |
-| Operations App | HappyRobot Apps | Authenticated review, metrics and rep decisions through the service |
+After one-time native-resource and secret setup, `make deploy APP=<isolated-app> APP_URL=<native-app-url>` builds and deploys the container, checks authenticated service health and TMS reachability, then opens the App. The exact isolated command was exercised. `make review` instead builds and opens a disposable local simulator with no customer credentials or external business writes.
 
-After one-time cloud and secret setup, make deploy builds and deploys the container to the approved Fly environment. Voice and operations routes use separate credentials. The App verifies the signed-in user and keeps its service key server-side. No secret value belongs in the repository, prompt, video or submission.
+Point reads batch at their scheduled SQL slot without caching mutable state. Snapshot reads paginate, reject truncated replies and fail closed at their twenty-page bound. The App allows twenty seconds for operations snapshots and suppresses overlapping refreshes. History retention, cross-table non-atomicity, real provider quotas, shared delivery throttling before multi-instance scale, alert ownership and telephony answer/hold telemetry remain explicit pilot constraints.
 
-## Tailored next steps
-
-1. Agree pricing assumptions, the MAX_BUY mapping and TMS finalization/cancellation behavior.
-2. Replace the shared demo inbox with trusted carrier-contact records and an appropriate identity process.
-3. Validate expected capacity and conversation behavior, including speech recognition, interruptions and failures.
-4. Run a supervised pilot with agreed success criteria and review of unknown outcomes.
-5. Consider real telephony and operational notifications after those checks.
+A staffed pilot should enroll trusted contacts, assign reps, agree arrival patterns and compare matched shifts on missed calls, rep effort and reviewed agreements. The [five-minute owner script](proposal-demo.md) pairs a new human call with its exact reservation and keeps simulated receipts and QA layers clearly identified.

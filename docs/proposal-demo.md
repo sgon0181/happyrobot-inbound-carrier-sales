@@ -1,107 +1,149 @@
-# Carrier sales recording cues
+# Five-minute owner-recorded walkthrough
 
-This rehearsal uses the known Version 8 recording. The Version 9 and Version 10 candidates remain experimental. Use the filmed workflow until the latest candidate completes its documented voice acceptance gates.
+Two timed cuts target a maximum of 5:00. Choose the cut before recording the narration. Use a genuine new human call, with the same run in the opening and follow-up. All narration is spoken by the owner. This script creates no video, audio or rehearsal asset.
 
-Private rehearsal. The guide voice outside the genuine Version 8 call is synthetic. Record those sections in your own voice before presenting the demo. The redacted call is included as its own editable clip.
+Cut A allows 120 seconds of call audio and 180 seconds of presentation. Its spoken narration is 325 words, approximately 150 seconds at 130 words per minute, leaving approximately 30 seconds for navigation and pauses. Cut B allows 150 seconds of call audio and 150 seconds of presentation. Its narration is 239 words, approximately 110 seconds, leaving approximately 40 seconds for navigation and pauses. Do not read SHOW directions aloud.
 
-The timer follows the rendered rehearsal. Start with a clean tab bar, disable notifications and close the inbox. Open the historical sample and the disposable local simulator in separately labeled tabs. Each is labeled in the video. Use the actual receipt returned during a fresh demonstration.
+The time budget includes the call clip, screen changes and pauses. A shorter call adds room to demonstrate the same-run evidence. If the genuine call exceeds 150 seconds, use a clearly labeled excerpt within that slot and link the full native recording. Privacy or time edits are acceptable; preserve the actual sequence, price decisions and outcome. Do not label an edited call continuous. Hide OTPs, inbox details, private rate limits, credentials and unrelated tabs.
 
-## 00:00 to 00:14  Client problem
+## Call slot
 
-**Show**  Opening title. Let the three operating decisions appear in frame.
+**SHOW**
 
-**Say**  A carrier with a truck wants to know two things. Is there freight on my lane, and what will you pay? Your dispatchers need to answer quickly, protect the rate and leave the next rep enough information to finish the deal.
+Cut A: 0:35 to 2:35, 120 seconds. Cut B: 0:25 to 2:55, 150 seconds. Play the new human and agent audio with both parties audible. Keep the tested development workflow version and matching native run identifiable. Do not narrate over the call.
 
-## 00:14 to 00:31  Decision ownership
+**CALLER PLAN**
 
-**Show**  Show HappyRobot, the service and the rep. Keep the call and rep decision distinct.
+Use the approved test carrier and a current lane checked read-only just before the call. Give a clear MC number, complete verification, request the equipment and lane, and name one complete dollar total above opening. Respond to the actual result: accept the stated counter or make one clear further ask. If the first ask is accepted, retain that outcome. End after the genuine agreement and actual configured handoff. No real booking send is needed during the call. Re-recording is acceptable; identify the run shown and retain unsuccessful runs in the evidence.
 
-**Say**  HappyRobot takes the call. A service checks motor carrier authority, verifies an emailed code and reads your TMS. The service controls pricing, and Twin records the decisions. The senior rep decides whether to submit the booking. Here is one recorded web call.
+## Exact SHOW and SAY sequence
 
-## 00:31 to 01:48  Original call
+### The business decision
 
-**Show**  Play the sanitized original Werner web call. The caller and agent are both the original audio.
+Cut A: 0:00 to 0:20. Cut B: 0:00 to 0:15.
 
-**Say**  Play the original call with the verification code removed. Do not talk over the caller.
+**SHOW**
 
-## 01:48 to 02:01  The originating reservation
+Open the unified Overview in the separate candidate App. Show the actual headline, qualification funnel and reservation status cards. Use the combined records view.
 
-**Show**  Open the Werner reservation for LD01088 and point to its original recording link.
+**SAY, Cut A**
 
-**Say**  That was Werner asking for a reefer from Baton Rouge to Nashville. Here is the same call on the rep's desk. The opening was $975. Werner asked for $1,000, and the service accepted it.
+"The carrier desk has to qualify callers, find freight and negotiate while more calls arrive. This workspace brings recorded conversations and reservations together. The funnel shows progress, and the queue shows the next action. Let me follow one new call."
 
-## 02:01 to 02:07  Audit trail
+**SAY, Cut B**
 
-**Show**  Open the originating call timeline, keeping the trial source visible.
+"The carrier desk must qualify callers, find freight and negotiate. This workspace brings the recorded calls and reservations together. Let me follow one new call."
 
-**Say**  The rep can listen to the original call or inspect the sequence of decisions before sending anything.
+### Who does what
 
-## 02:07 to 02:20  Pricing rule
+Cut A: 0:20 to 0:35. Cut B: 0:15 to 0:25.
 
-**Show**  Show the service-owned ceiling and three-round rule, keeping the private value off screen.
+**SHOW**
 
-**Say**  Why accept the first ask? It fit the service's permitted price for that round. The voice model never receives the private ceiling. Repeating a number buys no extra round, and the third counter is final.
+Briefly show the tested HappyRobot development workflow and its version, then the new call window. Keep the matching run identifiable.
 
-## 02:20 to 02:33  A genuine counteroffer
+**SAY, Cut A**
 
-**Show**  Show the separate recorded LD01127 call timeline, with both carrier asks and the counter visible.
+"HappyRobot handles the conversation. The service checks authority and the email code, reads the TMS and decides prices. Twin records the decisions. A senior rep controls booking submission."
 
-**Say**  Here's a different call. The carrier asked for three thousand. The service countered at $2,825, and both sides settled at $2,750. A supervisor can trace every dollar.
+**SAY, Cut B**
 
-## 02:33 to 02:45  Approve a disposable reservation
+"HappyRobot handles speech. The service verifies the carrier and decides prices. Twin records decisions. A rep controls booking submission."
 
-**Show**  Switch to the clearly identified local simulator. Select Confirm on LD09001 and approve the native browser prompt.
+### Follow the same agreement
 
-**Say**  For the button itself, this is a separate reservation in an isolated simulator. The rep checks the terms, then confirms the load, carrier and price. That authorizes one submission.
+Cut A: 2:35 to 3:00. Cut B: 2:55 to 3:15.
 
-## 02:45 to 02:51  Observe the receipt
+**SHOW**
 
-**Show**  Show the simulator receipt for the same disposable reservation.
+Open the exact new call and reservation. Point to the carrier, lane, opening and agreed rate. Briefly open its recording link. Use the same run throughout.
 
-**Say**  Here is its pending receipt. The desk preserves the reference and the status that actually came back.
+**SAY, Cut A**
 
-## 02:51 to 03:06  Earlier sandbox receipt
+"This is the same call and the same load. Here are the opening offer, carrier response and agreement. The rep can inspect the shipment and replay the evidence. Before submission, changed freight, missing terms or untrusted verification sends the work back for review."
 
-**Show**  Switch back to the historical, separately identified LD01080 receipt.
+**SAY, Cut B**
 
-**Say**  This earlier booking was sent to the real sandbox. Its reference also came back pending. Only a confirmed TMS reply counts as booked. If a send times out, the rep investigates before taking another action.
+"This is the same call and load, with its opening and agreed rate. The rep can replay the evidence. Changed freight, missing terms or untrusted verification blocks submission."
 
-## 03:06 to 03:20  The business KPI
+### Keep the status honest
 
-**Show**  Open Overview, Recorded trial. Keep the verified denominator, reservations and rate movement in frame.
+Cut A: 3:00 to 3:25. Cut B: 3:15 to 3:35.
 
-**Say**  What did all that calling produce for the desk? Across forty-nine recorded trials, thirty-six callers passed the email check. Nineteen of those calls produced a reservation a rep could review. That's fifty-three percent.
+**SHOW**
 
-## 03:20 to 03:33  Rate movement and sample
+Return to the Reservations list to show its actual SendMode indicator, then open the new reservation and its available actions. Show a clearly labeled separate simulator or sandbox receipt that actually exists. Keep its load, reference and exact PENDING status visible. Do not submit an imported historical record.
 
-**Show**  Keep the two recorded-trial KPI cards in view, then move down to the funnel.
+**SAY, Cut A**
 
-**Say**  The median agreement was fifty dollars above the opening offer. Eighteen of the nineteen agreements came from one carrier, so this gives us a workflow baseline. A pilot needs more carriers.
+"A phone agreement creates an internal reservation. A rep authorizes the TMS request after checking the terms. This separate test receipt says pending, so the desk preserves pending. Only an authoritative booked reply counts as confirmed. An uncertain send stays with the rep for investigation."
 
-## 03:33 to 03:47  The actionable exception
+**SAY, Cut B**
 
-**Show**  Open Verified without a match. Point to the empty-search and no-search counts, then a lane.
+"Agreement creates an internal reservation. A rep authorizes the TMS request. This separate test receipt says pending. Only an authoritative booked reply counts as confirmed. Uncertain sends stay with the rep."
 
-**Say**  Seven verified callers never got a match. Six searches returned empty. One call never reached search. I'd check the lanes and equipment for the six, and listen to the seventh before changing the conversation.
+### Make an operating decision
 
-## 03:47 to 04:11  Voice QA and guardrails
+Cut A: 3:25 to 3:50. Cut B: 3:35 to 3:55.
 
-**Show**  Show the documented price-correction regression and its scope. Mention normal, edge and adversarial checks.
+**SHOW**
 
-**Say**  Testing covered normal agreements, expired codes and callers trying to skip verification. One recording caught the agent negotiating after a caller rejected a misheard price. We made it repeat the corrected total and wait for yes. The same cases went from sixteen passes in twenty-four to all twenty-four. The broader suite passed one hundred eighteen mocked text checks.
+Return to unified Overview. Open an ended-call exception group, then its supporting calls. Keep date scope, cohort/provenance labels and denominator visible. Show the price-pair detail if time allows.
 
-## 04:11 to 04:35  Controlled concurrency
+**SAY, Cut A**
 
-**Show**  Show the separate loopback concurrency run and the counts. Distinguish this from the recorded calls.
+"The headline shows how many verified calls reach a reservation for rep review. Each funnel stage opens the evidence. Ended-call exceptions separate no suitable freight from no search. Price movement compares agreement with opening, not profit. Development and historical records stay identifiable."
 
-**Say**  Two local exercises tested volume. At the Twin rate limit, fourteen of fifteen simultaneous authority checks timed out. Reducing four statements to two let all fifteen finish. In a separate unpaced run, twelve API journeys and twenty-four competing approvals produced twelve TCP booking writes. The pilot still needs to measure concurrent voice calls.
+**SAY, Cut B**
 
-## 04:35 to 04:53  Pilot decision
+"The headline shows verified calls reaching a reservation for rep review. Funnel stages open the evidence. Ended-call exceptions guide follow-up. Price movement compares agreement with opening, not profit."
 
-**Show**  Close on one staffed shift and the measures to compare with ordinary dispatch.
+### Explain the evidence
 
-**Say**  For a Monday pilot, I'd connect trusted carrier contacts and keep a rep on every submission. Then compare a similar staffed shift on missed calls, dispatcher minutes and verified calls that turn into reviewed deals. Let's start with one shift and inspect every uncertain send together.
+Cut A: 3:50 to 4:35. Cut B: 3:55 to 4:35.
 
-Measured rehearsal duration: 04:53.
+**SHOW**
 
-The 49 trials span workflow versions. The separate concurrency experiment uses a local TCP simulator. The filmed Werner agreement, second pricing example, historical TMS receipt and rehearsed local reservation each have their own load.
+Open the current evidence table in readiness.md, with the reviewed source commit and Version 15. First point to the three overlapping actual voice scenarios, explicitly labeled automated diagnostic callers. Then distinguish the new human call, the native text matrix (71/74, all three failed grades visible) and the separate twelve-call fixture workload with its actual pacing/deadline. Do not claim that automated callers prove human naturalness or production peak capacity. Pre-open this page so no terminal navigation consumes the segment.
+
+**SAY, Cut A**
+
+"Three overlapping calls exercised the actual voice stack: agreement, corrected-price decline and refusal after three counters. All ended cleanly, with no TMS booking sends. These were automated diagnostic callers. Pricing is deterministic: the agent never receives the private ceiling, has at most three counter rounds per call, and retries cannot buy another concession. Tests cover ordinary calls, edge cases, OTP bypass attempts and prompt injection. Native text checks scored seventy-one of seventy-four; the three failed grades remain visible. The human call you saw tests the experience separately."
+
+**SAY, Cut B**
+
+"Three overlapping automated callers exercised agreement, corrected-price decline and final-offer refusal. All ended cleanly, with no TMS booking sends. Pricing is deterministic. The agent never receives the private ceiling, has at most three counter rounds, and retries cannot buy another concession. Tests cover ordinary calls, edge cases, OTP bypass attempts and prompt injection. Native text checks scored seventy-one of seventy-four; the three failed grades remain visible. The human call is separate evidence."
+
+### The pilot decision
+
+Cut A: 4:35 to 5:00. Cut B: 4:35 to 5:00.
+
+**SHOW**
+
+Return to the same new call in the unified desk. Keep the reviewed source and build brief available. Optionally show the exact one-line isolated deploy/open command if that path was actually exercised; do not narrate an unperformed deployment.
+
+**SAY, Cut A**
+
+"For a staffed pilot, enroll trusted contacts, assign senior reps and agree the arrival pattern. Then compare missed calls, rep time and reviewed agreements with a comparable shift. The decision is a reliable first conversation and a clear next action."
+
+**SAY, Cut B**
+
+"For a staffed pilot, enroll trusted contacts, assign reps and agree the arrival pattern. Compare missed calls, rep time and agreements with a comparable shift. The decision is a reliable first conversation and clear next action."
+
+## Truth checks before recording
+
+- Use the final reviewed source commit and exact tested voice Development version. The separate candidate App has its own Production hosting slot and reads the isolated service backed by Twin staging. The existing baseline App and voice Production version remain unchanged.
+
+- The same new run, carrier, load, opening, agreement and timeline must agree across screens. New native links must resolve to that actual run. Counts may change, so the narration explains their meaning without hardcoded cohort values.
+
+- Imported historical records must remain read-only. A separate test receipt is visibly separate from the new call. Use the words simulator or sandbox to match the real evidence. Never call PENDING booked.
+
+- The three overlapping calls were generated diagnostic callers with actual agent audio, not three humans. Their successful endings do not overwrite the 71/74 native text grade.
+
+- The retry and twelve-call statements require the final reviewed regressions and full-flow result. Display actual limits and failed checks. Do not transfer an older prompt score to the new version or call text simulations voice tests.
+
+- If the new call did not agree, show its real exception and replace the first same-agreement lines with: "This is the same call. It did not produce an agreement. The recorded reason gives the rep a specific next action." Do not invent a reservation.
+
+- If no separate pending receipt exists, show status definitions and replace that sentence with: "A pending reply remains pending." If the concurrency result changes, state its actual result within the same time budget.
+
+- The final viewing URL must work for the reviewers. Source package, build brief, prospect email and recording identify the same reviewed candidate. No generated narration or video is supplied by this script.

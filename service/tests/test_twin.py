@@ -149,7 +149,7 @@ def test_statements_start_no_closer_than_the_pace() -> None:
 
     async def scenario() -> None:
         twin = fake.twin(pace=0.05)
-        await asyncio.gather(*(twin.get("calls", f"run-{i}") for i in range(5)))
+        await asyncio.gather(*(twin.insert("calls", f"run-{i}", {}) for i in range(5)))
         await twin.close()
 
     started = time.monotonic()
@@ -173,6 +173,14 @@ def test_every_row_of_a_table_is_read_in_one_statement() -> None:
     assert found == {"LD1": (1, {"state": "RESERVED"}), "o'k": (1, {"state": "RELEASED"})}
     assert empty == {}
     assert fake.statements[-2:] == [
-        "SELECT id, version, data FROM bookings",
-        "SELECT id, version, data FROM calls",
+        "SELECT id, version, data FROM bookings ORDER BY id LIMIT 100",
+        "SELECT id, version, data FROM calls ORDER BY id LIMIT 100",
     ]
+
+
+def test_isolated_staging_environment_is_carried_on_every_sql_request() -> None:
+    fake = FakeTwin()
+    settings = TwinSettings(api_key=API_KEY, org_id="org", environment="staging")
+    twin = Twin(settings, httpx.MockTransport(fake._handle))
+    asyncio.run(twin.get("calls", "isolated-run"))
+    assert fake.headers[0]["x-twin-environment"] == "staging"

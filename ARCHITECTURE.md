@@ -236,7 +236,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 | `POST /negotiate` | Agent | Applies the negotiation policy. On agreement, reserves the load. |
 | `POST /calls/close` | Agent | Records closing time and summary. Safe to repeat. |
 | `POST /calls/ended` | Agent | Sent by the workflow after the voice agent finishes: who ended the call and how long it lasted. Creates the call's row if no tool ran. Safe to repeat. |
-| `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds. |
+| `GET /ops/snapshot` | Ops | Calls, bookings with their versions, and KPIs for the app. Cached for 5 seconds after refresh completion. |
 | `POST /bookings/{load_id}/confirm` | Ops | Sends `LOAD_BOOK` for the version the rep saw ([§10](#10-reservation-and-confirm)). |
 | `POST /bookings/{load_id}/decline` | Ops | Releases the version the rep saw. Nothing was sent, so the load is free. |
 | `POST /bookings/{load_id}/reconcile` | Ops | Read-only TMS check on a stuck or sent booking. Never sends. A `SUBMITTING` row older than 60 seconds becomes `UNKNOWN`. |
@@ -326,7 +326,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 
 Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by their `search` fields.
 
-**Repeated requests are answered from stored state** ([D-26](docs/decisions.md)). A repeated `verify_code` on a consumed code returns verified. A repeated `negotiate` with the same ask returns the same response without using a round. A repeated close changes nothing. A repeated accept finds its own reservation.
+**Repeated requests are answered from stored state** ([D-26](docs/decisions.md)). A repeated `verify_code` on a consumed code returns verified. A repeated `negotiate` with the same load and ask uses no additional round, including delayed retries after another ask or load. Up to three concession-producing request signatures are retained with the shipment. A replay preserves the safe current standing quote if later negotiation changed it; an explicit acceptance at that quote still takes priority. Replay metadata reports the current global round and final-offer status, including an old request arriving after the third round. A repeated close changes nothing. A repeated accept finds its own reservation.
 
 ---
 
@@ -540,3 +540,12 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 ## 17. Open questions
 
 Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). Luke accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.
+
+
+### Proposal read budget and historical isolation
+
+Twin point reads collect at their paced SQL slot, then detach their waiter batch before execution. Later reads, including those after a conflicting write, obtain a new database snapshot. Each waiter receives an independent value; cancelling one does not cancel the others. Limits are 128 keys per query and 256 waiting requests. The existing 0.25-second SQL pacer and twelve-second voice deadline remain unchanged. No write is coalesced.
+
+Operations snapshots use ordered 100-row keyset pages, at most twenty pages per table, and reject upstream truncation, duplicate IDs or incomplete replies. A table requiring twenty full pages is unavailable rather than silently partial. The snapshot is not atomic across tables or concurrent changes. Its five-second cache starts on completion. The App allows twenty seconds for this read and suppresses overlapping refresh transitions. Size/retention and multi-instance provider quotas remain pilot constraints.
+
+Imported historical call and booking rows are marked read_only. Call transitions, rep actions, reservation acquisition, voiding and source-consent checks refuse to mutate or submit them. Even a released imported booking blocks reusing that row. Normal released reservations remain reusable. Native workflow provenance is stamped only when creating a call through a separately configured trusted workflow integration; input request fields cannot supply it.

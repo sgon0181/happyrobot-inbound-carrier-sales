@@ -218,3 +218,19 @@ def test_closing_notes_and_reported_ends_count_only_actual_evidence() -> None:
     }
     kpis = build_snapshot(rows, {}, START)["kpis"]
     assert (kpis["calls"], kpis["closed_with_summary"], kpis["ends_reported"]) == (3, 1, 1)
+
+
+def test_slow_refresh_receives_five_seconds_of_cache_after_it_finishes() -> None:
+    r = rig()
+    read = r.dashboard.twin.get_all
+
+    async def slow_read(table: str) -> Any:
+        result = await read(table)
+        r.clock.now += timedelta(seconds=6)
+        return result
+
+    r.dashboard.twin.get_all = slow_read  # type: ignore[method-assign]
+    r.get("/ops/snapshot")
+    count = len(r.twin.statements)
+    r.get("/ops/snapshot")
+    assert len(r.twin.statements) == count

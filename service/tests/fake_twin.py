@@ -19,6 +19,9 @@ _SELECT_MANY = re.compile(
     rf"SELECT id, version, data FROM (\w+) WHERE id IN \(({_LITERAL}(?:, {_LITERAL})*)\)"
 )
 _SELECT_ALL = re.compile(r"SELECT id, version, data FROM (\w+)")
+_SELECT_PAGE = re.compile(
+    rf"SELECT id, version, data FROM (\w+)(?: WHERE id > {_LITERAL})? ORDER BY id LIMIT ([0-9]+)"
+)
 _INSERT = re.compile(
     rf"INSERT INTO (\w+) \(id, version, data\) VALUES \({_LITERAL}, 1, {_LITERAL}::jsonb\) "
     r"ON CONFLICT \(id\) DO NOTHING RETURNING id"
@@ -73,9 +76,9 @@ class FakeTwin:
         if match := _SELECT_MANY.fullmatch(sql):
             table = self.tables[match[1]]
             keys = [_text(key) for key in re.findall(_LITERAL, match[2])]
-            return [
-                {"id": k, "version": table[k][0], "data": table[k][1]} for k in keys if k in table
-            ]
+            return self._many(table, keys)
+        if match := _SELECT_PAGE.fullmatch(sql):
+            return self._page(match[1], _text(match[2]) if match[2] else None, int(match[3]))
         if match := _SELECT_ALL.fullmatch(sql):
             rows = self.tables[match[1]].items()
             return [{"id": key, "version": row[0], "data": row[1]} for key, row in rows]
@@ -98,6 +101,22 @@ class FakeTwin:
             self.tables[table][key] = (row[0] + 1, data)
             return [{"id": key}]
         return None
+
+    def _page(self, table: str, after: str | None, limit: int) -> list[dict[str, object]]:
+        rows = self.tables[table]
+        keys = [key for key in sorted(rows) if after is None or key > after][:limit]
+        return [{"id": key, "version": rows[key][0], "data": rows[key][1]} for key in keys]
+
+    def _many(
+        self, table: dict[str, tuple[int, dict[str, object]]], keys: list[str]
+    ) -> list[dict[str, object]]:
+        rows = [{"id": k, "version": table[k][0], "data": table[k][1]} for k in keys if k in table]
+        if self.interfere:
+            for key in keys:
+                if key in table:
+                    version, data = table[key]
+                    table[key] = (version + 1, data)
+        return rows
 
 
 def _text(literal: str) -> str:

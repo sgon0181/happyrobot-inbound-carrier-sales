@@ -1,4 +1,5 @@
 // Explicit projection of authenticated operations snapshots. Unknown fields stay private.
+import { platformRun } from "@/lib/views";
 import { nativeStartedAt } from "@/lib/demo-voice-runs";
 import { callMilestones } from "@/lib/call-milestones";
 import { callPricing } from "@/lib/call-pricing";
@@ -12,6 +13,7 @@ export type Cohort = "real" | "synthetic";
 export type RepAction = "confirm" | "decline" | "reconcile";
 
 export type Booking = {
+  readOnly: boolean;
   trustedContact: boolean;
   agreementNeedsReview: boolean;
   carrierName: string | null;
@@ -37,11 +39,13 @@ export type Booking = {
 
 export type Call = ReturnType<typeof callMilestones> & {
   id: string;
+  recordingUrl: string | null;
   cohort: Cohort | null;
   startedAt: string | null;
   sessionAt: string | null;
   closedAt: string | null;
   endedAt: string | null;
+  durationSeconds: number | null;
   mc: string | null;
   carrierName: string | null;
   verifiedAt: string | null;
@@ -116,6 +120,7 @@ function projectBooking(raw: unknown): Booking[] {
     {
       loadId,
       agreementNeedsReview: b.agreement_needs_review === true,
+      readOnly: b.read_only === true,
       trustedContact: b.otp_route === "trusted_contact",
       version,
       carrierName: str(b.carrier_name, 120),
@@ -152,11 +157,13 @@ function projectCall(raw: unknown): Call[] {
   return [
     {
       id,
+      recordingUrl: platformRun(id, c.native_workflow),
       cohort: cohort(c.cohort),
       startedAt: str(c.started_at, 40),
       sessionAt: nativeStartedAt.get(id) ?? str(c.started_at, 40),
       closedAt: str(c.closed_at, 40),
       endedAt: str(c.ended_at, 40),
+      durationSeconds: num(c.duration_seconds),
       mc: str(c.mc, 32),
       carrierName: str(c.carrier_name, 120),
       verifiedAt: str(c.verified_at, 40),

@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-11-05T01:09:16.111954+00:00",
+  "scope": "read-only final integrity check",
+  "tables": {
+    "calls": {
+      "production_unchanged": true,
+      "imports_unchanged": true,
+      "source_count": 50,
+      "staging_count": 61
+    },
+    "bookings": {
+      "production_unchanged": true,
+      "imports_unchanged": true,
+      "source_count": 15,
+      "staging_count": 17
+    }
+  }
+}

@@ -47,7 +47,7 @@ Replaces the nine prototype tables.
 
 ### D-26: Repeated requests are answered from stored state
 
-Replaces D-17. Each operation checks whether its effect already happened, so a repeat is safe without a fingerprint cache or a time window. The prototype's cache took about two-thirds of each call row. Platform retries were never proven to happen.
+Replaces D-17. Each operation checks whether its effect already happened, so a repeat is safe without a fingerprint cache or a time window. The prototype's cache took about two-thirds of each call row. Platform retries were never proven to happen. The readiness proposal retains up to three concession-producing load/ask signatures with their shipment context, so an interleaved retry cannot consume another global round. A later safe standing quote remains binding, and accepting it takes priority over an older signature. Replays report the current global round and final-offer status, so an old request cannot reopen bargaining after the final quote. Changed shipment facts clear those per-load signatures, while the call-wide round limit remains.
 
 ### D-27: No background jobs
 

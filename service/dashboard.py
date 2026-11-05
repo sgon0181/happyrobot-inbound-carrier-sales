@@ -23,11 +23,11 @@ HOLDS_NOTHING = "UNCLAIMED"  # a voided claim on a load nobody reserved: not a r
 CALL_FIELDS = (
     *("started_at", "last_activity", "closed_at", "mc", "carrier_name", "eligible"),
     *("verified_at", "search", "offers", "rounds", "agreement", "summary", "events"),
-    *("ended_at", "ended_by", "duration_seconds"),
+    *("ended_at", "ended_by", "duration_seconds", "native_workflow", "read_only"),
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
-    *("send", "reason", "load", "otp_route"),
+    *("send", "reason", "load", "otp_route", "read_only"),
 )
 
 
@@ -45,10 +45,11 @@ class Dashboard:
         self._generation = 0  # rises on every forget, so a refresh begun before it is not kept
 
     async def snapshot(self) -> Reply:
-        """Two statements, one per table, at most once every 5 seconds.
+        """Bounded scans of both tables, shared by simultaneous dashboard readers.
 
-        Dashboards that ask together share one refresh, so they cannot crowd out voice
-        requests on Twin's 4 statements a second.
+        Cache for five seconds and fail if a complete scan cannot fit the adapter limits.
+        Tables are read separately, not as a cross-table transaction. Large scans share
+        the same paced SQL queue as calls, so pilot capacity must include dashboard traffic.
         """
         async with self._refreshing:
             now = self.now()
@@ -59,7 +60,7 @@ class Dashboard:
             bookings = await self.twin.get_all("bookings")
             snapshot = build_snapshot(calls, bookings, now, live_booking=self.live_booking)
             if generation == self._generation:  # no rep action landed while it was read
-                self._cached = (now + CACHE, snapshot)
+                self._cached = (self.now() + CACHE, snapshot)
             return snapshot
 
     def forget(self) -> None:

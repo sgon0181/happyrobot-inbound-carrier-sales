@@ -5,7 +5,7 @@ import { BookingActions } from "@/components/rep-queue";
 import { StateBadge } from "@/components/state-badge";
 import { fmtCount, fmtTime, fmtUsd, label, na, nextAction, submissionStatus } from "@/lib/format";
 import type { Booking, Call } from "@/lib/snapshot";
-import { viewHref, platformRun } from "@/lib/views";
+import { viewHref } from "@/lib/views";
 
 const box = "rounded-xl border bg-card p-5";
 const labels = "text-xs font-medium text-muted-foreground";
@@ -20,10 +20,10 @@ export function ReservationReview({ booking: b, call: c, now, live, canManage }:
   const agreed = c?.agreedRate ?? b?.rate ?? null;
   const state = b?.state ?? c?.bookingState ?? null;
   const gap = opening !== null && agreed !== null ? agreed - opening : null;
-  const runUrl = platformRun(c?.id);
+  const runUrl = c?.recordingUrl;
   const queue = b && state !== "RESERVED" && state !== "RELEASED" ? "bookings" : "reservations";
   return <section className="space-y-4">
-    <Link href={viewHref(queue)} className="text-sm underline">Back to {queue === "reservations" ? "awaiting rep" : "bookings"}</Link>
+    <Link href={viewHref(queue)} className="text-sm underline">Back to {queue === "reservations" ? "reservations" : "bookings"}</Link>
     <div className={box}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-2xl font-semibold"> {queue === "bookings" ? "Booking review" : "Reservation review"} · {loadId}</h2><StateBadge state={state} />

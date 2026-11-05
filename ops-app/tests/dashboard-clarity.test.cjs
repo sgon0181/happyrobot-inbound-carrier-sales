@@ -44,3 +44,10 @@ test('an incomplete acceptance is labeled as a hold and is releasable without su
   assert.match(html, /disabled=""[^>]*>Confirm/);
   assert.doesNotMatch(html.match(/<button([^>]*)>Decline<\/button>/)[1], /\sdisabled(?:=|\s|$)/);
 });
+
+
+test('imported historical reservations expose evidence without mutation controls', () => {
+  const html=render(ReservationReview,{booking:{...booking,readOnly:true},canManage:true,live:true,now:0});
+  assert.match(html,/Historical import. View only/);
+  assert.doesNotMatch(html,/<button[^>]*>(Confirm|Decline|Reconcile)/);
+});

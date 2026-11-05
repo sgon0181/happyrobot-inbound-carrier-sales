@@ -154,6 +154,7 @@ export function BookingActions({
   liveBooking: boolean | null;
   short?: boolean;
 }) {
+  if (b.readOnly) return <p className="text-xs text-muted-foreground">Historical import. View only.</p>;
   const actions = allowedActions(b, now);
   if (!actions.length) return <p className="text-xs text-muted-foreground">No action</p>;
   return (

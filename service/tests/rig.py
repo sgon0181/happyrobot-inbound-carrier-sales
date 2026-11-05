@@ -169,11 +169,12 @@ def rig(
     deadline: float = 12.0,
     tms: Reachable | None = None,
     live_booking: bool = True,
+    native_workflow: dict[str, str] | None = None,
 ) -> Rig:
     found = [ACTIVE] if carriers is None else carriers
     fake = FakeFmcsa(found, status=fmcsa_status, delay=fmcsa_delay)
     twin, mailer, clock, board = FakeTwin(), FakeMailer(fail=mail_fails), Clock(), FakeBoard()
-    rows = CallRows(twin=twin.twin(), cohort="real", now=clock)
+    rows = CallRows(twin=twin.twin(), cohort="real", now=clock, native_workflow=native_workflow)
     fmcsa = Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fake.reply))
     calls = Calls(
         rows=rows, fmcsa=fmcsa, mailer=mailer, code_secret=b"s" * 24, trusted_contacts=True

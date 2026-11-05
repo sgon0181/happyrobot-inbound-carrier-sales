@@ -1,0 +1,475 @@
+{
+  "candidate_version_id": "01a1a92c-4218-7de5-a2ca-6aca7b2d951e",
+  "candidate_version_slug": "4l79y6ugq62q",
+  "environment": "development",
+  "production_version_id": "01a1a4f6-79a3-7c40-8732-589b3adfdcfd",
+  "production_unchanged": true,
+  "source": "Exact native node readback, private auth token replaced by placeholder",
+  "prompt_sha256": "610f904bf08fba2bd831477c5c055c5a52d855a6be9605ccf4c9f922a5503b45",
+  "bindings": {
+    "Service verify_carrier": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/carriers/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"mc\":{{$var:01a19dc0-e205-7fec-9fb5-1bce8f0968ad.mc}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service call_ended": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/calls/ended"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"ended_by\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.call_end_initiator}},\"duration_seconds\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.duration}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service close_call": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/calls/close"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"summary\":{{$var:01a19f02-2dca-7185-94ff-52435dc3a20c.summary}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service find_loads": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/loads/search"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"equipment\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.equipment}},\"origin_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.origin_state}},\"dest_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.dest_state}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service verify_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/otp/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"code\":{{$var:01a19dc0-e218-762c-8e5e-fa1ca6770e81.code}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service negotiate": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/negotiate"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.load_id}},\"rate\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.rate}},\"after_final_offer\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.after_final_offer}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service send_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/otp/send"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "negotiate": {
+      "message": {
+        "type": "none",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "load_id",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "The load_id of the load being discussed, exactly as find_loads returned it."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "rate",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Apply the pending-confirmation gate FIRST. After amount clarification, submit only a total already read back for this load and unambiguously affirmed by the caller. A reply containing a DIFFERENT complete amount is a correction even if it starts Yes: read back that new amount and wait for a fresh affirmative. No followed by the same digits is not confirmation. Yeah, 1125 after a clarification question also needs a readback and a later affirmative. Never negotiate while asking or waiting. With no pending clarification, ordinary clear asks/repeats and acceptance keep their direct behavior. Service-requested retries keep the same confirmed load and rate."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "after_final_offer",
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Boolean flag. Use only the literal string true or false. For a new caller reply after this load's quoted final offer, use true. Otherwise use false. For a plain final refusal the TWO DIFFERENT fields are rate=decline and after_final_offer=true. Never put decline, money or words in this boolean field."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Send the caller's rate for one offered load, whether they accept our offer or counter. The service answers with a counter, a final offer, an agreement or a failure."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c5-710b-aeeb-71abd8190871",
+      "tool_index_hash": "a946f2769a08486933888b8293e71224485d0ca003481df9d72da6639631b32c"
+    },
+    "close_call": {
+      "message": {
+        "type": "ai",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Say the truthful caller-facing closing explanation. On agreement, include the exact service-approved load ID and total and that a senior rep will confirm. For other terminal outcomes, briefly say why with no handoff. If the voice _hangup tool is available, do not include thanks or goodbye here: after the note result, _hangup speaks 'Thank you for calling. Goodbye.' once. If _hangup is not available, finish this message with that farewell. Never include private notes, a code, an internal price or an email address."
+              }
+            ]
+          }
+        ]
+      },
+      "end_call": false,
+      "execution": {
+        "async": false,
+        "force_invoke_llm_on_result": false
+      },
+      "parameters": [
+        {
+          "name": "summary",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "One or two sentences: the lane asked for, the load discussed, the final rate or why there was no deal. Never include a verification code."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "bye_headers": [],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Record that the call is ending. Call it once, just before you end any call after verification started."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c4-7300-a127-c0acc4f6ab9a",
+      "tool_index_hash": "11ea929ddbe23284930a5e72f825e7940df523cd1383bb8b74f5a037e5690e2d"
+    },
+    "verify_code": {
+      "message": {
+        "type": "none",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "code",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Exactly the digits the caller read, keeping leading zeros. Never guess."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Check the six-digit code the caller read back. The returned status decides what happens next."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c5-7ce6-972a-fde3524e72af",
+      "tool_index_hash": "139b888963845d3dcae74883bb23d75f5693210ab51a24542ea75e7d74e9ae1f"
+    },
+    "send_code": {
+      "message": {
+        "type": "none",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "parameters": [],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Email a six-digit verification code to the carrier. Call it once, after verify_carrier returns eligible."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c3-79f6-8497-dbe92d5ea33c",
+      "tool_index_hash": "f52f34fded7e0ed2ac36dce9e965dd6cad2da716d1712210649d479dfe49e620"
+    },
+    "verify_carrier": {
+      "message": {
+        "type": "none",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "mc",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "The MC number exactly as the caller said it, digits only."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Check the caller's MC number with FMCSA. Call it once the caller has said their MC number. The returned status decides what happens next."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c4-75da-8d57-75a0230df5ad",
+      "tool_index_hash": "9fc0e0057f286b72946100db0e8c15171243f720da78bb778eeafb85ec8447b0"
+    },
+    "find_loads": {
+      "message": {
+        "type": "none",
+        "example": "",
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": ""
+              }
+            ]
+          }
+        ]
+      },
+      "parameters": [
+        {
+          "name": "equipment",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Equipment as the caller said it, such as dry van, reefer or flatbed. Use an empty string if they did not say."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "origin_state",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Two-letter US state code where the load picks up, such as TX. Use an empty string if they did not say."
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "dest_state",
+          "required": true,
+          "description": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "text": "Two-letter US state code where the load delivers, such as GA. Use an empty string if they did not say."
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "Search for loads on the caller's lane once they are verified. The service returns up to three loads with our offer for each."
+            }
+          ]
+        }
+      ],
+      "tool_index_id": "tool:01a1a90c-07c5-7b97-858b-f87484776bda",
+      "tool_index_hash": "ff091719292cc51da8d7fdc0125e2358d2e8eab9c8e27f094998c9019fde1486"
+    }
+  }
+}

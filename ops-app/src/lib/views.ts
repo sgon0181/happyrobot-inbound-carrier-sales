@@ -29,6 +29,13 @@ export function workspaceFilters(params: Params) {
 }
 export const isRunId = (id: string | null | undefined): id is string =>
   typeof id === "string" && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id);
-export function platformRun(id: string | null | undefined) {
-  return isRunId(id) && demoVoiceRunIds.has(id) ? `https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/runs?run_id=${id}` : null;
+export function platformRun(id: string | null | undefined, provenance?: unknown) {
+  if (!isRunId(id)) return null;
+  if (provenance && typeof provenance === "object") {
+    const native = provenance as Record<string, unknown>;
+    const safe = (v: unknown): v is string => typeof v === "string" && /^[A-Za-z0-9_-]{1,80}$/.test(v);
+    if (safe(native.workspace) && safe(native.workflow_id))
+      return `https://platform.happyrobot.ai/${native.workspace}/workflows/${native.workflow_id}/runs?run_id=${id}`;
+  }
+  return demoVoiceRunIds.has(id) ? `https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/runs?run_id=${id}` : null;
 }

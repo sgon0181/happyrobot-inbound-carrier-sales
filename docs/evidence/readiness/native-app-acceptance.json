@@ -1,0 +1,117 @@
+{
+  "schema": "carrier-sales-native-app-acceptance/v1",
+  "recorded_at_utc": "2026-11-05T01:14:51.385980+00:00",
+  "disposition": "PASS: isolated hosted candidate, no live TMS booking",
+  "candidate": {
+    "name": "Carrier Sales Candidate",
+    "slug": "carrier-sales-proposal-sg",
+    "url": "https://carrier-sales-proposal-sg.happyrobot.dev",
+    "build": 10,
+    "native_target": "Production target of separate candidate App",
+    "backend": "https://happyrobot-proposal-sg.fly.dev",
+    "backend_twin_environment": "staging",
+    "booking_sends_enabled": false
+  },
+  "source": {
+    "repository": "happyrobot-custom-apps/carrier-sales-proposal-sg",
+    "prepared_commit": "ab3c19e9f432721e05467102bc96da5ecc0eda44",
+    "deployed_commit": "7a233ae2e07d67bf6808a7cddcdee9ed66a756b1",
+    "tree": "f47bca622b915b254076dfbc53edb1f77bc1e547",
+    "archive_sha256": "efa9a5d7c978232e0415909d07c680e514f0902e934804fce296c82c0edd57d2",
+    "manifest_sha256": "74a015332c0fd9e7f5fb572b41277e107e5a4de290cd6ffebb213671e990a0eb",
+    "paths": 91,
+    "local_source_matches": 91,
+    "native_HEAD_matches": 91,
+    "native_origin_main_matches": 91,
+    "native_working_matches": 91,
+    "mismatches": 0,
+    "extras": 0,
+    "native_worktree_clean": true,
+    "deployed_tree_matches_prepared_tree": true,
+    "verification_method": "Local SHA-256 comparison independently performed; native assistant read-only blob comparison observed in candidate UI after Deploy, checking remote references as well as local refs."
+  },
+  "validation": {
+    "native_tests_passed": 65,
+    "native_lint_errors": 0,
+    "native_lint_warnings": 3,
+    "native_typecheck": "pass",
+    "native_production_build": "pass, 8 routes",
+    "native_dependency_install": "npm ci passed on unchanged canonical package pair before final three-file auth import",
+    "source_hashes_checked_after_each_validation": true,
+    "independent_local_app_tests": 65
+  },
+  "hosted_acceptance": {
+    "authenticated_health": {
+      "status": 200,
+      "body": {
+        "ok": true
+      }
+    },
+    "health_with_credentials_omitted": {
+      "status": 401,
+      "body": {
+        "error": "Unauthorized"
+      }
+    },
+    "same_origin_assigned_rep_empty_confirm": {
+      "path": "/api/bookings/LD00000/confirm",
+      "status": 400,
+      "body": {
+        "error": "Booking version required"
+      },
+      "service_action_reached": false,
+      "reason": "Actual verified native identity and rep authorization precede required booking version; empty body stops before postRepAction."
+    },
+    "foreign_origin_probe": {
+      "origin": "https://untrusted.example",
+      "cookie": "nonsecret invalid-probe token presence only",
+      "status": 403,
+      "body": {
+        "error": "Forbidden"
+      },
+      "service_action_reached": false
+    },
+    "native_platform_me": {
+      "status": 200,
+      "response_identity_field": "id",
+      "response_has_sub": false,
+      "identity_normalization": "Verified id normalized to internal sub; conflicting or malformed identities deny. Exact account identifier omitted."
+    },
+    "native_app_identity_environment": "production",
+    "service_environment_is_independent": true,
+    "overview": "Unified genuine recorded calls across voice versions; counts have explicit denominators; ended-only losses; TMS pending separate from confirmed. Screenshot observed inline via CUA.",
+    "client_hydration": "Pause changed to Resume and navigation to Overview and reservation detail worked.",
+    "no_real_booking_or_decline_performed": true
+  },
+  "recording_link": {
+    "run_id": "8eb82ad6-79b8-4c11-94ab-99bd1ce34c9b",
+    "load_id": "LD01123",
+    "opening_usd": 2100,
+    "agreed_usd": 2100,
+    "app_status": "Awaiting rep",
+    "tms_status": "Not submitted",
+    "native_version": 15,
+    "native_environment": "Development",
+    "run_url": "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/runs?run_id=8eb82ad6-79b8-4c11-94ab-99bd1ce34c9b",
+    "ui_resolution": "Matching run panel, completed timestamp and V15 Development table row, audio player and transcript observed. Transcript states agreed $2,100 and senior rep confirmation, then one goodbye and agent hung up."
+  },
+  "preserved_baseline": {
+    "app_slug": "codex-lab-carrier-sales-v24",
+    "app_build": 24,
+    "url": "https://carrier-sales-santiago.happyrobot.dev",
+    "verification": "Read-only native UI still Build24 after candidate publish. No baseline source/settings changes."
+  },
+  "rejected_attempts": [
+    "Initial imported package files were normalized by native daemon, yielding 89/91 matches. Deployment withheld.",
+    "A local-only source commit was lost on sandbox restart before remote persistence. Template mismatch detected and deployment withheld.",
+    "Canonical package pair adopted by writer after exact diff review: TypeScript pin/order and dev flag normalization, no resolved version or integrity changes across 614 lock entries.",
+    "Actual /api/apps/me contract returned id, revealing original sub-only adapter denied assigned native rep. Writer fixed adapter and fixture, added route regression, and exact final source was revalidated before publish."
+  ],
+  "limits": [
+    "Candidate native hosting acceptance only. Existing production baseline retained.",
+    "Real hosted rep role and origin gates proved without a booking write; complete Confirm/PENDING/duplicate/viewer flow independently tested against isolated local TCP fixture by root.",
+    "Native assistant reports blob hashes; no separate repository export was downloaded after publish.",
+    "New user-recorded human demo remains owner work. Native V15 synthetic caller audio evidence and checkpoint results remain separate, with failed grades retained.",
+    "Native dev sandbox transient preview origin may require separate reconfiguration after restart; accepted deliverable is stable hosted candidate URL."
+  ]
+}

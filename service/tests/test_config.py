@@ -92,3 +92,29 @@ def test_parse_private_contact_roster_without_echoing_addresses() -> None:
         with pytest.raises(SettingsError, match="OTP_CONTACTS_JSON") as caught:
             load_settings(ENV | {"OTP_CONTACTS_JSON": invalid})
         assert invalid not in str(caught.value)
+
+
+def test_twin_environment_defaults_to_production_and_rejects_unknown_names() -> None:
+    assert load_settings(ENV).twin_environment == "production"
+    assert load_settings(ENV | {"TWIN_ENVIRONMENT": "staging"}).twin_environment == "staging"
+    with pytest.raises(SettingsError, match="TWIN_ENVIRONMENT"):
+        load_settings(ENV | {"TWIN_ENVIRONMENT": "unknown"})
+
+
+def test_native_integration_provenance_requires_both_safe_identifiers() -> None:
+    assert load_settings(ENV).native_workflow is None
+    configured = ENV | {
+        "HAPPYROBOT_WORKSPACE_SLUG": "our-workspace",
+        "HAPPYROBOT_WORKFLOW_ID": "6oaskq84xpfc",
+    }
+    assert load_settings(configured).native_workflow == {
+        "workspace": "our-workspace",
+        "workflow_id": "6oaskq84xpfc",
+    }
+    for overrides in [
+        {"HAPPYROBOT_WORKFLOW_ID": ""},
+        {"HAPPYROBOT_WORKSPACE_SLUG": "https://attacker.test"},
+        {"HAPPYROBOT_WORKFLOW_ID": "../../outside"},
+    ]:
+        with pytest.raises(SettingsError, match="HAPPYROBOT_WORKSPACE_SLUG"):
+            load_settings(configured | overrides)

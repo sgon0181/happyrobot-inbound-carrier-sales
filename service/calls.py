@@ -5,7 +5,6 @@ is identified by the workflow's run_id, which the model cannot choose (D-16). St
 changes share a write with their events (INV-9); refused carrier changes leave the row untouched.
 """
 
-import copy
 from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -14,7 +13,7 @@ from typing import Any, Protocol
 from service.adapters.email import DeliveryLimited, EmailFailed, NoTrustedContact
 from service.adapters.fmcsa import Fmcsa, FmcsaUnavailable
 from service.adapters.twin import Data, Row, Twin
-from service.call_state import code_state, new_call, permits_action, store_code
+from service.call_state import code_state, complete_call, permits_action, store_code
 from service.core import codes
 from service.core.carrier_policy import assess, normalize_mc
 
@@ -40,14 +39,22 @@ class CallRows:
     """Reads and writes call rows. Every write is one decision and its event."""
 
     def __init__(
-        self, *, twin: Twin, cohort: str, now: Callable[[], datetime] = lambda: datetime.now(UTC)
+        self,
+        *,
+        twin: Twin,
+        cohort: str,
+        now: Callable[[], datetime] = lambda: datetime.now(UTC),
+        native_workflow: Data | None = None,
     ) -> None:
         self.twin, self.cohort, self.now = twin, cohort, now
+        self.native_workflow = dict(native_workflow) if native_workflow else None
 
     async def read(self, run_id: str) -> Data:
         """The call as stored, or a new call if it has no row yet. Nothing is written."""
         row = await self.twin.get("calls", run_id)
-        return _complete(row.data if row else None, self.cohort, self.now())
+        return complete_call(
+            row.data if row else None, self.cohort, self.now(), self.native_workflow
+        )
 
     async def step(
         self,
@@ -81,8 +88,8 @@ class CallRows:
         now = self.now()
 
         def edit(current: Data | None) -> tuple[Data | None, Reply]:
-            data = _complete(current, self.cohort, now)
-            if not permits_action(data, action):
+            data = complete_call(current, self.cohort, now, self.native_workflow)
+            if data.get("read_only") or not permits_action(data, action):
                 return None, {"status": "call_closed"}
             ending = action in ("close", "call_ended")
             hint = {"_claim": data["accepting"]} if ending and data["accepting"] else {}
@@ -234,11 +241,6 @@ def set_outcome(outcome: str) -> Decide:
     return decide
 
 
-def _complete(current: Data | None, cohort: str, now: datetime) -> Data:
-    """A copy of the row to edit, with any field added since it was written."""
-    return new_call(cohort, now) | copy.deepcopy(current or {})
-
-
 def _select(mc: str) -> Decide:
     """A different MC starts verification again, keeping the budgets (section 8). It is
     saved before the lookup, so a failed or slow lookup cannot leave an earlier MC verified.
@@ -257,7 +259,15 @@ def _select(mc: str) -> Decide:
                 verified_at=None,
                 otp_route=None,
             )
-            data.update(offers={}, shipments={}, lowest_asks={}, last_counter=None, outcome=None)
+            data.update(
+                offers={},
+                shipments={},
+                lowest_asks={},
+                last_counters={},
+                counter_replies={},
+                last_counter=None,
+                outcome=None,
+            )
         # Suspend freight access while rechecking even the same MC. Keep its valid OTP.
         data.update(eligible=False, authority=None)
         data["lookup"] += 1

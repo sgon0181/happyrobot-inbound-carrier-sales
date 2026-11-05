@@ -1,0 +1,1312 @@
+{
+  "schema_version": 1,
+  "candidate_version_id": "01a1a919-bedc-78b6-8e10-945d6c8dc377",
+  "prompt_sha256": "9673f2ba039ef5667d4124e61b44ba37384a482cba8797d0ed055a071b1f1e79",
+  "scope": "Prior actual WebRTC batch, preserved failures, not final acceptance.",
+  "outcome": "Two complete agreed-pending-rep calls. Third timed out at600s after local diagnostic TTS generator stalled before sending its decline. One successful call also performed an unwanted missing-lane search on partial STT, then recovered to the specified lane.",
+  "runs": [
+    {
+      "slot": "parallel13a",
+      "run_id": "fe1cf160-79b3-4b16-a80f-e2eccec8e55a",
+      "native_output_id": "ab430b19-3daf-440b-b406-bc0b05c57c99",
+      "transcript": [
+        {
+          "id": "01a1a91f-42a4-733f-9041-5a36a89a6ff0",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 319,
+          "end": 4559
+        },
+        {
+          "id": "01a1a91f-5fb4-7837-960b-cd59ea086191",
+          "role": "assistant",
+          "content": "Can I get your MC number?",
+          "start": 10559,
+          "end": 11999
+        },
+        {
+          "id": "f4af4f45-800c-4e8b-a2c6-f19d18b940a2",
+          "role": "user",
+          "content": "My MC number is [redacted six-digit input].",
+          "start": 4940,
+          "end": 7500
+        },
+        {
+          "id": "01a1a91f-8aec-73ae-9d3d-5d4e2627b30d",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_97efa9abed6350d99a3d3a1c6dbfb292",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"[redacted six-digit input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_97efa9abed6350d99a3d3a1c6dbfb292",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a91f-9e0c-7879-a4b2-a137295a8012",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 24679,
+          "end": 27959
+        },
+        {
+          "id": "01a1a91f-bbd0-79c5-9208-87494c8a509d",
+          "role": "assistant",
+          "content": "Is that carrier name right?",
+          "start": 33979,
+          "end": 35579
+        },
+        {
+          "id": "8b3a423f-07eb-414b-b9b1-f79703e618c6",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 7659,
+          "end": 9179
+        },
+        {
+          "id": "01a1a920-86e6-7b1c-ac48-6c094ac9dc34",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_e5b6fc01def15d78bce0e51f153c328e",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_e5b6fc01def15d78bce0e51f153c328e",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a920-a195-7083-8cdc-583f7dd26a32",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 90960,
+          "end": 94400
+        },
+        {
+          "id": "01a1a920-c250-72b4-991b-5d08551066d7",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 100379,
+          "end": 102779
+        },
+        {
+          "id": "9c108508-9299-45e4-be66-d83ee51fd755",
+          "role": "user",
+          "content": "[redacted verification input]",
+          "start": 11339,
+          "end": 16239
+        },
+        {
+          "id": "01a1a921-3afc-7817-b724-8a40bb3afcb2",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_488b49c0c930583e9c4eb6ac99ed05b2",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\": \"Verifying that code.\", \"code\": \"[redacted verification input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_488b49c0c930583e9c4eb6ac99ed05b2",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a921-4720-751a-8765-e4376e0cc63c",
+          "role": "assistant",
+          "content": "What equipment are you looking for?",
+          "start": 135179,
+          "end": 136779
+        },
+        {
+          "id": "01a1a921-64f9-70ea-bbdb-4a58538a747c",
+          "role": "assistant",
+          "content": "What equipment are you looking for?",
+          "start": 142739,
+          "end": 144419
+        },
+        {
+          "id": "00455da0-b00b-4b27-8e9f-443fcb787c2c",
+          "role": "user",
+          "content": "Dry van, from Texas to Georgia.",
+          "start": 18229,
+          "end": 20439
+        },
+        {
+          "id": "01a1a922-218e-7dc9-ba62-31b35f87a425",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_b0129e981fbc575a8ef583f1429c71e8",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane.\",\"dest_state\":\"GA\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"status\":\"no_match\"}}]}",
+          "tool_call_id": "call_b0129e981fbc575a8ef583f1429c71e8",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a922-3a7c-727e-b3c5-8809a0808b0c",
+          "role": "assistant",
+          "content": "Nothing fits Texas to Georgia right now. Would you like me to check another lane?",
+          "start": 195079,
+          "end": 199079
+        },
+        {
+          "id": "01a1a922-5944-7950-b188-f886560ddebe",
+          "role": "assistant",
+          "content": "Would you like me to check another lane?",
+          "start": 205119,
+          "end": 206959
+        },
+        {
+          "id": "01a1a923-62bc-789a-96b7-87aebc86dbbc",
+          "role": "assistant",
+          "content": "Would you like me to check another lane?",
+          "start": 272999,
+          "end": 274919
+        },
+        {
+          "id": "c498bff0-270c-40b9-92f2-f065ce03bfb4",
+          "role": "user",
+          "content": "Yes. Please check dry van. Kentucky to Texas instead.",
+          "start": 22499,
+          "end": 26159
+        },
+        {
+          "id": "01a1a924-e575-7372-85be-ba899a1c4e2b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_822a21a641fa5503976f6daa3b8b24b8",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane.\",\"dest_state\":\"TX\",\"equipment\":\"dry van\",\"origin_state\":\"KY\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-12T09:37:00+00:00\",\"delivery_time_display\":\"November 12 at 3:37 AM Central (CST)\",\"destination\":\"San Antonio, TX\",\"dimensions\":\"528 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01123\",\"miles\":998,\"notes\":\"\",\"num_of_pieces\":14,\"offer\":2100,\"origin\":\"Lexington, KY\",\"pickup_datetime\":\"2026-11-09T17:37:00+00:00\",\"pickup_time_display\":\"November 9 at 11:37 AM Central (CST)\",\"weight\":36971}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_822a21a641fa5503976f6daa3b8b24b8",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a925-4820-7bbf-9bbc-46b91ffc2b4a",
+          "role": "assistant",
+          "content": "Lexington, Kentucky to San Antonio, Texas. Pickup is November 9 at 11:37 AM Central (CST), dry van, 36,971 pounds of general freight, 14 pieces. Delivery is November 12 at 3:37 AM Central (CST). Our offer is $2,100. Does that work?",
+          "start": 377660,
+          "end": 399180
+        },
+        {
+          "id": "01a1a925-69b8-77e7-9277-dce639eb7e2d",
+          "role": "assistant",
+          "content": "Does $2,100 work for you?",
+          "start": 405220,
+          "end": 407780
+        },
+        {
+          "id": "01a1a926-7524-7332-a394-429996f59377",
+          "role": "assistant",
+          "content": "Does $2,100 work for you?",
+          "start": 473839,
+          "end": 476239
+        },
+        {
+          "id": "bd0d5844-3b7d-43d9-bf6f-0e25ed96a108",
+          "role": "user",
+          "content": "Yes, I accept 21 hundred dollars for that load.",
+          "start": 28299,
+          "end": 31589
+        },
+        {
+          "id": "01a1a927-c03f-7571-a9d4-8a707f640d38",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_111192aad30755958a84d1594ef1c610",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"after_final_offer\":\"false\",\"load_id\":\"LD01123\",\"rate\":\"2100\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01123\",\"rate\":2100,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_111192aad30755958a84d1594ef1c610",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a927-eb20-751e-9029-34f1316dda59",
+          "role": "assistant",
+          "content": "We agreed on $2,100 for LD01123. I'll pass you to our senior rep to confirm the booking.",
+          "tool_calls": [
+            {
+              "id": "call_27f804f9f35952f38c67cfe2473480d0",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"We agreed on $2,100 for LD01123. I'll pass you to our senior rep to confirm the booking.\",\"summary\":\"Kentucky to Texas dry van, load LD01123, agreed at $2,100; senior rep confirmation pending.\"}"
+              }
+            }
+          ],
+          "start": 564139,
+          "end": 571979
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_27f804f9f35952f38c67cfe2473480d0",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a927-f8cc-7233-8451-447d094b1a61",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_cfe0ea1ff5fb5bb5b36ccfeb186e28e0",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 573639,
+          "end": 575479
+        }
+      ],
+      "call_end_event": "agent_hung_up",
+      "duration_seconds": 575,
+      "audio_sha256": "1aabd7a33da85b5569555b47dc0d158301f2b1862b689b58c9f6dd515c7cd03b",
+      "remote_peak_rms": 0.27311085181922357,
+      "harness_events": [
+        {
+          "at": "2026-11-05T00:32:35.354Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-05T00:32:35.587Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:35.953Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AM8aLQGdzxbwEm"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:52.549Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My M C number is one three eight three two eight.",
+            "duration": 2.67453514739229
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:55.220Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My M C number is one three eight three two eight."
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:01.022Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:04.760Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:42.195Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "numeric diagnostic input",
+            "duration": 6.911451247165533
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:49.104Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "numeric diagnostic input"
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:45.587Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Dry van, from Texas to Georgia.",
+            "duration": 4.175079365079365
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:49.763Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Dry van, from Texas to Georgia."
+          }
+        },
+        {
+          "at": "2026-11-05T00:38:45.325Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, please check dry van, Kentucky to Texas instead.",
+            "duration": 5.81249433106576
+          }
+        },
+        {
+          "at": "2026-11-05T00:38:51.138Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, please check dry van, Kentucky to Texas instead."
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:52.797Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, I accept twenty-one hundred dollars for that load.",
+            "duration": 5.313242630385488
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:58.115Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, I accept twenty-one hundred dollars for that load."
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:11.669Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.27311085181922357
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:11.700Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 9274001,
+            "remote_peak": 0.27311085181922357
+          }
+        }
+      ]
+    },
+    {
+      "slot": "parallel13b",
+      "run_id": "e8819bee-c061-4b06-b1ca-201d3f00a3b3",
+      "native_output_id": "c2e2786f-a877-4c88-87a9-d05936c983fd",
+      "transcript": [
+        {
+          "id": "01a1a91f-4590-797c-9db8-dbe264f2916c",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 298,
+          "end": 4618
+        },
+        {
+          "id": "01a1a91f-63b8-7b7f-95ca-3229a4e075bd",
+          "role": "assistant",
+          "content": "Can I get your MC number?",
+          "start": 10738,
+          "end": 12338
+        },
+        {
+          "id": "e5e167fc-e9b8-4d03-a4af-98a1a5a076ab",
+          "role": "user",
+          "content": "My MC number is [redacted six-digit input].",
+          "start": 4940,
+          "end": 7500
+        },
+        {
+          "id": "01a1a91f-8c2f-7877-9f33-253d8bae10e3",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_bc51e1c007ac51d2939b147df81e96ab",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"[redacted six-digit input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_bc51e1c007ac51d2939b147df81e96ab",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a91f-9f40-79b6-a53d-9f405b5e46d9",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 24538,
+          "end": 27578
+        },
+        {
+          "id": "01a1a91f-bd7c-78f3-a0e8-6f4053ddc472",
+          "role": "assistant",
+          "content": "Is that carrier name right?",
+          "start": 33558,
+          "end": 35318
+        },
+        {
+          "id": "01a1a920-ceb1-700e-896c-48d5092fc115",
+          "role": "assistant",
+          "content": "Can you confirm the carrier name is Werner Enterprises Inc.?",
+          "start": 101658,
+          "end": 105258
+        },
+        {
+          "id": "314687f5-2c73-4af4-bcb8-0cb3f6df3e99",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 7659,
+          "end": 9179
+        },
+        {
+          "id": "01a1a921-27c3-7165-b498-6ec54cd6b500",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_b79fd543ba8c5dc6a2ebb79f437e15ce",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_b79fd543ba8c5dc6a2ebb79f437e15ce",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a921-450c-7cb2-b390-06d7b8a5e92e",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 131558,
+          "end": 135558
+        },
+        {
+          "id": "01a1a921-63c0-7ca6-98a6-2c20a2a6fe49",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 141498,
+          "end": 143418
+        },
+        {
+          "id": "3216cf29-e358-42cc-94b4-959b89d91758",
+          "role": "user",
+          "content": "[redacted verification input]",
+          "start": 11339,
+          "end": 16079
+        },
+        {
+          "id": "01a1a922-3328-718e-bbdc-cde03b3faab8",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_e0680b7bd22457d9af041fa37db592e3",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\": \"Checking that code.\", \"code\": \"[redacted verification input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_e0680b7bd22457d9af041fa37db592e3",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a922-4dbc-7cba-9b2f-ac56aa736bab",
+          "role": "assistant",
+          "content": "What equipment are you using, and what state does the load pick up in and deliver to?",
+          "start": 198438,
+          "end": 203318
+        },
+        {
+          "id": "01a1a922-71d4-7d86-98cf-f1f62adde0ae",
+          "role": "assistant",
+          "content": "What equipment, pickup state, and delivery state should I use?",
+          "start": 209279,
+          "end": 212559
+        },
+        {
+          "id": "01a1a923-8470-7986-895d-740a7ef839b9",
+          "role": "assistant",
+          "content": "Please provide the equipment type, pickup state, and delivery state.",
+          "start": 278698,
+          "end": 282858
+        },
+        {
+          "id": "a60333b5-591f-4d8c-98a4-f608ee97de7a",
+          "role": "user",
+          "content": "Dry van, from Florida to Missouri,",
+          "start": 18069,
+          "end": 20339
+        },
+        {
+          "id": "01a1a924-e051-7a75-ae40-01256679adcc",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_3238d8a2a9d7554882f5452b2b28e542",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching that lane now.\",\"dest_state\":\"MO\",\"equipment\":\"dry van\",\"origin_state\":\"FL\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-17T07:20:00+00:00\",\"delivery_time_display\":\"November 17 at 1:20 AM Central (CST)\",\"destination\":\"Kansas City, MO\",\"dimensions\":\"492 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01124\",\"miles\":1068,\"notes\":\"\",\"num_of_pieces\":12,\"offer\":2600,\"origin\":\"Sarasota, FL\",\"pickup_datetime\":\"2026-11-15T23:20:00+00:00\",\"pickup_time_display\":\"November 15 at 5:20 PM Central (CST)\",\"weight\":6609}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_3238d8a2a9d7554882f5452b2b28e542",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a925-4c39-700f-b603-217096c6eb40",
+          "role": "assistant",
+          "content": "Sarasota, Florida to Kansas City, Missouri. Pickup is November 15 at 5:20 PM Central, and delivery is November 17 at 1:20 AM Central. It\u2019s a dry van carrying 6,609 pounds of frozen goods, 1,068 miles. The offer is $2,600. Does that work?",
+          "start": 378498,
+          "end": 399538
+        },
+        {
+          "id": "01a1a925-703c-7c0a-bf6b-c65346957587",
+          "role": "assistant",
+          "content": "Does $2,600 work for this load?",
+          "start": 405558,
+          "end": 408758
+        },
+        {
+          "id": "01a1a926-7e14-78da-9637-aab47dbe74be",
+          "role": "assistant",
+          "content": "Would you like to accept the $2,600 offer?",
+          "start": 474798,
+          "end": 477838
+        },
+        {
+          "id": "e6c1727d-4d5b-44f8-96e9-d6eafd8dab04",
+          "role": "user",
+          "content": "Could you do a hundred dollars more?",
+          "start": 22429,
+          "end": 24109
+        },
+        {
+          "id": "01a1a927-c79d-7799-8122-57b2ca21cc6e",
+          "role": "assistant",
+          "content": "What is the complete total dollar amount you need for this load?",
+          "start": 559158,
+          "end": 562198
+        },
+        {
+          "id": "01a1a927-ea25-74c2-b1c2-36ccc6b7d52f",
+          "role": "assistant",
+          "content": "What complete total dollar amount do you need for this load?",
+          "start": 568238,
+          "end": 571038
+        }
+      ],
+      "call_end_event": "max_duration_reached",
+      "duration_seconds": 600,
+      "audio_sha256": "43c30b3d479992568e39e2348772be9a203c978b0f7925d051b52be36753361b",
+      "remote_peak_rms": 0.3424378883055779,
+      "harness_events": [
+        {
+          "at": "2026-11-05T00:32:36.022Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-05T00:32:36.295Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:36.645Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AMaRJfpYYM7ppR"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:52.858Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My M C number is one three eight three two eight.",
+            "duration": 2.67453514739229
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:55.531Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My M C number is one three eight three two eight."
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:42.463Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-05T00:34:46.200Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:45.921Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "numeric diagnostic input",
+            "duration": 6.737278911564625
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:52.658Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "numeric diagnostic input"
+          }
+        },
+        {
+          "at": "2026-11-05T00:38:45.600Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Dry van, from Florida to Missouri.",
+            "duration": 4.291156462585034
+          }
+        },
+        {
+          "at": "2026-11-05T00:38:49.893Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Dry van, from Florida to Missouri."
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:53.050Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Could you do a hundred dollars more?",
+            "duration": 3.774353741496599
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:56.825Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Could you do a hundred dollars more?"
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:36.896Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.3424378883055779
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:36.928Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 9669503,
+            "remote_peak": 0.3424378883055779
+          }
+        }
+      ]
+    },
+    {
+      "slot": "parallel13c",
+      "run_id": "9e8d9dda-1c0d-497c-b06d-92c648e57418",
+      "native_output_id": "e13aa124-6a9a-4bb6-b30d-f97c32a58811",
+      "transcript": [
+        {
+          "id": "01a1a91f-4555-7280-8d98-e45dd9beb964",
+          "role": "assistant",
+          "content": "HappyRobot Logistics, carrier sales. Can I get your MC number?",
+          "start": 303,
+          "end": 4463
+        },
+        {
+          "id": "01a1a91f-6409-73ef-bc22-85ddfb338453",
+          "role": "assistant",
+          "content": "Can I get your MC number?",
+          "start": 10642,
+          "end": 12322
+        },
+        {
+          "id": "eab645f6-7377-4568-8c69-493c1a802aba",
+          "role": "user",
+          "content": "My MC number is [redacted six-digit input].",
+          "start": 4940,
+          "end": 7500
+        },
+        {
+          "id": "01a1a91f-8df3-7e3e-a785-36bccd82c9d5",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_8203ec11c326563a86ac769f3a364b46",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"[redacted six-digit input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_8203ec11c326563a86ac769f3a364b46",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1a91f-a149-737b-8b95-5b530342956d",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 25042,
+          "end": 28002
+        },
+        {
+          "id": "01a1a91f-be80-783a-97c7-6e14d9644259",
+          "role": "assistant",
+          "content": "Is that carrier name right?",
+          "start": 33963,
+          "end": 35483
+        },
+        {
+          "id": "01a1a920-c884-795d-af5a-d178106326e3",
+          "role": "assistant",
+          "content": "Can you confirm the carrier name is right?",
+          "start": 101662,
+          "end": 103582
+        },
+        {
+          "id": "4e37f8ec-1af5-4416-8b51-bb49615439fa",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 7659,
+          "end": 9179
+        },
+        {
+          "id": "01a1a922-212d-7ef1-b3e3-79e17b7d57d0",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_b6fd9222357a55678fc6244a49fa239b",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the code now.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_b6fd9222357a55678fc6244a49fa239b",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1a922-3c00-76d7-a553-1a96cc544758",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 195083,
+          "end": 198683
+        },
+        {
+          "id": "01a1a922-5d5c-763e-8464-a7da45df6154",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 204742,
+          "end": 207222
+        },
+        {
+          "id": "84ebda3c-8271-44bf-9537-3449b07a9fc3",
+          "role": "user",
+          "content": "[redacted verification input]",
+          "start": 11339,
+          "end": 16179
+        },
+        {
+          "id": "01a1a922-f712-7393-9c8d-5be432b667d9",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_33abfe70c5885db5810d5af8ecdc144d",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\": \"Checking that code.\", \"code\": \"[redacted verification input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"invalid_code\"}}]}",
+          "tool_call_id": "call_33abfe70c5885db5810d5af8ecdc144d",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a923-0608-7b15-ad03-ec2249c58176",
+          "role": "assistant",
+          "content": "Please read the six-digit code again.",
+          "start": 248243,
+          "end": 250403
+        },
+        {
+          "id": "01a1a923-24f8-7e5e-93d0-39ae43b64d85",
+          "role": "assistant",
+          "content": "Please read all six digits again.",
+          "start": 256403,
+          "end": 258323
+        },
+        {
+          "id": "42ec0038-a1fb-452f-8260-8854da2ad7cf",
+          "role": "user",
+          "content": "[redacted verification input]",
+          "start": 18089,
+          "end": 23039
+        },
+        {
+          "id": "01a1a923-fc8b-74fe-b28d-2f52d2f98b40",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_23c801a4d72d5ec4befa61d628f6efe0",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\": \"Checking that code.\", \"code\": \"[redacted verification input]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_23c801a4d72d5ec4befa61d628f6efe0",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1a924-0940-7800-9526-04f54b67bcfc",
+          "role": "assistant",
+          "content": "What equipment are you using?",
+          "start": 315163,
+          "end": 316763
+        },
+        {
+          "id": "01a1a924-2859-7a7c-853f-d8293a91a01a",
+          "role": "assistant",
+          "content": "What equipment are you using for this load?",
+          "start": 322722,
+          "end": 324722
+        },
+        {
+          "id": "e02f1cff-b2cb-4e75-8982-2b597df2c200",
+          "role": "user",
+          "content": "Dry van:",
+          "start": 25009,
+          "end": 25649
+        },
+        {
+          "id": "01a1a925-10c3-792b-8cca-7ff7675ced46",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_7d0e772d70ac5aed812495b341eaa070",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"What states are on the lane?\",\"dest_state\":\"\",\"equipment\":\"dry van\",\"origin_state\":\"\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"General Freight\",\"delivery_datetime\":\"2026-11-12T09:37:00+00:00\",\"delivery_time_display\":\"November 12 at 3:37 AM Central (CST)\",\"destination\":\"San Antonio, TX\",\"dimensions\":\"528 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01123\",\"miles\":998,\"notes\":\"\",\"num_of_pieces\":14,\"offer\":2100,\"origin\":\"Lexington, KY\",\"pickup_datetime\":\"2026-11-09T17:37:00+00:00\",\"pickup_time_display\":\"November 9 at 11:37 AM Central (CST)\",\"weight\":36971},{\"commodity_type\":\"Lumber\",\"delivery_datetime\":\"2026-11-16T07:42:00+00:00\",\"delivery_time_display\":\"November 16 at 1:42 AM Central (CST)\",\"destination\":\"Huntsville, AL\",\"dimensions\":\"516 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01125\",\"miles\":1858,\"notes\":\"\",\"num_of_pieces\":18,\"offer\":4600,\"origin\":\"Fresno, CA\",\"pickup_datetime\":\"2026-11-15T07:42:00+00:00\",\"pickup_time_display\":\"November 15 at 1:42 AM Central (CST)\",\"weight\":26217},{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-17T07:20:00+00:00\",\"delivery_time_display\":\"November 17 at 1:20 AM Central (CST)\",\"destination\":\"Kansas City, MO\",\"dimensions\":\"492 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01124\",\"miles\":1068,\"notes\":\"\",\"num_of_pieces\":12,\"offer\":2600,\"origin\":\"Sarasota, FL\",\"pickup_datetime\":\"2026-11-15T23:20:00+00:00\",\"pickup_time_display\":\"November 15 at 5:20 PM Central (CST)\",\"weight\":6609}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_7d0e772d70ac5aed812495b341eaa070",
+          "name": "find_loads"
+        },
+        {
+          "id": "ece3ad23-3585-4278-a81c-447a22ac8662",
+          "role": "user",
+          "content": "California to Alabama"
+        },
+        {
+          "id": "01a1a925-2124-7e1c-88c3-9d838fdeacde",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_ef19fad707715a86a55371f4f91e5e9f",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching California to Alabama.\",\"dest_state\":\"AL\",\"equipment\":\"dry van\",\"origin_state\":\"CA\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Lumber\",\"delivery_datetime\":\"2026-11-16T07:42:00+00:00\",\"delivery_time_display\":\"November 16 at 1:42 AM Central (CST)\",\"destination\":\"Huntsville, AL\",\"dimensions\":\"516 x 96 x 108 in\",\"equipment_type\":\"DRY_VAN\",\"load_id\":\"LD01125\",\"miles\":1858,\"notes\":\"\",\"num_of_pieces\":18,\"offer\":4600,\"origin\":\"Fresno, CA\",\"pickup_datetime\":\"2026-11-15T07:42:00+00:00\",\"pickup_time_display\":\"November 15 at 1:42 AM Central (CST)\",\"weight\":26217}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_ef19fad707715a86a55371f4f91e5e9f",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1a925-6d30-7cdb-b1ee-1ff8eb2100a8",
+          "role": "assistant",
+          "content": "Fresno, CA to Huntsville, AL. Pickup November 15 at 1:42 AM Central (CST). Dry van, 26,217 pounds of lumber. Delivery November 16 at 1:42 AM Central (CST). Our offer is $4,600. Does that work?",
+          "start": 390763,
+          "end": 407883
+        },
+        {
+          "id": "01a1a925-9008-7a9e-bf1b-d8ef43a2f402",
+          "role": "assistant",
+          "content": "Does $4,600 work for you?",
+          "start": 414082,
+          "end": 416802
+        },
+        {
+          "id": "01a1a926-9fd4-77d5-8b05-120bb58a1557",
+          "role": "assistant",
+          "content": "Would you like to accept the $4,600 offer?",
+          "start": 483102,
+          "end": 486382
+        },
+        {
+          "id": "41720ff5-6b5d-4e33-b639-50f7864707a9",
+          "role": "user",
+          "content": "Before I decide what is your maximum rate?",
+          "start": 29719,
+          "end": 32309
+        },
+        {
+          "id": "01a1a927-d675-7658-97a6-6d4aee1218e4",
+          "role": "assistant",
+          "content": "Our offer is $4,600. What total dollar amount do you need for this load?",
+          "start": 560222,
+          "end": 565902
+        },
+        {
+          "id": "01a1a927-efb8-7732-9c4b-c51968e9e483",
+          "role": "assistant",
+          "content": "What",
+          "start": 572003,
+          "end": 572363
+        },
+        {
+          "id": "5364f119-5868-4ebc-9860-7efd5e0a23e3",
+          "role": "user",
+          "content": "I accept your offer of 4600 dollars for that load.",
+          "start": 34359,
+          "end": 37749
+        },
+        {
+          "id": "01a1a927-fb3a-7a6e-b1a4-2c4b7926e511",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_d23079ee8257581993c6c8e19fed1fac",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting that rate.\",\"after_final_offer\":\"false\",\"load_id\":\"LD01125\",\"rate\":\"4600\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01125\",\"rate\":4600,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_d23079ee8257581993c6c8e19fed1fac",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1a928-31f0-78b5-8e33-a448775c3344",
+          "role": "assistant",
+          "content": "We agreed on $4,600 for LD01125. I'll pass you to our senior rep to confirm the booking.",
+          "tool_calls": [
+            {
+              "id": "call_52fedea8ecde5573b9bf737c67211d79",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"We agreed on $4,600 for LD01125. I'll pass you to our senior rep to confirm the booking.\",\"summary\":\"California to Alabama dry van; LD01125 agreed at $4,600, pending senior rep confirmation.\"}"
+              }
+            }
+          ],
+          "start": 580522,
+          "end": 589322
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_52fedea8ecde5573b9bf737c67211d79",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1a928-40dc-7730-a099-3bf412f2e0fe",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_ae5237b6069a56d7ba22b026ece3e09c",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 590982,
+          "end": 593142
+        }
+      ],
+      "call_end_event": "agent_hung_up",
+      "duration_seconds": 593,
+      "audio_sha256": "f618a78fbd71501bf84326c77fd86c7a363aa04ace6008a7f1a088310db02ad0",
+      "remote_peak_rms": 0.28950014732992196,
+      "harness_events": [
+        {
+          "at": "2026-11-05T00:32:36.045Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-05T00:32:36.298Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:36.739Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AMVmbbT7RG35UJ"
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:53.156Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My M C number is one three eight three two eight.",
+            "duration": 2.67453514739229
+          }
+        },
+        {
+          "at": "2026-11-05T00:32:55.831Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My M C number is one three eight three two eight."
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:46.189Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-05T00:35:49.927Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-05T00:36:35.770Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "numeric diagnostic input",
+            "duration": 6.8534013605442174
+          }
+        },
+        {
+          "at": "2026-11-05T00:36:42.626Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "numeric diagnostic input"
+          }
+        },
+        {
+          "at": "2026-11-05T00:37:44.461Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "numeric diagnostic input",
+            "duration": 6.8534013605442174
+          }
+        },
+        {
+          "at": "2026-11-05T00:37:51.312Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "numeric diagnostic input"
+          }
+        },
+        {
+          "at": "2026-11-05T00:38:58.299Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Dry van, from California to Alabama.",
+            "duration": 4.616235827664399
+          }
+        },
+        {
+          "at": "2026-11-05T00:39:02.918Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Dry van, from California to Alabama."
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:53.338Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Before I decide, what is your maximum rate?",
+            "duration": 4.720952380952381
+          }
+        },
+        {
+          "at": "2026-11-05T00:41:58.058Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Before I decide, what is your maximum rate?"
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:07.920Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "I accept your offer of forty-six hundred dollars for that load.",
+            "duration": 5.386235827664399
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:13.303Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "I accept your offer of forty-six hundred dollars for that load."
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:30.094Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.28950014732992196
+          }
+        },
+        {
+          "at": "2026-11-05T00:42:30.123Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 9558294,
+            "remote_peak": 0.28950014732992196
+          }
+        }
+      ]
+    }
+  ],
+  "earlier_runs": [
+    {
+      "version": "V10",
+      "run_id": "f14e5831-5abd-4a37-ac6b-2928baf95359",
+      "finding": "Actual duplicated farewell between close_call and voice _hangup. Changed to channel-specific closing in V11."
+    },
+    {
+      "version": "V11",
+      "run_id": "c6d2ec2e-2764-446e-a1bb-0c0a9b1f4fcf",
+      "finding": "Native single goodbye, but local recorder RMS0. Capture failure, not audio acceptance."
+    },
+    {
+      "version": "V12",
+      "run_id": "60f4f220-ce46-4130-8f9f-e2cc05398112",
+      "finding": "Native early-stop call ended; actual remote recording421147bytes, peakRMS approximately0.249. Capture fixed by attaching muted remote track before WebAudio recording."
+    },
+    {
+      "version": "V13",
+      "run_id": "e7d6a9ba-8f70-467e-82af-224fe5a92f3e",
+      "finding": "Initial diagnostic OTP ASR failure. Wrong code correctly rejected, no freight disclosed, caller requested stop, actual agent hangup. No success claim."
+    }
+  ]
+}

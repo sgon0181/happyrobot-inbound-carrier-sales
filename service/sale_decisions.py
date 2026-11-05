@@ -59,6 +59,8 @@ def remember_offer(data: Data, load: Load, terms: Terms) -> None:
     if not same_shipment(load, snapshots.get(load_id)):
         kept = terms.opening
         data.get("lowest_asks", {}).pop(load_id, None)
+        data.get("last_counters", {}).pop(load_id, None)
+        data.get("counter_replies", {}).pop(load_id, None)
         if data["last_counter"] and data["last_counter"]["load_id"] == load_id:
             data["last_counter"] = None
     data["offers"][load_id] = min(kept, terms.cap)
@@ -81,6 +83,8 @@ def answer_counter(load: Load, ask: str, terms: Terms, after_final: bool, mc: st
             data["offers"].pop(load_id)
             data["last_counter"] = None
             data.get("lowest_asks", {}).pop(load_id, None)
+            data.get("last_counters", {}).pop(load_id, None)
+            data.get("counter_replies", {}).pop(load_id, None)
             return _unavailable(data, load_id) | {
                 "message": "The shipment changed. Let me check the lane again."
             }
@@ -92,29 +96,41 @@ def answer_counter(load: Load, ask: str, terms: Terms, after_final: bool, mc: st
 def _price_ask(data: Data, load_id: str, ask: str, terms: Terms, after_final: bool) -> Reply:
     amount = parse_ask(ask)
     offer = min(int(data["offers"][load_id]), terms.cap)  # preserve the spoken quote, INV-1
-    last = data["last_counter"]
-    if after_final and _refused_final(last, load_id, amount, ask, offer):
+    last = _counter_for(data, load_id, amount)
+    if after_final and _refused_final(data["rounds"], amount, ask, offer):
         return _apply(data, load_id, Step(Action.FAILED, None, data["rounds"]))
-    if last and amount is not None and (last["load_id"], last["ask"]) == (load_id, amount):
+    if last and amount is not None and amount > offer:
         data["offers"][load_id] = offer
-        reply = {**last["reply"], "offer": offer} if "offer" in last["reply"] else last["reply"]
-        last["reply"] = reply
-        return reply
+        return {
+            "status": "final_offer" if data["rounds"] == MAX_ROUNDS else "counter",
+            "offer": offer,
+            "round": data["rounds"],
+        }
     lowest = data.setdefault("lowest_asks", {})
     step = _standing_ask(respond(terms, data["rounds"], offer, ask), lowest.get(load_id))
     if amount is not None:
         lowest[load_id] = min(lowest.get(load_id, amount), amount)
     data["rounds"] = step.rounds_used
     reply = _apply(data, load_id, step)
-    if amount is not None and step.action is not Action.ACCEPT:
+    if amount is not None and "offer" in reply:
         data["last_counter"] = {"load_id": load_id, "ask": amount, "reply": reply}
+        data["counter_replies"].setdefault(load_id, {})[str(amount)] = data["last_counter"]
     return reply
 
 
-def _refused_final(
-    last: Data | None, load_id: str, amount: int | None, ask: str, offer: int
-) -> bool:
-    if not last or last["load_id"] != load_id or last["reply"]["status"] != "final_offer":
+def _counter_for(data: Data, load_id: str, amount: int | None) -> Data | None:
+    """At most three concession-producing requests per call, bound to their shipment."""
+    replies = data.setdefault("counter_replies", {})
+    legacy = [data.get("last_counter"), *data.get("last_counters", {}).values()]
+    for previous in legacy:
+        if previous and "offer" in previous["reply"]:
+            replies.setdefault(previous["load_id"], {}).setdefault(str(previous["ask"]), previous)
+    result: Data | None = replies.get(load_id, {}).get(str(amount))
+    return result
+
+
+def _refused_final(rounds: int, amount: int | None, ask: str, offer: int) -> bool:
+    if rounds != MAX_ROUNDS:
         return False
     return ask == "decline" or (amount is not None and amount > offer)
 

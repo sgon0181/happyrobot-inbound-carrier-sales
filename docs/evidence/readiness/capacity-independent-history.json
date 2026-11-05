@@ -1,0 +1,51 @@
+{
+  "arrivals": 12,
+  "spacing_seconds": 1.5,
+  "think_seconds": 3,
+  "outcomes": {
+    "/carriers/verify:eligible": 12,
+    "/otp/send:sent": 12,
+    "/otp/verify:verified": 12,
+    "/loads/search:found": 12,
+    "/negotiate:agreed": 12,
+    "/calls/close:closed": 12,
+    "/calls/ended:ended": 12
+  },
+  "sql_statements": 204,
+  "sql_kinds": {
+    "SELECT id, version,": 72,
+    "INSERT INTO calls": 12,
+    "UPDATE calls SET": 108,
+    "INSERT INTO bookings": 12
+  },
+  "journey_p95_seconds": 41.65,
+  "tool_p95_seconds": {
+    "/carriers/verify": 3.07,
+    "/otp/send": 4.27,
+    "/otp/verify": 2.27,
+    "/loads/search": 5.78,
+    "/negotiate": 10.04,
+    "/calls/close": 2.02,
+    "/calls/ended": 2.01
+  },
+  "durable_holds": 212,
+  "outstanding_claims": 0,
+  "finalized_agreements": 12,
+  "tms_booking_writes": 0,
+  "historical_calls": 500,
+  "historical_bookings": 200,
+  "snapshot_reads": [
+    {
+      "http": 200,
+      "status": "ok",
+      "calls": 500,
+      "seconds": 3.02
+    },
+    {
+      "http": 200,
+      "status": "ok",
+      "calls": 512,
+      "seconds": 14.59
+    }
+  ]
+}

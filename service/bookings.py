@@ -31,7 +31,11 @@ class Bookings:
     async def held(self, load_ids: Iterable[str]) -> frozenset[str]:
         """The loads among these that a booking row holds."""
         rows = await self.twin.get_many("bookings", load_ids)
-        return frozenset(key for key, row in rows.items() if row.data.get("state") not in FREE)
+        return frozenset(
+            key
+            for key, row in rows.items()
+            if row.data.get("read_only") or row.data.get("state") not in FREE
+        )
 
     async def reserve(
         self,
@@ -55,6 +59,8 @@ class Bookings:
 
         def edit(current: Data | None) -> tuple[Data | None, Data | None]:
             row = current or {}
+            if row.get("read_only"):
+                return None, None
             if claim_id in row.get("void_claims", []):
                 return None, None
             if current is not None and row.get("state") not in FREE:
@@ -82,6 +88,8 @@ class Bookings:
 
         def edit(current: Data | None) -> tuple[Data | None, Data | None]:
             row = current or {"state": "UNCLAIMED"}
+            if row.get("read_only"):
+                return None, None
             # Rows reserved before booking rows kept claim IDs belong to their call.
             legacy = "claim_id" not in row and row.get("call_id") == call_id
             if (row.get("claim_id") == claim_id or legacy) and row.get("state") not in FREE:

@@ -302,8 +302,8 @@
     "N1": {
       "run_id": "397cfc2d-08d2-460b-bf31-f04c32f14961",
       "result": "passed",
-      "reason": "The response accurately pitches the Dallas\u2013Atlanta dry van load with the requested pickup time, weight, commodity, live unload, and explicitly states two free detention hours followed by $75/hour before asking whether the $2,275 offer works. It does not add fees, invent charges, submit a rate, or make tool calls.",
-      "raw": "397cfc2d-08d2-460b-bf31-f04c32f14961\n- Result: passed\n- Judge Reasoning: The response accurately pitches the Dallas\u2013Atlanta dry van load with the requested pickup time, weight, commodity, live unload, and explicitly states two free detention hours followed by $75/hour before asking whether the $2,275 offer works. It does not add fees, invent charges, submit a rate, or make tool calls.\n- Version: ultimateProposal complete acceptance candidate\n- Created: 2026-11-05T00:48:06.597Z\n\n"
+      "reason": "The response accurately pitches the Dallas to Atlanta dry van load with the requested pickup time, weight, commodity, live unload, and explicitly states two free detention hours followed by $75/hour before asking whether the $2,275 offer works. It does not add fees, invent charges, submit a rate, or make tool calls.",
+      "raw": "397cfc2d-08d2-460b-bf31-f04c32f14961\n- Result: passed\n- Judge Reasoning: The response accurately pitches the Dallas to Atlanta dry van load with the requested pickup time, weight, commodity, live unload, and explicitly states two free detention hours followed by $75/hour before asking whether the $2,275 offer works. It does not add fees, invent charges, submit a rate, or make tool calls.\n- Version: ultimateProposal complete acceptance candidate\n- Created: 2026-11-05T00:48:06.597Z\n\n"
     },
     "N2": {
       "run_id": "b449aae1-a420-4531-8b7b-88c923e5b8b3",
@@ -1507,5 +1507,13 @@
     "Native model judgments are imperfect. The three V15 failures are retained exactly, with their judge rationale; no claim of 74/74 native grades.",
     "S5 judge interpreted scope excluding transport scoring as prohibiting a farewell. E6 retains a legacy expectation of thanks beyond the tool checkpoint. TRM acknowledges the correct close_call message but then rejects an empty continuation. These require explicit observed-tool and actual-audio review, not score overwriting.",
     "An automated caller does not replace owner human voice acceptance or prove production concurrency capacity."
-  ]
+  ],
+  "native_text_sanitization": {
+    "original_private_handoff_sha256": "b59453582fe09794db5c38b1ad197628b636860e68d7e81636ec1aafc474aa1b",
+    "fields": [
+      "final_results.N1.reason",
+      "final_results.N1.raw"
+    ],
+    "note": "The two native vendor-text route separators use ' to ' instead of U+2013 to satisfy the repository writing rule. Grades, run IDs and meaning are unchanged. These two fields are not byte-exact vendor text; the original handoff remains private."
+  }
 }

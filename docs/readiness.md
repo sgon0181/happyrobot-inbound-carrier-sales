@@ -8,6 +8,8 @@ Deployment names describe separate resources: the new [candidate App](https://ca
 
 Native [candidate Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/) is accepted for isolated review. Its deployed tree matches all 91 reviewed App files, including the canonical package metadata and verified native identity fix. Hosted authenticated health returned 200, omitted credentials returned 401, and the assigned rep reached request validation while a foreign-origin request was refused. No real hosted booking write was used for this check. The fresh Version 15 LD01123 recording link opened the matching development run, audio and transcript. [Exact native acceptance record](evidence/readiness/native-app-acceptance.json) preserves source hashes, prior rejected imports, the scope of native assistant hash evidence and baseline Build 24 verification.
 
+**Source versus later documentation.** The immutable native 91-file and deployed service 33-file manifests below identify the accepted 9e846c0/c923f27 source snapshot. The subsequent architecture consolidation updates `ops-app/README.md` and `service/README.md` without redeployment. Those two documentation files intentionally differ from their hosted snapshot; executable code, configuration, policy files and voice artifacts are unchanged. Do not describe the later checkout as byte-identical in its entirety or rewrite the original evidence hashes.
+
 ## Evidence at a glance
 
 | Evidence layer | Observed result | What it establishes |

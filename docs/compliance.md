@@ -1,4 +1,6 @@
-# Assignment compliance, submission candidate
+# Historical baseline assignment compliance
+
+This preserves the November 4 to 5 baseline assessment and its original status judgments. For the current `ultimateProposal`, use the [current challenge rubric](proposal.md#challenge-rubric), [readiness evidence and limits](readiness.md), and [new owner script](proposal-demo.md). The tables below are not the current candidate acceptance checklist; historical failures and grades are retained.
 
 The [review guide](reviewer-guide.md) links the filmed reservation and authenticated recording, the separate rep-approved receipt, operating metrics, and QA. The [five-page assignment](FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf) defines the requirements. Workflow Version 8 and service release 17 support the native App. The owner completes the video and final submission. Build 22 and Build 23 are prior dashboard baselines.
 

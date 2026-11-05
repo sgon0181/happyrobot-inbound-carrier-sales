@@ -1,29 +1,26 @@
-# Submission candidate
+# Preserved baseline submission package
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
-
-Use the [updated prospect email draft](proposal-prospect-email.md) with the [proposal recording cues](proposal-demo.md) when presenting this branch.
-
+This page preserves the original Version 8 submission draft, links and approvals. It is not the current candidate package manifest. For `ultimateProposal`, use [readiness and current hosted links](readiness.md), the [updated prospect email](proposal-prospect-email.md), [current build description](build-description.md) and [new five-minute owner script](proposal-demo.md). The original ZIP and baseline resources remain unchanged; later local package artifacts are pinned separately by their manifest.
 
 [Reviewer entry guide](reviewer-guide.md) links the native reservation queue, filmed call, performance dashboard, QA and TMS receipt.
 
 The owner controls final submission and explicitly directed Codex to leave the portal alone. No portal fields, uploads, access grants or submission are authorized. The native App reads the Version 8 call records from service release 17. [Verification and limits](confirmation-fix.md) cover the recorded confirmation regression. The owner reports a successful normal Version 8 call; no independent transcript/audio review of that latest call is claimed. The owner adds the walkthrough URL and submits the source ZIP. Luke confirmed this route on November 5. A private GitHub link is optional and the reviewer is assigned after submission.
 
-## Links and files
+## Historical baseline links and files
 
-| Item | Candidate value | Remaining step |
+| Item | Baseline value | Step at the baseline review |
 |---|---|---|
 | Source ZIP | `submission/ready-to-submit/happyrobot-inbound-carrier-sales-source.zip` | Accepted for portal upload. No GitHub invitation is required for this route. |
 | Optional private repository | https://github.com/sgon0181/happyrobot-inbound-carrier-sales | Reviewed Version 8 source and release records are pushed; the refreshed package manifest pins its exact source commit. Luke can supply the account to invite after submission if this alternative is used |
 | HappyRobot workflow | https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/kvexhw5fzj4y | Version 8 live since 2026-11-04; prompt SHA-256 `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`; 118/118 locked checkpoints and two complete mocked recording replays |
 | Web-call demo | https://platform.happyrobot.ai/deployments/6oaskq84xpfc | Production workflow is Version 8; owner reports successful normal demo call, not independently reviewed |
 | Operations App | https://carrier-sales-santiago.happyrobot.dev | Native Carrier Sales App. Reservations opens the queue. Overview shows the fixed 49-call sample. Reviewer-account access remains to check |
-| Build description | docs/build-description.md; export in submission/build-description.pdf | PDF regenerated from corrected Version 8 source and visually checked; exact source/PDF hashes are in the local package manifest |
-| Walkthrough video | Owner to record and provide URL | Follow walkthrough.md; approximately five minutes |
+| Build description | Original export in submission/build-description.pdf | The baseline PDF was generated from the then-current Version 8 description and checked. docs/build-description.md now describes the proposal; it is not the historical source text. |
+| Walkthrough video | Owner to record and provide URL at baseline review | walkthrough.md preserves the earlier outline. Use proposal-demo.md for the new candidate recording. |
 
 Repository privacy was verified read-only on GitHub on 2026-11-03: private, default branch main, only the owner listed as collaborator, zero pending invitations. No invitations were sent. The optional repository invitation is separate from HappyRobot workspace access. Luke did not specify whether reviewers would operate the App or place calls themselves, or how long to keep the service live. Do not share service keys.
 
-## Summary email to the prospect
+## Historical summary email to the prospect
 
 Subject: Inbound carrier sales proof of concept and proposed next steps
 
@@ -50,7 +47,7 @@ The build description and source ZIP accompany this submission. The walkthrough 
 Thanks,
 Santiago
 
-## Reviewer notes
+## Historical reviewer notes
 
 Start with README.md, ARCHITECTURE.md and docs/decisions.md. docs/compliance.md distinguishes the released implementation from remaining acceptance and evidence limits. docs/qa-package.md separates the test layers; docs/qa-results.md records actual counts, versions and remaining failures. docs/kpis.md defines every displayed measure.
 
@@ -58,7 +55,7 @@ Luke accepted reserving in Twin on agreement and sending LOAD_BOOK once at a rep
 
 The shared demo inbox is an approved demonstration exception, not proof of carrier identity. CALL_COHORT is currently synthetic and LIVE_BOOKING is off. Changing either Fly setting requires owner approval. There is no fallback to prototype/e2e.
 
-## Release and access checklist
+## Historical release and access checklist
 
 1. Complete: reviewed prompt fix 9d7a149 published as Version 7 after explicit owner approval; exact root and tool readbacks match. Service release 17 from bf512aa and App Build 20 were not redeployed. Booking sends remain off and calls synthetic.
 2. Complete: reviewed Version 8 confirmation fix eaa2661 published under existing non-portal release approval, with exact post-publication root/tool readbacks. Service 17 and App 20 unchanged. The owner withdrew portal-writing authorization.

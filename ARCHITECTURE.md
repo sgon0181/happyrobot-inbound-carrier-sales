@@ -1,17 +1,17 @@
 # Inbound Carrier Sales: Architecture
 
-**Proposal checkout.** The [Friday pilot guide](docs/proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
-
-
-The carrier sales App opens on the rep queue and exposes the dated voice sample in Overview. [Reviewer guide](docs/reviewer-guide.md) links the filmed call, its originating transaction, commercial metrics and QA evidence.
+This describes the current `ultimateProposal` source. The [readiness guide](docs/readiness.md) pins the deployed candidate, evidence and reproduction commands. The original `main` release remains a separate baseline.
 
 | | |
 |---|---|
-| **Version** | 3.1, current release documentation checked 2026-11-04 |
-| **Status** | Version 8 (`kvexhw5fzj4y`), service release 17 from bf512aa and the native Carrier Sales App form the deployed proof of concept. Version 8 passes 118/118 locked checkpoints and two inspected mocked recording replays. The owner reports a successful normal Version 8 call; its transcript/audio has not been independently reviewed. Eleven Version 6 calls retain timed closing and stored end-event evidence. Build 23 introduced the reviewed 49-call sample. See docs/kpis.md for its scope. See docs/confirmation-fix.md and docs/releases/2026-11-04-v8/README.md. |
-| **Evidence** | A prototype built from v2.5 passed a real end-to-end call. It stays on branch `prototype/e2e` as reference. See [what it proved](docs/lessons-from-prototype.md). |
-| **Decisions** | Every decision, its reason and its cost are in [docs/decisions.md](docs/decisions.md). |
+| **Version** | 4.0, proposal architecture reconciled 2026-11-05 |
+| **Candidate** | Native App Build 10, isolated proposal service and Twin staging. Voice Version 15 is published only to workflow Development. Booking sends remain disabled. The separate candidate App uses its own Apps Production hosting slot. |
+| **Accepted evidence** | 563 service tests, 65 App tests, 71/74 native text checkpoints and three overlapping actual voice scenarios with automated diagnostic callers. Failed grades and evidence limits remain visible in [readiness](docs/readiness.md). |
+| **Preserved baseline** | `main` at 15ce2b6, production voice Version 8, service release 17 and original App Build 24. The 49-call sample is dated historical evidence, not the current reporting boundary. |
+| **Decisions** | Material choices, reasons and tradeoffs are in [docs/decisions.md](docs/decisions.md), including D-36 through D-42 for the proposal. |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
+
+The four-part architecture, two Twin tables, deterministic pricing policy and rep-only TMS submission already existed on the baseline. The proposal strengthens consent, authorization, failure recovery, read capacity and the operations workspace. It does not replace the platform or introduce a new datastore. Reservations now opens all recorded agreements, with an Awaiting rep filter; Overview derives stage progress and ended-call exceptions from the complete bounded snapshot.
 
 ---
 
@@ -23,7 +23,7 @@ Two rules shape everything else:
 
 > **1. The model talks; the service decides.** The model can only request actions. The service allows or refuses each one using its own records and the TMS, never the model's word. It never gives the model the rate ceiling or the expected code.
 >
-> **2. Only a rep can send a booking.** The TMS has no cancel, so the voice agent has no way to send `LOAD_BOOK`. A carrier's agreement only creates a reservation, so a mistake on the call reaches a person, not the TMS. A signed-in rep confirms that exact reservation at its recorded rate. It is sent at most once: if the result is unclear, the load stays blocked and the booking is never resent.
+> **2. Only a rep can send a booking.** The TMS has no cancel, so the voice agent has no way to send `LOAD_BOOK`. A carrier's agreement only creates a reservation, so a mistake on the call reaches a person, not the TMS. An assigned, platform-verified rep confirms that exact reservation at its recorded rate, after the service checks finalized consent and trusted contact evidence. It is sent at most once: if the result is unclear, the load stays blocked and the booking is never resent.
 
 Four parts, each with one job:
 
@@ -53,7 +53,7 @@ flowchart TB
     tms[["<b>Legacy TMS</b><br/>TCP line protocol"]]
     fmcsa[["<b>FMCSA</b><br/>QCMobile REST"]]
     twin[("<b>Twin</b><br/>calls and bookings")]
-    email[["<b>Email provider</b><br/>code to the demo inbox"]]
+    email[["<b>Email provider</b><br/>code to a configured contact"]]
 
     carrier <-->|audio| voice
     manager --> app
@@ -77,7 +77,7 @@ flowchart TB
 
 **Blue** is HappyRobot, **green** is the service we build and run, **grey** is outside systems.
 
-**Trust boundaries.** Every arrow into the service is authenticated, and each caller has its own key. Tool requests carry the workflow's `run_id` in a hidden runtime field, so the model cannot choose or change the call. The service is the only writer to Twin, and the only thing that talks to the TMS, FMCSA and the email provider.
+**Trust boundaries.** Every arrow into the service is authenticated, and each caller has its own key. Tool requests carry the workflow's `run_id` in a hidden runtime field, so the model cannot choose or change the call. The service is the runtime writer to Twin and the integration path to the TMS, FMCSA and email provider. The workflow key must remain exclusive to that trusted integration: a hidden run ID is not independent platform attestation. Imported history is separately provisioned and immutable in runtime paths.
 
 ---
 
@@ -112,7 +112,7 @@ sequenceDiagram
 
     C->>A: Lane and equipment
     A->>S: find_loads(lane, equipment)
-    S->>T: LOAD_QUERY, then LOAD_GET on up to 3 loads
+    S->>T: LOAD_QUERY, then bounded LOAD_GET batches for up to 3 usable loads
     S->>D: Save offers on the call row
     S-->>A: Up to 3 loads with our offer, no ceiling
 
@@ -122,11 +122,12 @@ sequenceDiagram
         S-->>A: Counter, or agreed
     end
 
-    S->>D: Reservation: insert the booking row for this load
+    S->>D: Hold booking row, then finalize matching call agreement
     S-->>A: Agreed
+    A-->>C: Approved recap via close_call._message
     A->>S: close(summary)
     S->>D: Save closing time and summary
-    A-->>C: Agreed rate, mocked rep handoff and farewell, then hangup (V6 candidate)
+    A-->>C: Farewell via _hangup, then disconnect
 ```
 
 Then, in the operations app:
@@ -141,9 +142,10 @@ sequenceDiagram
     participant D as Twin
 
     R->>P: Clicks Confirm
-    P->>S: confirm(load_id, version seen, signed-in rep)
-    S->>D: Read the row: still the version the rep saw?
-    S->>T: LOAD_GET: still OPEN, ceiling covers the rate?
+    P->>P: Verify native identity, assigned rep and request origin
+    P->>S: confirm(load_id, version seen, verified rep)
+    S->>D: Check version, finalized agreement, trusted contact and write eligibility
+    S->>T: LOAD_GET: valid unchanged shipment, still OPEN, rate within current ceiling?
     S->>D: Version-checked write: RESERVED to SUBMITTING
     S->>T: LOAD_BOOK, exactly once
     T-->>S: Receipt
@@ -192,7 +194,7 @@ Tests must prove these regardless of what the model does.
 | Graceful TMS timeouts and malformed responses (p.3) | [§6](#6-the-service), [§10](#10-reservation-and-confirm) | Fault-injection tests over real TCP |
 | Authentication on all endpoints (p.5) | INV-8 | API tests: every route rejects a missing or wrong key |
 | KPIs, scripted, edge and adversarial tests (p.4) | [§14](#14-quality) | `docs/qa-results.md`, written during the build |
-| Docker, single-command cloud deploy (p.4) | [§16](#16-deployment) | `make deploy` |
+| Docker, single-command cloud deploy (p.4) | [§16](#16-deployment) | `make deploy APP=... APP_URL=...` after explicit setup |
 | Web call only, no phone number (p.5) | Voice workflow | Browser demo |
 
 ---
@@ -202,28 +204,29 @@ Tests must prove these regardless of what the model does.
 One Python 3.12 FastAPI program. It keeps no database of its own and runs no background jobs. Its size is reported with every commit and kept small, but not capped ([D-28](docs/decisions.md)).
 
 ```text
-service/                                                                   Status
-  main.py            Builds the dependencies and the app                   built
-  config.py          Typed settings; the only code that reads the env      built
-  api.py             Routes, keys, request models; no business rules       built
-  calls.py           The call row, and the verify and code flows           built
-  selling.py         Voice flows: search, negotiate, close                 built
-  sale_decisions.py  Pure call-row negotiation decisions                   built
-  bookings.py        Reservation: one booking row per load                 built
-  rep_actions.py     A rep's confirm, decline and reconcile; LOAD_BOOK     built
-  dashboard.py       The snapshot and KPIs for the operations app          built
-  core/              Pure rules: no network, no files, no clock
-    models.py  money.py  pricing.py  negotiation.py  loads.py              built
-    carrier_policy.py  codes.py                                            built
-  adapters/          Talks to the outside world, holds no business rules
-    tms/  protocol.py  mapping.py  client.py                               built
-    twin.py  fmcsa.py  email.py                                            built
-  policy/            Versioned pricing policy, blocked-load list           built
-  tests/             Tests, the fake TMS, a guard against outside network  built
-tools/               The branch coverage check that make check runs        built
+service/
+  main.py            Builds dependencies and the app
+  config.py          Typed settings; the only runtime environment reader
+  api.py             Routes, keys and request models
+  calls.py           Verification and code flows
+  call_state.py      Call-row transitions, claims and terminal recovery
+  selling.py         Search, negotiation and closing orchestration
+  sale_decisions.py  Atomic call-row negotiation decisions
+  bookings.py        One reservation row per load and consent checks
+  rep_actions.py     Rep confirm, decline and reconcile; LOAD_BOOK
+  dashboard.py       Bounded snapshot and legacy diagnostic fields
+  core/              Pure rules; no network, files or clock
+    models.py  money.py  pricing.py  negotiation.py  loads.py
+    approved_freight.py  carrier_policy.py  codes.py
+  adapters/          External transport and provider contracts
+    tms/              protocol.py  mapping.py  client.py
+    twin.py  twin_reads.py  fmcsa.py  email.py
+  policy/            Versioned pricing and blocked-load list
+  tests/             Deterministic tests, fake integrations and profiles
+tools/               Build gates and isolated review/deployment launchers
 ```
 
-*Built* means on `main` now; the rest arrives in the slice shown. `tools/` sits outside `service/` because it checks the build and never runs in production. Where each prototype file went, and why, is in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
+This map describes the current proposal source. Build tooling is outside the runtime. Prototype migration history remains in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
 
 The dependency direction is one way: `api` calls `calls`, `selling`, `rep_actions` and `dashboard`, which call `core` and `adapters`. `selling` writes call rows through `calls`. `core` imports nothing from the others.
 
@@ -273,7 +276,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 | `version` | int | Rises by one on every write |
 | `data` | jsonb | The row's fields, shown below. Not `json`: the SQL casts values to `::jsonb`, as on the prototype |
 
-**`calls`, one row per call.**
+**`calls`, one row per call.** The abbreviated example shows current state fields; imported rows also carry `read_only` and `imported_from`. Values are illustrative, not a recorded call.
 
 ```json
 {
@@ -284,10 +287,14 @@ Both tables have the same shape, created once in the Twin UI because the API can
   "otp": { "hash": "...", "expires_at": "...", "sends": 1, "failed": 0, "consumed_at": null },
   "verified_at": "...",
   "search": { "equipment": "DRY_VAN", "origin_state": "CA", "dest_state": "KY" },
-  "offers": { "LD01234": 3400 },
+  "native_workflow": { "workspace": "...", "workflow_id": "..." },
+  "offers": { "LD01234": 3600 },
+  "shipments": { "LD01234": { "origin": { "city": "...", "state": "...", "zip": "..." } } },
+  "lowest_asks": { "LD01234": 4200 },
   "rounds": 1,
-  "last_counter": { "load_id": "LD01234", "ask": 4200, "response": 3600 },
-  "agreement": { "load_id": "LD01234", "rate": 3625 },
+  "counter_replies": { "LD01234": { "4200": { "load_id": "LD01234", "ask": 4200, "reply": { "status": "counter", "offer": 3600, "round": 1 } } } },
+  "accepting": null,
+  "agreement": null,
   "outcome": null,
   "summary": "...",
   "ended_at": "...", "ended_by": "user", "duration_seconds": 52,
@@ -310,7 +317,7 @@ Both tables have the same shape, created once in the Twin UI because the API can
 }
 ```
 
-**Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. Reservation correctness does not depend on local locks. Dashboard refresh and Twin pacing do use local asyncio locks. Two statements cover most actions, which matters on a database allowing about 4 per second.
+**Every write works the same way.** Read the row and its version, compute the new row in memory with its new event, then write it back only if the version has not changed. If it has, read again and retry, up to 5 times. Reservation correctness does not depend on local locks. Dashboard refresh and Twin pacing do use local asyncio locks. Multi-step actions can require several statements. Fresh point reads share paced SQL slots, while writes remain independent and version checked; see section 13 for the actual budget and measured contention.
 
 **The audit trail is the `events` list.** Because an event is written with the change it describes, an individual persisted row cannot lose its event through a separate failed audit write (INV-9). Call and booking rows can temporarily disagree during reservation recovery; claim IDs and booking history resolve that boundary. External TMS effects are a separate boundary. There is no separate audit table to keep in step, no outbox and no replay. Each call event records the call's MC after the step, except email completions retain the issuance MC and send number. Events keep what was asked and the result, never a code or the ceiling. A negotiation event keeps the carrier's ask as heard and as read, the load and our answer, so every round survives a later one. A search event keeps the loads pitched as the agent received them. A code event records the observed mailer result, not inbox delivery; a superseded completion cannot claim the current code was sent. Cancellation can leave delivery unknown. The workflow's end-of-call request records who ended the call and how long it lasted. Some results are internal, such as `checking` before an FMCSA lookup, so events record what the service decided, not every word spoken. A refused carrier change after an acceptance claim or agreement leaves no event or row write. Transcripts stay in HappyRobot, because they contain the spoken code.
 
@@ -318,26 +325,28 @@ Both tables have the same shape, created once in the Twin UI because the API can
 
 | Condition | Outcome shown |
 |---|---|
-| A booking row exists for the call | `agreed_pending_rep`, with the booking's own state beside it |
-| `outcome` is set | That value: `negotiation_failed`, `no_match`, `carrier_ineligible`, `fmcsa_unavailable`, `code_failed`, `pricing_review_required`, `tms_unavailable` |
+| A historical reservation belongs to the call, without an unfinished claim or follow-up flag | `agreed_pending_rep`, with its booking state beside it; incomplete holds remain review exceptions |
+| `outcome` is set | That value: `negotiation_failed`, `no_match`, `carrier_ineligible`, `fmcsa_unavailable`, `code_failed`, `pricing_review_required`, `shipment_review_required`, `tms_unavailable` |
 | `closed_at` is set | `ended_without_agreement` |
 | `ended_at` is set, by the workflow after the call | `ended_without_close` |
 | No activity for 30 minutes and no end recorded | `end_not_recorded` |
 
-Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by their `search` fields.
+The legacy service demand diagnostic groups `no_match` outcomes by their latest `search` fields. The current App also inspects search history and requires end evidence before reporting a verified call as lost; [KPI definitions](docs/kpis.md) separate the two populations.
 
 **Repeated requests are answered from stored state** ([D-26](docs/decisions.md)). A repeated `verify_code` on a consumed code returns verified. A repeated `negotiate` with the same load and ask uses no additional round, including delayed retries after another ask or load. Up to three concession-producing request signatures are retained with the shipment. A replay preserves the safe current standing quote if later negotiation changed it; an explicit acceptance at that quote still takes priority. Replay metadata reports the current global round and final-offer status, including an old request arriving after the third round. A repeated close changes nothing. A repeated accept finds its own reservation.
 
 ---
 
-**Capture coverage (deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, introduced with the deployed service and Version 4, retained in Version 8, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Call counts cover persisted service requests and delivered end reports, not every platform call. No start-to-offer timing is inferred from the end webhook's receipt time.
+**Capture coverage (deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, introduced with Version 4, retained in the baseline and current candidate, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Call counts cover persisted service requests and delivered end reports, not every platform call. No start-to-offer timing is inferred from the end webhook's receipt time.
+
+**Historical imports and media provenance (D-40).** Imported call and booking rows carry `read_only` metadata. Call transitions, rep actions, reservation acquisition, voiding and source-consent checks refuse to mutate or submit them. Even a released imported booking blocks reuse; normal released rows remain reusable. Fresh call creation can stamp configured workflow provenance, from which the App constructs recording links for valid run IDs. Request fields cannot supply a URL. Historical native inventory enriches older rows; a UUID alone earns no media link.
 
 ## 8. Verification and the one-time code
 
 1. **Authority.** FMCSA QCMobile docket lookup. Eligible only if `allowedToOperate` is `Y`, `commonAuthorityStatus` or `contractAuthorityStatus` is `A`, `statusCode` is `A`, `oosDate` is present and null, and any other out-of-service field says no. `allowedToOperate` alone is not enough, because inactive carriers still showed `Y`. Missing or unknown values fail closed, and an empty result means not found. FMCSA errors return `fmcsa_unavailable`, never inactive. The request works from Fly.io but returns HTTP 403 from the local machine. The ledger of checked carriers is in [docs/test-carriers.md](docs/test-carriers.md).
 2. **Issue.** The service generates a 6-digit code, stores a keyed hash on the call row with a 5-minute expiry, then sends the email itself over Gmail SMTP. The service never returns the expected code to the workflow; the caller-spoken code and verification request do appear in restricted platform run records, and an uncertain send counts against the limit and is not silently retried.
 3. **Check.** The carrier reads the code aloud, which is unavoidable. The service compares it against the hash in constant time. Consuming the code and marking the call verified are one write, so a crash cannot leave a used code and an unverified call.
-4. **Destination.** Codes go to one configured demo inbox (D-12), as Luke approved. This proves access to that inbox, not who owns an MC, so records say *code passed*, never *identity verified*.
+4. **Destination (D-12, D-37).** Isolated acceptance uses the approved shared demo inbox, which proves access to that inbox, not carrier identity. An enrolled roster routes each MC to an independently verified contact and is mandatory for booking-enabled startup. Per-reservation evidence must show that trusted route before a real send. Delivery admission allows four attempts per recipient and 100 total per process in ten minutes, in addition to per-call budgets; restart and scale-out limits remain explicit.
 5. **Every call.** A fresh code is required on every call before matching (D-9).
 6. **MC changes.** Before an acceptance claim or agreement, changing the MC clears authority, code and offers. It keeps the round, send and failure budgets, so a new MC cannot reset them. The new MC is saved before FMCSA is asked, so a failed or slow lookup cannot leave the earlier MC verified, and a late result for an MC the caller has since replaced is not applied. After a claim or agreement, a different MC returns `carrier_locked` without changing the row or looking up the carrier. Settlement and agreement replay still recheck verification and carrier ownership inside their writes. A refused settlement keeps the claim and held booking for recovery or rep decline; the voice path never releases that booking.
 
@@ -345,9 +354,9 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 ## 9. Load search and negotiation
 
-**Search** normalizes lane and equipment, then requires explicit `OPEN`, a future pickup and no active reservation. `LOAD_QUERY` also returns `PENDING` loads, so returned matches are checked locally. Loads on the [blocked list](service/policy/blocked-loads-v1.json) are never offered. Results are ranked by pickup time, and at most three are offered, one at a time. The agent reads notes as written. When nothing matches, the search is recorded on the call.
+**Search** normalizes lane and equipment, then requires explicit `OPEN`, a future pickup and no active reservation. `LOAD_QUERY` also returns `PENDING` loads, so returned matches are checked locally. Loads on the [blocked list](service/policy/blocked-loads-v1.json) are never offered. Results are ranked by pickup time, and at most three are offered, one at a time. Only validated locations, cargo, chronology and approved complete operating clauses reach the voice payload. Unrecognized text, contradictory requirements or incomplete shipment facts require review instead of a false claim of no freight. When nothing matches, the search is recorded on the call.
 
-**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. Missing times stay null. The voice prompt reads these supplied strings instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. The service change was deployed in release 17 before Version 6 publication and is retained in Version 8.
+**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. The formatter leaves missing times null, but validation prevents such a load from being returned as found. Every found load carries both display strings. The voice prompt reads them instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. Display formatting was deployed in release 17 before Version 6 publication and is retained in the current candidate; the proposal additionally validates shipment chronology and completeness before quoting.
 
 **Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. Luke did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
 
@@ -359,9 +368,9 @@ Turned-away demand (D-13) is also derived: calls with `no_match`, grouped by the
 
 Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back does not redraw the price. The secret prevents exact recomputation, but the public policy band and observed offers still constrain possible ceilings. These percentages are demo choices the brokerage would own.
 
-**Rounds.** Each counter advances to the next target. An ask at or below the target is accepted at the carrier's number. Round 3 is the final offer at the cap, and anything but acceptance ends the call as `negotiation_failed`, with no transfer. Rounds count across loads (INV-4).
+**Rounds.** A new concession-producing ask advances the global round budget toward the policy target. Acceptance uses the carrier's amount when authorized, while an earlier lower ask on unchanged freight bounds later counters. Round 3 is final. An explicit refusal or excessive ask marked `after_final_offer` ends negotiation without transfer; a transport retry returns the safe current standing offer and current round without spending another round. A held load spends no round. Rounds count across loads (INV-4); D-26 defines bounded replay history.
 
-**What this protects, and what it costs.** A fixed percentage could be inverted to find the ceiling; the keyed gap removes that formula. Some leakage is unavoidable, because the cap creates an accept/reject boundary that probing can narrow, so confidentiality is a tested property, not a guarantee. A carrier whose last ask falls between cap and ceiling is turned away, measured as *deals lost to the cap*.
+**What this protects, and what it costs.** A fixed percentage could be inverted to find the ceiling; the keyed gap removes that formula. Some leakage is unavoidable, because the cap creates an accept/reject boundary that probing can narrow, so confidentiality is a tested property, not a guarantee. A carrier whose ask stays above the cap can be turned away even below the private ceiling. The App counts evidenced final-offer exhaustion, not an independently proven causal loss to the ceiling.
 
 ---
 
@@ -369,7 +378,7 @@ Both draws use an HMAC of the policy version, load ID and purpose under a server
 
 **On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
 
-**Proposal consent boundary.** Each quote stores its shipment facts, including dispatch ZIPs. Acceptance and rep submission compare the fresh TMS facts. Changed terms require a new pitch and acceptance. A stable shipment retains its spoken price through a repeated search or ask, unless the current cap requires a lower quote. A rising posted rate never silently raises a prior quote. A carrier's own earlier lower ask bounds later counters on those same terms. A changed shipment clears those per-load facts and retains the call-wide round budget.
+**Shipment-bound consent (D-36).** Each quote stores its shipment facts, including dispatch ZIPs. Acceptance and rep submission compare the fresh TMS facts. Changed terms require a new pitch and acceptance. A stable shipment retains its spoken price through a repeated search or ask, unless the current cap requires a lower quote. A rising posted rate never silently raises a prior quote. A carrier's own earlier lower ask bounds later counters on those same terms. A changed shipment clears those per-load facts and retains the call-wide round budget.
 
 A booking row is a durable hold. Rep submission additionally requires the source call to have a matching finalized agreement and trusted-contact verification. A terminal webhook can recover a hold whose acceptance write was interrupted, but labels it as requiring carrier follow-up. That hold can be released, cannot be sent and is excluded from the conversion numerator. This is a safety repair, not evidence the caller heard a completed handoff.
 
@@ -405,8 +414,8 @@ stateDiagram-v2
 |---|---|---|---|
 | `RESERVED` | Carrier agreed. Nothing sent. | Yes | Confirm, decline |
 | `SUBMITTING` | Intent saved, `LOAD_BOOK` in flight. | Yes | Reconcile once older than 60 seconds |
-| `ACK_PENDING` | Complete reply with matching load, reference and `PENDING`. | Yes | Reconcile |
-| `CONFIRMED` | Complete reply with `BOOKED`. Never observed live. | Yes | None |
+| `ACK_PENDING` | Complete reply with matching load, reference, valid timestamp and `PENDING`. | Yes | Reconcile |
+| `CONFIRMED` | Complete reply with matching load, reference, valid timestamp and `BOOKED`. Never observed live. | Yes | None |
 | `UNKNOWN` | The write may have landed and we cannot tell. | Yes | Reconcile |
 | `FAILED` | The TMS refused, or we can prove nothing was sent. | No | None |
 | `RELEASED` | The rep declined. Nothing was sent. | No | None |
@@ -438,8 +447,8 @@ A later reservation on a freed load carries the earlier attempt's events forward
 
 Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. It verifies the signed-in user, then calls the service from its server with the ops key. The Twin gateway for Apps has been failing (T-7), so the app reads through the service, which also keeps every rule in one place. The ops key never reaches the browser, and the rep's identity comes from the verified session.
 
-- **Reservations.** The default route shows actual open rows sorted by the originating native session time when available. A historical list counts reservations by call and retains released owners. Record links carry both load ID and run ID. A superseded owner opens without mutation controls.
-- **Overview.** The published native session inventory joins to Twin call and booking histories. Each KPI counts calls, once per stage. Commercial metrics match the first offer and agreement for the same load and run. See [KPI definitions](docs/kpis.md).
+- **Reservations.** The default route shows all recorded agreements, including historical released owners. Awaiting rep narrows the list to current reservations. Links carry load and run IDs, and native start time is used when available. Imported or superseded owners have no mutation controls. Latest per-load status cards are distinct from historical per-call agreement counts.
+- **Overview.** UUID-shaped call IDs from the complete bounded Twin snapshot are deduplicated and counted once per stage, including active development calls. This admission rule is not platform attestation. The historical inventory adds duration and known-end evidence, rather than limiting new calls. Loss groups require a close, end callback or known historical completion. Commercial metrics pair the first offer and agreement for the same load and run. See [KPI definitions](docs/kpis.md).
 - **Bookings.** Submissions retain the actual TMS status and original receipt evidence. Reconciliation is a read. Confirm and decline go through existing state, version and identity checks.
 - **Calls and demand.** Search operational records by MC, carrier, load, lane, outcome and Central date. Demand separates an explicitly empty search from a verified call that never initiated a search. Native recording links require platform sign-in. No signed media URLs are stored or served.
 
@@ -447,10 +456,12 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 
 ## 12. Security
 
-- **Authentication everywhere.** Two bearer keys, compared in constant time. Each opens only its own endpoints. FastAPI's docs routes are off.
+- **Service authentication.** Separate agent and operations bearer keys, compared in constant time, open only their own endpoints. FastAPI's docs routes are off.
+- **Rep authorization (D-37).** The App calls the platform identity endpoint and validates its `id` into a canonical subject, with consistent legacy `sub` compatibility. Missing or conflicting identity fails closed. Only exact `OPS_REP_SUBJECTS` assignments can mutate; a decoded cookie or request-supplied name cannot authorize.
+- **Browser origin.** The App uses its configured canonical origin and explicit trusted deployment origins, not arbitrary forwarded headers. Unsafe cookie-bearing requests require an allowed Origin. The local reviewer uses an isolated identity fixture with the observed native response shape.
 - **Least information to the model.** The agent never receives `max_rate`, the expected code, contact details or raw TMS frames. The Tool Call Result node exposes only listed fields as a second layer.
 - **Secrets** live in Fly secrets and HappyRobot's credential store, never in the repository. `.env.example` lists names only.
-- **Social engineering.** No path skips verification, because the gate is in the service, not the prompt. The code's destination comes from configuration, never the conversation.
+- **Identity and delivery.** No path skips verification. The code destination comes from configuration, never the conversation. Real sends require an enrolled trusted contact roster and matching verification evidence on that reservation; the shared demo inbox is not carrier identity. Explicit re-verification suspends earlier eligibility. Email admission limits span call IDs within one process; shared throttling is required before scale-out.
 - **Call isolation.** Identity comes from `run_id` in a hidden runtime field (D-16), so the model has no call ID to substitute.
 - **SQL.** Twin's API takes SQL text, so every value goes through one quoting function and table names come from constants.
 - **Logs.** Codes and the ceiling stay out of logs. Platform transcripts contain spoken codes, so they stay restricted to operators. Twin stores structured service events and closing notes when supplied, not a raw transcript.
@@ -462,27 +473,28 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 - **Timeouts.** A timeout does not tell us whether a request landed. For reads we retry. For `LOAD_BOOK` we record `UNKNOWN` and stop.
 - **Voice deadline.** Every voice request stops at 12 seconds and returns `temporarily_unavailable`. That is safe because no voice request can send a booking. An interrupted code email counts against the send limit and is not retried.
 - **Confirm runs to completion.** It has no voice deadline, and a dashboard disconnecting does not cancel it.
-- **Twin rate limit.** All statements pass through one pacer at 4 per second, retrying only on HTTP 429. A timed-out write may still have landed, so the next read decides. Conditional writes make that safe.
+- **Twin rate limit.** All statements pass through one pacer at 4 per second, retrying only on HTTP 429. A timed-out write may still have landed, so the next fresh read decides. Conditional writes make that safe.
+- **Fresh-read batching (D-38).** Point reads collect while waiting for their SQL slot, then detach before execution. Later reads and CAS retries get a new snapshot. Results are independent per waiter; cancellation of one does not cancel the others. Limits are 128 keys per query and 256 waiting requests. No write is coalesced and mutable call state is not cached.
+- **Complete bounded snapshots (D-39).** Operations reads use ordered 100-row keyset pages, at most twenty pages per table, and reject truncation, duplicate IDs or incomplete replies. Twenty full pages, including exactly 2,000 rows, fail closed. The snapshot is not atomic across tables or concurrent writes. Cache expiry is five seconds after completion. The App allows twenty seconds and prevents overlapping refreshes; its prior screen and timestamp stay visible while refreshing.
 - **One instance.** One service instance for simplicity. The version check protects against restarts and deployment overlap, without process-local reservation locks.
 - **No background jobs.** Stale calls and stuck bookings are detected when read, and resolved by a rep. Saved row state survives restarts. An in-flight email or booking can have an uncertain outcome; a booking receipt not yet saved in Twin can be lost from process memory. Recovery depends on retained logs or the rep receipt, and no automatic resend is allowed.
-- **Capacity.** Unproven. Earlier statement-count estimates were not a throughput benchmark and omit pacing, retries, concurrent tools and latency. The single-instance Twin pacer is a constraint, not a measured call rate. Capacity validation is a pilot prerequisite, not an extra assignment requirement.
+- **Measured scope.** Both controlled twelve-call fixture patterns now finish with twelve agreements and no unfinished claims at the unchanged pacer and voice deadline. Three exact-version actual voice calls also overlapped and ended correctly. These are separate workloads, not a production capacity guarantee. [Before/after results and reproduction](docs/readiness.md#concurrency-and-read-budget) preserve the failures, history/polling pressure, and remaining provider, retention and arrival-rate constraints.
 
 ---
 
 ## 14. Quality
 
-**Northstar KPI: recorded reservations per code-passed call** (D-15). Real call rows with a reservation event, divided by real call rows that ever passed the code check. It measures reservation creation, not proof of a spoken transfer or financial impact. Rep-approved submission, pending acknowledgement and final TMS confirmation remain separate; PENDING is never final confirmation. See [KPI definitions](docs/kpis.md) for clocks, denominators and missing data.
+**North Star: verified calls with a recorded reservation.** The current App divides deduplicated, UUID-shaped call rows with successful code verification and a recorded reservation by all such code-passed calls. Active calls and development records remain in the denominator; the UI says so. Incomplete consent holds do not enter the numerator. This is service-recorded conversion, not proof of a spoken handoff, carrier identity or financial impact. Rep approval, PENDING and BOOKED remain separate. [KPI definitions](docs/kpis.md) specify every boundary and the dated 49-call sample.
 
-**Cohorts (D-21).** Each call is real or synthetic, set by `CALL_COHORT` when the call begins. KPIs count real calls only.
+**Cohorts (D-21, D-40).** Deployment tags remain on each record and enforce send eligibility. The App reports one unified population, with imported history and development calls identifiable. Legacy service `kpis` fields still count real-tagged rows; they are not the current Overview calculation.
 
-| Customer problem (PDF p.1) | KPI |
-|---|---|
-| Missed calls, long holds | Recorded calls and tool-to-offer interval; actual answer rate and call-start latency unmeasured |
-| Inconsistent negotiation | Ceiling compliance, headroom, deals lost to the cap |
-| Manual FMCSA checks | Authority checked and emailed code passed, not proof of carrier identity |
-| No audit trail | Share of calls with a complete record |
-| Dispatcher burnout | Calls handled without a dispatcher |
-| Unmatched demand | Latest unmatched lanes, not measured revenue |
+| Customer problem (PDF p.1) | Implemented evidence | Additional pilot measurement |
+|---|---|---|
+| Missed calls and long holds | Recorded calls and available session durations | Incoming/offered calls, answer rate, queue/hold time and abandonment |
+| Inconsistent negotiation | Opening-to-agreement movement, counter rounds, final-offer exhaustion; deterministic limit tests | Representative commercial results and customer-owned pricing policy |
+| Manual verification | Authority and emailed-code milestones | Trusted contact onboarding and measured dispatcher time saved |
+| No audit trail | Per-call events, shipment consent and separate submission receipts | Capture completeness against independent platform and TMS totals |
+| Unmatched demand | Ended calls with no match, separated from no search | Staffing, inventory action and realized business impact |
 
 **Guardrails:** service rates above ceiling, raw-ceiling field exposure, verification bypass, counters beyond three and duplicate booking sends must stay at zero in tests. These checks do not prove the model can never infer or speak a private number.
 
@@ -504,14 +516,14 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `sale_decisions.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
-| Capacity | Unproven; agree a representative workload and latency target before a supervised pilot. The earlier 12-call benchmark was a recommendation, not a submission gate |
+| Capacity | Keep the measured fixture and actual-voice workloads separate; agree representative arrival and latency targets before a supervised production pilot |
 | Dependencies | `pip-audit` and `npm audit --omit=dev` show no high or critical issue |
 
 ---
 
 ## 15. Build plan
 
-Each slice is a small set of commits on `main`, read by the owner. Each ends in something the owner can run or call. No booking is sent before slice 4.
+The following slices describe the completed November 2 to 4 baseline, not unfinished proposal work. Each slice was a small set of commits on `main`, read by the owner. Each ends in something the owner can run or call. No booking is sent before slice 4.
 
 | Slice | Delivers | Ends with |
 |---|---|---|
@@ -524,14 +536,15 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 
 **Definition of done** is one real run showing: an active MC, an emailed code, at least one counter, a spoken mocked transfer, the agent ending the session, complete Twin rows, and a rep Confirm that returns a TMS reference.
 
-**Delivery state.** The original same-day target is historical. The reviewed candidate must pass the release checklist and owner voice/App checks before recording. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
+**Current delivery state.** Candidate source, isolated hosting, three automated-caller audio scenarios and the local browser Confirm are accepted within their documented scope. A new owner human call and final recording remain to be completed using the [current script](docs/proposal-demo.md). Production pilot acceptance is separate. The original same-day target is historical. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
 
 ---
 
 ## 16. Deployment
 
 - **Image:** one Docker image, Python 3.12 slim, non-root, runtime packages only.
-- **Deploy:** after one-time setup, `make deploy` runs `fly deploy`. Luke confirmed any cloud environment works, and any host that runs a container can run this image.
+- **Cloud deploy:** after explicit resource and secret setup, `make deploy APP=<isolated-fly-app> APP_URL=<native-app-https-url>` deploys the service, checks authenticated health and TMS reachability, then opens the named App. There is no default target. It does not provision or publish native App/workflow resources.
+- **Local review:** `make review` builds the isolated App, service, identity and TCP fixtures and opens a usable reservation; `make review-down` removes that disposable environment. No real business writes or customer secrets are used. See [reproduction and accepted checks](docs/readiness.md#reproduce-the-application).
 - **Hosting:** a machine that stays up during the demo. Fly's trial stopped machines after about 5 minutes.
 - **Setup steps** are in [docs/onboarding.md](docs/onboarding.md).
 
@@ -540,12 +553,3 @@ Each slice is a small set of commits on `main`, read by the owner. Each ends in 
 ## 17. Open questions
 
 Unresolved checks are tracked in [docs/decisions.md](docs/decisions.md#open-checks). Luke accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.
-
-
-### Proposal read budget and historical isolation
-
-Twin point reads collect at their paced SQL slot, then detach their waiter batch before execution. Later reads, including those after a conflicting write, obtain a new database snapshot. Each waiter receives an independent value; cancelling one does not cancel the others. Limits are 128 keys per query and 256 waiting requests. The existing 0.25-second SQL pacer and twelve-second voice deadline remain unchanged. No write is coalesced.
-
-Operations snapshots use ordered 100-row keyset pages, at most twenty pages per table, and reject upstream truncation, duplicate IDs or incomplete replies. A table requiring twenty full pages is unavailable rather than silently partial. The snapshot is not atomic across tables or concurrent changes. Its five-second cache starts on completion. The App allows twenty seconds for this read and suppresses overlapping refresh transitions. Size/retention and multi-instance provider quotas remain pilot constraints.
-
-Imported historical call and booking rows are marked read_only. Call transitions, rep actions, reservation acquisition, voiding and source-consent checks refuse to mutate or submit them. Even a released imported booking blocks reusing that row. Normal released reservations remain reusable. Native workflow provenance is stamped only when creating a call through a separately configured trusted workflow integration; input request fields cannot supply it.

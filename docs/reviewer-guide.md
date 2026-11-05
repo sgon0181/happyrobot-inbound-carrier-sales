@@ -2,8 +2,9 @@
 
 For the current proposal, start with [one-command review and current evidence](readiness.md), then [the five-minute owner script](proposal-demo.md). The historical hosted examples below remain useful but do not identify the development candidate.
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+## Preserved baseline examples
 
+The following links, rubric and numbers describe the original Version 8/App Build 24 review. Use the [current candidate rubric](proposal.md#challenge-rubric) for newer evidence; historical failures are not erased.
 
 [Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
 
@@ -14,7 +15,7 @@ For the current proposal, start with [one-command review and current evidence](r
 | Structured activity, mocked transfer and rep control | Twin stores call and reservation histories. The originating call and load are joined by run ID so a reused load cannot show another carrier's agreement. Web calls use a spoken handoff. A rep must confirm before submission. |
 | Unreliable legacy TMS | The service validates fixed-width responses and applies bounded retries to reads. A booking send uses the rep's version and a fresh load check. It is never blindly retried because the protocol has no idempotency key. PENDING and UNKNOWN each have their own review path. [Contract evidence](tms-contract.md) |
 | Business reporting | Each clickable numerator opens its calls. The 49 completed demo sessions span workflow versions. The figures describe the proof of concept, including its losses. [Cohort and formulas](kpis.md) |
-| Standard, edge and adversarial QA | [QA results](qa-results.md) separates the 487 offline service tests, 118 mocked text checkpoints, two complete text replays and human call evidence. A recorded price correction drove the focused retest. The replay closing limitation remains documented. |
+| Standard, edge and adversarial QA | The baseline section of [QA results](qa-results.md) separates the 487 offline service tests, 118 mocked text checkpoints, two complete text replays and human call evidence. A recorded price correction drove the focused retest. The replay closing limitation remains documented. |
 | Deployment and responsibilities | [Build description](build-description.md) covers Docker, one-command deployment and system owners. [Decisions](decisions.md) records pricing assumptions and the interpretation of PENDING. |
 
 A supervised pilot can compare dispatcher time and verified calls producing a rep-ready agreement with a comparable staffed shift. Telephony and a staffing baseline are needed to measure missed calls, waiting time and labor impact.

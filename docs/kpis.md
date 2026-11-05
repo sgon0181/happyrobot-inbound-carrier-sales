@@ -1,13 +1,31 @@
 # KPI definitions
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+## Current Overview population and formulas
 
+Overview answers three operations questions: how often verified calls produce a reservation, where ended calls stopped, and how far carrier payment moved from the opening offer. It reads the service's complete bounded Twin snapshot. Rows with UUID-shaped run IDs are deduplicated by ID; non-UUID helper records are excluded. This includes fresh development calls and imported history regardless of their real/synthetic deployment tag. It is a format-based admission rule, not independent platform attestation. The historical native inventory enriches duration and end evidence, rather than limiting new calls to 49.
 
-## Recorded demo call overview
+| Measure | Current calculation and interpretation |
+|---|---|
+| Verified calls with a reservation, the business North Star | Code-passed calls with a historical reservation divided by all code-passed calls, rounded to a whole percentage; no denominator means no percentage. An unfinished acceptance claim or follow-up flag excludes the hold from reservation conversion. Released agreements remain historical successes. Active calls remain in the denominator, as labeled. |
+| Qualification funnel | Count distinct recorded calls, any authority attempt, any eligible result, any code issuance, successful verification, a successful search among verified calls, and a reservation among verified calls. Each call counts once at each stage, even after retries or MC changes. An issued code is not evidence of inbox delivery. |
+| Agreement after matching | Reserved calls divided by matched verified calls. Stages count historical milestones; they do not establish a clean, linear funnel for every legacy record. |
+| Ended without a match | Verified calls with no recorded reservation and no successful search, plus end evidence. Demand separates an explicitly empty search from no search and missing legacy lane detail. |
+| Ended after matching without agreement | Matched verified calls with no recorded reservation, plus end evidence. No reason for rejection is inferred solely from missing agreement. |
+| Verified calls without end evidence | All verified calls without a close, end callback or known historical completion, including an active agreement. These are not classified as lost. |
+| Final-offer exhaustion | Calls with both a final-offer event and explicit negotiation failure, without a historical reservation. Not proof that the private ceiling caused every loss. |
+| Counteroffer distribution | Distinct numbered counter/final-offer replies for each reserved call. Retries do not add rounds; zero counters may still include a pricing decision accepting a carrier ask. |
+| Duration | Median available nonnegative session duration, using the reconciled native value when known and otherwise the workflow-reported duration. Show coverage; missing duration is not zero. This is session time, not greeting-to-spoken-offer latency. |
+| Payment above opening | Median agreed rate minus the first recorded offer for the same load and run, among reserved calls with both values. Show paired coverage. This is price movement, not brokerage margin or savings. |
 
-The Overview answers three questions for the operations manager. How often do verified calls produce a reservation? Where do calls stop? How far does the carrier payment move from the opening offer?
+End evidence means `endedAt`, `closedAt` or membership in the known completed historical inventory. A quiet-call timeout, UUID shape or deployment tag does not prove a call ended. The known missed historical session does not enter the report without a Twin row. Funnel stages and exception groups open their source calls; not every derived comparison card is a drilldown. Recording links require separate trusted integration provenance or a known historical run.
 
-HappyRobot listed 50 inbound sessions for workflow `01a18119-67a1-79a3-b220-369aa359d4fb` from November 2 through 4, 2026. The retained [session inventory](../ops-app/src/lib/demo-voice-runs.ts) comes from the November 4 export at 14:22 UTC. HappyRobot marked 49 sessions completed and one missed with zero connected seconds. All 49 completed runs matched Twin call IDs across workflow versions. The missed session has no Twin call row and is excluded from the completed sample. The 30 text sessions and service deployment check are outside the cohort. New service call records appear immediately in the operational Calls page and rep queue. All 49 historical native sessions also contribute their recorded start and duration. To extend this dated report, reconcile a fresh inbound inventory before updating its IDs and dates.
+Snapshot reads reject truncation or a scan that cannot complete within twenty 100-row pages per table, including exactly 2,000 full rows. Tables are not read atomically. An unavailable snapshot is not a partial KPI result. [Read budgets, actual evidence and limits](readiness.md) are kept separately from these definitions.
+
+## Dated baseline reconciliation: November 2 to 4, 2026
+
+The following figures describe the original sample only. They are not current totals for the growing proposal workspace.
+
+HappyRobot listed 50 inbound sessions for workflow `01a18119-67a1-79a3-b220-369aa359d4fb` from November 2 through 4, 2026. The retained [session inventory](../ops-app/src/lib/demo-voice-runs.ts) comes from the November 4 export at 14:22 UTC. HappyRobot marked 49 sessions completed and one missed with zero connected seconds. All 49 completed runs matched Twin call IDs across workflow versions. The missed session has no Twin call row and is excluded from the completed sample. The 30 text sessions and service deployment check are outside the cohort. All 49 historical native sessions contribute recorded start and duration. Current reporting admits newer UUID-shaped calls automatically; a fresh platform inventory is needed only to independently reconcile coverage, not to add each new call to the UI.
 
 | Measure | Calculation | Reconciled result |
 |---|---|---|
@@ -22,7 +40,7 @@ HappyRobot listed 50 inbound sessions for workflow `01a18119-67a1-79a3-b220-369a
 | Where verified calls stopped | Verified calls without a reservation, divided by whether their history contains a successful search. Review the calls to establish the reason. | 7 without a match (6 calls with an explicit empty search, 1 without a search. Three of the six have event-level lane detail, and three legacy calls lack it), 10 matched without an agreement |
 | Rate above opening offer | Median of agreed rate minus opening rate, using the first successful search event for the same load on the same call. Both prices and matching agreement and historical reservation IDs must be present. | $50, with recorded pairs on all 19 agreements |
 
-The report reads the first appearance of the agreed load in the full call event history. Seven opening prices came from the older offers map, and twelve from load entries in newer search events. The current offers map changes during negotiation. The payment difference measures price movement and does not establish brokerage margin. The underlying drills link each count to calls and show the two prices for each agreement. These 49 sessions include repeated development scenarios across versions. Eighteen of the 19 agreements used the same MC and only two distinct MCs produced agreements. Call-level conversion describes this sample and cannot establish independent market demand or production performance.
+The report reads the first appearance of the agreed load in the full call event history. Seven opening prices came from the older offers map, and twelve from load entries in newer search events. The current offers map changes during negotiation. The payment difference measures price movement and does not establish brokerage margin. Funnel and exception drilldowns link their source calls and the paired records show both prices for each agreement. These 49 sessions include repeated development scenarios across versions. Eighteen of the 19 agreements used the same MC and only two distinct MCs produced agreements. Call-level conversion describes this sample and cannot establish independent market demand or production performance.
 
 ## Legacy service diagnostics
 
@@ -52,4 +70,4 @@ The API retains historical names for compatibility; display labels above are the
 
 ## Current work versus historical results
 
-Reservations shows current open reservations. Bookings shows submitted records and their actual states. Historical call results count calls and retain prior reservations after release or load-row reuse. They are intentionally separate sections, not stages of one funnel. The historical reservation list follows each originating call. The operational queues include new service records.
+Reservations opens all recorded agreements by originating call; Awaiting rep selects current open work. Its agreement count can differ from latest per-load status cards because a released load may have earlier owners. Bookings shows submissions and their actual receipt states. Imported records and superseded owners remain view-only. No PENDING acknowledgement counts as BOOKED. These state cards and historical conversion are distinct measures, not successive stages of one current-bookings funnel.

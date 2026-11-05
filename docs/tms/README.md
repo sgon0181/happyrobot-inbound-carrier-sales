@@ -4,7 +4,7 @@ Internal reference for authorized contributors, including Claude Code and Codex.
 
 Start with [onboarding](../onboarding.md) for access, external workflow state and current build status. Read alongside [project requirements](../assignment.md), [measured evidence](../tms-contract.md) and [architecture](../../ARCHITECTURE.md). The PDF defines requirements; the handbook defines the wire contract; measured evidence and [owner-recorded clarifications](../questions.md) identify token-specific differences. Keep assumptions explicit.
 
-**Current tracked implementation:** sanitized reply fixtures only. The TMS adapter arrives in slice 1 of the [build plan](../../ARCHITECTURE.md#15-build-plan), ported from branch `prototype/e2e`.
+**Current tracked implementation:** [service/adapters/tms/](../../service/adapters/tms/client.py) implements bounded reads, strict parsing and rep-authorized one-shot booking. Sanitized fixtures and loopback failure tests remain the contract evidence. [Current architecture](../../ARCHITECTURE.md#9-load-search-and-negotiation) adds validated shipment facts and consent checks; [readiness](../readiness.md) identifies the isolated deployment. The prototype reader below is historical inspection tooling, not the runtime adapter.
 
 ## 1. Setup and safe inspection
 
@@ -38,7 +38,7 @@ CMD:<command>|AUTH:<token>|KEY:<value>\r\n
 - TCP chunks are not records. Accumulate bytes until complete CRLF-terminated lines arrive, with explicit size and time bounds.
 - Success is zero or more record lines followed by a separate, exact `END\r\n` line. `END\r\n` alone is a valid empty result. A line such as `NOTES:WEEKEND\r\n` is not a terminator. Stop at `END`, without waiting for connection closure.
 - Error is exactly one `ERR|CODE:<code>|MSG:<message>\r\n` line, without `END`. Validate framing and required fields; never treat a partial reply as an empty search or a completed booking.
-- The handbook documents a 4096-byte frame including terminator and a 30-second idle timeout. Live replies reached 7,941 bytes in total, so enforce the frame bound per line plus a separate total-response bound. The current reader's total bound is 1 MiB; the production adapter still needs its own chosen limit.
+- The handbook documents a 4096-byte frame including terminator and a 30-second idle timeout. Live replies reached 7,941 bytes in total, so enforce the frame bound per line plus a separate total-response bound. The historical reader's total bound is 1 MiB. The current adapter independently bounds a complete reply to 256 KiB and each line to 4096 bytes, including its terminator.
 - Ignore unknown response keys after structural validation, but require the fields needed for the requested operation. `DEBUG_ECHO` has a bare `ECHO` record prefix, so a parser that demands `KEY:VALUE` for every segment cannot parse that command.
 
 ## 3. Commands, fields and codes
@@ -132,8 +132,8 @@ Codes are non-exhaustive. Branch on `CODE`, keep a fallback for unfamiliar codes
 1. The service verifies FMCSA eligibility and a fresh OTP for the trusted call before returning any load details. Coding-agent access to this reference does not bypass runtime verification.
 2. Normalize lane/equipment, query, then fetch full details for candidates. Check filters, schedule, availability and our own active bookings; offer at most three ranked candidates through an allowlisted response.
 3. The backend applies the versioned pricing policy, with no missing-ceiling fallback. At most three counter rounds total per call; failed negotiation ends without handoff. The runtime agent receives only permitted details and the approved offer.
-4. Reserve the agreed carrier, load and exact rate by inserting the booking row, then hand off. **D-22:** `LOAD_BOOK` is sent when the senior rep confirms, never during the call. This is an explicit decision, not Luke's mandate. No TMS hold or finalization command is inferred. See [architecture section 10](../../ARCHITECTURE.md#10-reservation-and-confirm).
-5. At Confirm, re-read the load and ceiling, win the version-checked write to `SUBMITTING`, then send `LOAD_BOOK` once. Persist the actual receipt as `ACK_PENDING`, authoritative `CONFIRMED` or transport-`UNKNOWN`. Keep pending and unknown loads blocked from new offers. Operator annotations alone do not unblock them. Never overstate finality.
+4. Reserve the agreed carrier, load and exact rate by inserting the booking row, then hand off. **D-22/D-32:** only a senior rep can send `LOAD_BOOK` by confirming the reviewed reservation. A rep may act while the caller is still connected; the voice agent has no send path. This is an explicit decision, not Luke's mandate. No TMS hold or finalization command is inferred. See [architecture section 10](../../ARCHITECTURE.md#10-reservation-and-confirm).
+5. At Confirm, require completed matching consent, trusted contact evidence and write eligibility. Re-read the shipment and ceiling, reject material drift, win the version-checked write to `SUBMITTING`, then send `LOAD_BOOK` once. Persist the actual receipt as `ACK_PENDING`, authoritative `CONFIRMED` or transport-`UNKNOWN`. Keep pending and unknown loads blocked from new offers. Operator annotations alone do not unblock them. Never overstate finality.
 
 Fault injection can accept a request then stay silent, truncate a response, corrupt framing/fields, or delay closing a complete connection. Faults have no reliable marker and may vary. A complete `DEBUG_ECHO` does not rule them out.
 

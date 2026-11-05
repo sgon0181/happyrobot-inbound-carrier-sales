@@ -1,6 +1,6 @@
-# Finish and submit
+# Historical baseline finish checklist
 
-Use the [reviewer guide](reviewer-guide.md) for the current reservation queue, filmed run, TMS receipt and 49-call report. Historical build numbers below describe their original checks.
+This preserves the earlier Version 8 finish plan, including its superseded Real/Test screen instructions and retained-clip recording plan. Do not use it to record the current candidate. Use the [new five-minute owner script](proposal-demo.md), [candidate readiness](readiness.md) and [updated prospect email](proposal-prospect-email.md). The owner still controls the final portal submission; all actions and counts below are dated baseline history.
 
 The reviewed fix is live: workflow Version 8 and service release 17 with the native Carrier Sales App. The owner retains sole control of the submission portal. Do not open, fill, upload to or submit through it. The recorded confirmation regression and verification are in [confirmation-fix.md](confirmation-fix.md). Booking sends stay off and calls stay synthetic. No service redeployment, new booking, BOOKED result, capacity benchmark or cohort change is required to finish this submission.
 

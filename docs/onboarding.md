@@ -1,11 +1,8 @@
 # Onboarding
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
+The current candidate is [Carrier Sales Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/), backed by the isolated proposal service and Twin staging. Voice Version 15 runs in workflow Development. Start with [readiness and one-command setup](readiness.md), then the architecture and decisions below. The original main/App/voice release is preserved separately.
 
-
-[Reservations](https://carrier-sales-santiago.happyrobot.dev/) opens the rep's queue. Search by MC, carrier, load or lane and open [the filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) for its $975 opening, $1,000 agreement, native recording and Twin timeline. [Bookings](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) contains the separate historical PENDING acknowledgement. [Overview](https://carrier-sales-santiago.happyrobot.dev/?view=overview) explains 49 recorded calls, the conversion to a reservation, losses and carrier payment changes.
-
-Updated 2026-11-04 (Australia/Sydney). The shared starting map for the owner, Claude Code and Codex. A Git clone includes everything tracked here. It does not include browser sessions, local `.env`, ignored evidence or MCP authentication.
+Updated 2026-11-05 (Australia/Sydney). A clone includes tracked source and sanitized evidence, not browser sessions, local `.env`, private recordings or MCP authentication. Use `make review` for a complete disposable local App without those credentials.
 
 ## Read first
 
@@ -22,22 +19,36 @@ Keep requirements, observed behaviour, assumptions and simulations distinct. The
 
 | Area | State |
 |---|---|
-| `main` | Use the unified carrier-sales workspace and Overview. Published App Build 24 is the preserved baseline. Build 23 from `147eb49` introduced the reconciled recorded-trial performance view. Workflow Version 8 and service release 17 power the calls. The owner adds the video URL and submits the ZIP. A GitHub invite applies if the private-link alternative is chosen after reviewer assignment. |
+| `ultimateProposal` | Current reviewed candidate source, isolated App Build 10 and proposal service; voice V15 in Development. Readiness records 563 service tests, 65 App tests, raw 71/74 native checkpoints and three overlapping actual diagnostic-caller audio scenarios. The owner still records a new human call and final video. |
+| `main` | Preserved at 15ce2b6 with the original submission ZIP. App Build 24, voice Version 8 and service release 17 remain the baseline. No proposal merge or baseline replacement is implied. |
 | `prototype/e2e` | Working system at `4b5ef3a`. Reference only. Not merged. See [lessons](lessons-from-prototype.md). |
 | `lab/harness-v24` | Earlier Codex test harness, kept locally. Historical. |
-| Who does what | One writer at a time on main. Codex handles implementation, validation and a separate read-only review. Claude can provide additional audits when available. The owner approves every push. |
+| Who does what | One assigned writer at a time, followed by independent read-only review. The owner authorized reviewed proposal-branch pushes; production promotion and final portal submission remain separate decisions. |
 | Spent loads | Listed in [`tms-contract.md`](tms-contract.md#booking-test-inventory) and [`blocked-loads-v1.json`](../service/policy/blocked-loads-v1.json). No supported cancel/reset is established; no quota or permanent-consumption claim follows. |
 
 Workspace: [FDE - Santiago Gonzalez Alvarez](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez), organization ID `01a17a99-0856-7f88-b09f-4b787e20413c`.
 
 | Platform resource | Identity | State |
 |---|---|---|
-| Real workflow, the target | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 8 (`kvexhw5fzj4y`, UUID `01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) live since 2026-11-04, replacing Version 7. Prompt SHA-256: `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`. |
+| Preserved workflow Production | Inbound Carrier Sales, `01a18119-67a1-79a3-b220-369aa359d4fb`, slug `6oaskq84xpfc` | Version 8 (`kvexhw5fzj4y`, UUID `01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) live since 2026-11-04, replacing Version 7. Prompt SHA-256: `53a884aea629114fa6d3342b9c8cf9f392bf376ca053622ab1f561821d33437c`. |
 | Prototype workflow | `01a19476-5384-704b-9c5e-569fd96f9adf`, slug `yhcdrf4kne4j` | Historical owner-call evidence retained; unpublished on 2026-11-04. |
-| Operations app | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Published Build 24 serves Reservations, Overview, Bookings, Calls and Demand at the alias. Reviewed Build 23 introduced the reconciled voice sample. Booking sends remain off. See [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). |
+| Preserved Operations App | Carrier Sales; existing slug `codex-lab-carrier-sales-v24`, alias `carrier-sales-santiago.happyrobot.dev` | Published Build 24 serves Reservations, Overview, Bookings, Calls and Demand at the alias. Reviewed Build 23 introduced the reconciled voice sample. Booking sends remain off. See [dashboard release](releases/2026-11-04-dashboard-clarity/README.md). |
 | Prototype service | Fly app `codex-e2e-lab-sg-20261031`, `iad` | Stopped, bookings off. |
 | Prototype Twin tables | `proto_*` | Keep until the build no longer needs them. |
-| Build Twin tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
+| Baseline Twin production tables | `calls`, `bookings`: `id` text primary key, `version` int, `data` jsonb | Created on 2026-11-02. Schema checked, and version-checked writes proven from Fly on 2026-11-03 (T-1). |
+
+### Candidate resources
+
+| Resource | Current isolated target |
+|---|---|
+| Native App | [Carrier Sales Candidate Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/), its own Apps Production hosting slot |
+| Service | `happyrobot-proposal-sg`, https://happyrobot-proposal-sg.fly.dev; final accepted runtime and policy hashes in [deployment evidence](evidence/readiness/deployed-service.json) |
+| Workflow Development | Same workflow `6oaskq84xpfc`, Version 15, slug `4l79y6ugq62q`; [exact prompt and acceptance](readiness.md#native-conversation-evidence) |
+| Twin staging | Separate `calls` and `bookings`, same schema; imported history is immutable. `TWIN_ENVIRONMENT=staging`, `CALL_COHORT=synthetic`, `LIVE_BOOKING=false` |
+
+The App hosting slot, workflow environment and Twin environment are different controls. Candidate App Production does not mean production voice or production data. The [validated LD01123 agreement](https://carrier-sales-proposal-sg.happyrobot.dev/?view=reservations&load=LD01123&run=8eb82ad6-79b8-4c11-94ab-99bd1ce34c9b) links the actual development run. No real booking send was made during this acceptance.
+
+### Historical release observations
 
 After owner approval, Claude reports pushing `bf512aa`, deploying Fly release 17, then publishing Version 6. Codex independently verified GitHub main, 28 matching deployed runtime source/policy files, the healthy machine, authenticated health/snapshot reads, missing-key 401 on `/calls/ended`, and the exact live prompt. At that earlier release check, the native App selector showed production Build 20; source 48ba398/import 97da4f6 is reported in Claude's release handover, the 77-file archive matches the checkout, and the final visual check passes. See [release verification](releases/2026-11-04-v6/README.md). LIVE_BOOKING remains false and CALL_COHORT remains synthetic. Six test reservations were declined on 2026-11-04. Committing later documentation does not deploy it. The repository privacy/access check from 2026-11-03 found only the owner and zero pending invitations; that was an access snapshot. Luke later accepted a portal ZIP without a prior GitHub invitation.
 
@@ -45,15 +56,19 @@ Historical Version 7 publication matched reviewed 9d7a149. Version 8 subsequentl
 
 Refresh this before relying on it. Do not edit a published workflow version, or reconstruct editor URLs.
 
-## Setup for the build
+## Setup for the current candidate
 
-One-time setup below is already complete for the existing deployment. Do not recreate tables, keys or apps. Any secret change or deployment needs owner approval.
+For a fresh reviewer machine with Docker Compose and Python 3.12, run `make review` from the root. It builds and opens the full local App with fixture identity, service, email, Twin and TCP TMS. Confirm changes one fixture booking to PENDING; `make review-down` removes only this disposable environment. No customer credentials or cloud writes are needed.
 
-1. **Twin tables.** In the Twin UI, create `calls` and `bookings`, each with `id` (text, primary key), `version` (int) and `data` (jsonb, not json). The API cannot create tables. Leave the `proto_*` tables alone.
-2. **Twin key.** Create an Editor API key for the service. Do not reuse a lab key. Editor applies workspace-wide while tag scopes are off.
-3. **Fly app.** Put a payment method on the Fly account, because the trial stops machines after about 5 minutes. The app is `happyrobot-carrier-sales-sg` in `fly.toml`, created with `fly apps create`.
-4. **Secrets.** `AGENT_API_KEY`, `OPS_API_KEY`, `OTP_HASH_SECRET` and `PRICING_SECRET` are generated into the ignored `.env`, at least 24 characters each. `make secrets` copies exactly the settings `config.py` reads into Fly secrets without printing them, and `make deploy` deploys. `make run` runs the same image locally.
-5. **Gmail.** Create an app password for the demo inbox.
+Cloud resources listed above already exist. Do not recreate or overwrite them. For a new isolated deployment:
+
+1. Provision separate Twin staging `calls` and `bookings` with `id` text primary key, `version` int and `data` jsonb. The API cannot create tables. Leave production and prototype tables alone.
+2. Use an authorized Editor API key for the service; scopes are workspace-wide while tag scopes are off. Configure the isolated Fly target and native App/workflow separately.
+3. Generate distinct service agent/ops keys and OTP/pricing secrets into protected settings. Set the staging environment, synthetic cohort and sends off. Set the App's exact canonical origin, service URL and explicit rep subjects; configure trusted workflow provenance. The [pilot settings](proposal.md#pilot-configuration-and-rollback) define these boundaries and enrolled contacts for any future send-enabled deployment.
+4. With the intended target and matching readiness key available, run `make secrets APP=<isolated-fly-app> APP_URL=<native-app-https-url>`, then `make deploy APP=<isolated-fly-app> APP_URL=<native-app-https-url>`. The first stages allowlisted settings; the second deploys, verifies authenticated health and TMS reachability, then opens the App. There is no implicit cloud target. Neither command provisions or publishes native resources.
+5. Configure approved email delivery for the demonstration. A customer pilot requires independently enrolled carrier contacts and shared throttling. The shared inbox cannot authorize a real booking.
+
+`make run` remains a service-only container command using deliberately supplied `.env`; it is not the full reviewer App. Exact tested commands, source manifests and limits are in [readiness](readiness.md#reproduce-the-application).
 
 ## Access without committing secrets
 
@@ -67,9 +82,9 @@ The private candidate portal link is in Luke's original "HappyRobot | FDE Techni
 | FMCSA | Use the portal-issued key. Direct requests work from Fly.io and return HTTP 403 from the local machine. |
 | Twin | External SQL needs an organization API key. A Viewer key cannot write. The Apps gateway to Twin has been failing (T-7), so the app reads through the service. |
 | OTP email | Luke approved email to the candidate's demo inbox. `DEMO_OTP_EMAIL` is configuration, never caller input, and is not proof of carrier identity. |
-| Fly.io | The CLI is installed and authenticated. The service is `happyrobot-carrier-sales-sg` at `https://happyrobot-carrier-sales-sg.fly.dev`, one machine in `iad`. Release 17 from reviewed `bf512aa` is healthy on 2026-11-04, with all 28 runtime source/policy files matching the checkout. |
+| Fly.io | Candidate: `happyrobot-proposal-sg`. Preserved baseline: `happyrobot-carrier-sales-sg`, one machine in `iad`, release 17 verified November 4. CLI authentication is local and is not part of a clone. Select the target explicitly. |
 
-Local credentials are not part of a clone. Use the owner-managed ignored .env and platform secret settings; do not assume an old prototype worktree is the current source. Secret values and their synchronization were not inspected for this documentation pass. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
+Local credentials are not part of a clone. Use the owner-managed ignored .env and platform secret settings; do not assume an old prototype worktree is the current source. This documentation pass does not re-inspect secret values or change configuration. Never copy credential values into documentation, prompts or commits. `.gitignore` prevents commits, not access, so keep raw studies, codes, ceilings and credentials out of runtime voice context.
 
 ## FMCSA integration starting point
 

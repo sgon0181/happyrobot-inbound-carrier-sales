@@ -3,7 +3,7 @@
 **Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
 
 
-Every design decision, why it was made and what it costs. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result; this file explains the choices. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
+Material design decisions, why they were made and what they cost. The dated baseline choices remain below; D-36 through D-42 document the current proposal and link its accepted evidence. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result; this file explains the choices. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
 
 ## Decisions made on 2026-11-02
 
@@ -42,7 +42,7 @@ Replaces the nine prototype tables.
 | Transcript-reading consent check | A false yes could trigger a non-cancellable send | A false yes now creates a reservation the rep can decline. It was 155 lines at complexity 29 and 19, and it caused a redundant question on the passing call. | The rep is the safety check. |
 | Transcript redaction and collection | Kept spoken codes out of stored transcripts | Twin stores structured activity and optional closing notes, so there is no raw copy to redact. It was the most complex function in the repo. | No verbatim Twin transcript; missing closing notes stay missing. T-8 is optional. |
 | Receipt journal | Backed up the in-call send | It sat in container storage, and the evidence records it lost after an automatic stop and start. At Confirm the rep sees the result. | If Twin stays down after a send, the service logs the receipt and returns it to the rep when possible. Logs and browser recovery are not a durable independent journal; process/log retention failure can lose evidence. |
-| Cross-call OTP throttle | Limited sends across calls | Per-call limits stay (2 sends, 3 failures), and codes reach only the demo inbox. | A real deployment would need it back. |
+| Cross-call OTP throttle | Limited sends across calls | Removed for the November 2 demo baseline, retaining per-call limits (2 sends, 3 failures). | Reintroduced in the proposal after cross-session inbox abuse review; D-37 specifies its bounded process-local scope. |
 | Retry fingerprinting (D-17) | Caught duplicate tool calls | See D-26. | Depends on T-10. |
 
 ### D-26: Repeated requests are answered from stored state
@@ -111,6 +111,52 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **Version 8 follow-up:** recorded Version 7 call b61fba6e submitted 110025 after an explicit No and later 1125 after renewed clarification without readback. Version 8 gives pending confirmation priority, treats No as non-confirmation and requires a fresh affirmative after a corrected total. An eight-case suite scored 16/24 on unchanged Version 7, exposing eight failed executions; final focused 24/24 and full 59-case suite twice 118/118 pass. Two mocked complete replays submitted only 1125 after readback and Yes. The owner reports a successful normal Version 8 call, without an independent transcript/audio review. See confirmation-fix.md.
 - **Limits:** Version 8 is live. No repeat of the superseded Version 7 stress-call script is required. Live speech retesting of the split-number edge case remains unverified. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. The Version 6 closing mechanism is released; the conditional amount-confirmation follow-up is now live.
 
+## Proposal decisions consolidated on 2026-11-05
+
+These extend the November baseline; the four-part architecture, two Twin tables and pricing-v1 percentages are unchanged. [Readiness](readiness.md) pins deployments, measurements and remaining pilot gates.
+
+### D-36: Consent belongs to a shipment, not just a load ID
+
+- **Why:** fresh TMS reads could change lane, ZIP, equipment or appointment while an earlier price acceptance still reserved the load. A durable hold could also outlive a failed agreement write.
+- **Choice:** store the quoted material terms, compare them at acceptance and rep preflight, and require a matching finalized source-call agreement before submission. Stable freight keeps the safe standing quote and lowest ask. A changed shipment requires a fresh pitch while retaining the global round budget. Unsafe or contradictory upstream text goes to review before speech.
+- **Tradeoff:** conservative validation can withhold otherwise usable freight, and interrupted holds need rep follow-up or release. It avoids treating an internal intent or changed shipment as carrier consent. See [consent boundary](../ARCHITECTURE.md#10-reservation-and-confirm) and the retained review reproductions.
+
+### D-37: An authenticated viewer is not automatically a rep or a carrier
+
+- **Why:** a valid App login alone grants no booking authority; the real platform returns an `id` field rather than the earlier fixture's `sub`. Shared demo-inbox access does not identify a carrier, and per-call mail limits can be bypassed with new sessions.
+- **Choice:** validate the platform identity response into one subject, require an exact rep assignment, enforce canonical-origin writes, and require an enrolled contact roster plus per-reservation trusted delivery evidence for real sends. Caller-supplied identities and contact destinations cannot authorize. SMTP admission adds four attempts per recipient and 100 total per ten minutes across call IDs.
+- **Tradeoff:** operators and contacts need explicit onboarding. Email throttling is in-memory per process and resets on restart, so shared provider admission is required before scale-out. The demo inbox remains usable only with booking sends off. [Configuration and rollback](proposal.md#pilot-configuration-and-rollback).
+
+### D-38: Share fresh point reads, never cache mutable decision state
+
+- **Why:** repeated row reads exhausted Twin's four-statements-per-second budget during full call bursts, despite passing ordinary tests. Raising the voice deadline or bypassing pacing would hide the bottleneck.
+- **Choice:** batch keys waiting for the same paced SQL slot, detach before dispatch, isolate each waiter's result and cancellation, and force later reads and CAS conflicts through a fresh query. Bound admission to 256 waiters and each query to 128 keys. Writes remain independent version checks.
+- **Tradeoff:** a small asynchronous coordinator adds cancellation and freshness obligations. Its explicit race tests and [paired full-flow profiles](readiness.md#concurrency-and-read-budget) justify the complexity; no production call-rate guarantee follows.
+
+### D-39: Show a complete bounded snapshot or an unavailable state
+
+- **Why:** the actual Twin API truncates at 500 rows or one million bytes. A successful HTTP response can therefore omit history and corrupt KPI denominators. Growing-history scans also exceeded the former ten-second App budget.
+- **Choice:** ordered 100-row keyset pages, a twenty-page completion bound per table and strict truncation/ordering checks. Cache for five seconds after completion; allow twenty seconds for operations fetches and suppress overlapping refreshes. The voice deadline stays twelve seconds.
+- **Tradeoff:** exactly twenty full pages and oversized pages fail closed. Separate table reads are not a transactional snapshot. Retention and real shared-quota sizing remain pilot work; partial success is never reported as complete history.
+
+### D-40: Unify reviewable records while preserving origin and write eligibility
+
+- **Why:** switching between trial and desk views concealed useful history, while a fixed 49-run whitelist hid new calls. Reusing copied historical rows or guessing recording links would misrepresent evidence.
+- **Choice:** Overview deduplicates UUID-shaped call IDs from the complete snapshot, across deployment tags. Historical native inventory enriches known durations and endings instead of restricting admission. Active calls contribute to progress; losses require end evidence. Reservation history stays per call, latest state per load. Imports are immutable even when released. Fresh media links require configured workflow provenance stamped at creation; known historical runs are the fallback.
+- **Tradeoff:** UUID admission is not platform attestation, and the integration key must remain exclusive to its workflow. Mixed development history is useful operational evidence, not a customer conversion estimate. Source tags still enforce sends; D-21's real-only policy remains only in legacy service diagnostic fields. [Exact formulas](kpis.md).
+
+### D-41: Gate voice behavior with both checkpoint and actual audio evidence
+
+- **Why:** passing text checkpoints did not catch premature search on partial speech, missing audible endings or amount-confirmation failures. Final-offer refusal also needs explicit tool intent to distinguish it from a retry.
+- **Choice:** Version 15 asks for missing details one at a time, waits for the lane, reads back corrected totals before mutation, binds final refusal explicitly, and speaks the truthful close before ending. Keep exact prompt/tool hashes, failed native grades and actual overlapping diagnostic audio as separate evidence layers.
+- **Tradeoff:** clarification costs turns, generated diagnostic callers do not prove human naturalness, and text grades cannot substitute for speech. Current evidence is 71/74 native checkpoints and three completed overlapping actual audio scenarios; a new owner human call remains required. [Versioned results](readiness.md#native-conversation-evidence).
+
+### D-42: Reproduce locally without credentials; deploy only to an explicit target
+
+- **Why:** a service-only Docker command did not demonstrate a usable App, while an implicit cloud target could overwrite the preserved release. Local auth fixtures also hid the native identity-contract defect.
+- **Choice:** `make review` starts the complete disposable App/service/identity/TCP fixture, with the observed native identity shape and real browser-confirm acceptance. `make deploy APP=... APP_URL=...` requires preconfigured resources, checks authenticated service and TMS readiness, and opens the named App. Native App/workflow publication remains a separate action.
+- **Tradeoff:** the local fixture proves the application path, not external carrier identity or TMS behavior. Cloud one-time setup and secrets are explicit prerequisites, not falsely claimed automation. [Commands and accepted checks](readiness.md#reproduce-the-application).
+
 ## Earlier decisions
 
 | ID | Decision | Status |
@@ -126,22 +172,22 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 | D-9 | OTP on every call | Active |
 | D-10 | `MAX_BUY` supplies `max_rate`, subject to validation | Active |
 | D-11 | No usable ceiling means pricing review | Active |
-| D-12 | Codes go to one configured demo inbox | Active |
+| D-12 | Codes go to one configured demo inbox | Demo exception only; trusted roster required for sends under D-37 |
 | D-13 | Record turned-away demand | Active. Derived from call rows, with no table. |
 | D-14 | Carrier view in the operations app | Deferred to optional additions |
 | D-15 | Northstar is a handoff per verified call | Clarified: recorded reservations per call that ever passed its code; not proof of a spoken handoff |
 | D-16 | `run_id` is the only call identity, in a hidden field | Active |
 | D-17 | Retries recognized by request fingerprint | **Replaced by D-26** |
 | D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The agent takes no part in the send, so it never has to describe `UNKNOWN`, and Confirm applies only to `RESERVED`. |
-| D-19 | `service/` on `main` is the only production code | Active, with D-29 |
+| D-19 | `service/` on `main` is the only production code | Preserved baseline; ultimateProposal is an independently deployed isolated candidate, not a main promotion |
 | D-20 | No standalone test bookings | Active. The owner authorized one exception on 2026-11-02: two probe sends, recorded in [tms-contract.md](tms-contract.md). |
-| D-21 | Real and synthetic calls kept apart | Active |
+| D-21 | Real and synthetic calls kept apart | Tags and send guards remain; unified App reporting supersedes a separate-view requirement under D-40 |
 
 Each original decision's full reasoning is in [architecture v2.5](https://github.com/sgon0181/happyrobot-inbound-carrier-sales/blob/prototype/e2e/ARCHITECTURE.md#12-decisions-and-open-questions).
 
 ## Reporting and the rep workspace
 
-The service keeps call identity and deployment tags on each record. The rep needs one queue across available records. The App therefore uses a unified working list while the business report uses a fixed native voice inventory matched by run ID. New service calls appear immediately in the queue and activity views. Extending the dated report requires an audited native inventory. The load ID alone is insufficient for a historical record because a released load may be reserved by another call.
+The November 4 baseline report used a fixed, reconciled 49-call native inventory. That sample remains dated evidence in [KPI definitions](kpis.md). The current proposal admits new UUID-shaped call rows automatically, with historical inventory used only to enrich evidence, and shows all recorded agreements by default (D-40). The load ID alone remains insufficient for historical review because a released load may later belong to another call; links carry both load and run IDs.
 
 ## Open checks
 
@@ -152,7 +198,7 @@ The service keeps call identity and deployment tags on each record. The rep need
 | T-3 | Can the service deliver codes? | Proven: Gmail SMTP from Fly | |
 | T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype, and on the real workflow on 2026-11-03: the model's tool arguments held only the MC and code, and the Twin row is keyed by the run's ID. | |
 | T-5 | Can the service reach FMCSA? | Proven from Fly `iad`, again by the new service on 2026-11-03. The local machine gets HTTP 403. | Native HTTP node passes the raw result |
-| T-6 | Can the agent end a voice session and speak the handoff? | Observed on the prototype and owner Version 3 run8167bb06. Version 4 pressure text simulation ended by idle_timeout with no close_call. Eleven later Version 6 timed traces show proactive hangup and saved close/end records across successful and refused calls. Audio was not listened to. The owner reports a successful normal Version 8 call; its transcript/audio is not independently reviewed. | |
+| T-6 | Can the agent end a voice session and speak the handoff? | Historical failures and V6/V8 limits remain in their release evidence. Exact V15 actual audio completed three overlapping diagnostic-caller scenarios, with a truthful agreement recap or refusal, single goodbye and agent hangup. A new owner human call remains separate. [Evidence](readiness.md#native-conversation-evidence) | |
 | T-7 | Why does the Apps gateway to Twin fail? | Open, and designed around by D-30 | |
 | T-8 | Can a native post-call node produce a summary for the close request? | Optional and untested. No longer a dependency: R3 stores structured decisions and best-effort model closing notes, with end reporting separate. | Show absent notes honestly; do not invent a post-call summary |
 | T-9 | Should workflow run dumps store full transcripts in Twin natively? | Not tested. They would add spoken codes to Twin. | Transcripts stay on the platform |

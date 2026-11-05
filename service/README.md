@@ -1,24 +1,33 @@
 # Carrier Sales Service
 
-The Python service that decides what the voice agent may do. Slices 1 and 2's code are built: the business rules, the read-only TMS adapter, Twin storage, the FMCSA check, the emailed code and the three verify routes, all tested offline. The rest arrives through the [build plan](../ARCHITECTURE.md#15-build-plan) in small commits, each read by the owner.
+The Python 3.12 service owns verification, deterministic pricing, shipment-bound consent, reservations, rep-only TMS submission and complete bounded operations snapshots. The current `ultimateProposal` runtime is deployed to the isolated service with Twin staging and sends disabled. The original main release is preserved. [Readiness](../docs/readiness.md) records the exact deployed snapshot, later documentation-only changes and accepted evidence; [architecture](../ARCHITECTURE.md) explains the contracts.
 
 ## Layout
 
-| Path | Job | Rule | Status |
-|---|---|---|---|
-| `main.py` | Builds dependencies and the app | The only place that connects the parts | Built |
-| `config.py` | Typed settings, validated at startup | The only code that reads the environment | Built |
-| `api.py` | Routes, keys, request models | No business rules | Built |
-| `calls.py` | The call row, and the verify and code flows | Calls `core` and `adapters`; no SQL or sockets | Built |
-| `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets | Built |
-| `bookings.py` | Reservation: one booking row per load | No TMS calls | Built |
-| `rep_actions.py` | A rep's confirm, decline and reconcile | The only code that can reach `LOAD_BOOK` | Built |
-| `dashboard.py` | Snapshot and KPIs | Read only | Built |
-| `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment | Built |
-| `adapters/` | Twin, TMS, FMCSA, email | Talks to outside systems, holds no business rules | Built |
-| `policy/` | Versioned pricing policy and blocked loads | Data, loaded once at startup | Built |
-| `tests/` | Tests, the fake TMS, the network guard | Test doubles live here, never in production folders | Built |
+| Path | Job | Rule |
+|---|---|---|
+| `main.py` | Builds dependencies and the app | The only place that connects the parts |
+| `config.py` | Typed settings, validated at startup | The only code that reads the environment |
+| `api.py` | Routes, keys, request models | No business rules |
+| `calls.py` | The call row, and the verify and code flows | Calls `core` and `adapters`; no SQL or sockets |
+| `call_state.py` | Call transitions, claims and terminal recovery | Version-checked state changes |
+| `selling.py` | Search, negotiation and close | Writes call rows through `calls`; no SQL or sockets |
+| `sale_decisions.py` | Shipment-bound negotiation and replay | Pure decisions applied within a call-row write |
+| `bookings.py` | Reservation: one booking row per load | No TMS calls |
+| `rep_actions.py` | A rep's confirm, decline and reconcile | The only code that can reach `LOAD_BOOK` |
+| `dashboard.py` | Complete snapshot and legacy diagnostics | Read only; current Overview formulas live in the App |
+| `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment |
+| `adapters/` | Twin, TMS, FMCSA, email | External transport and provider contracts |
+| `adapters/twin_reads.py` | Fresh point-read batching | Bounded waiters, detached batches, independent cancellation |
+| `policy/` | Versioned pricing policy and blocked loads | Data, loaded once at startup |
+| `tests/` | Tests, the fake TMS, the network guard | Test doubles live here, never in production folders |
 
 Dependencies point one way: `api` to `calls`, `selling`, `rep_actions` and `dashboard`, then to `core` and `adapters`. `core` imports nothing from the others.
 
 Every commit reports its production line count. Size is watched, not capped ([D-28](../docs/decisions.md)).
+
+## Run and verify
+
+From the repository root, `make check` runs strict types, lint/format, shape and coverage gates. The accepted candidate passed 563 service tests with 97.9% of gated business branches covered. Use `make review` with Docker Compose and Python 3.12 for the complete disposable App and service; `make run` starts only the service with deliberately supplied settings.
+
+Cloud deployment requires an explicit preconfigured target: `make deploy APP=<isolated-fly-app> APP_URL=<native-app-https-url>`. It verifies authenticated service and TMS readiness before opening the App; it does not provision native resources. Contact enrollment, rep assignment, pacing and retention limits are in the [runbook](../docs/readiness.md), not hidden prerequisites or claims of production readiness.

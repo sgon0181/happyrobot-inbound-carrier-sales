@@ -1,4 +1,4 @@
-.PHONY: install hooks check lint types test audit run secrets deploy review review-down
+.PHONY: install hooks check lint types test audit run secrets deploy review review-down zip
 
 install:
 	pip install -r requirements-dev.txt
@@ -13,6 +13,7 @@ lint:
 	ruff check service tools
 	ruff format --check service tools
 	python tools/check_service_shape.py
+	python tools/check_docs.py
 
 types:
 	mypy
@@ -48,3 +49,9 @@ secrets:
 
 deploy:
 	python3 tools/launch.py deploy
+
+# Source ZIP of the committed HEAD for the portal. .gitattributes leaves out study material.
+zip:
+	mkdir -p ../submission-release
+	git archive --format=zip --prefix=carrier-sales/ \
+		-o ../submission-release/carrier-sales-$$(git rev-parse --short HEAD).zip HEAD

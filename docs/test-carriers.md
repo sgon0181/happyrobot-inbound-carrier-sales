@@ -18,4 +18,4 @@ Inactive carriers still show `allowedToOperate` Y, so that field alone proves no
 
 When adding a case, record the timestamp and timezone, the source endpoint without `webKey`, the relevant fields and the eligibility decision. Keep only the minimum sanitized fields, with no contacts or credentials.
 
-See [onboarding](onboarding.md#access-without-committing-secrets) for the request shape and [architecture section 8](../ARCHITECTURE.md#8-verification-and-the-one-time-code) for the eligibility rule.
+See [onboarding](reference/onboarding.md#access-without-committing-secrets) for the request shape and [architecture section 8](reference/architecture.md#8-verification-and-the-one-time-code) for the eligibility rule.

@@ -1,20 +1,46 @@
-# Project context
+# Guide for AI agents
 
-`README.md` is the map of this repository. `ARCHITECTURE.md` explains how the system works, and `docs/decisions.md` records why, along with open checks. The assignment PDF in `docs/` is the source of challenge requirements, summarized in `docs/assignment.md`.
+This repository is a take-home submission: an AI voice agent for inbound carrier sales on HappyRobot, a Python service that makes every business decision, and an operations App. Use this file to find things quickly and to check claims against code.
 
-Read `docs/onboarding.md` for access setup, current state and platform resources. For TMS work, read `docs/tms/README.md` before implementing or testing the integration, then `docs/tms-contract.md` for sanitized observations, fixtures and blocked/protected inventory. These tracked references are shared by Codex and Claude Code; ignored local packets are optional evidence, not required onboarding.
+## Read in this order
 
-Production code lives in `service/` on `main`. Branch `prototype/e2e` is reference only: port from it deliberately, one reviewed piece at a time, and never merge it. Meet the engineering gates in `ARCHITECTURE.md` section 14, and report the production line count in each commit.
+1. `README.md`: what it does, requirement table, known limits.
+2. `ARCHITECTURE.md`: parts, call flow, the invariants (INV-1 to INV-10) and code layout.
+3. `docs/decisions.md`: key decisions as questions; each links to `docs/reference/decision-log.md`.
+4. `docs/results.md`: the only place test counts and scores are stated.
+5. `docs/reference/`: full detail. `docs/history/` and `happyrobot/history/` are dated records of earlier versions; do not treat them as the current state.
 
-# Writing
+The challenge brief is `docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf`, summarized in `docs/reference/assignment.md`. The TMS protocol and observed behavior are in `docs/tms/README.md` and `docs/tms-contract.md`.
 
-Never output Unicode U+2014, U+2013, or other long dash punctuation in responses or generated content. Use commas, periods, colons, semicolons or parentheses instead. Ordinary ASCII hyphens are allowed in compound words, code and bullet lists; double hyphens are not sentence punctuation. Paraphrase prohibited characters in source material, and check output before delivery.
+## Where to verify a claim
 
-# Workflow
+| Claim | Look at |
+| --- | --- |
+| Rate ceiling never exceeded or exposed | `service/core/pricing.py`, `service/core/negotiation.py`, `service/core/loads.py` (allowlist), `service/tests/test_negotiation*.py` |
+| Code required before load details | `service/core/codes.py`, `service/calls.py`, `service/tests/test_verify.py` |
+| Three rounds, redial memory | `service/sale_decisions.py`, `service/negotiation_memory.py`, `service/tests/test_reciprocal_memory.py` |
+| One booking send, never resent | `service/rep_actions.py`, `service/bookings.py`, `service/tests/test_rep_actions.py`, `service/tests/test_book.py` |
+| TMS timeouts and malformed frames | `service/adapters/tms/`, `service/tests/test_protocol.py` |
+| Every endpoint authenticated | `service/api.py`, `service/tests/test_verify.py` |
+| Rep-only actions in the App | `ops-app/src/lib/rep-access.ts`, `ops-app/src/lib/auth.ts`, `ops-app/tests/` |
+| Live prompt and tools | `happyrobot/prompt-v19.md`, `happyrobot/tool-bindings-v19.json` |
+| Deployed state and rollback | `docs/reference/release.md`, `docs/evidence/` |
 
-One agent writes at a time, and Codex reviews the result.
+## Commands
 
-1. Only the agent assigned as writer changes tracked files for a task. Other agents stay read-only.
-2. The writer makes one local commit on `main` and reports its SHA and validation.
-3. Codex reviews that commit, and findings go back to the writer.
-4. Nothing is pushed until the review is done and the owner approves the push.
+```bash
+make check        # lint, strict types, tests, coverage gates, docs check (what CI runs)
+make review       # whole system locally with fixtures; Confirm sends to a TCP stand-in
+make review-down  # remove the local review environment
+```
+
+App checks run from `ops-app/`: `npm ci && npm test && npm run lint && npm run build && npm run typecheck`.
+
+## Rules for changing this repository
+
+- Production code is `service/` and `ops-app/src/`. Keep the gates in `docs/reference/architecture.md` section 14 green and report the production line count in each commit message.
+- One writer at a time makes one local commit on `main`; another agent reviews it; nothing is pushed or deployed without the owner's approval.
+- State each number once, in `docs/results.md`. `tools/check_docs.py` fails the build if test counts or scores appear in other top-level documents.
+- Never put credentials in the repository, prompts or commit messages. `.env.example` lists setting names only.
+- Do not use long dash characters (U+2014, U+2013) in documents or output; use commas, colons, semicolons or parentheses.
+- Branch `prototype/e2e` is historical reference only. Never merge it.

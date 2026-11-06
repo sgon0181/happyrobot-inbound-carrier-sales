@@ -1,56 +1,77 @@
-# Carrier Sales: business and IT build description
+# Carrier Sales: build description
 
-The brokerage needs to qualify incoming carriers, negotiate consistently and give dispatchers a usable record of each agreement. Carrier Sales automates the first conversation and gives a senior rep control of the final TMS request. One populated workspace contains historical and new calls, reservations, exceptions and booking receipts.
+For the brokerage's business and IT review.
 
-## Carrier journey
+## The problem
 
-The workflow begins with a fixed statement identifying the AI agent, followed by the MC-number question. The service checks operating authority with FMCSA, confirms the carrier name and verifies an emailed code before discussing freight. Lookup unavailability is kept separate from carrier ineligibility. The agent asks only for missing equipment and lane details.
+Inbound carrier calls have grown faster than the dispatch team. Calls are missed at peak times, different dispatchers negotiate to different ceilings, FMCSA checks are manual, and there is no structured record of what was offered or agreed. Carrier Sales automates the first conversation so a carrier can call at any time, get verified, hear a matching load and agree a rate, while a senior rep keeps control of the booking.
 
-Matching reads the TMS, checks availability and validates shipment terms. The caller hears the lane, price and essential operating conditions. Clarifications and corrections are handled before an amount can become an agreement. On acceptance, the service records the exact load, carrier, price and shipment facts. The agent explains that the agreement awaits senior-rep review. It does not claim a completed transfer or final booking.
+## What a carrier experiences
+
+1. The agent introduces itself as an AI and asks for the MC number.
+2. It confirms the carrier's name from FMCSA, emails a six-digit code and asks the carrier to read it back. No code, no load details.
+3. It asks for equipment and lane, then pitches a matching load: route, pickup time, weight, commodity, rate and any operating conditions or fees.
+4. The carrier can accept or counter. The agent answers each counter with the service's price, up to three rounds.
+5. On agreement, the agent recaps the load and rate and explains that a senior rep will confirm. It never claims the load is booked.
 
 ## Commercial control
 
-Prices are service decisions, not model guesses. The working cap stays below the private TMS maximum. The opening price and concessions are deterministic and auditable.
+All prices come from the service, never from the language model. The TMS ceiling stays inside the service; offers stay under a working cap a few percent below it. We move toward a carrier who moves toward us, in steps of at least $25, and inflated or rising asks earn nothing. The same carrier calling back about the same load continues the same negotiation instead of starting over. [How negotiation works](decisions.md#how-does-negotiation-work).
 
-We move toward a carrier who moves toward us, in steps of at least $25 while room remains, never above our private limit. Every above-offer ask must be within 25% above the opening; after the first ask, the carrier must improve the carrier's best prior amount by at least $25. We move one third of the remaining gap toward their ask or our limit, rounded down to $25 with that minimum step. Less than $25 of remaining room stops at the limit. If the caller asks less than our next offer, we agree at their exact amount.
+## Rep control
 
-Inflated asks beyond reach, rising demands and token changes earn no increase. The verified carrier and load share their negotiation memory across calls and restarts. Three rounds is a limit, not a promise to reach the cap. [Exact policy and adversarial results](negotiation-review.md) explain the thresholds and business tradeoff. This tested floor correction is deployed with owner approval. Existing Version 19 voice evidence uses the prior rule; a fresh diagnostic voice journey remains pending.
+An agreement reserves the load; it does not book it. The rep opens the reservation in the App and sees the carrier, the shipment, the opening and agreed rates, every price decision and a link to the call recording. Confirm rechecks that the shipment and ceiling have not changed, then sends the booking to the TMS once. The App shows the TMS reply as it is: PENDING is acknowledged, `BOOKED` is confirmed, and an unclear result is flagged for the rep and never resent.
 
-A caller may still seek the best available deal. The policy limits the cost of that behavior; it does not claim negotiations are impossible to probe or that these thresholds maximize commercial conversion.
+## What operations sees
 
-## Rep decisions and business visibility
-
-The rep opens a reservation with its call, event timeline and shipment. Submission checks the rep's identity, record version, completed agreement, trusted verification route, current availability and unchanged shipment facts. Only the rep can authorize a send. Historical imports remain view-only.
-
-Overview follows authority, code delivery, verification, matching and reservation. Every stage opens supporting records. Active calls and ended-call exceptions are distinguished. Bookings separates acknowledgement, final confirmation and uncertain sends. Price movement is agreement minus opening; it is not profit or a claim of savings.
-
-The TMS has no established cancellation operation or idempotency key. Confirm records its intent before one send. Ambiguous transport becomes UNKNOWN and is not blindly resent. PENDING remains acknowledged. Only an authoritative BOOKED response becomes confirmed. Luke accepted that separation.
-
-## Shipment validation tradeoff
-
-[`service/core/approved_freight.py`](../service/core/approved_freight.py) uses an approved list of cities, commodity names and operating-note phrases before text can reach the caller. It blocks untrusted instructions, incomplete clauses and contradictions. In the dated feed check, **8 of 50 historical open loads required rep review** and 42 were usable.
-
-This favors controlled disclosure over broad freight coverage. A real brokerage would need an owned process for extending approved shipment terms. The implementation does not silently discard those eight loads as absent inventory, and this release does not replace the approved list with a looser shape check.
-
-## System responsibilities
-
-| Component | Responsibility |
+| View | Answers |
 | --- | --- |
-| HappyRobot workflow | Fixed AI disclosure, conversation, tools and end-of-call report |
-| Python service on Fly.io | Verification, email, pricing, TCP TMS integration and rep actions |
-| HappyRobot Twin | Versioned call, booking and carrier/load negotiation records |
-| HappyRobot Apps | Authenticated operating desk, metrics and review actions |
+| Reservations | Which agreements are waiting for a rep, with their calls |
+| Overview | How many verified calls end in a reservation (the North Star), and where the others stop |
+| Bookings | What the TMS has acknowledged, confirmed or left unclear |
+| Calls | Every call with its timeline, outcome, notes and recording |
+| Demand | Lanes and equipment carriers asked for that we could not fill |
 
-Call and booking writes have their own durable histories. Concessions and changed shared prices are persisted before the call record; if the second write fails, a concession can remain spent without having been heard. This conservative boundary prevents retries from refunding concessions. It is not a cross-table transaction. An unchanged opening acceptance with no prior memory or rounds skips a redundant memory write after a fresh read; [capacity evidence](reciprocal-capacity.md) explains that boundary.
+[KPI definitions and current results](results.md).
 
-## Evidence and limits
+## How it is built
 
-Local validation passed **604 service tests**, **98.1% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
+| Component | Technology | Responsibility |
+| --- | --- | --- |
+| Voice workflow | HappyRobot web call and inbound voice agent | Conversation, AI disclosure, six tools that call the service, end-of-call report |
+| Carrier Sales service | Python 3.12, FastAPI, Docker on Fly.io | Verification, email, pricing, negotiation, TMS connection over TCP, reservations, rep actions |
+| Data | HappyRobot Twin | Calls, bookings and negotiations, each change saved with its audit event |
+| Operations App | HappyRobot Apps (Next.js) | Signed-in desk for operations and reps |
 
-Historical Version 15 evidence includes three overlapping actual audio journeys and 71/74 native text checks. Those results belong to that exact version. Version 19 is live with the fixed AI disclosure. Its two raw text sweeps scored 70/74 and 73/74, and ten focused checks passed. A real amount-clarification early close remains documented alongside judge interpretation issues. Its complete diagnostic voice journey and actual deployment are tracked in [readiness](readiness.md).
+The legacy TMS is unreliable by design. The service retries reads within the voice deadline, reports an outage honestly instead of guessing, refuses malformed replies and never resends a booking whose outcome is unclear. [Architecture](../ARCHITECTURE.md).
 
-The code goes to a demo inbox, so it proves inbox access, not carrier identity; a pilot would enroll real carrier contacts first. Booking sends are off in the hosted App. The Confirm path is shown with `make review` and the earlier LD01080 sandbox receipt. Measured experiments do not establish missed-call reduction, profit, production peak capacity or human accent/noise coverage. Trusted contact enrollment, operational ownership and representative workload testing remain responsibilities before a customer rollout.
+## Security
 
-## History
+- Every service endpoint requires a key, including the health check; there are no public API docs.
+- The voice agent never receives the ceiling, the expected code, contact details or raw TMS data.
+- Only reps assigned by their HappyRobot identity can confirm or decline; other signed-in users can view.
+- The code goes only to a configured address, never to one the caller provides.
+- Secrets live in Fly and HappyRobot secret stores, never in the code repository.
 
-Version 8 and App Build 24 are retained as rollback references. The earlier source is available as `oldmain` and the local `baseline-v8` tag. All original evidence remains available.
+## Deployment
+
+The service is one Docker image. `make deploy` deploys it to Fly.io after one-time setup of the app and its secrets, then checks that it is healthy and can reach the TMS. Any container host would work. `make review` runs the whole system on a laptop with stand-ins for the TMS, email and sign-in, so IT can try Confirm without touching real systems.
+
+## Testing
+
+Automated tests cover the business rules, failure handling and permissions; the platform's evaluations test the prompt against scripted, edge-case and adversarial conversations; real web calls test the full path with live FMCSA, email and TMS reads. Results, including failures, are in [results](results.md).
+
+## What this demo does not yet do
+
+- The code goes to a demo inbox, so it proves inbox access, not carrier identity. A pilot would use enrolled carrier contacts.
+- Booking sends are off in the hosted App. Confirm is demonstrated locally and with an earlier sandbox receipt.
+- The sandbox TMS returns PENDING; how a booking becomes final is not defined in the sandbox.
+- Loads with unrecognized note text go to a rep instead of being quoted.
+- Load testing used controlled bursts and generated callers, not real peak traffic, accents or background noise.
+
+## Next steps
+
+1. Agree the pricing thresholds and the approved shipment vocabulary with the carrier sales team.
+2. Enroll trusted carrier contacts and name the reps who can confirm.
+3. Run a supervised shift and compare time to first offer, verified calls reaching a reservation and unresolved requests against a normal shift.
+4. Then decide on real telephony, notifications and wider rollout.

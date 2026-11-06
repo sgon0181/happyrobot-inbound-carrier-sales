@@ -1,14 +1,14 @@
 # Operations app
 
-Current workspace: [Carrier Sales Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/), backed by the submission service and populated Twin staging. App hosting and voice deployment are separate settings. App Build 24 remains a rollback reference. [Readiness](../docs/readiness.md) records the active workflow and current checks; executable App files are unchanged.
+Live App: [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/) (HappyRobot Apps Build 10). The [release guide](../docs/reference/release.md) records its deployment and rollback.
 
-For deployment, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the isolated App environment. The service URL has no implicit production fallback. See the [pilot runbook](../docs/proposal.md).
+For deployment, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the App environment. The service URL has no implicit fallback.
 
-The dashboard for the operations manager and senior reps, built on the HappyRobot Apps Next.js template and mirrored here for review. It is described in [architecture section 11](../ARCHITECTURE.md#11-operations-app).
+The dashboard for the operations manager and senior reps, built on the HappyRobot Apps Next.js template and mirrored here for review. It is described in [architecture section 11](../docs/reference/architecture.md#11-operations-app).
 
 ## How it works
 
-The app verifies the signed-in user with the platform and normalizes the returned native `id` into its internal subject. A legacy `sub` is accepted only when valid and consistent with `id`; missing, malformed or conflicting identity is refused. Decoded token claims never authorize a rep. The app then calls the service from its own server with the ops key ([D-30](../docs/decisions.md)). The key never reaches the browser, and the app never reads Twin or talks to the TMS. The service holds every rule; the app only shows its snapshot and forwards a rep's actions.
+The app verifies the signed-in user with the platform and normalizes the returned native `id` into its internal subject. A legacy `sub` is accepted only when valid and consistent with `id`; missing, malformed or conflicting identity is refused. Decoded token claims never authorize a rep. The app then calls the service from its own server with the ops key ([D-30](../docs/reference/decision-log.md)). The key never reaches the browser, and the app never reads Twin or talks to the TMS. The service holds every rule; the app only shows its snapshot and forwards a rep's actions.
 
 The default route is Reservations. Its current queue shows live service rows across deployment tags, most recent originating call first. The default list includes every saved agreement, even when a later call reserved the same load. Awaiting rep is a filter on that shared workspace. Imported historical rows are view-only. Open a review by its load and run ID. A stale owner link provides historical call evidence without controls for the current owner's reservation. The native recording link opens HappyRobot with the signed-in user's permissions. New runs require immutable trusted workflow provenance; fixtures without it have no guessed media link.
 
@@ -17,9 +17,9 @@ The default route is Reservations. Its current queue shows live service rows acr
 - **Calls** searches MC, carrier, load, lane, outcome and Central date range. It includes the originating run, pricing rounds, actual agent counteroffers and closing notes.
 - **Demand** separates empty searches, verified calls without searches and other unsuccessful searches. Lanes use the final explicit empty search, once per call. An ambiguous legacy lane remains unrecorded.
 
-The business formulas and reconciliation evidence are in [KPI definitions](../docs/kpis.md). The unified operational report and native behavioral evaluations serve different purposes. The App gives snapshot reads twenty seconds and retains the current screen during a pending refresh. Refreshes never overlap; exhausting the budget shows unavailable, not partial data.
+The business formulas and reconciliation evidence are in [KPI definitions](../docs/reference/kpis.md). The unified operational report and native behavioral evaluations serve different purposes. The App gives snapshot reads twenty seconds and retains the current screen during a pending refresh. Refreshes never overlap; exhausting the budget shows unavailable, not partial data.
 
-Each action posts the booking version the rep saw ([D-31](../docs/decisions.md)) to `/api/bookings/{load_id}/{action}`. That route requires an exact assigned `OPS_REP_SUBJECTS` identity and an allowed request Origin. It takes the rep's identity from the verified session, never from the request, and forwards `{version, rep}` to the service. The rep sees the service's answer, such as `stale` when the row has moved on or `live_booking_off` when sends are disabled. If a send's receipt could not be saved, its safe identifiers, status and digest stay in a panel and browser storage with Copy and Download until the rep dismisses it. Raw wire bytes do not reach the browser. The panel and the refresh controls stay up even when the snapshot fails.
+Each action posts the booking version the rep saw ([D-31](../docs/reference/decision-log.md)) to `/api/bookings/{load_id}/{action}`. That route requires an exact assigned `OPS_REP_SUBJECTS` identity and an allowed request Origin. It takes the rep's identity from the verified session, never from the request, and forwards `{version, rep}` to the service. The rep sees the service's answer, such as `stale` when the row has moved on or `live_booking_off` when sends are disabled. If a send's receipt could not be saved, its safe identifiers, status and digest stay in a panel and browser storage with Copy and Download until the rep dismisses it. Raw wire bytes do not reach the browser. The panel and the refresh controls stay up even when the snapshot fails.
 
 ## Files
 
@@ -41,8 +41,8 @@ Each action posts the booking version the rep saw ([D-31](../docs/decisions.md))
 | `ALLOWED_ORIGINS` | App setting, server only | Only explicit trusted HTTPS origins for a verified embed, when required. |
 | `HR_PLATFORM_URL`, `NEXT_PUBLIC_ORG_ID`, `NEXT_PUBLIC_APP_SLUG`, `NEXT_PUBLIC_APP_NAME` | Supplied by the platform | Sign-in and app identity, as in the template |
 
-Run the complete disposable App locally with `make review` from the repository root. [Readiness setup](../docs/readiness.md) describes credentials, cloud deployment and isolation.
+Run the complete disposable App locally with `make review` from the repository root. [Release guide](../docs/reference/release.md) describes credentials, cloud deployment and isolation.
 
 ## Checks
 
-Use Node 22 and `npm ci --include=dev`, then `npm test`, `npm run lint`, `npm run build` and `npm run typecheck`. The accepted candidate passed 65 tests, production build and type checks; lint had zero errors and three existing warnings. Native hosted acceptance verified all 91 source files and the real platform identity contract. The local full-App browser test confirmed one simulated PENDING receipt, a safe stale replay and viewer denial. Hosted checks did not send a real booking. [Current QA and historical release evidence](../docs/qa-results.md) keep those scopes separate.
+Use Node 22 and `npm ci --include=dev`, then `npm test`, `npm run lint`, `npm run build` and `npm run typecheck`. Current results are in [results](../docs/results.md); hosted acceptance records are in the [release guide](../docs/reference/release.md).

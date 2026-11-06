@@ -40,7 +40,7 @@ HappyRobot owns managed speech/model execution. The repo does not implement an S
 
 State and its event share one version-checked row write. Reservation still spans call claim, booking row and call settlement, with recovery rather than a cross-table transaction. The end callback is conditional on execution and persistence and cannot recreate missing closing notes.
 
-Repo rollout notes record Version 4 live since 2026-11-04 and an older App build. Repo QA reports the fixed prompt at 44/44 mocked checkpoints, after the earlier 58/66; human voice acceptance remains open. See [QA results](../../qa-results.md). A successful-path diagram is not a claim that every conversation follows it.
+Repo rollout notes record Version 4 live since 2026-11-04 and an older App build. Repo QA reports the fixed prompt at 44/44 mocked checkpoints, after the earlier 58/66; human voice acceptance remains open. See [QA results](../../history/qa-results.md). A successful-path diagram is not a claim that every conversation follows it.
 
 ## Rebuild
 

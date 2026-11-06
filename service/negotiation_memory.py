@@ -88,9 +88,27 @@ async def decide(
         data["rounds"] = step.rounds_used
         if step.action in (Action.COUNTER, Action.FINAL_OFFER, Action.ACCEPT):
             data["offer"] = step.rate
+        if _opening_acceptance(previous, call, terms, step):
+            return None, step
         return data, step
 
     return await twin.change("negotiations", key(mc, load.load_id), edit)
+
+
+def _opening_acceptance(previous: Data | None, call: Data, terms: Terms, step: Step) -> bool:
+    """A fresh absent-row read plus opening acceptance spends no shared concession.
+
+    This decision linearizes at that fresh read. A later concurrent decision remains
+    intact. Existing rows, lower accepts, repriced quotes and nonzero rounds still
+    persist through CAS. Booking ownership remains a separate CAS.
+    """
+    return (
+        previous is None
+        and call["rounds"] == 0
+        and call["offers"][terms.load_id] == terms.opening
+        and step.action is Action.ACCEPT
+        and step.rate == terms.opening
+    )
 
 
 def _answer(data: Data, terms: Terms, ask: str, after_final: bool) -> Step:

@@ -1,0 +1,462 @@
+{
+  "scope": "Offline controlled workloads; real service code, loopback TCP TMS, fake authority/mail/Twin with configured 0.25-second SQL pacing and unchanged 12-second voice deadline. Not actual voice or production peak capacity.",
+  "before_commit": "0cff154f96b277361b488d551e37fd8e53ff1ae6",
+  "fix": "Skip redundant shared-memory write only after fresh absent-row read and exact opening acceptance at zero rounds. Existing rows, concessions, lower accepts, repricing and round history retain CAS.",
+  "before": {
+    "simultaneous": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "0",
+        "--think",
+        "0"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 34.77,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 0.0,
+        "think_seconds": 0.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:temporarily_unavailable": 7,
+          "/negotiate:agreed": 5,
+          "/calls/close:closed": 5,
+          "/calls/ended:ended": 5
+        },
+        "sql_statements": 138,
+        "sql_kinds": {
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 87,
+          "SELECT id, version,": 15,
+          "INSERT INTO negotiations": 12,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 34.39,
+        "tool_p95_seconds": {
+          "/carriers/verify": 5.78,
+          "/otp/send": 6.53,
+          "/otp/verify": 3.26,
+          "/loads/search": 4.02,
+          "/negotiate": 12.0,
+          "/calls/close": 1.51,
+          "/calls/ended": 1.51
+        },
+        "booking_rows": 12,
+        "durable_holds": 12,
+        "historical_calls": 0,
+        "historical_bookings": 0,
+        "snapshot_reads": [],
+        "outstanding_claims": 7,
+        "finalized_agreements": 5,
+        "tms_booking_writes": 0
+      }
+    },
+    "staggered": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "1.5",
+        "--think",
+        "3"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 62.72,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 1.5,
+        "think_seconds": 3.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:agreed": 11,
+          "/calls/close:closed": 11,
+          "/calls/ended:ended": 11,
+          "/negotiate:temporarily_unavailable": 1
+        },
+        "sql_statements": 222,
+        "sql_kinds": {
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 105,
+          "SELECT id, version,": 81,
+          "INSERT INTO negotiations": 12,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 49.19,
+        "tool_p95_seconds": {
+          "/carriers/verify": 2.81,
+          "/otp/send": 5.03,
+          "/otp/verify": 2.52,
+          "/loads/search": 7.04,
+          "/negotiate": 12.0,
+          "/calls/close": 2.27,
+          "/calls/ended": 3.02
+        },
+        "booking_rows": 12,
+        "durable_holds": 12,
+        "historical_calls": 0,
+        "historical_bookings": 0,
+        "snapshot_reads": [],
+        "outstanding_claims": 1,
+        "finalized_agreements": 11,
+        "tms_booking_writes": 0
+      }
+    },
+    "history": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "1.5",
+        "--think",
+        "3",
+        "--historical-calls",
+        "500",
+        "--historical-bookings",
+        "200",
+        "--dashboard"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 65.37,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 1.5,
+        "think_seconds": 3.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:agreed": 8,
+          "/calls/close:closed": 8,
+          "/negotiate:temporarily_unavailable": 4,
+          "/calls/ended:ended": 8
+        },
+        "sql_statements": 236,
+        "sql_kinds": {
+          "SELECT id, version,": 104,
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 96,
+          "INSERT INTO negotiations": 12,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 49.34,
+        "tool_p95_seconds": {
+          "/carriers/verify": 3.59,
+          "/otp/send": 5.56,
+          "/otp/verify": 2.54,
+          "/loads/search": 6.82,
+          "/negotiate": 12.0,
+          "/calls/close": 2.29,
+          "/calls/ended": 2.28
+        },
+        "booking_rows": 212,
+        "durable_holds": 12,
+        "historical_calls": 500,
+        "historical_bookings": 200,
+        "snapshot_reads": [
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 500,
+            "seconds": 3.02
+          },
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 512,
+            "seconds": 14.67
+          },
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 512,
+            "seconds": 8.65
+          }
+        ],
+        "outstanding_claims": 4,
+        "finalized_agreements": 8,
+        "tms_booking_writes": 0
+      }
+    }
+  },
+  "after": {
+    "simultaneous": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "0",
+        "--think",
+        "0"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 37.1,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 0.0,
+        "think_seconds": 0.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:agreed": 12,
+          "/calls/close:closed": 12,
+          "/calls/ended:ended": 12
+        },
+        "sql_statements": 147,
+        "sql_kinds": {
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 108,
+          "SELECT id, version,": 15,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 36.75,
+        "tool_p95_seconds": {
+          "/carriers/verify": 5.79,
+          "/otp/send": 6.54,
+          "/otp/verify": 3.27,
+          "/loads/search": 4.03,
+          "/negotiate": 10.57,
+          "/calls/close": 3.27,
+          "/calls/ended": 3.27
+        },
+        "booking_rows": 12,
+        "durable_holds": 12,
+        "historical_calls": 0,
+        "historical_bookings": 0,
+        "snapshot_reads": [],
+        "outstanding_claims": 0,
+        "finalized_agreements": 12,
+        "tms_booking_writes": 0
+      }
+    },
+    "staggered": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "1.5",
+        "--think",
+        "3"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 60.1,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 1.5,
+        "think_seconds": 3.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:agreed": 12,
+          "/calls/close:closed": 12,
+          "/calls/ended:ended": 12
+        },
+        "sql_statements": 210,
+        "sql_kinds": {
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 108,
+          "SELECT id, version,": 78,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 45.07,
+        "tool_p95_seconds": {
+          "/carriers/verify": 2.86,
+          "/otp/send": 5.05,
+          "/otp/verify": 2.79,
+          "/loads/search": 6.56,
+          "/negotiate": 9.33,
+          "/calls/close": 2.28,
+          "/calls/ended": 2.78
+        },
+        "booking_rows": 12,
+        "durable_holds": 12,
+        "historical_calls": 0,
+        "historical_bookings": 0,
+        "snapshot_reads": [],
+        "outstanding_claims": 0,
+        "finalized_agreements": 12,
+        "tms_booking_writes": 0
+      }
+    },
+    "history": {
+      "command": [
+        "python",
+        "-m",
+        "service.tests.full_profile",
+        "--arrivals",
+        "12",
+        "--spacing",
+        "1.5",
+        "--think",
+        "3",
+        "--historical-calls",
+        "500",
+        "--historical-bookings",
+        "200",
+        "--dashboard"
+      ],
+      "exit_code": 0,
+      "elapsed_seconds": 64.11,
+      "result": {
+        "arrivals": 12,
+        "spacing_seconds": 1.5,
+        "think_seconds": 3.0,
+        "outcomes": {
+          "/carriers/verify:eligible": 12,
+          "/otp/send:sent": 12,
+          "/otp/verify:verified": 12,
+          "/loads/search:found": 12,
+          "/negotiate:agreed": 12,
+          "/calls/close:closed": 12,
+          "/calls/ended:ended": 12
+        },
+        "sql_statements": 231,
+        "sql_kinds": {
+          "SELECT id, version,": 99,
+          "INSERT INTO calls": 12,
+          "UPDATE calls SET": 108,
+          "INSERT INTO bookings": 12
+        },
+        "journey_p95_seconds": 48.09,
+        "tool_p95_seconds": {
+          "/carriers/verify": 3.61,
+          "/otp/send": 5.56,
+          "/otp/verify": 2.53,
+          "/loads/search": 8.06,
+          "/negotiate": 11.34,
+          "/calls/close": 2.04,
+          "/calls/ended": 2.53
+        },
+        "booking_rows": 212,
+        "durable_holds": 12,
+        "historical_calls": 500,
+        "historical_bookings": 200,
+        "snapshot_reads": [
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 500,
+            "seconds": 3.03
+          },
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 512,
+            "seconds": 13.66
+          },
+          {
+            "http": 200,
+            "status": "ok",
+            "calls": 512,
+            "seconds": 8.91
+          }
+        ],
+        "outstanding_claims": 0,
+        "finalized_agreements": 12,
+        "tms_booking_writes": 0
+      }
+    }
+  },
+  "initial_measured_manifest": {
+    "service/config.py": "c366a3cb93642e4cec45ad7fee81145c0c1caced91d46f83ef5492d5acae07d9",
+    "service/rep_actions.py": "b4b8eeeded1a8cd3a767b3d4e79d2cea583ce1de0d16db4b7798a803a2fd7769",
+    "service/selling.py": "680294a888818bb6cb27c1ab7e02042f17f8a5cdf2b93290f9b1b8f79a82e719",
+    "service/sale_decisions.py": "03b3c338cd2ec211b5837f6699cf9d6f942a0f93402f6839aea6414e6b5bec64",
+    "service/negotiation_memory.py": "45e77884683b046ab83189aaccdb25c9c4533cf9f3c9fbd8de2757b0b37fbfed",
+    "service/bookings.py": "18188abde1174898431deb334b96eb83e7f9dafbbf3067b6f1c1f02a27e507df",
+    "service/call_state.py": "b19925f41b57780a434f11df7056c6c737e601579bc32305afa15b18c544336b",
+    "service/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/dashboard.py": "2e0fa93db75768e246100bf85d845ff10f9cc9eaad910d20d2ad000a0c94a0db",
+    "service/api.py": "4233d75145105ae6d354719b35d87968cd411cbbbe1b86a597e14b3ca1682431",
+    "service/main.py": "0ec6f672596dd755383c5c799f8c5f2692f8bef1bdf8ae68710bcb1b83759826",
+    "service/calls.py": "d861dff7dea826a5c726cb9e8729cc4277aa4a66f198d6064cdc6b54fbed714e",
+    "service/core/models.py": "4eccb1390f4b46934ebcff546d1fabfb27b80222840a0e1c36df7f0e3b307e87",
+    "service/core/loads.py": "36507d291a9f88b515ea807733a3c00261470cc27b5cc8216b615aa405f25714",
+    "service/core/codes.py": "2679143dbdc78b314402f79633dc0536acdbc69a8abe0d00a9f11079306ce573",
+    "service/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/core/money.py": "7934e4e21955ed28d815670e439766f7b135a1ba150df2360ca6c400fa560329",
+    "service/core/approved_freight.py": "8cb614f45ac190375795895729b137e13d889ca717037a959d328e0e6373e675",
+    "service/core/pricing.py": "959745d250c385d247dc032180ec11634f0c855d2acfb871f3ecf22ca8f78da0",
+    "service/core/carrier_policy.py": "deb38db733ff06c1d3aebe80c2b70375c861e47fc66774894e56a9e6ff9b71ec",
+    "service/core/negotiation.py": "20f199a6973785a94ba5fa65fa97817c982c9e877d4afd959d3d67d4a99806c1",
+    "service/adapters/twin.py": "115f04f40fa5307f6345c8d55f569b7a40345ad0bf066f77a59370177f73cf48",
+    "service/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/twin_reads.py": "4c6dce07c0d9642736d4c3615fa614a9917618e740c43da9fe0ea9a653d5625a",
+    "service/adapters/fmcsa.py": "31847c2fe7711dfaf8d9c48635d212cb87170fe76c3eb53de1645dc7794fa5c8",
+    "service/adapters/email.py": "c7bc5e4548da5bb59f25a696df507560beb3c6a7d31c3a3a0a23b5b8de74c208",
+    "service/adapters/tms/protocol.py": "41addda305d4ba059d8e45b5c8a7d1fac947fc7ddb6ef163ab2c0792066cea48",
+    "service/adapters/tms/client.py": "157022431f1f8b0cee585b7397a941a130bb340f2bb38ea7adbbe75b6dc764c4",
+    "service/adapters/tms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/tms/mapping.py": "71cccdda49ffc6d308211ca8a4983dc2ce09fa2d935aba1faa2a0460f5836de7"
+  },
+  "final_runtime_manifest": {
+    "service/config.py": "c366a3cb93642e4cec45ad7fee81145c0c1caced91d46f83ef5492d5acae07d9",
+    "service/rep_actions.py": "b4b8eeeded1a8cd3a767b3d4e79d2cea583ce1de0d16db4b7798a803a2fd7769",
+    "service/selling.py": "680294a888818bb6cb27c1ab7e02042f17f8a5cdf2b93290f9b1b8f79a82e719",
+    "service/sale_decisions.py": "03b3c338cd2ec211b5837f6699cf9d6f942a0f93402f6839aea6414e6b5bec64",
+    "service/negotiation_memory.py": "2fcfc6e2f2076daa4999b36a5a7682f705a240b80ff558362e9ccf35e176a925",
+    "service/bookings.py": "18188abde1174898431deb334b96eb83e7f9dafbbf3067b6f1c1f02a27e507df",
+    "service/call_state.py": "b19925f41b57780a434f11df7056c6c737e601579bc32305afa15b18c544336b",
+    "service/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/dashboard.py": "2e0fa93db75768e246100bf85d845ff10f9cc9eaad910d20d2ad000a0c94a0db",
+    "service/api.py": "4233d75145105ae6d354719b35d87968cd411cbbbe1b86a597e14b3ca1682431",
+    "service/main.py": "0ec6f672596dd755383c5c799f8c5f2692f8bef1bdf8ae68710bcb1b83759826",
+    "service/calls.py": "d861dff7dea826a5c726cb9e8729cc4277aa4a66f198d6064cdc6b54fbed714e",
+    "service/core/models.py": "4eccb1390f4b46934ebcff546d1fabfb27b80222840a0e1c36df7f0e3b307e87",
+    "service/core/loads.py": "36507d291a9f88b515ea807733a3c00261470cc27b5cc8216b615aa405f25714",
+    "service/core/codes.py": "2679143dbdc78b314402f79633dc0536acdbc69a8abe0d00a9f11079306ce573",
+    "service/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/core/money.py": "7934e4e21955ed28d815670e439766f7b135a1ba150df2360ca6c400fa560329",
+    "service/core/approved_freight.py": "8cb614f45ac190375795895729b137e13d889ca717037a959d328e0e6373e675",
+    "service/core/pricing.py": "959745d250c385d247dc032180ec11634f0c855d2acfb871f3ecf22ca8f78da0",
+    "service/core/carrier_policy.py": "deb38db733ff06c1d3aebe80c2b70375c861e47fc66774894e56a9e6ff9b71ec",
+    "service/core/negotiation.py": "20f199a6973785a94ba5fa65fa97817c982c9e877d4afd959d3d67d4a99806c1",
+    "service/adapters/twin.py": "115f04f40fa5307f6345c8d55f569b7a40345ad0bf066f77a59370177f73cf48",
+    "service/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/twin_reads.py": "4c6dce07c0d9642736d4c3615fa614a9917618e740c43da9fe0ea9a653d5625a",
+    "service/adapters/fmcsa.py": "31847c2fe7711dfaf8d9c48635d212cb87170fe76c3eb53de1645dc7794fa5c8",
+    "service/adapters/email.py": "c7bc5e4548da5bb59f25a696df507560beb3c6a7d31c3a3a0a23b5b8de74c208",
+    "service/adapters/tms/protocol.py": "41addda305d4ba059d8e45b5c8a7d1fac947fc7ddb6ef163ab2c0792066cea48",
+    "service/adapters/tms/client.py": "157022431f1f8b0cee585b7397a941a130bb340f2bb38ea7adbbe75b6dc764c4",
+    "service/adapters/tms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "service/adapters/tms/mapping.py": "71cccdda49ffc6d308211ca8a4983dc2ce09fa2d935aba1faa2a0460f5836de7"
+  },
+  "source_note": "The only runtime-file change during the after-run series was a docstring clarification of the fresh-read decision point in negotiation_memory.py. Replacing that comment with its preceding wording reproduces the initial measured file hash exactly. Executable statements were unchanged; final full tests cover the final file.",
+  "validation": {
+    "service_tests": 591,
+    "business_branches": {
+      "covered": 353,
+      "total": 360,
+      "percent": 98.1
+    },
+    "production_python_lines": 3868,
+    "focused_memory_opening_tests": 28
+  }
+}

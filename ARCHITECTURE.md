@@ -1,13 +1,13 @@
 # Inbound Carrier Sales: Architecture
 
-This describes the current `ultimateProposal` source. The [readiness guide](docs/readiness.md) pins the deployed candidate, evidence and reproduction commands. The original `main` release remains a separate baseline.
+This describes the submission source on `main`. The [readiness guide](docs/readiness.md) pins deployment, evidence and reproduction commands. The earlier release is retained at `oldmain`.
 
 | | |
 |---|---|
 | **Version** | 4.0, proposal architecture reconciled 2026-11-05 |
-| **Candidate** | Native App Build 10, isolated proposal service and Twin staging. Voice Version 15 is published only to workflow Development. Booking sends remain disabled. The separate candidate App uses its own Apps Production hosting slot. |
-| **Accepted evidence** | 563 service tests, 65 App tests, 71/74 native text checkpoints and three overlapping actual voice scenarios with automated diagnostic callers. Failed grades and evidence limits remain visible in [readiness](docs/readiness.md). |
-| **Preserved baseline** | `main` at 15ce2b6, production voice Version 8, service release 17 and original App Build 24. The 49-call sample is dated historical evidence, not the current reporting boundary. |
+| **Operating workspace** | Native App Build 10, submission service and populated Twin staging. Booking sends remain disabled. Readiness identifies the tested voice version and deployment. |
+| **Evidence** | 591 service tests and 65 App tests. Voice grades and audio results belong to their exact version; current results and retained failures are in [readiness](docs/readiness.md). |
+| **Preserved baseline** | `oldmain` at 15ce2b6, production voice Version 8, service release 17 and original App Build 24. The 49-call sample is dated historical evidence, not the current reporting boundary. |
 | **Decisions** | Material choices, reasons and tradeoffs are in [docs/decisions.md](docs/decisions.md), including D-36 through D-42 for the proposal. |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
 
@@ -17,7 +17,7 @@ The four-part architecture, two Twin tables, deterministic pricing policy and re
 
 ## 1. The system on one page
 
-A carrier opens a HappyRobot web call. A voice agent takes their MC number, the service checks it against FMCSA, and the carrier reads back a code sent by email. The agent then finds matching loads in the legacy TMS, negotiates within a private ceiling and reserves the load. A senior rep, whose transfer is mocked on the call, reviews the reservation in the operations app and clicks Confirm. That click sends the booking to the TMS.
+A carrier opens a HappyRobot web call. A voice agent takes their MC number, the service checks it against FMCSA, and the carrier reads back a code sent by email. The agent then finds matching loads in the legacy TMS, negotiates within a private ceiling and reserves the load. A senior rep, whose transfer is mocked on the call, reviews the reservation in the operations app and clicks Confirm. With independently enrolled carrier contacts and sends enabled, that click submits the booking to the TMS. Hosted submission sends remain off.
 
 Two rules shape everything else:
 
@@ -52,7 +52,7 @@ flowchart TB
 
     tms[["<b>Legacy TMS</b><br/>TCP line protocol"]]
     fmcsa[["<b>FMCSA</b><br/>QCMobile REST"]]
-    twin[("<b>Twin</b><br/>calls and bookings")]
+    twin[("<b>Twin</b><br/>calls, bookings and negotiations")]
     email[["<b>Email provider</b><br/>code to a configured contact"]]
 
     carrier <-->|audio| voice
@@ -188,7 +188,7 @@ Tests must prove these regardless of what the model does.
 | Never exceed or disclose `max_rate` (p.4) | §9, INV-1, INV-2 | Property tests, adversarial probing, marked-value scan |
 | At most 3 counters, then close without transfer (p.5) | §9, INV-4 | Unit and conversation tests |
 | Tentative reservation, rep confirms, mocked handoff (pp.2-3) | [§10](#10-reservation-and-confirm) | End-to-end demo |
-| Log MC, load, rate, outcome, notes (p.3) | [§7](#7-data-two-tables), events on each row | Row checks after each test call |
+| Log MC, load, rate, outcome, notes (p.3) | [§7](#7-data-call-booking-and-negotiation-records), events on each row | Row checks after each test call |
 | All call activity in Twin (p.4) | §7 | A call that drops midway still has a record |
 | Operations UI in Apps (p.4) | [§11](#11-operations-app) | Demo |
 | Graceful TMS timeouts and malformed responses (p.3) | [§6](#6-the-service), [§10](#10-reservation-and-confirm) | Fault-injection tests over real TCP |
@@ -364,17 +364,17 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 - **Working cap:** the ceiling minus a load-specific gap of 2 to 6%. It is the highest number we say and the highest ask we accept.
 - **Opening offer:** the posted rate minus 5% when that leaves room below the cap, otherwise a load-specific spread of 8 to 15% below the cap.
-- **Legacy round targets:** the pricing-v1 schema retains its historical 35%, 65% and 100% values for reproducibility. The local reciprocal policy does not use them to authorize concessions.
+- **Legacy round targets:** the pricing-v1 schema retains its historical 35%, 65% and 100% values for reproducibility. The reciprocal policy does not use them to authorize concessions.
 
 Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back does not redraw the price. The secret prevents exact recomputation, but the public policy band and observed offers still constrain possible ceilings. These percentages are demo choices the brokerage would own.
 
-**Local reciprocal policy, not yet deployed.** A first ask within 10% of the standing offer can earn at most 2% of opening, rounded down to $25. Later asks must improve on the lowest prior ask; our increase is bounded by half that improvement and the same 2% limit. Asks outside the reachable band, increases and token changes earn no increase. Acceptance at or below the standing offer uses the caller's own amount. A new above-offer ask consumes a round even when we hold. Exact repeats do not. Three is a budget, not a requirement to reach the cap.
+**Reciprocal policy.** A first ask within 10% of the standing offer can earn at most 2% of opening, rounded down to $25. Later asks must improve on the lowest prior ask; our increase is bounded by half that improvement and the same 2% limit. Asks outside the reachable band, increases and token changes earn no increase. Acceptance at or below the standing offer uses the caller's own amount. A new above-offer ask consumes a round even when we hold. Exact repeats do not. Three is a budget, not a requirement to reach the cap.
 
 **Cross-call memory.** A new `negotiations` Twin table uses the same id/version/data shape. Each row is keyed by normalized verified MC and load ID and contains the shipment fingerprint, standing quote, lowest ask, rounds and at most three concession-decision events. New calls must independently verify and search. They resume the quote and shared budget; changing voice version, restarting the service or waiting does not reset it. Material shipment changes allow a fresh shared budget, but never reset the call's global three-round limit. Posted-rate or ceiling changes alone do not reset the budget. Lower price limits durably retract the quote; later increases cannot resurrect it. No automatic time expiry is implemented, intentionally preventing wait-and-retry resets. Human repricing is a future explicit operation, not a caller capability.
 
-**Write boundaries.** Shared-memory CAS spends the concession first, then call-row CAS rechecks verification, shipment consent and the global call budget before recording or reserving. A failed second write may consume a concession without the caller hearing it; retry or redial does not refund it. There is no multi-row transaction claim. Memory failure fails closed. Search and negotiation do fresh reads, not a process-local cache. Concurrent searches can return a conservative older quote; negotiation always uses shared memory and fresh price limits. Acceptance retains the existing reservation claim and recovery flow.
+**Write boundaries.** A fresh exact opening acceptance with no existing memory or spent rounds needs no memory write; it linearizes at the fresh absent-row read. A concurrent later decision is never overwritten. Concessions, lower prices and existing rows retain shared-memory CAS. That CAS spends the concession first, then call-row CAS rechecks verification, shipment consent and the global call budget before recording or reserving. A failed second write may consume a concession without the caller hearing it; retry or redial does not refund it. There is no multi-row transaction claim. Memory failure fails closed. Search and negotiation do fresh reads, not a process-local cache. Concurrent searches can return a conservative older quote; negotiation always uses shared memory and fresh price limits. Acceptance retains the existing reservation claim and recovery flow.
 
-The unpublished implementation and scenario results are described in [the negotiation review](docs/negotiation-review.md). Deployment requires provisioning the third table, staging acceptance and owner approval. Existing historical calls remain immutable and are not retroactively treated as negotiations under the new policy.
+The implementation and scenario results are described in [the negotiation review](docs/negotiation-review.md). The third table is provisioned in Twin staging and the reviewed service is deployed; [readiness](docs/readiness.md) records exact release evidence. Existing historical calls remain immutable and are not retroactively treated as negotiations under the new policy.
 
 **What this protects, and what it costs.** A fixed percentage could be inverted to find the ceiling; the keyed gap removes that formula. Some leakage is unavoidable, because the cap creates an accept/reject boundary that probing can narrow, so confidentiality is a tested property, not a guarantee. A carrier whose ask stays above the cap can be turned away even below the private ceiling. The App counts evidenced final-offer exhaustion, not an independently proven causal loss to the ceiling.
 

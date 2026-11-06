@@ -149,7 +149,7 @@ These extend the November baseline; the four-part architecture, two Twin tables 
 
 - **Why:** passing text checkpoints did not catch premature search on partial speech, missing audible endings or amount-confirmation failures. Final-offer refusal also needs explicit tool intent to distinguish it from a retry.
 - **Choice:** Version 15 asks for missing details one at a time, waits for the lane, reads back corrected totals before mutation, binds final refusal explicitly, and speaks the truthful close before ending. Keep exact prompt/tool hashes, failed native grades and actual overlapping diagnostic audio as separate evidence layers.
-- **Tradeoff:** clarification costs turns, generated diagnostic callers do not prove human naturalness, and text grades cannot substitute for speech. Current evidence is 71/74 native checkpoints and three completed overlapping actual audio scenarios; a new owner human call remains required. [Versioned results](readiness.md#native-conversation-evidence).
+- **Tradeoff:** clarification costs turns, generated diagnostic callers do not prove human naturalness, and text grades cannot substitute for speech. Historical Version 15 evidence is 71/74 native checkpoints and three overlapping actual audio scenarios. Version 19 has two raw sweeps (70/74 and 73/74), ten focused passes and a complete diagnostic audio journey; a new owner human call remains required. [Versioned results](readiness.md#native-conversation-evidence).
 
 ### D-42: Reproduce locally without credentials; deploy only to an explicit target
 

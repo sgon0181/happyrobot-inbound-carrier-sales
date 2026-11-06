@@ -1,0 +1,64 @@
+{
+  "date": "2026-11-07",
+  "service_commit": "9d051ba",
+  "production_python_lines": 3868,
+  "git": {
+    "main_promoted_from": "ultimateProposal",
+    "oldmain": "15ce2b6",
+    "baseline_tag": "baseline-v8",
+    "pushed": false
+  },
+  "workflow": {
+    "version": 19,
+    "id": "01a1b2ea-26c8-7131-8252-b334dcaab976",
+    "slug": "l6zo75s4s4vk",
+    "environment": "production",
+    "readback_live": true,
+    "web_call_url": "https://platform.happyrobot.ai/deployments/6oaskq84xpfc",
+    "editor_url": "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk",
+    "rollback_version": 8,
+    "rollback_version_id": "01a1a4f6-79a3-7c40-8732-589b3adfdcfd",
+    "development": null
+  },
+  "app": {
+    "build": 10,
+    "url": "https://carrier-sales-proposal-sg.happyrobot.dev/",
+    "code_unchanged": true
+  },
+  "service": {
+    "url": "https://happyrobot-proposal-sg.fly.dev",
+    "TWIN_ENVIRONMENT": "staging",
+    "CALL_COHORT": "synthetic",
+    "LIVE_BOOKING": false
+  },
+  "verification": "Demo inbox access only, not carrier identity. A pilot enrolls real carrier contacts.",
+  "validation": {
+    "service_tests": 591,
+    "business_branch_coverage": 98.1,
+    "app_tests": 65,
+    "app_lint_build_types": "passed under Node22 Docker; initial environment failures retained",
+    "native_raw": [
+      {
+        "passed": 70,
+        "total": 74
+      },
+      {
+        "passed": 73,
+        "total": 74
+      }
+    ],
+    "focused": {
+      "passed": 10,
+      "total": 10
+    },
+    "remaining_known_issue": "R1 may close prematurely after contradictory repeated amount clarification, without agreeing a rate.",
+    "offline_capacity": "Three 12-call opening-acceptance workloads, all 12 agreements, zero unfinished claims, zero TMS sends, unchanged pacing/deadline.",
+    "local_confirm": "One TCP simulator send, FAKE0001/PENDING, stale replay refused"
+  },
+  "voice_evidence": "../../../happyrobot/qa-v19-voice.json",
+  "limits": [
+    "Generated diagnostic callers do not replace owner human acceptance or noisy/accents workload tests.",
+    "Hosted Confirm sends remain disabled; no artificial BOOKED status was created.",
+    "No Git push, portal upload or final owner video was performed."
+  ]
+}

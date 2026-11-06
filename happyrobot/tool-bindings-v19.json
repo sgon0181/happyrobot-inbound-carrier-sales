@@ -1,0 +1,165 @@
+{
+  "version": 19,
+  "version_id": "01a1b2ea-26c8-7131-8252-b334dcaab976",
+  "version_slug": "l6zo75s4s4vk",
+  "environment": "production",
+  "initial_message": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+  "source": "Exact native prompt and all seven HTTP node readbacks; credential replaced by placeholder",
+  "bindings": {
+    "Service verify_carrier": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/carriers/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"mc\":{{$var:01a19dc0-e205-7fec-9fb5-1bce8f0968ad.mc}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service negotiate": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/negotiate"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.load_id}},\"rate\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.rate}},\"after_final_offer\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.after_final_offer}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service send_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/otp/send"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service close_call": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/calls/close"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"summary\":{{$var:01a19f02-2dca-7185-94ff-52435dc3a20c.summary}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service verify_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/otp/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"code\":{{$var:01a19dc0-e218-762c-8e5e-fa1ca6770e81.code}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service call_ended": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/calls/ended"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"ended_by\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.call_end_initiator}},\"duration_seconds\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.duration}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service find_loads": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": "https://happyrobot-proposal-sg.fly.dev/loads/search"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"equipment\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.equipment}},\"origin_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.origin_state}},\"dest_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.dest_state}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": "<AGENT_API_KEY, unchanged private credential>",
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    }
+  },
+  "prompt_sha256": "8cd315df44a08b537da383621beb65feb01cae57f5484a6c530f1b8af566e54f"
+}

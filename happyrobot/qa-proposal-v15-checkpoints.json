@@ -1515,5 +1515,13 @@
       "final_results.N1.raw"
     ],
     "note": "The two native vendor-text route separators use ' to ' instead of U+2013 to satisfy the repository writing rule. Grades, run IDs and meaning are unchanged. These two fields are not byte-exact vendor text; the original handoff remains private."
+  },
+  "later_criteria_revision": {
+    "date": "2026-11-07",
+    "original_grades_preserved": true,
+    "original_score": "71/74",
+    "reason": "The voice close message and built-in hangup have separate responsibilities. E6 lacked thanks inside close_call under its original criterion; that original failed grade is retained. Revised S5, E6, TRM and V4 definitions distinguish the checkpoint boundary from full spoken ending.",
+    "new_versions": "Versions 16 through 19, not reruns of unchanged Version 15",
+    "definitions_and_new_grades": "qa-v19-checkpoints.json"
   }
 }

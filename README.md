@@ -14,6 +14,8 @@ An AI carrier-sales desk for HappyRobot Logistics. It verifies callers, finds fr
 
 The model handles conversation; the service controls verification, money and state changes. A repeated request cannot create a second booking send. PENDING remains an acknowledgement, and only an authoritative BOOKED receipt becomes confirmed.
 
+The code goes to a demo inbox, so it proves inbox access, not carrier identity; a pilot would enroll real carrier contacts first. Booking sends are off in the hosted App. The Confirm path is shown with `make review` and the earlier LD01080 sandbox receipt.
+
 ## What the desk shows
 
 Reservations brings agreements and their calls together. Overview shows qualification, matching and reservation conversion with supporting records. Calls provides the event timeline and native recording link. Bookings separates pending, confirmed and uncertain receipts. Demand shows where ended calls lacked suitable freight or never reached a search.
@@ -30,7 +32,7 @@ make review
 
 This opens an authenticated local App with a reservation. Confirm sends once to a TCP simulator and shows its PENDING receipt. It uses no customer credentials or cloud booking. `make review-down` removes the local environment.
 
-The latest local checks passed 581 service tests, 65 App tests, strict types, lint and production build. Business-rule branch coverage is 97.5%. [Readiness](docs/readiness.md) separates those results from live integration, text evaluations and spoken-call evidence, and lists outstanding release checks.
+The latest local checks passed 591 service tests, 65 App tests, strict types, lint and production build. Business-rule branch coverage is 98.1%. [Readiness](docs/readiness.md) separates those results from live integration, text evaluations and spoken-call evidence, and lists outstanding release checks.
 
 ## Repository map
 

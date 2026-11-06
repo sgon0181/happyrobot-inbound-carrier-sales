@@ -1,0 +1,28 @@
+{
+  "base": "cc84d6b",
+  "changed_markdown_files": [
+    "ARCHITECTURE.md",
+    "README.md",
+    "docs/build-description.md",
+    "docs/decisions.md",
+    "docs/negotiation-review.md",
+    "docs/onboarding.md",
+    "docs/proposal-demo.md",
+    "docs/proposal-review.md",
+    "docs/proposal.md",
+    "docs/readiness.md",
+    "docs/reciprocal-capacity.md",
+    "docs/submission.md",
+    "docs/test-carriers.md",
+    "happyrobot/README.md",
+    "happyrobot/prompt-v17.md",
+    "happyrobot/prompt-v18.md",
+    "happyrobot/prompt-v19.md",
+    "ops-app/README.md",
+    "service/README.md"
+  ],
+  "link_anchor_errors": [],
+  "long_dash_files": [],
+  "readme_words": 515,
+  "prospect_email_words": 196
+}

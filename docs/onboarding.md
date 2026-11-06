@@ -10,9 +10,9 @@ A clone includes source and sanitized evidence. It does not include browser sess
 
 ## Current state
 
-The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` integer and `data` JSONB. The last release snapshot contained 71 call rows; this is a dated count, not a fixed dashboard population.
+The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` integer and `data` JSONB. The last release snapshot contained 74 call rows and 19 booking rows; this is a dated count, not a fixed dashboard population.
 
-Version 16 (`42vhesibpud2`, UUID `01a1b2da-1c90-7249-886f-5abb3f2416bf`) is in workflow Development while release acceptance proceeds. Workflow Production remains Version 8 until its switch is verified. [Readiness](readiness.md#current-release-state) is the deployment record and must be updated after that switch. Workflow Production, App hosting and Twin environment are separate controls.
+Version 19 (`l6zo75s4s4vk`, UUID `01a1b2ea-26c8-7131-8252-b334dcaab976`) is live in workflow Production. Use [the Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [its exact editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk). Version 8 is retained unpublished for rollback. Development is empty. [Readiness](readiness.md#current-release-state) records acceptance, limitations and endpoints. Workflow Production, App hosting and Twin environment are separate controls.
 
 The owner retained the approved demo email route, synthetic record tags and disabled hosted sends. See [the single explanation of this boundary](readiness.md#current-release-state). Historical imported records remain immutable; do not relabel them to enable a send.
 

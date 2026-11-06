@@ -1,6 +1,6 @@
 # Reciprocal negotiation review
 
-Local implementation, November 7, 2026. Nothing in this change is published. The candidate service, App and voice Version 15 remain unchanged. Main remains the preserved baseline; these changes belong to ultimateProposal.
+Implementation and offline review of `cc84d6b`, November 7, 2026. The source is now on `main` and the reciprocal service has been deployed. This report preserves its original offline results. [Readiness](readiness.md) records later native voice, capacity and release acceptance, including failures.
 
 ## Business policy
 
@@ -44,7 +44,7 @@ Full validation: `make check` passed with 581 tests, 99% combined service covera
 
 Independent review found and prompted fixes for two quote-retraction defects. Both now have regressions: search must persist a lower quote, and an older call quote must not override the shared decision.
 
-## Unpublished voice draft
+## Voice corrections and subsequent checks
 
 [Prompt draft v16](../happyrobot/prompt-proposal-v16.md) includes:
 
@@ -56,14 +56,14 @@ Independent review found and prompted fixes for two quote-retraction defects. Bo
 - Natural counter wording and brief acknowledgment of the caller's stated concern, without invented market evidence, strategy disclosures or invented prices.
 - Saved agreement awaiting senior-rep review, not a claimed live transfer or confirmed booking.
 
-No new native model simulation or voice recording has been executed against this local draft. Before release, run the draft with the revised service and verify: email send_limit; split MC 9999 followed by 9999; goodbye during code collection; unsafe driving; repeated fuel-cost request; high and moderate ladders; reachable concession and acceptance; redial; and a full agreement ending with the correct load, rate and pending review. Inspect tool arguments and listen to audio. Static prompt edits do not establish conversational success.
+Version 16 native and actual voice checks subsequently found issues; later prompts and evidence are tracked in readiness. The original acceptance plan was to verify: email send_limit; split MC 9999 followed by 9999; goodbye during code collection; unsafe driving; repeated fuel-cost request; high and moderate ladders; reachable concession and acceptance; redial; and a full agreement ending with the correct load, rate and pending review. Inspect tool arguments and listen to audio. Static prompt edits do not establish conversational success.
 
 ## Deployment boundary
 
-The new `negotiations` table must exist in the selected Twin environment before deploying this service. It uses `id` text primary key, `version` integer and `data` JSONB, like existing tables. The table is allowlisted by the adapter but has not been provisioned remotely. The disposable local reviewer fixture already supports it. Do not add it to the call or booking population in the App.
+The new `negotiations` table must exist in the selected Twin environment before deploying this service. It uses `id` text primary key, `version` integer and `data` JSONB, like existing tables. The table is allowlisted by the adapter and was provisioned and read back in Twin staging. The disposable local reviewer fixture already supports it. Do not add it to the call or booking population in the App.
 
 There is intentionally no automatic expiry. Material shipment changes replace the active shared negotiation; per-call audit events retain the previous history. No historical call rows are rewritten or backfilled. The new policy applies prospectively. Memory is keyed by verified MC, not a uniquely authenticated human dispatcher; the existing demo inbox is still not production carrier identity.
 
 Shared memory is written before the call row, not in a distributed transaction. A later refusal or failed write can consume a concession that was never heard. This conservative behavior prevents retries from refunding money. Simultaneous searches can briefly show a conservative older quote; negotiation rechecks shared state. No new voice-latency or capacity claim is made for the additional Twin reads and writes. Staging latency and conversation acceptance remain release checks.
 
-Owner requested results before publication. No push, service deployment, workflow publication or live booking is authorized by this report.
+The owner subsequently authorized the main promotion, service and workflow release while retaining demo verification and disabled hosted sends. No Git push has been performed. Readiness is the current release record.

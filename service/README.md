@@ -1,6 +1,6 @@
 # Carrier Sales Service
 
-The Python 3.12 service owns verification, deterministic pricing, shipment-bound consent, reservations, rep-only TMS submission and complete bounded operations snapshots. The current `ultimateProposal` runtime is deployed to the isolated service with Twin staging and sends disabled. The original main release is preserved. [Readiness](../docs/readiness.md) records the exact deployed snapshot, later documentation-only changes and accepted evidence; [architecture](../ARCHITECTURE.md) explains the contracts.
+The Python 3.12 service owns verification, deterministic pricing, shipment-bound consent, reservations, rep-only TMS submission and complete bounded operations snapshots. The submission source is on `main`; the service uses the populated Twin staging workspace with sends disabled. The old source remains at `oldmain`. [Readiness](../docs/readiness.md) records the exact deployed snapshot, later documentation-only changes and accepted evidence; [architecture](../ARCHITECTURE.md) explains the contracts.
 
 ## Layout
 
@@ -28,6 +28,6 @@ Every commit reports its production line count. Size is watched, not capped ([D-
 
 ## Run and verify
 
-From the repository root, `make check` runs strict types, lint/format, shape and coverage gates. The accepted candidate passed 563 service tests with 97.9% of gated business branches covered. Use `make review` with Docker Compose and Python 3.12 for the complete disposable App and service; `make run` starts only the service with deliberately supplied settings.
+From the repository root, `make check` runs strict types, lint/format, shape and coverage gates. The reciprocal runtime passed 591 service tests with 98.1% of gated business branches covered. Current release acceptance is tracked in readiness. Use `make review` with Docker Compose and Python 3.12 for the complete disposable App and service; `make run` starts only the service with deliberately supplied settings.
 
 Cloud deployment requires an explicit preconfigured target: `make deploy APP=<isolated-fly-app> APP_URL=<native-app-https-url>`. It verifies authenticated service and TMS readiness before opening the App; it does not provision native resources. Contact enrollment, rep assignment, pacing and retention limits are in the [runbook](../docs/readiness.md), not hidden prerequisites or claims of production readiness.

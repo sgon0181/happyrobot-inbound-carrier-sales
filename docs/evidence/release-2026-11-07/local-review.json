@@ -1,0 +1,46 @@
+{
+  "checked_at": "2026-11-06T22:24:09.910903+00:00",
+  "source_commit": "9d051ba50c78504bf3d80c1a2f1aaea1b979a85c",
+  "scope": "Final code make review rebuild and authenticated Next Confirm route against disposable local TCP simulator only. No remote/cloud actions.",
+  "make_review_exit": 0,
+  "runtime_file_hash": "2fcfc6e2f2076daa4999b36a5a7682f705a240b80ff558362e9ccf35e176a925",
+  "initial_page_http": 200,
+  "before": {
+    "tcp_booking_commands": 0,
+    "state": "RESERVED"
+  },
+  "confirm_reply": {
+    "status": "sent",
+    "state": "ACK_PENDING",
+    "reason": null,
+    "reference": "FAKE0001",
+    "tmsStatus": "PENDING",
+    "loadStatus": null,
+    "sendStep": null,
+    "sendError": null,
+    "sendBytes": null,
+    "sendSha256": null
+  },
+  "after": {
+    "tcp_booking_commands": 1,
+    "state": "ACK_PENDING"
+  },
+  "receipt_visible_in_rendered_app": true,
+  "stale_repeat_reply": {
+    "status": "stale",
+    "state": null,
+    "reason": null,
+    "reference": null,
+    "tmsStatus": null,
+    "loadStatus": null,
+    "sendStep": null,
+    "sendError": null,
+    "sendBytes": null,
+    "sendSha256": null
+  },
+  "final_counts": {
+    "tcp_booking_commands": 1,
+    "state": "ACK_PENDING"
+  },
+  "passed": true
+}

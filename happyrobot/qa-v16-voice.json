@@ -1,0 +1,56 @@
+{
+  "version": 16,
+  "version_id": "01a1b2da-1c90-7249-886f-5abb3f2416bf",
+  "run_id": "ba9f99b3-fa33-4379-825f-6ccd77533004",
+  "environment": "development",
+  "caller": "Generated diagnostic audio through official WebRTC SDK, not a human acceptance call",
+  "status": "completed",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?"
+    },
+    {
+      "role": "assistant",
+      "content": "May I have your complete MC number?"
+    },
+    {
+      "role": "assistant",
+      "content": "Please provide your complete MC number when ready."
+    },
+    {
+      "role": "user",
+      "content": "My MC number is 138328."
+    },
+    {
+      "role": "assistant",
+      "content": "I have you as Werner Enterprises Inc. Is that right?"
+    },
+    {
+      "role": "assistant",
+      "content": "I have you as Werner Enterprises Inc. Is that right?"
+    },
+    {
+      "role": "user",
+      "content": "Yes. Werner Enterprises is correct. Actually, I need to go. Thank you. Goodbye."
+    },
+    {
+      "role": "assistant",
+      "content": "I just emailed a six-digit code, but you need to go. Please call back when you're ready to continue."
+    },
+    {
+      "role": "assistant",
+      "content": "Thank you for calling. Goodbye."
+    }
+  ],
+  "findings": {
+    "fixed_ai_disclosure": "passed",
+    "graceful_farewell_and_disconnect": "passed",
+    "mixed_yes_and_exit": "failed: send_code ran before close_call; V17 adds terminal-intent priority"
+  },
+  "recording": {
+    "bytes": 3375630,
+    "remote_peak": 0.2882637417739825,
+    "tracked": false
+  }
+}

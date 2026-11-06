@@ -39,15 +39,15 @@ This favors controlled disclosure over broad freight coverage. A real brokerage 
 | HappyRobot Twin | Versioned call, booking and carrier/load negotiation records |
 | HappyRobot Apps | Authenticated operating desk, metrics and review actions |
 
-Call and booking writes have their own durable histories. Shared negotiation decisions are persisted before the call record; if the second write fails, a concession can remain spent without having been heard. This conservative boundary prevents retries from refunding concessions. It is not a cross-table transaction.
+Call and booking writes have their own durable histories. Concessions and changed shared prices are persisted before the call record; if the second write fails, a concession can remain spent without having been heard. This conservative boundary prevents retries from refunding concessions. It is not a cross-table transaction. An unchanged opening acceptance with no prior memory or rounds skips a redundant memory write after a fresh read; [capacity evidence](reciprocal-capacity.md) explains that boundary.
 
 ## Evidence and limits
 
-Local validation passed **581 service tests**, **97.5% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
+Local validation passed **591 service tests**, **98.1% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
 
-Historical Version 15 evidence includes three overlapping actual audio journeys and 71/74 native text checks. Those results belong to that exact version. Version 16 adds voice corrections and the AI disclosure; its release checks and actual deployment state are tracked in [readiness](readiness.md), without transferring old grades to the new prompt.
+Historical Version 15 evidence includes three overlapping actual audio journeys and 71/74 native text checks. Those results belong to that exact version. Version 19 is live with the fixed AI disclosure. Its two raw text sweeps scored 70/74 and 73/74, and ten focused checks passed. A real amount-clarification early close remains documented alongside judge interpretation issues. Its complete diagnostic voice journey and actual deployment are tracked in [readiness](readiness.md).
 
-The current email route and send settings are also recorded there. The approved demo inbox is not proof of a real carrier employee's identity. Measured experiments do not establish missed-call reduction, profit, production peak capacity or human accent/noise coverage. Trusted contact enrollment, operational ownership and representative workload testing remain responsibilities before a customer rollout.
+The code goes to a demo inbox, so it proves inbox access, not carrier identity; a pilot would enroll real carrier contacts first. Booking sends are off in the hosted App. The Confirm path is shown with `make review` and the earlier LD01080 sandbox receipt. Measured experiments do not establish missed-call reduction, profit, production peak capacity or human accent/noise coverage. Trusted contact enrollment, operational ownership and representative workload testing remain responsibilities before a customer rollout.
 
 ## History
 

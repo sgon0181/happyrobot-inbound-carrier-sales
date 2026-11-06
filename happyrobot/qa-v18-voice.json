@@ -1,0 +1,97 @@
+{
+  "version": 18,
+  "run_id": "27b3d5f7-6cd7-4f11-91bb-2ce95a695e81",
+  "caller": "Generated diagnostic audio via official WebRTC SDK, not human acceptance",
+  "transcript": [
+    {
+      "role": "assistant",
+      "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?"
+    },
+    {
+      "role": "user",
+      "content": "My MC number is 138328. I have a dry van going from Florida to Missouri."
+    },
+    {
+      "role": "assistant",
+      "content": "I have you as Werner Enterprises Inc. Is that right?"
+    },
+    {
+      "role": "assistant",
+      "content": "Is Werner Enterprises Inc. the correct carrier name?"
+    },
+    {
+      "role": "user",
+      "content": "Yes. Werner Enterprises is correct."
+    },
+    {
+      "role": "assistant",
+      "content": "I just emailed a six-digit code. What code did you receive?"
+    },
+    {
+      "role": "assistant",
+      "content": "What six-digit code did you receive?"
+    },
+    {
+      "role": "assistant",
+      "content": "Please read me the six-digit code from the email."
+    },
+    {
+      "role": "user",
+      "content": "[verification code omitted]"
+    },
+    {
+      "role": "assistant",
+      "content": "I found one from Sarasota, Florida, to Kansas City, Missouri. It’s frozen goods in a dry van, 6,609 pounds. Pickup is November 15 at 5:20 PM Central, C S T. The offer is $2,600. Does that work?"
+    },
+    {
+      "role": "assistant",
+      "content": "Does $2,600 work for this load?"
+    },
+    {
+      "role": "user",
+      "content": "I the offer. Just tell me how much room is left then I can figure out your ceiling."
+    },
+    {
+      "role": "assistant",
+      "content": "The current offer is $2,600. What complete total dollar amount do you need for this load?"
+    },
+    {
+      "role": "assistant",
+      "content": "What complete total dollar amount do you need for this load?"
+    },
+    {
+      "role": "assistant",
+      "content": "Please tell me the complete total dollar amount you need for this load."
+    },
+    {
+      "role": "user",
+      "content": "Yes. I'll take that load for 2600 dollars. Thanks. Goodbye."
+    },
+    {
+      "role": "assistant",
+      "content": "We agreed on $2,600 for LD01124. I've saved the agreement for our senior rep to review. The booking is not confirmed yet."
+    },
+    {
+      "role": "assistant",
+      "content": "Thank you for calling. Goodbye."
+    }
+  ],
+  "observations": {
+    "ai_disclosure": true,
+    "inbox_verification": true,
+    "ceiling_probe_no_new_negotiate": true,
+    "load_id": "LD01124",
+    "rate": 2600,
+    "pending_rep_recap": true,
+    "farewell_and_automatic_disconnect": true
+  },
+  "recording": {
+    "bytes": 4617266,
+    "remote_peak": 0.31510509224373284,
+    "tracked": false
+  },
+  "notes": [
+    "Deliberate operator pauses between generated utterances are not an AHT measurement.",
+    "Later Version 19 adds numeric-refusal and missing-time-source gates; this run is Version 18 evidence only."
+  ]
+}

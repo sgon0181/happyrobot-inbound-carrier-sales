@@ -5,7 +5,7 @@ Record a genuine call on the final tested workflow, then follow that exact run i
 ## Prepare the tabs
 
 1. [Overview](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview).
-2. The exact final workflow editor and web-call entry point, read from the native platform after the Production switch in [readiness](readiness.md#current-release-state). Do not record the older Production Version 8 by accident.
+2. [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [Version 19 editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk), verified in [readiness](readiness.md#current-release-state).
 3. [Reservations](https://carrier-sales-proposal-sg.happyrobot.dev/?view=reservations), with the new run selected after the call.
 4. [Calls](https://carrier-sales-proposal-sg.happyrobot.dev/?view=calls) and that run's native recording.
 5. [Bookings](https://carrier-sales-proposal-sg.happyrobot.dev/?view=bookings).
@@ -47,6 +47,10 @@ If no agreement occurred, show the actual exception and say: "This call did not 
 **SAY:**
 
 "Hosted sends are off for this demonstration. Here, a separate local example shows the rep's Confirm action and a pending receipt. Only an authoritative booked response counts as confirmed. An uncertain send stays with the rep for investigation and is never blindly retried."
+
+**If showing the historical receipt instead, SAY:**
+
+"Hosted sends are off for this demonstration. This earlier LD01080 sandbox booking shows a real TMS acknowledgement after rep approval. It is a separate transaction from today's call. Pending means acknowledged, not finally booked. Uncertain sends are investigated rather than blindly retried."
 
 ## 3:45 to 4:10: make an operating decision
 

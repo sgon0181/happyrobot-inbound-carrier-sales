@@ -1,8 +1,8 @@
 # Operations app
 
-Current candidate: [Carrier Sales Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/), in its own Apps Production hosting slot, backed by the isolated service and Twin staging. Voice V15 uses workflow Development. The original App Build 24 remains unchanged. [Readiness](../docs/readiness.md) records accepted source/hosting evidence and the subsequent README-only divergence; executable App files are unchanged.
+Current workspace: [Carrier Sales Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/), backed by the submission service and populated Twin staging. App hosting and voice deployment are separate settings. App Build 24 remains a rollback reference. [Readiness](../docs/readiness.md) records the active workflow and current checks; executable App files are unchanged.
 
-For the proposal, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the isolated App environment. The service URL has no implicit production fallback. See the [pilot runbook](../docs/proposal.md).
+For deployment, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the isolated App environment. The service URL has no implicit production fallback. See the [pilot runbook](../docs/proposal.md).
 
 The dashboard for the operations manager and senior reps, built on the HappyRobot Apps Next.js template and mirrored here for review. It is described in [architecture section 11](../ARCHITECTURE.md#11-operations-app).
 

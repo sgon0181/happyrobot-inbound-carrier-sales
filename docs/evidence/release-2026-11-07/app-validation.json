@@ -1,0 +1,93 @@
+{
+  "commit": "cc84d6bff7e6dca947f69a9bfce08aa43e82907c",
+  "checks": [
+    {
+      "check": "app_lint",
+      "exit_code": -6,
+      "seconds": 0.11,
+      "log": "/tmp/app_lint-release.log"
+    },
+    {
+      "check": "app_test",
+      "exit_code": -6,
+      "seconds": 0.11,
+      "log": "/tmp/app_test-release.log"
+    },
+    {
+      "check": "app_build",
+      "exit_code": -6,
+      "seconds": 0.1,
+      "log": "/tmp/app_build-release.log"
+    },
+    {
+      "check": "app_typecheck",
+      "exit_code": -6,
+      "seconds": 0.11,
+      "log": "/tmp/app_typecheck-release.log"
+    },
+    {
+      "check": "app_lint_docker",
+      "exit_code": 0,
+      "seconds": 2.55,
+      "log": "/tmp/app_lint_docker-release.log",
+      "runtime": "Node22 Docker"
+    },
+    {
+      "check": "app_test_docker",
+      "exit_code": 0,
+      "seconds": 1.58,
+      "log": "/tmp/app_test_docker-release.log",
+      "runtime": "Node22 Docker"
+    },
+    {
+      "check": "app_build_docker",
+      "exit_code": 1,
+      "seconds": 4.67,
+      "log": "/tmp/app_build_docker-release.log",
+      "runtime": "Node22 Docker"
+    },
+    {
+      "check": "app_typecheck_docker",
+      "exit_code": 0,
+      "seconds": 1.92,
+      "log": "/tmp/app_typecheck_docker-release.log",
+      "runtime": "Node22 Docker"
+    },
+    {
+      "check": "make_review_end_to_end",
+      "exit_code": 0,
+      "page_status": 200,
+      "load": "LD09001",
+      "receipt_reference": "FAKE0001",
+      "tms_status": "PENDING",
+      "counts": {
+        "tcp_booking_commands": 1,
+        "state": "ACK_PENDING"
+      },
+      "scope": "Disposable loopback fixture only. Confirm POST succeeded and made one real TCP simulator request. Receipt then verified in rendered App HTML."
+    },
+    {
+      "check": "app_build_production_docker",
+      "exit_code": 0,
+      "runtime": "Node22 Docker",
+      "environment": {
+        "NODE_ENV": "production"
+      },
+      "log": "/tmp/app_build_production-release.log"
+    }
+  ],
+  "notes": [
+    "Host Homebrew node aborted because libsimdutf.34.dylib was missing. No host runtime was modified.",
+    "Docker reviewer image defaults NODE_ENV=development. First production build inherited that unsuitable value and failed prerender. Repeating with NODE_ENV=production passed.",
+    "One local Confirm ran through the Next API and TCP simulator. The first verification script expected raw service tms_status instead of App camelCase tmsStatus; a subsequent read verified receipt FAKE0001/PENDING and exactly one TCP booking.",
+    "No tracked files changed. Disposable reviewer containers remain running for inspection."
+  ],
+  "summary": {
+    "app_lint": "passed",
+    "app_test": "65/65 passed",
+    "app_build": "passed with production build environment",
+    "app_typecheck": "passed",
+    "make_review": "passed, one TCP booking, PENDING FAKE0001",
+    "remote_changes": false
+  }
+}

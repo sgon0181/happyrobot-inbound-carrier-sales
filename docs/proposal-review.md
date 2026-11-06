@@ -31,24 +31,21 @@ Independent review of `cc84d6b` found two quote-retraction defects during implem
 
 ## Validation
 
-The current service passed 581 tests with 97.5% business-rule branch coverage, strict typing, lint and size/complexity gates. The App passed 65 tests, lint, typecheck and production build under Node 22. `make review` opened the authenticated App; Confirm sent one request to a TCP simulator and displayed FAKE0001/PENDING. These local checks used no real booking inventory.
+The current service passed 591 tests with 98.1% business-rule branch coverage, strict typing, lint and size/complexity gates. The App passed 65 tests, lint, typecheck and production build under Node 22. `make review` opened the authenticated App; Confirm sent one request to a TCP simulator and displayed FAKE0001/PENDING. These local checks used no real booking inventory.
 
-Historical capacity measurements exposed timeouts before fresh-read batching. Subsequent controlled twelve-call workloads completed twelve agreements at the unchanged SQL pacing and tool deadline. Those runs predate cross-call negotiation memory and are not a latency claim for the updated runtime. [Readiness](readiness.md#concurrency-and-read-budget) links successful and failed measurements.
+Historical capacity measurements exposed timeouts before fresh-read batching. The new memory then regressed twelve-call opening-acceptance workloads. Review found a safe redundant-write optimization and added ten regressions. [Current before/after capacity evidence](reciprocal-capacity.md) shows all three workloads completing twelve agreements with no unfinished claims. The deadline and provider pacing are unchanged. The fixtures do not establish live peak or heavy negotiation capacity.
 
 ## Voice evidence
 
-Version 15's original 71/74 text grades remain unchanged, including S5, E6 and TRM. Inspection of E6 confirmed that its caller-facing close message omitted thanks. That finding must not be dismissed as a test mismatch. Any changed definition or rerun is new evidence, with the original grade retained.
+Original failures remain visible. Version 15 retained 71/74 under its original criteria, including E6's missing thanks inside the close message. Later criteria separate that checkpoint from the built-in voice farewell. Versions 16 through 18 exposed ceiling-probe, exit-priority, final-rate and missing-time-source defects. Version 19 contains the targeted repairs.
 
-Version 16 adds fixed AI disclosure and the reviewed voice corrections. Its repeated checks found a ceiling-probe tool call, omitted CST and vague amount readback. Those real defects block promotion until the corrected successor is retested and accepted in actual audio. Version 15's three overlapping diagnostic audio calls establish only those exact journeys. Earlier Version 9 through Version 13 results, time-display failures and ending repairs remain available in the existing evidence files. None is a substitute for acceptance of the final version.
+Final raw native grades are 70/74 and 73/74, with 10/10 focused consent and exit checks. Manual inspection found four judge interpretation issues and one genuine premature close during contradictory amount clarification. The latter can lose a valid caller opportunity, but does not authorize an incorrect booking. It remains a release limitation. [Readiness](readiness.md#native-conversation-evidence) links raw grades, exact traces and actual speech separately.
 
-## Remaining release gates
+## Completed release checks and owner handoff
 
-- Verify the final graph, disclosure, prompt and service bindings; complete native checks and actual voice acceptance on that version.
-- Measure the revised service under representative concurrent calls, including the additional shared-memory writes.
-- Verify the populated App, native recording access and same-run reservation.
-- Keep the owner-selected demo email route and hosted sends disabled. Show Confirm locally and identify any historical sandbox receipt separately.
-- Publish the tested workflow to Production, read back the active version and verify the production entry point before recording.
-- Record the owner's genuine call and walkthrough, then package the reviewed main commit. The owner submits through the portal.
+The final graph, fixed disclosure, prompt and seven bindings were read back. Version 19 completed native checks, a full diagnostic voice agreement on service `9d051ba` and a Production routing/exit smoke after publication. Controlled twelve-call workloads passed within their documented scope. The App and local Confirm path are validated separately, with hosted sends disabled.
+
+The owner still records the genuine human call and five-minute video, reviews the final package and submits through the portal. Representative arrival rates, accents, noise and heavy negotiation contention require pilot acceptance; the synthetic tests do not establish those claims. The known R1 early-close limitation remains visible rather than described as repaired.
 
 ## History
 

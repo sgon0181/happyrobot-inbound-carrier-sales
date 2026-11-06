@@ -1,0 +1,236 @@
+{
+  "version": 19,
+  "version_id": "01a1b2ea-26c8-7131-8252-b334dcaab976",
+  "service_commit": "9d051ba",
+  "caller": "Generated diagnostic audio via official WebRTC SDK; not owner or customer human acceptance",
+  "runs": [
+    {
+      "run_id": "f602f43e-6a78-4fce-9c91-c342572c8f8c",
+      "environment": "development",
+      "status": "completed",
+      "transcript": [
+        {
+          "role": "assistant",
+          "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+          "start_ms": 306,
+          "end_ms": 4866
+        },
+        {
+          "role": "assistant",
+          "content": "May I have your complete MC number?",
+          "start_ms": 10846,
+          "end_ms": 13006
+        },
+        {
+          "role": "user",
+          "content": "My MC number is 138328. I run a dry van from Massachusetts to South Dakota.",
+          "start_ms": 14080,
+          "end_ms": 19930
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start_ms": 22386,
+          "end_ms": 25346
+        },
+        {
+          "role": "assistant",
+          "content": "Is Werner Enterprises Inc. the correct carrier name?",
+          "start_ms": 31486,
+          "end_ms": 35646
+        },
+        {
+          "role": "user",
+          "content": "Yes. Werner Enterprises is correct.",
+          "start_ms": 48040,
+          "end_ms": 50380
+        },
+        {
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start_ms": 53986,
+          "end_ms": 58066
+        },
+        {
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start_ms": 64086,
+          "end_ms": 66166
+        },
+        {
+          "role": "user",
+          "content": "[verification code omitted]",
+          "start_ms": 83070,
+          "end_ms": 86500
+        },
+        {
+          "role": "assistant",
+          "content": "I have a dry van from Worcester, Massachusetts, to Sioux Falls, South Dakota, with produce, 5,447 pounds. Pickup is November 16 at 2:24 AM Central, C S T. It pays $3,675. Live unload, with two hours of detention free, then $75 per hour. Does that work?",
+          "start_ms": 92986,
+          "end_ms": 115866
+        },
+        {
+          "role": "assistant",
+          "content": "Does $3,675 work",
+          "start_ms": 121906,
+          "end_ms": 122506
+        },
+        {
+          "role": "user",
+          "content": "I need 6000 dollars for this load.",
+          "start_ms": 121610,
+          "end_ms": 123930
+        },
+        {
+          "role": "assistant",
+          "content": "I understand. I can offer $3,675 on this load. Would that work?",
+          "start_ms": 127086,
+          "end_ms": 132766
+        },
+        {
+          "role": "assistant",
+          "content": "Would $3,675 work for you?",
+          "start_ms": 138927,
+          "end_ms": 142767
+        },
+        {
+          "role": "user",
+          "content": "I can come down to 4 thousand dollars for the load.",
+          "start_ms": 166840,
+          "end_ms": 169679
+        },
+        {
+          "role": "assistant",
+          "content": "I can offer $3,725. Would that work?",
+          "start_ms": 173067,
+          "end_ms": 177227
+        },
+        {
+          "role": "assistant",
+          "content": "I can offer $3,725. Would that work for you?",
+          "start_ms": 183326,
+          "end_ms": 188126
+        },
+        {
+          "role": "user",
+          "content": "Yes. I accept 3725 dollars for that load. Thank you. Goodbye.",
+          "start_ms": 214699,
+          "end_ms": 220569
+        },
+        {
+          "role": "assistant",
+          "content": "We agreed on $3,725 for LD01134. I've saved the agreement for our senior rep to review. The booking is not confirmed yet.",
+          "start_ms": 224886,
+          "end_ms": 236006
+        },
+        {
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "start_ms": 237526,
+          "end_ms": 239526
+        }
+      ],
+      "result": {
+        "load_id": "LD01134",
+        "opening": 3675,
+        "asks": [
+          6000,
+          4000
+        ],
+        "offers": [
+          3675,
+          3725
+        ],
+        "agreed_rate": 3725,
+        "rounds": 2,
+        "state": "RESERVED",
+        "tms_send": false
+      },
+      "recording": {
+        "bytes": 3859123,
+        "remote_peak": 0.3952761462133214,
+        "tracked": false
+      }
+    },
+    {
+      "run_id": "4ba74723-4c02-48e0-a075-dbb029ae2406",
+      "environment": "production",
+      "status": "completed",
+      "transcript": [
+        {
+          "role": "assistant",
+          "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+          "start_ms": 314,
+          "end_ms": 5514
+        },
+        {
+          "role": "assistant",
+          "content": "May I have your complete MC number?",
+          "start_ms": 11434,
+          "end_ms": 13274
+        },
+        {
+          "role": "user",
+          "content": "My MC number is 138328.",
+          "start_ms": 43800,
+          "end_ms": 46360
+        },
+        {
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start_ms": 48514,
+          "end_ms": 51714
+        },
+        {
+          "role": "assistant",
+          "content": "Is Werner Enterprises Inc. the correct carrier name?",
+          "start_ms": 57734,
+          "end_ms": 60854
+        },
+        {
+          "role": "user",
+          "content": "Yes. Werner Enterprises is correct.",
+          "start_ms": 100210,
+          "end_ms": 102490
+        },
+        {
+          "role": "user",
+          "content": "Actually, I need to go now. Thank you. Goodbye.",
+          "end_ms": 106160
+        },
+        {
+          "role": "assistant",
+          "content": "No load was discussed, and verification was not completed.",
+          "start_ms": 107214,
+          "end_ms": 110734
+        },
+        {
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "start_ms": 112434,
+          "end_ms": 114434
+        }
+      ],
+      "tools": [
+        "verify_carrier",
+        "send_code",
+        "close_call"
+      ],
+      "result": {
+        "agreement": false,
+        "tms_send": false,
+        "farewell_and_disconnect": true
+      },
+      "recording": {
+        "bytes": 1843905,
+        "remote_peak": 0.3396590166274017,
+        "tracked": false
+      }
+    }
+  ],
+  "limitations": [
+    "Operator pauses between utterances are not a handling-time measurement.",
+    "Production recognition split the carrier-name yes and subsequent goodbye into separate turns. A code was sent on the yes; this is not evidence of zero email sends around a later interruption.",
+    "Native checkpoint R1 can close prematurely during contradictory amount clarification; retained separately in qa-v19-checkpoints.json."
+  ]
+}

@@ -41,7 +41,8 @@ Opening $4,600, working cap $5,000, run against the deployed rule. [All scenario
 | Platform text evaluations, live Version 19 | Two full runs: 70 of 74 and 73 of 74. Ten focused checks on consent and leaving the call: 10 of 10 | Tool calls and replies against written criteria. Of the five failed grades, manual review found four grading misreadings (for example, spelling "CST" as "C S T") and one real defect, kept as a known limit |
 | Real call, generated caller, Version 19 | Verified, negotiated ($6,000 then $4,000 against a $3,675 opening), agreed $3,725 on LD01134, accurate pending-review close; no booking sent | Live FMCSA, email, TMS reads and Twin. Ran before the negotiation floor fix |
 | Real call, generated caller, Production | AI disclosure, verification, correct close and hangup | The Production web call routes to Version 19 |
-| Real call after the floor fix | Pending | One call on a fresh load, to be recorded with its run ID |
-| Owner's human call | Pending | Recorded for the walkthrough |
+| Owner's call after the floor fix, run `6dc95ce1-f7e0-44a3-8394-8408b754527e` | Verified MC 138328; flatbed LD01114, Akron, OH to Cedar Rapids, IA, $1,100 opening. Asked $1,250, offered $1,150; asked $1,175, agreed at exactly $1,175. Pending rep review, no TMS send; 124 seconds | The deployed negotiation rule on a load under $1,250, which the earlier rule could not move on. Decisions read from the [live service record](evidence/reciprocal-negotiation/owner-calls-2026-11-07.json) |
+| Owner's call, ineligible carrier, run `2e57f13a-6bae-49d9-ae28-845b08db596b` | MC 132354 refused (registration not active); no code sent; closed by the agent in 21 seconds | The FMCSA gate on a live record |
+| Walkthrough recording | Pending | Recorded for the video |
 
 Evidence: [text evaluations](../happyrobot/qa-v19-checkpoints.json), [voice runs](../happyrobot/qa-v19-voice.json). Earlier versions' scores and failures are kept in [history](history/README.md); they describe those versions only.

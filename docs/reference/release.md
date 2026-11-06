@@ -2,7 +2,7 @@
 
 `main` is the submission source. The operating workspace is [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview), served by `https://happyrobot-proposal-sg.fly.dev`. The populated Twin staging workspace is retained deliberately, including 74 recorded call rows and 19 booking rows at the 22:21 UTC release snapshot (November 6), with later calls appended. The App's hosting slot, workflow deployment and Twin environment are separate settings.
 
-The owner-approved `reciprocal-v2` concession-floor correction from `8ccbf0a` is deployed. On November 7, authenticated health and TMS reachability passed, the snapshot returned 75 calls and 19 booking records, and all 32 runtime source/policy files matched the reviewed source. Guarded sends, demo inbox and Twin staging remain unchanged. [Deployment evidence](../evidence/reciprocal-negotiation/service-deployment-2026-11-07.json) records the image and checks. A fresh Version 19 voice test is still pending; existing speech evidence belongs to `9d051ba`.
+The owner-approved `reciprocal-v2` concession-floor correction from `8ccbf0a` is deployed. On November 7, authenticated health and TMS reachability passed, the snapshot returned 75 calls and 19 booking records, and all 32 runtime source/policy files matched the reviewed source. Guarded sends, demo inbox and Twin staging remain unchanged. [Deployment evidence](../evidence/reciprocal-negotiation/service-deployment-2026-11-07.json) records the image and checks. The owner's first call on the deployed rule, run `6dc95ce1-f7e0-44a3-8394-8408b754527e`, verified MC 138328, matched flatbed LD01114 (Akron, OH to Cedar Rapids, IA) at a $1,100 opening, countered a $1,250 ask with $1,150 and accepted the carrier's $1,175 at the exact amount. The reservation is pending rep review with no TMS send. A second call, run `2e57f13a-6bae-49d9-ae28-845b08db596b`, correctly refused MC 132354 (registration not active) without sending a code.
 
 ## Current release state
 
@@ -23,7 +23,7 @@ The code goes to a demo inbox, so it proves inbox access, not carrier identity; 
 | Layer | Result | Scope |
 | --- | --- | --- |
 | Deployed service source | 604 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
-| Live floor correction | `reciprocal-v2`; all 32 runtime/policy hashes match; four pure pricing smoke cases pass on the deployed machine | Service deployed; fresh Version 19 voice diagnostic remains pending |
+| Live floor correction | `reciprocal-v2`; all 32 runtime/policy hashes match; four pure pricing smoke cases pass on the deployed machine | Service deployed; owner call `6dc95ce1-f7e0-44a3-8394-8408b754527e` exercised the rule live (see results) |
 | Current App | 65/65 tests; lint, typecheck and production build pass | UI and server-route behavior |
 | Local end to end | `make review` healthy; one TCP booking; FAKE0001/PENDING shown in the App | Disposable local simulator, not a hosted booking |
 | Reciprocal negotiation | Floor correction: extreme asks hold; improving asks inside reach earn bounded movement; retries, reconnects and concurrent-call budgets are retained | [Executed scenarios and review](negotiation.md) |

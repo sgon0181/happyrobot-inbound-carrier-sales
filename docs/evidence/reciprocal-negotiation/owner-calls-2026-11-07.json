@@ -1,0 +1,232 @@
+{
+  "recorded_at": "2026-11-06T23:41:26.985490+00:00",
+  "source": "Authenticated read of https://happyrobot-proposal-sg.fly.dev/ops/snapshot (service 8ccbf0a, Twin staging). Code hashes, contact routes and internal claim IDs omitted.",
+  "workflow": {
+    "version": 19,
+    "version_id": "01a1b2ea-26c8-7131-8252-b334dcaab976",
+    "environment": "production"
+  },
+  "caller": "Owner, human web call",
+  "negotiation_policy_version": "reciprocal-v2",
+  "calls": [
+    {
+      "id": "6dc95ce1-f7e0-44a3-8394-8408b754527e",
+      "started_at": "2026-11-06T23:17:16.551853+00:00",
+      "closed_at": "2026-11-06T23:19:08.902604+00:00",
+      "ended_at": "2026-11-06T23:19:12.193608+00:00",
+      "ended_by": "agent",
+      "duration_seconds": 124,
+      "mc": "138328",
+      "carrier_name": "WERNER ENTERPRISES INC",
+      "eligible": true,
+      "code_passed": true,
+      "search": {
+        "equipment": "FLATBED",
+        "dest_state": "IA",
+        "origin_state": "OH"
+      },
+      "offers": {
+        "LD01114": 1150
+      },
+      "rounds": 2,
+      "agreement": {
+        "mc": "138328",
+        "rate": 1175,
+        "load_id": "LD01114"
+      },
+      "outcome": "agreed_pending_rep",
+      "summary": "Ohio to Iowa flatbed, LD01114, agreed at $1,175; senior rep confirmation pending.",
+      "cohort": "synthetic",
+      "events": [
+        {
+          "at": "2026-11-06T23:17:16.551853+00:00",
+          "mc": "138328",
+          "seq": 1,
+          "action": "verify_carrier",
+          "lookup": 1,
+          "status": "checking"
+        },
+        {
+          "at": "2026-11-06T23:17:16.849976+00:00",
+          "mc": "138328",
+          "seq": 2,
+          "action": "verify_carrier",
+          "status": "eligible",
+          "carrier_name": "WERNER ENTERPRISES INC"
+        },
+        {
+          "at": "2026-11-06T23:17:23.050534+00:00",
+          "mc": "138328",
+          "seq": 3,
+          "action": "send_code",
+          "status": "code_issued",
+          "send_number": 1
+        },
+        {
+          "at": "2026-11-06T23:17:27.429074+00:00",
+          "mc": "138328",
+          "seq": 4,
+          "action": "send_code",
+          "status": "sent",
+          "delivery": "sent",
+          "send_number": 1
+        },
+        {
+          "at": "2026-11-06T23:17:43.142172+00:00",
+          "mc": "138328",
+          "seq": 5,
+          "action": "verify_code",
+          "status": "verified"
+        },
+        {
+          "at": "2026-11-06T23:17:51.717160+00:00",
+          "mc": "138328",
+          "seq": 6,
+          "action": "find_loads",
+          "search": {
+            "equipment": "FLATBED",
+            "dest_state": "IA",
+            "origin_state": "OH"
+          },
+          "status": "found"
+        },
+        {
+          "at": "2026-11-06T23:18:42.649556+00:00",
+          "mc": "138328",
+          "ask": 1250,
+          "seq": 7,
+          "heard": "1250",
+          "offer": 1150,
+          "round": 1,
+          "action": "negotiate",
+          "status": "counter",
+          "load_id": "LD01114",
+          "negotiation_policy_version": "reciprocal-v2"
+        },
+        {
+          "at": "2026-11-06T23:18:54.758987+00:00",
+          "mc": "138328",
+          "ask": 1175,
+          "seq": 8,
+          "rate": 1175,
+          "heard": "1175",
+          "action": "negotiate",
+          "cohort": "synthetic",
+          "status": "accepting",
+          "load_id": "LD01114",
+          "negotiation_policy_version": "reciprocal-v2"
+        },
+        {
+          "at": "2026-11-06T23:18:55.763243+00:00",
+          "mc": "138328",
+          "ask": 1175,
+          "seq": 9,
+          "rate": 1175,
+          "heard": "1175",
+          "action": "negotiate",
+          "status": "agreed",
+          "load_id": "LD01114",
+          "negotiation_policy_version": "reciprocal-v2"
+        },
+        {
+          "at": "2026-11-06T23:19:08.902604+00:00",
+          "mc": "138328",
+          "seq": 10,
+          "action": "close",
+          "status": "closed"
+        },
+        {
+          "at": "2026-11-06T23:19:12.193608+00:00",
+          "mc": "138328",
+          "seq": 11,
+          "action": "call_ended",
+          "status": "ended",
+          "ended_by": "agent",
+          "duration_seconds": 124
+        }
+      ]
+    },
+    {
+      "id": "2e57f13a-6bae-49d9-ae28-845b08db596b",
+      "started_at": "2026-11-06T23:22:20.723768+00:00",
+      "closed_at": "2026-11-06T23:22:28.172190+00:00",
+      "ended_at": "2026-11-06T23:22:31.786534+00:00",
+      "ended_by": "agent",
+      "duration_seconds": 21,
+      "mc": "132354",
+      "carrier_name": "QCT LLC",
+      "eligible": false,
+      "code_passed": false,
+      "search": null,
+      "offers": {},
+      "rounds": 0,
+      "agreement": null,
+      "outcome": "carrier_ineligible",
+      "summary": "MC 132354; registration not active; no load booked.",
+      "cohort": "synthetic",
+      "events": [
+        {
+          "at": "2026-11-06T23:22:20.723768+00:00",
+          "mc": "132354",
+          "seq": 1,
+          "action": "verify_carrier",
+          "lookup": 1,
+          "status": "checking"
+        },
+        {
+          "at": "2026-11-06T23:22:21.057713+00:00",
+          "mc": "132354",
+          "seq": 2,
+          "action": "verify_carrier",
+          "reason": "registration_not_active",
+          "status": "ineligible"
+        },
+        {
+          "at": "2026-11-06T23:22:28.172190+00:00",
+          "mc": "132354",
+          "seq": 3,
+          "action": "close",
+          "status": "closed"
+        },
+        {
+          "at": "2026-11-06T23:22:31.786534+00:00",
+          "mc": "132354",
+          "seq": 4,
+          "action": "call_ended",
+          "status": "ended",
+          "ended_by": "agent",
+          "duration_seconds": 21
+        }
+      ]
+    }
+  ],
+  "reservation": {
+    "load_id": "LD01114",
+    "state": "RESERVED",
+    "mc": "138328",
+    "rate": 1175,
+    "rep": null,
+    "reference": null,
+    "tms_status": null,
+    "cohort": "synthetic",
+    "load": {
+      "origin": {
+        "zip": "44308",
+        "city": "Akron",
+        "state": "OH"
+      },
+      "destination": {
+        "zip": "52401",
+        "city": "Cedar Rapids",
+        "state": "IA"
+      },
+      "equipment_type": "FLATBED",
+      "weight": 18880,
+      "miles": 528,
+      "commodity_type": "Electronics",
+      "pickup_datetime": "2026-11-10T03:28:00+00:00",
+      "delivery_datetime": "2026-11-10T21:28:00+00:00"
+    }
+  },
+  "tms_send": false
+}

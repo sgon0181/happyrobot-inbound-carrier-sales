@@ -2,15 +2,15 @@
 
 `main` is the submission source. The operating workspace is [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview), served by `https://happyrobot-proposal-sg.fly.dev`. The populated Twin staging workspace is retained deliberately, including 74 recorded call rows and 19 booking rows at the 22:21 UTC release snapshot (November 6), with later calls appended. The App's hosting slot, workflow deployment and Twin environment are separate settings.
 
-The local `reciprocal-v2` concession-floor correction is pending Claude review and owner approval. It has not been deployed or exercised in a new voice call. Hosted evidence below remains tied to `9d051ba`; [the policy review](negotiation-review.md) contains the local before/after cases and fresh recording inventory.
+The owner-approved `reciprocal-v2` concession-floor correction from `8ccbf0a` is deployed. On November 7, authenticated health and TMS reachability passed, the snapshot returned 75 calls and 19 booking records, and all 32 runtime source/policy files matched the reviewed source. Guarded sends, demo inbox and Twin staging remain unchanged. [Deployment evidence](evidence/reciprocal-negotiation/service-deployment-2026-11-07.json) records the image and checks. A fresh Version 19 voice test is still pending; existing speech evidence belongs to `9d051ba`.
 
 ## Current release state
 
 | Component | Verified state |
 | --- | --- |
-| Git | Main includes `9d051ba`; old source `15ce2b6` is retained as `oldmain` and local tag `baseline-v8` |
+| Git | Main includes service source `8ccbf0a`; old source `15ce2b6` is retained as `oldmain` and local tag `baseline-v8` |
 | App | Build 10 at the workspace link above; 65 local tests, lint, typecheck and production build pass |
-| Service | Updated runtime deployed to `happyrobot-proposal-sg`; authenticated health and TMS reachability verified; 3,868 production Python lines |
+| Service | Source `8ccbf0a` deployed to `happyrobot-proposal-sg`; authenticated health, TMS reachability and runtime hashes verified; 3,871 production Python lines |
 | Data | Twin staging; `calls`, `bookings` and the new `negotiations` table; provisioning of negotiation memory verified |
 | Voice | [Version 19](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk), ID `01a1b2ea-26c8-7131-8252-b334dcaab976`, slug `l6zo75s4s4vk` |
 | Workflow Production | Version 19 published and read back live; [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc); Version 8 retained unpublished for rollback |
@@ -22,15 +22,15 @@ The code goes to a demo inbox, so it proves inbox access, not carrier identity; 
 
 | Layer | Result | Scope |
 | --- | --- | --- |
-| Deployed service source | 591 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
-| Local floor correction | 604 tests; 98.1% business-rule branch coverage; 3,871 production Python lines; lint, types and shape gates pass | Local source only, awaiting Claude review and owner-approved deploy |
+| Deployed service source | 604 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
+| Live floor correction | `reciprocal-v2`; all 32 runtime/policy hashes match; four pure pricing smoke cases pass on the deployed machine | Service deployed; fresh Version 19 voice diagnostic remains pending |
 | Current App | 65/65 tests; lint, typecheck and production build pass | UI and server-route behavior |
 | Local end to end | `make review` healthy; one TCP booking; FAKE0001/PENDING shown in the App | Disposable local simulator, not a hosted booking |
-| Reciprocal negotiation | Local floor correction: extreme asks hold; improving asks inside reach earn bounded movement; retries, reconnects and concurrent-call budgets are retained | [Executed scenarios and review](negotiation-review.md) |
+| Reciprocal negotiation | Floor correction: extreme asks hold; improving asks inside reach earn bounded movement; retries, reconnects and concurrent-call budgets are retained | [Executed scenarios and review](negotiation-review.md) |
 | Historical Version 15 audio | Three actual diagnostic WebRTC calls overlapped for 176.78 seconds; one agreement and two intentional declines | Exact Version 15 integration, not Version 16 acceptance |
 | Historical Version 15 text | 71/74; S5, E6 and TRM failed and retained | Original grading definitions and source hash |
 | Final Version 19 text | Raw 70/74 and 73/74; focused 10/10 | Four judge interpretation issues and one genuine early-close limitation remain visible |
-| Final Version 19 voice | Full diagnostic journey on deployed `9d051ba`: LD01134 reserved at $3,725 after bounded negotiation | Generated caller, live FMCSA, email, TMS reads and Twin; no booking send |
+| Version 19 voice before floor correction | Full diagnostic journey on deployed `9d051ba`: LD01134 reserved at $3,725 after bounded negotiation | Generated caller, live FMCSA, email, TMS reads and Twin; no booking send |
 | Final owner recording | Pending | Genuine human call and same-run demo |
 
 The floor-correction pass repeated all four App gates under Node 22.23.4 and exercised browser Confirm against a freshly built disposable stack: exactly one TCP send, FAKE0001/PENDING. All 30 runtime files matched the local source. This does not replace the required post-deployment Version 19 voice check. [Validation record](evidence/reciprocal-negotiation/floor-validation.json).

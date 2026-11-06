@@ -1,6 +1,6 @@
 # Decisions
 
-Material design decisions, why they were made and what they cost. The dated baseline choices remain below; D-36 through D-44 document the submission design. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result, and [readiness](readiness.md) distinguishes deployed evidence from local changes awaiting review. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
+Material design decisions, why they were made and what they cost. The dated baseline choices remain below; D-36 through D-44 document the submission design. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result, and [readiness](readiness.md) distinguishes deployed evidence from outstanding acceptance checks. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
 
 ## Decisions made on 2026-11-02
 
@@ -210,7 +210,7 @@ The November 4 baseline report used a fixed, reconciled 49-call native inventory
 - **Choice:** `reciprocal-v2` moves toward a carrier who moves toward us. An ask must be within 25% above the opening. After the first ask, it must improve the best prior ask by at least $25. Move one third of the gap to the lower of ask and private cap, rounded down to $25, with a $25 minimum; stop at the cap if less room remains. Accept the caller's exact amount when it is at or below our standing or next offer. Keep pricing-v1 and its HMAC draws unchanged.
 - **Controls:** distant, rising and token asks hold. A new above-offer ask spends a round even when held; exact replays do not. Three rounds, final refusal and lower-cap retraction remain unchanged. Each new call negotiation event and shared decision event carries `negotiation_policy_version`; historical events keep their original fields and values.
 - **Tradeoff:** the floor and wider reach improve small-gap conversion but allow larger concessions than the original 2% rule. A descending ask inside the reachable band can earn money, even if it began at a distant anchor. These are explicit brokerage policy choices, not market estimates, optimal-strategy claims or immunity from probing. The cap and durable budget bound exposure. [Before/after examples and adversarial results](negotiation-review.md) show the cost.
-- **Release:** this floor correction is local and awaiting Claude review and owner approval. Current Version 19 speech evidence belongs to the previously deployed rule. No prompt or workflow change accompanies this patch.
+- **Release:** service source `8ccbf0a` was deployed with owner approval on November 7. Runtime hashes, authenticated health, TMS reachability and guarded settings passed. Existing Version 19 speech evidence belongs to the prior rule; the new diagnostic voice check remains pending. No prompt or workflow change accompanies this patch.
 
 ### D-44: A third Twin table holds durable carrier/load memory
 

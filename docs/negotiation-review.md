@@ -1,6 +1,6 @@
 # Reciprocal negotiation review
 
-Local service correction on November 7, 2026, based on `26c17ed`. The floor fix is not deployed. Version 19 remains unchanged and its recorded voice evidence uses the prior rule. [Readiness](readiness.md) separates local validation from the hosted release and retains earlier failures.
+Service correction `8ccbf0a`, based on `26c17ed`, deployed with owner approval on November 7, 2026. [Deployment checks](evidence/reciprocal-negotiation/service-deployment-2026-11-07.json) verify the runtime and guarded settings. Version 19 remains unchanged and its recorded voice evidence uses the prior rule. [Readiness](readiness.md) separates local validation from the hosted release and retains earlier failures.
 
 ## Business policy
 
@@ -102,4 +102,4 @@ There is intentionally no automatic expiry. Material shipment changes replace th
 
 Shared memory is written before the call row, not in a distributed transaction. A later refusal or failed write can consume a concession that was never heard. This conservative behavior prevents retries from refunding money. Simultaneous searches can briefly show a conservative older quote; negotiation rechecks shared state. No new voice-latency or capacity claim is made for the additional Twin reads and writes. Staging latency and conversation acceptance remain release checks.
 
-The owner previously authorized main promotion and the original reciprocal service/workflow release while retaining demo verification and disabled hosted sends. This floor correction is a separate local commit for Claude review. After that review and explicit owner approval, deploy only the service and run one fresh Version 19 voice journey with an in-reach counter of at least $25 followed by agreement. Record its run ID in readiness. The prompt and workflow stay unchanged. No Git push or cloud mutation is part of this patch.
+The owner approved deployment of service source `8ccbf0a`. The service was released without changing the prompt, workflow, App, secrets or hosted booking guard. Authenticated health, TMS reachability and snapshot reads passed; all 32 runtime source/policy files matched. Four pure pricing smoke cases passed on the deployed machine without writes. One fresh Version 19 voice journey remains pending: an in-reach ask, a concession of at least $25, agreement and an accurate pending-review close. Record its run ID in readiness. No Git push or voice call was performed by this deployment.

@@ -1,9 +1,8 @@
 """Answering a carrier's counter-offer (architecture section 9).
 
-Each counter moves our offer to the next round's target. An ask at or below
-our current offer, or at or below the next target, is accepted at the
-carrier's own number. Round 3 is the final offer at the cap; after it, only
-acceptance succeeds. Rounds count across every load on a call (INV-4).
+Concessions require a reachable ask and reciprocal movement. Three rounds are a
+budget, not a promise to reach the cap. The caller/load memory supplies the best
+prior ask; amounts and limits remain deterministic and outside the voice model.
 """
 
 from dataclasses import dataclass
@@ -11,6 +10,10 @@ from enum import Enum
 
 from service.core.money import parse_ask
 from service.core.pricing import MAX_ROUNDS, Terms
+
+REACH_BPS = 11000  # asks within 10% of the standing offer can be negotiated
+CONCESSION_BPS = 200  # at most 2% of opening per new round
+ROUNDING = 25
 
 
 class Action(Enum):
@@ -29,7 +32,11 @@ class Step:
 
 
 def respond(
-    terms: Terms, rounds_used: int, current_offer: int, ask: int | float | str | None
+    terms: Terms,
+    rounds_used: int,
+    current_offer: int,
+    ask: int | float | str | None,
+    best_ask: int | None = None,
 ) -> Step:
     """Answer one ask. current_offer is the last number we said for this load."""
     _check(terms, rounds_used, current_offer)
@@ -41,12 +48,23 @@ def respond(
     if rounds_used == MAX_ROUNDS:
         return Step(Action.FAILED, None, rounds_used)
 
-    target = max(current_offer, terms.targets[rounds_used])
+    target = concession(terms, current_offer, amount, best_ask)
     round_number = rounds_used + 1
     if amount <= target:
         return Step(Action.ACCEPT, amount, round_number)
     action = Action.FINAL_OFFER if round_number == MAX_ROUNDS else Action.COUNTER
     return Step(action, target, round_number)
+
+
+def concession(terms: Terms, offer: int, ask: int, best_ask: int | None) -> int:
+    """Never reward distance, escalation, or a token change rounded up to money."""
+    if ask * 10000 > offer * REACH_BPS:
+        return offer
+    budget = terms.opening * CONCESSION_BPS // 10000
+    if best_ask is not None:
+        budget = min(budget, max(0, best_ask - ask) // 2)
+    increase = budget // ROUNDING * ROUNDING
+    return min(terms.cap, offer + increase)
 
 
 def _check(terms: Terms, rounds_used: int, current_offer: int) -> None:

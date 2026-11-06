@@ -17,7 +17,7 @@ from service.adapters.twin_reads import MAX_KEYS, ReadBatches
 from service.adapters.twin_reads import TwinUnavailable as TwinUnavailable
 
 URL = "https://platform.happyrobot.ai/api/v2/twin/sql"
-TABLES = frozenset({"calls", "bookings"})
+TABLES = frozenset({"calls", "bookings", "negotiations"})
 MAX_ATTEMPTS = 5  # tries at one change before a busy row counts as unavailable
 RATE_LIMIT_RETRIES = 5
 SCAN_PAGE_ROWS = 100

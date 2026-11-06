@@ -18,10 +18,10 @@ TERMS = Terms(
     [
         (0, 2000, 2000, Step(Action.ACCEPT, 2000, 0)),  # at our offer: agreed, no round used
         (0, 2000, 1800, Step(Action.ACCEPT, 1800, 0)),  # below it: agreed at their number
-        (0, 2000, 2050, Step(Action.ACCEPT, 2050, 1)),  # under round 1's target
-        (0, 2000, 5000, Step(Action.COUNTER, 2100, 1)),
-        (1, 2100, 5000, Step(Action.COUNTER, 2200, 2)),
-        (2, 2200, 5000, Step(Action.FINAL_OFFER, 2300, 3)),
+        (0, 2000, 2050, Step(Action.COUNTER, 2025, 1)),  # bounded first concession
+        (0, 2000, 5000, Step(Action.COUNTER, 2000, 1)),
+        (1, 2100, 5000, Step(Action.COUNTER, 2100, 2)),
+        (2, 2200, 5000, Step(Action.FINAL_OFFER, 2200, 3)),
         (3, 2300, 2300, Step(Action.ACCEPT, 2300, 3)),  # the final offer accepted
         (3, 2300, 2301, Step(Action.FAILED, None, 3)),  # anything else ends it
         (1, 2100, "2150.50", Step(Action.ASK_AGAIN, None, 1)),  # never rounded, no round used
@@ -40,7 +40,7 @@ def test_rounds_carry_across_loads_on_a_call() -> None:
         cap=1300,
     )
     assert respond(other, MAX_ROUNDS, 1000, 1500).action is Action.FAILED
-    assert respond(other, 2, 1000, 5000).rate == 1300  # straight to the final offer
+    assert respond(other, 2, 1000, 5000).rate == 1000  # distant asks never earn a concession
 
 
 @pytest.mark.parametrize(

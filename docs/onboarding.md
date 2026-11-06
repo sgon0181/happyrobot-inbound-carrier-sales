@@ -15,6 +15,10 @@ Updated 2026-11-05 (Australia/Sydney). A clone includes tracked source and sanit
 
 Keep requirements, observed behaviour, assumptions and simulations distinct. The handbook is a field manual with sample transcripts, and a live discrepancy must be recorded with its scope. Reading `PENDING` as any particular business stage is an interpretation, not a confirmed contract.
 
+## Local change awaiting review and publication
+
+The reciprocal negotiation policy and voice prompt draft v16 are local only. See [negotiation review](negotiation-review.md) for exact policy, results and required `negotiations` table. The live candidate and Version 15 described below remain unchanged.
+
 ## Current state
 
 | Area | State |

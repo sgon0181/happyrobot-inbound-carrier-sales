@@ -9,6 +9,7 @@ from collections.abc import Awaitable
 from datetime import datetime, tzinfo
 from typing import Protocol
 
+from service import negotiation_memory
 from service.adapters.tms.client import TmsUnavailable
 from service.adapters.twin import Data
 from service.bookings import Bookings
@@ -80,6 +81,8 @@ class Sales:
         quotable = [load for load in loads if safe_to_quote(load)]
         priced = [(load, terms) for load in quotable if (terms := self._terms(load))]
 
+        remembered = await negotiation_memory.quotes(self.rows.twin, source["mc"], priced)
+
         def decide(data: Data, now: datetime) -> Reply:
             if not priced:  # a load we cannot price is never offered (D-11)
                 status = _no_offer_status(loads, quotable)
@@ -91,6 +94,9 @@ class Sales:
                 data["outcome"] = None
             for load, terms in priced:  # a repeat keeps our offer, within today's terms (INV-1)
                 remember_offer(data, load, terms)
+                data["offers"][load.load_id] = remembered.get(
+                    load.load_id, data["offers"][load.load_id]
+                )
             views = [
                 public_view(
                     load, data["offers"][load.load_id], display_timezone=self.display_timezone
@@ -109,10 +115,8 @@ class Sales:
     ) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).
 
-        The load is read again each time, so every number is checked against today's
-        ceiling. Each answer is computed inside the call row's version-checked write, so
-        concurrent requests cannot share a round. An existing claim is settled or voided
-        before another can reserve freight (D-24).
+        Shared memory spends concessions first; call CAS enforces its global budget.
+        A failed call write cannot refund a shared concession.
         """
         heard = {"load_id": load_id, "ask": parse_ask(ask), "heard": ask}  # on every event
 
@@ -137,11 +141,26 @@ class Sales:
         if priced is None:
             return await log(drop(load_id))
         load, terms = priced
-        reply = await log(answer_counter(load, ask, terms, after_final, data["mc"]))
+        step = await negotiation_memory.decide(
+            self.rows.twin,
+            data["mc"],
+            run_id,
+            load,
+            terms,
+            data,
+            ask,
+            after_final,
+            self.rows.now(),
+        )
+        reply = await log(answer_counter(load, step, data["mc"], ask, terms.cap))
         if reply["status"] != "accepting":
             return reply
-        held = await self.bookings.reserve(
-            load_id,
+        held = await self._reserve(run_id, load, reply)
+        return await log(settle(reply["id"], held))
+
+    async def _reserve(self, run_id: str, load: Load, reply: Reply) -> Data | None:
+        return await self.bookings.reserve(
+            load.load_id,
             claim_id=reply["id"],
             call_id=run_id,
             mc=reply["mc"],
@@ -151,7 +170,6 @@ class Sales:
             now=self.rows.now(),
             load=reservation_view(load),
         )
-        return await log(settle(reply["id"], held))
 
     async def close(self, run_id: str, summary: str | None) -> Reply:
         """Record that the call ended. A repeat changes nothing, so the first close stands."""

@@ -203,3 +203,12 @@ The November 4 baseline report used a fixed, reconciled 49-call native inventory
 | T-8 | Can a native post-call node produce a summary for the close request? | Optional and untested. No longer a dependency: R3 stores structured decisions and best-effort model closing notes, with end reporting separate. | Show absent notes honestly; do not invent a post-call summary |
 | T-9 | Should workflow run dumps store full transcripts in Twin natively? | Not tested. They would add spoken codes to Twin. | Transcripts stay on the platform |
 | T-10 | Does the platform retry tool calls? | Unknown. D-26 is safe either way. | |
+
+
+## Local proposal: bounded reciprocal negotiation and persistent memory
+
+Status: implemented locally, not deployed. Owner requested results before publication.
+
+Human acceptance exposed a commercial weakness: different inflated asks advanced a fixed concession ladder. Replace that ladder with bounded reciprocal movement while preserving deterministic service authorization. Reachability is 10% above the standing offer; each concession is at most 2% of opening rounded down to $25; after the first ask it is also capped at half the carrier's improvement over their best prior ask. These are explicit demo policy choices, not inferred market rates.
+
+Use one version-checked Twin negotiation row per verified carrier/load. A new session, workflow version or service restart cannot create a fresh concession budget. No automatic expiry is added. A changed material shipment starts a new shared negotiation; price-only changes do not. Preserve the global three-round call limit and existing booking recovery. Shared writes precede call writes, deliberately choosing conservative budget consumption if the second write fails. Do not deploy until the table exists and staging tests pass. Historical negotiations are not backfilled or reinterpreted. See [review and results](negotiation-review.md).

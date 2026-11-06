@@ -1,0 +1,107 @@
+{
+  "scope": "Offline deterministic fixture; opening 4600, working cap 5000. Not live calls.",
+  "scenarios": {
+    "extreme_descending": {
+      "asks": [
+        15000,
+        14000,
+        13000
+      ],
+      "offers": [
+        4600,
+        4600,
+        4600
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    },
+    "moderate_descending": {
+      "asks": [
+        6000,
+        5500,
+        5200
+      ],
+      "offers": [
+        4600,
+        4600,
+        4600
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    },
+    "reachable_reciprocal": {
+      "asks": [
+        5000,
+        4900,
+        4800
+      ],
+      "offers": [
+        4675,
+        4725,
+        4775
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    },
+    "increasing_demands": {
+      "asks": [
+        5000,
+        5100,
+        5200
+      ],
+      "offers": [
+        4675,
+        4675,
+        4675
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    },
+    "one_dollar_changes": {
+      "asks": [
+        5000,
+        4999,
+        4998
+      ],
+      "offers": [
+        4675,
+        4675,
+        4675
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    },
+    "extreme_then_reachable": {
+      "asks": [
+        15000,
+        5000,
+        4900
+      ],
+      "offers": [
+        4600,
+        4675,
+        4725
+      ],
+      "actions": [
+        "counter",
+        "counter",
+        "final_offer"
+      ]
+    }
+  }
+}

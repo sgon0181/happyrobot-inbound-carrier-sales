@@ -34,3 +34,8 @@ Inbound Carrier Sales lives in the HappyRobot workspace, workflow 01a18119-67a1-
 | [simulations.json](simulations.json) | Two fully mocked full-workflow text simulations, criteria, setup error and manual limits |
 
 Results and failures are in [QA results](../docs/qa-results.md). The preserved baseline workflow has a web-call trigger, an inbound voice agent, six tools and the end-report webhook introduced in Version 4. It has 16 nodes; the failed closing-module experiment is removed. This is not a guaranteed post-call summary or universal hangup capture. Version 6 followed the approved service deployment; Version 8 is a prompt-only publication. The owner reports a successful normal Version 8 call, not independently reviewed; the split-number edge case has mocked regression coverage but no new live speech retest. Checkpoints explicitly lock six external actions; full simulations lock seven, including call_ended. Never run tests with inherited live actions.
+
+
+### Unpublished voice corrections
+
+`prompt-proposal-v16.md` is a local draft only. It separates email throttling from carrier rejection, asks for a complete or corrected MC before rejecting an ambiguous lookup, respects goodbye immediately, describes safe verification while driving, shortens the shipment pitch without dropping operating conditions, uses natural service-bound counter wording, and describes a saved rep-review agreement rather than a live transfer. It retains amount clarification and price-confidentiality gates. No workflow version has been created or published for this draft, and no new audio quality claim is made. See `docs/negotiation-review.md` for the required conversation checks.

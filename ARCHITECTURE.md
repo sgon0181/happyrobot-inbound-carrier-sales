@@ -264,7 +264,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 
 ---
 
-## 7. Data: two tables
+## 7. Data: call, booking and negotiation records
 
 Twin has no multi-table transactions, but one row can be updated atomically with a version check. State and its own event therefore share one row. Agreement and load reservation still cross call/booking rows and use ID-bearing accepting claims, booking-row voids and retry recovery; they are not a transaction ([D-23](docs/decisions.md)).
 
@@ -364,11 +364,17 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 - **Working cap:** the ceiling minus a load-specific gap of 2 to 6%. It is the highest number we say and the highest ask we accept.
 - **Opening offer:** the posted rate minus 5% when that leaves room below the cap, otherwise a load-specific spread of 8 to 15% below the cap.
-- **Round targets:** 35%, 65% and 100% of the way from opening to cap.
+- **Legacy round targets:** the pricing-v1 schema retains its historical 35%, 65% and 100% values for reproducibility. The local reciprocal policy does not use them to authorize concessions.
 
 Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back does not redraw the price. The secret prevents exact recomputation, but the public policy band and observed offers still constrain possible ceilings. These percentages are demo choices the brokerage would own.
 
-**Rounds.** A new concession-producing ask advances the global round budget toward the policy target. Acceptance uses the carrier's amount when authorized, while an earlier lower ask on unchanged freight bounds later counters. Round 3 is final. An explicit refusal or excessive ask marked `after_final_offer` ends negotiation without transfer; a transport retry returns the safe current standing offer and current round without spending another round. A held load spends no round. Rounds count across loads (INV-4); D-26 defines bounded replay history.
+**Local reciprocal policy, not yet deployed.** A first ask within 10% of the standing offer can earn at most 2% of opening, rounded down to $25. Later asks must improve on the lowest prior ask; our increase is bounded by half that improvement and the same 2% limit. Asks outside the reachable band, increases and token changes earn no increase. Acceptance at or below the standing offer uses the caller's own amount. A new above-offer ask consumes a round even when we hold. Exact repeats do not. Three is a budget, not a requirement to reach the cap.
+
+**Cross-call memory.** A new `negotiations` Twin table uses the same id/version/data shape. Each row is keyed by normalized verified MC and load ID and contains the shipment fingerprint, standing quote, lowest ask, rounds and at most three concession-decision events. New calls must independently verify and search. They resume the quote and shared budget; changing voice version, restarting the service or waiting does not reset it. Material shipment changes allow a fresh shared budget, but never reset the call's global three-round limit. Posted-rate or ceiling changes alone do not reset the budget. Lower price limits durably retract the quote; later increases cannot resurrect it. No automatic time expiry is implemented, intentionally preventing wait-and-retry resets. Human repricing is a future explicit operation, not a caller capability.
+
+**Write boundaries.** Shared-memory CAS spends the concession first, then call-row CAS rechecks verification, shipment consent and the global call budget before recording or reserving. A failed second write may consume a concession without the caller hearing it; retry or redial does not refund it. There is no multi-row transaction claim. Memory failure fails closed. Search and negotiation do fresh reads, not a process-local cache. Concurrent searches can return a conservative older quote; negotiation always uses shared memory and fresh price limits. Acceptance retains the existing reservation claim and recovery flow.
+
+The unpublished implementation and scenario results are described in [the negotiation review](docs/negotiation-review.md). Deployment requires provisioning the third table, staging acceptance and owner approval. Existing historical calls remain immutable and are not retroactively treated as negotiations under the new policy.
 
 **What this protects, and what it costs.** A fixed percentage could be inverted to find the ceiling; the keyed gap removes that formula. Some leakage is unavoidable, because the cap creates an accept/reject boundary that probing can narrow, so confidentiality is a tested property, not a guarantee. A carrier whose ask stays above the cap can be turned away even below the private ceiling. The App counts evidenced final-offer exhaustion, not an independently proven causal loss to the ceiling.
 

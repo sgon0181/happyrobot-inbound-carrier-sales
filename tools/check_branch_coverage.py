@@ -16,6 +16,7 @@ GATED = (
         "service/calls.py",
         "service/call_state.py",
         "service/selling.py",
+        "service/negotiation_memory.py",
         "service/bookings.py",
     ),
     *("service/dashboard.py", "service/rep_actions.py", "service/sale_decisions.py"),

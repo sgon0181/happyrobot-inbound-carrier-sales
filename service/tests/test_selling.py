@@ -581,14 +581,14 @@ def test_hangup_settles_or_voids_stranded_reservations_without_new_tms_activity(
 def test_higher_posted_rate_does_not_change_a_spoken_quote_or_identical_retry() -> None:
     r = offered(make_load(RATE="2000", MAX_BUY="2300"))
     first = counter(r, 2025)
-    assert first == {"status": "counter", "offer": 2000, "round": 1, "http": 200}
+    assert first == {"status": "counter", "offer": 1925, "round": 1, "http": 200}
     r.board.records = [make_load(RATE="2200", MAX_BUY="2300")]
     second = counter(r, 2100)
-    assert second["offer"] == 2025
+    assert second["offer"] == 1925
     assert counter(r, 2100) == second
     assert r.row()["rounds"] == 2
     agreed = counter(r, second["offer"])
-    assert agreed["status"] == "agreed" and agreed["rate"] == 2025
+    assert agreed["status"] == "agreed" and agreed["rate"] == 1925
 
 
 def test_replay_cannot_restore_a_retracted_quote_after_a_ceiling_rises() -> None:
@@ -607,9 +607,9 @@ def test_search_replay_preserves_quote_and_prior_ask_after_posted_rate_changes()
     first = counter(r, 2025)
     r.board.records = [make_load(RATE="2200", MAX_BUY="2300")]
     found = search(r)
-    assert found["loads"][0]["offer"] == 2000
+    assert found["loads"][0]["offer"] == 1925
     assert counter(r, 2025) == first
-    assert counter(r, 2000)["rate"] == 2000
+    assert counter(r, 1925)["rate"] == 1925
 
 
 def test_material_change_is_new_pitch_and_clears_the_prior_price_replay() -> None:
@@ -663,7 +663,7 @@ def test_older_same_load_request_cannot_buy_another_concession_after_a_new_ask()
     assert repeated == second and r.row()["rounds"] == 2
     assert len(r.row()["counter_replies"]["LD09001"]) == 2
     assert counter(r, 9000) == repeated
-    assert first["offer"] < repeated["offer"]  # the existing later quote is still honored
+    assert first["offer"] == repeated["offer"]  # distant asks do not buy concessions
 
 
 def test_delayed_earlier_counter_after_final_reports_current_final_state_without_a_new_round() -> (

@@ -1,7 +1,8 @@
 """The versioned pricing policy (D-4, architecture section 9).
 
 Each load gets three kinds of number: a working cap below the ceiling, an
-opening offer and one target per round. The gap below the ceiling and the
+opening offer and legacy targets retained for historical reproducibility.
+Reciprocal negotiation no longer advances through those targets. The gap below the ceiling and the
 fallback spread are drawn per load with an HMAC under a server secret, so a
 load gets the same numbers on every call, and knowing the policy without the
 secret does not reveal the gap. A load that cannot be priced safely returns

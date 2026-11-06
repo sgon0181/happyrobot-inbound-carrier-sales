@@ -37,6 +37,7 @@ class FakeTwin:
         self.tables: dict[str, dict[str, tuple[int, dict[str, object]]]] = {
             "calls": {},
             "bookings": {},
+            "negotiations": {},
         }
         self.statements: list[str] = []
         self.headers: list[httpx.Headers] = []

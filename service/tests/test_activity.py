@@ -18,9 +18,9 @@ def test_multi_round_history_can_be_reconstructed_from_the_stored_row() -> None:
     assert r.post("/loads/search", **lane)["status"] == "found"
     for ask in ("5000.00", "5100"):
         assert r.post("/negotiate", load_id="LD09001", rate=ask)["status"] == "counter"
-    agreed = r.post("/negotiate", load_id="LD09001", rate="2075")
+    agreed = r.post("/negotiate", load_id="LD09001", rate="1900")
     assert agreed["status"] == "agreed"
-    r.post("/calls/close", summary="Agreed LD09001 at 2075; mocked rep handoff.")
+    r.post("/calls/close", summary="Agreed LD09001 at 1900; mocked rep handoff.")
     r.post("/calls/ended", ended_by="assistant", duration_seconds=90)
     row = r.twin.data("calls", RUN)
     history: Any = row["events"]
@@ -35,14 +35,14 @@ def test_multi_round_history_can_be_reconstructed_from_the_stored_row() -> None:
     )
     counters = [e for e in history if e["status"] == "counter"]
     assert [(e["heard"], e["ask"], e["offer"], e["round"]) for e in counters] == [
-        ("5000.00", 5000, 2000, 1),
-        ("5100", 5100, 2075, 2),
+        ("5000.00", 5000, 1900, 1),
+        ("5100", 5100, 1900, 2),
     ]
     deal = next(e for e in history if e["status"] == "agreed")
     assert (deal["load_id"], deal["rate"], row["summary"]) == (
         "LD09001",
-        2075,
-        "Agreed LD09001 at 2075; mocked rep handoff.",
+        1900,
+        "Agreed LD09001 at 1900; mocked rep handoff.",
     )
     assert history[-1]["ended_by"] == "assistant" and row["duration_seconds"] == 90
     assert r.board.sends == []

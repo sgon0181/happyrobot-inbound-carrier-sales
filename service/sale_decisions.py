@@ -11,7 +11,7 @@ from service.calls import Decide, Reply, is_verified
 from service.core.loads import same_shipment, shipment_terms
 from service.core.models import Load
 from service.core.money import parse_ask
-from service.core.negotiation import Action, Step, respond
+from service.core.negotiation import Action, Step
 from service.core.pricing import MAX_ROUNDS, Terms
 
 
@@ -67,7 +67,7 @@ def remember_offer(data: Data, load: Load, terms: Terms) -> None:
     snapshots[load_id] = shipment_terms(load)
 
 
-def answer_counter(load: Load, ask: str, terms: Terms, after_final: bool, mc: str) -> Decide:
+def answer_counter(load: Load, step: Step, mc: str, ask: str, cap: int) -> Decide:
     """The counter's answer, from the row as it is at the moment of writing."""
 
     def decide(data: Data, now: datetime) -> Reply:
@@ -88,59 +88,36 @@ def answer_counter(load: Load, ask: str, terms: Terms, after_final: bool, mc: st
             return _unavailable(data, load_id) | {
                 "message": "The shipment changed. Let me check the lane again."
             }
-        return _price_ask(data, load_id, ask, terms, after_final)
+        return _record_step(data, load_id, step, ask, cap)
 
     return decide
 
 
-def _price_ask(data: Data, load_id: str, ask: str, terms: Terms, after_final: bool) -> Reply:
+def _seen(data: Data, load_id: str) -> Data:
+    seen: Data = data.setdefault("counter_replies", {}).setdefault(load_id, {})
+    for event in data.get("events", []):
+        if event.get("load_id") == load_id and event.get("status") in ("counter", "final_offer"):
+            seen[str(event.get("ask"))] = True
+    return seen
+
+
+def _record_step(data: Data, load_id: str, step: Step, ask: str, cap: int) -> Reply:
     amount = parse_ask(ask)
-    offer = min(int(data["offers"][load_id]), terms.cap)  # preserve the spoken quote, INV-1
-    last = _counter_for(data, load_id, amount)
-    if after_final and _refused_final(data["rounds"], amount, ask, offer):
-        return _apply(data, load_id, Step(Action.FAILED, None, data["rounds"]))
-    if last and amount is not None and amount > offer:
-        data["offers"][load_id] = offer
-        return {
-            "status": "final_offer" if data["rounds"] == MAX_ROUNDS else "counter",
-            "offer": offer,
-            "round": data["rounds"],
-        }
-    lowest = data.setdefault("lowest_asks", {})
-    step = _standing_ask(respond(terms, data["rounds"], offer, ask), lowest.get(load_id))
-    if amount is not None:
-        lowest[load_id] = min(lowest.get(load_id, amount), amount)
-    data["rounds"] = step.rounds_used
-    reply = _apply(data, load_id, step)
-    if amount is not None and "offer" in reply:
-        data["last_counter"] = {"load_id": load_id, "ask": amount, "reply": reply}
-        data["counter_replies"].setdefault(load_id, {})[str(amount)] = data["last_counter"]
-    return reply
-
-
-def _counter_for(data: Data, load_id: str, amount: int | None) -> Data | None:
-    """At most three concession-producing requests per call, bound to their shipment."""
-    replies = data.setdefault("counter_replies", {})
-    legacy = [data.get("last_counter"), *data.get("last_counters", {}).values()]
-    for previous in legacy:
-        if previous and "offer" in previous["reply"]:
-            replies.setdefault(previous["load_id"], {}).setdefault(str(previous["ask"]), previous)
-    result: Data | None = replies.get(load_id, {}).get(str(amount))
-    return result
-
-
-def _refused_final(rounds: int, amount: int | None, ask: str, offer: int) -> bool:
-    if rounds != MAX_ROUNDS:
-        return False
-    return ask == "decline" or (amount is not None and amount > offer)
-
-
-def _standing_ask(step: Step, prior: int | None) -> Step:
-    """Quote a prior lower ask for consent rather than pay more on unchanged terms."""
-    if prior is None or step.rate is None or step.rate <= prior:
-        return step
-    action = Action.FINAL_OFFER if step.rounds_used == MAX_ROUNDS else Action.COUNTER
-    return Step(action, prior, step.rounds_used)
+    seen = _seen(data, load_id)
+    current = min(data["offers"][load_id], cap)
+    above_offer = amount is not None and amount > current
+    countering = step.action in (Action.COUNTER, Action.FINAL_OFFER)
+    spends = (above_offer or countering) and str(amount) not in seen
+    if spends and data["rounds"] == MAX_ROUNDS:
+        return _apply(data, load_id, Step(Action.FAILED, None, MAX_ROUNDS))
+    if step.action in (Action.COUNTER, Action.FINAL_OFFER, Action.ACCEPT):
+        rounds = max(data["rounds"] + int(spends), step.rounds_used)
+        data["rounds"] = rounds
+        if step.action is not Action.ACCEPT:
+            action = Action.FINAL_OFFER if rounds == MAX_ROUNDS else Action.COUNTER
+            step = Step(action, min(cap, step.rate or current), rounds)
+        seen[str(amount)] = True
+    return _apply(data, load_id, step)
 
 
 def _apply(data: Data, load_id: str, step: Step) -> Reply:

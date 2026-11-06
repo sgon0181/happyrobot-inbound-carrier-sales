@@ -1,54 +1,54 @@
-# Inbound Carrier Sales: business and IT build description
+# Carrier Sales: business and IT build description
 
-The current proposal uses voice Version 15 in isolated development, a Python service and one populated HappyRobot Apps workspace backed by Twin. A carrier can be qualified, matched to freight and reach a recorded rate agreement while other calls arrive. A designated senior rep reviews the originating call and controls any TMS submission. Main, the original submission ZIP and the published Version 8/Build 24 baseline are preserved. [Current evidence, configuration and deployment](readiness.md) identify exactly what was tested.
+The brokerage needs to qualify incoming carriers, negotiate consistently and give dispatchers a usable record of each agreement. Carrier Sales automates the first conversation and gives a senior rep control of the final TMS request. One populated workspace contains historical and new calls, reservations, exceptions and booking receipts.
 
-## Customer problem and scope
+## Carrier journey
 
-The brokerage wants fewer missed opportunities, consistent rate decisions and an audit trail that a rep can use without opening platform logs. The proof of concept automates qualification, matching and negotiation, then leaves the final commitment with the rep. It demonstrates bounded concurrent conversations and traceable decisions. It does not yet measure missed-call reduction, staffing savings, profit or production peak capacity.
+The workflow begins with a fixed statement identifying the AI agent, followed by the MC-number question. The service checks operating authority with FMCSA, confirms the carrier name and verifies an emailed code before discussing freight. Lookup unavailability is kept separate from carrier ineligibility. The agent asks only for missing equipment and lane details.
 
-1. **Verify the caller.** Check FMCSA operating authority, confirm the carrier name and verify an emailed code before discussing freight. An unavailable authority lookup is not an ineligible carrier. The approved demo inbox proves access to that inbox; production needs independently enrolled carrier contacts.
-2. **Match the shipment.** Ask only for missing equipment and lane preferences. Read the TMS, validate the operating fields and quote approved data. Unrecognized instructions, contradictory conditions or incomplete freight require manual review.
-3. **Negotiate consistently.** The service sets prices within the private ceiling and allows at most three counter rounds across the call. Relative or corrected amounts need a complete total and appropriate readback. Duplicate or delayed requests cannot buy another concession. A final refusal ends without handoff.
-4. **Record an agreement.** Save the rate, carrier, load and shipment facts in Twin. The agent speaks the exact approved agreement and a mocked handoff for senior-rep confirmation. This is an internal reservation, not a final TMS booking.
-5. **Review and submit.** The rep opens the reservation with its originating call, prices, shipment and event timeline. Submission rechecks authorization, trusted contact proof, finalized consent, load availability, material shipment facts and the current ceiling. A stale rep action cannot send twice. Imported historical records remain view-only.
+Matching reads the TMS, checks availability and validates shipment terms. The caller hears the lane, price and essential operating conditions. Clarifications and corrections are handled before an amount can become an agreement. On acceptance, the service records the exact load, carrier, price and shipment facts. The agent explains that the agreement awaits senior-rep review. It does not claim a completed transfer or final booking.
 
-## Business visibility
+## Commercial control
 
-Reservations opens all recorded agreements by default. Awaiting rep is a filter within the same workspace. Overview follows authority, code delivery, verification, matching and reservation, with counts linked to their calls. Active calls contribute stage progress but are kept out of ended-call loss groups. Demand distinguishes an empty search from never reaching search. Bookings separates acknowledgement, final confirmation and uncertain sends.
+Prices are service decisions, not model guesses. The working cap stays below the private TMS maximum. The opening price and concessions are deterministic and auditable.
 
-Opening-to-agreed price movement measures payment concessions, not broker profit. The historical 49 completed-call sample contained 36 email-verified calls, 29 matches and 19 reservations, with a $50 median movement above opening. Eighteen agreements belonged to one MC. Those observations helped identify pilot questions; they are not the current dashboard's fixed denominator or representative market results. The combined workspace includes imported history and newer development calls.
+A first reachable ask may earn a small concession. Subsequent movement requires the carrier to improve their best prior ask, and our movement is bounded by that improvement. Repetition, increased demands and distant asks do not automatically raise our offer. The verified carrier and load share their negotiation memory across calls and restarts. Three rounds is a limit, not a promise to reach the cap. [Exact policy and adversarial results](negotiation-review.md) explain the demo thresholds and business tradeoff.
 
-The recording link is constructed only from trusted native workflow provenance or known historical run inventory. Local fixture IDs do not get invented recordings. Platform permissions still govern playback. Twin history is evidence of service decisions, not a substitute for what was actually spoken.
+A caller may still seek the best available deal. The policy limits the cost of that behavior; it does not claim negotiations are impossible to probe or that these thresholds maximize commercial conversion.
 
-## Safety and transaction boundaries
+## Rep decisions and business visibility
 
-The model talks; the service decides. Authority, OTP, price bounds, round counts, reservations and rep permissions are enforced independently of prompt compliance. Raw private ceilings and expected codes are excluded from the voice payload. A load-specific cap reduces simple inversion; this does not prove offers reveal no indirect pricing information.
+The rep opens a reservation with its call, event timeline and shipment. Submission checks the rep's identity, record version, completed agreement, trusted verification route, current availability and unchanged shipment facts. Only the rep can authorize a send. Historical imports remain view-only.
 
-Material shipment changes require a new pitch and agreement. A hold whose write succeeded but whose agreement did not finish cannot be submitted. The rep can release it and follow up. Both open-work and historical views preserve the difference.
+Overview follows authority, code delivery, verification, matching and reservation. Every stage opens supporting records. Active calls and ended-call exceptions are distinguished. Bookings separates acknowledgement, final confirmation and uncertain sends. Price movement is agreement minus opening; it is not profit or a claim of savings.
 
-The TMS has no supported cancellation or idempotency key. Confirm sends once after a version-checked transition. Ambiguous transport becomes UNKNOWN and is never blindly resent. A matching reference, status and valid timestamp are required for a definitive receipt. PENDING means acknowledged; only an authoritative BOOKED receipt becomes confirmed. Luke accepted this separation. Original bytes remain in restricted Twin when saved, while safe receipt identifiers and digests support browser recovery.
+The TMS has no established cancellation operation or idempotency key. Confirm records its intent before one send. Ambiguous transport becomes UNKNOWN and is not blindly resent. PENDING remains acknowledged. Only an authoritative BOOKED response becomes confirmed. Luke accepted that separation.
 
-App users are verified through HappyRobot's API. The native response's user `id` is normalized into the internal subject and matched to an explicit rep assignment. Missing, malformed or conflicting identities are denied. Body-supplied names and decoded token claims never authorize an action. Production writes also require the exact configured origin. Keys remain server-side.
+## Shipment validation tradeoff
 
-## Measured evidence
+[`service/core/approved_freight.py`](../service/core/approved_freight.py) uses an approved list of cities, commodity names and operating-note phrases before text can reach the caller. It blocks untrusted instructions, incomplete clauses and contradictions. In the dated feed check, **8 of 50 historical open loads required rep review** and 42 were usable.
 
-- **Actual voice:** Version 15 completed three overlapping WebRTC conversations through real authority checks, approved demo email, safe TMS reads and isolated Twin writes. Scenarios were agreement, corrected-price decline and final-offer refusal. All closed through the agent; no TMS booking was sent. The three-way overlap was 176.78 seconds. Callers were generated diagnostics, so human accent/noise and subjective naturalness still need the owner's new call.
-- **Native text:** 71 passed and three failed out of 74 locked checkpoints. Raw failures remain visible. Their grading-boundary limitations are documented; real audio does not overwrite those scores. Earlier failed prompts and caller-harness errors are retained.
-- **Service and App:** 563 service tests, 97.9% business-rule branch coverage, strict types, lint and enforced size/complexity checks. The App passes 65 tests, lint, production build and typecheck, including the actual native identity response contract.
-- **Controlled pressure:** The original paced twelve-call workload exposed timeouts. Fresh-read batching preserves the four-statement-per-second budget, database freshness and twelve-second voice deadline. Both controlled twelve-call patterns then completed twelve agreements without unfinished claims. A separate test included 500 historical calls, 200 released bookings and dashboard polling. These use fixtures and loopback TCP, not a production capacity benchmark.
-- **Rep action:** The disposable browser exercise produced one simulated PENDING receipt, then refused a stale replay and a viewer action. The native hosting acceptance and final source identity are separately recorded in [readiness](readiness.md).
+This favors controlled disclosure over broad freight coverage. A real brokerage would need an owned process for extending approved shipment terms. The implementation does not silently discard those eight loads as absent inventory, and this release does not replace the approved list with a looser shape check.
 
-## Operation and deployment
+## System responsibilities
 
-| Component | Owner and responsibility |
+| Component | Responsibility |
 | --- | --- |
-| HappyRobot voice workflow | Conversation, native tools, mocked transfer and end report |
-| Python 3.12 service on Fly.io | Rules, authority, email, TCP TMS adapter, Twin events and rep actions |
-| HappyRobot Twin | Versioned call and booking rows with histories |
-| HappyRobot Apps | Authenticated unified desk, metrics and assigned-rep actions |
+| HappyRobot workflow | Fixed AI disclosure, conversation, tools and end-of-call report |
+| Python service on Fly.io | Verification, email, pricing, TCP TMS integration and rep actions |
+| HappyRobot Twin | Versioned call, booking and carrier/load negotiation records |
+| HappyRobot Apps | Authenticated operating desk, metrics and review actions |
 
-After one-time native-resource and secret setup, `make deploy APP=<isolated-app> APP_URL=<native-app-url>` builds and deploys the container, checks authenticated service health and TMS reachability, then opens the App. The exact isolated command was exercised. `make review` instead builds and opens a disposable local simulator with no customer credentials or external business writes.
+Call and booking writes have their own durable histories. Shared negotiation decisions are persisted before the call record; if the second write fails, a concession can remain spent without having been heard. This conservative boundary prevents retries from refunding concessions. It is not a cross-table transaction.
 
-Point reads batch at their scheduled SQL slot without caching mutable state. Snapshot reads paginate, reject truncated replies and fail closed at their twenty-page bound. The App allows twenty seconds for operations snapshots and suppresses overlapping refreshes. History retention, cross-table non-atomicity, real provider quotas, shared delivery throttling before multi-instance scale, alert ownership and telephony answer/hold telemetry remain explicit pilot constraints.
+## Evidence and limits
 
-A staffed pilot should enroll trusted contacts, assign reps, agree arrival patterns and compare matched shifts on missed calls, rep effort and reviewed agreements. The [five-minute owner script](proposal-demo.md) pairs a new human call with its exact reservation and keeps simulated receipts and QA layers clearly identified.
+Local validation passed **581 service tests**, **97.5% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
+
+Historical Version 15 evidence includes three overlapping actual audio journeys and 71/74 native text checks. Those results belong to that exact version. Version 16 adds voice corrections and the AI disclosure; its release checks and actual deployment state are tracked in [readiness](readiness.md), without transferring old grades to the new prompt.
+
+The current email route and send settings are also recorded there. The approved demo inbox is not proof of a real carrier employee's identity. Measured experiments do not establish missed-call reduction, profit, production peak capacity or human accent/noise coverage. Trusted contact enrollment, operational ownership and representative workload testing remain responsibilities before a customer rollout.
+
+## History
+
+Version 8 and App Build 24 are retained as rollback references. The earlier source is available as `oldmain` and the local `baseline-v8` tag. All original evidence remains available.

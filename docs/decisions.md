@@ -179,7 +179,7 @@ These extend the November baseline; the four-part architecture, two Twin tables 
 | D-16 | `run_id` is the only call identity, in a hidden field | Active |
 | D-17 | Retries recognized by request fingerprint | **Replaced by D-26** |
 | D-18 | Neutral wording on `UNKNOWN`; no Confirm on `UNKNOWN` | Retired. The agent takes no part in the send, so it never has to describe `UNKNOWN`, and Confirm applies only to `RESERVED`. |
-| D-19 | `service/` on `main` is the only production code | Preserved baseline; ultimateProposal is an independently deployed isolated candidate, not a main promotion |
+| D-19 | `service/` on `main` is the submission source | Active. Main was fast-forwarded to the reviewed release; `oldmain` and local tag `baseline-v8` retain `15ce2b6`. Deployment state is recorded in readiness, not inferred from Git. |
 | D-20 | No standalone test bookings | Active. The owner authorized one exception on 2026-11-02: two probe sends, recorded in [tms-contract.md](tms-contract.md). |
 | D-21 | Real and synthetic calls kept apart | Tags and send guards remain; unified App reporting supersedes a separate-view requirement under D-40 |
 
@@ -187,7 +187,7 @@ Each original decision's full reasoning is in [architecture v2.5](https://github
 
 ## Reporting and the rep workspace
 
-The November 4 baseline report used a fixed, reconciled 49-call native inventory. That sample remains dated evidence in [KPI definitions](kpis.md). The current proposal admits new UUID-shaped call rows automatically, with historical inventory used only to enrich evidence, and shows all recorded agreements by default (D-40). The load ID alone remains insufficient for historical review because a released load may later belong to another call; links carry both load and run IDs.
+The November 4 baseline report used a fixed, reconciled 49-call native inventory. That sample remains dated evidence in [KPI definitions](kpis.md). The current App admits new UUID-shaped call rows automatically, with historical inventory used only to enrich evidence, and shows all recorded agreements by default (D-40). The load ID alone remains insufficient for historical review because a released load may later belong to another call; links carry both load and run IDs.
 
 ## Open checks
 

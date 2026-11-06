@@ -1,10 +1,12 @@
-# Independent review and remaining release gates
+# Independent review and release gates
 
-This proposal was built in an isolated branch. Main, its submission ZIP, the published Version 8 workflow and service release 17 remain the historical baseline. The baseline has not been replaced. Candidate App Build 10 is hosted in its own Apps Production slot; candidate voice V15 uses workflow Development and the isolated service uses Twin staging. The [readiness continuation](readiness.md) records the later development-only candidate, full-flow repairs, unified App and reproducible local review. The independent reviewers used the original five-page assignment PDF, source, genuine call evidence and offline reproductions. They were asked to find failures rather than validate the author's design.
+The submission source is on `main`. Review used the assignment PDF, source, recorded calls and offline reproductions to look for failures. The operating workspace is [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview). [Readiness](readiness.md) identifies the actual deployment state and separates current checks from historical evidence.
 
-The first implementation was pinned as `4f6bd51`. It passed 507 service tests and 56 App tests, yet the second review reproduced additional safety defects. Passing those suites was insufficient. The table records the repairs and the regression tests that now exercise them. Later exact-source acceptance and hosted checks are recorded in [readiness](readiness.md); this earlier review remains the failure history, not a list of all still-open gates.
+## Defects found and repaired
 
-| Failure demonstrated | Proposal repair and evidence |
+The first expanded implementation passed 507 service tests and 56 App tests, yet independent review reproduced additional safety defects. The repairs below now have regression coverage. Passing a suite was useful evidence, not proof of completeness.
+
+| Failure demonstrated | Repair and evidence |
 | --- | --- |
 | Accepted freight changed after the quote | Store operating facts, including ZIPs, and compare at acceptance and rep preflight. Material changes require a fresh pitch. `test_selling.py` and `test_rep_actions.py` exercise changed lane, equipment, pickup and dispatch ZIP. |
 | A TMS city sentence could disclose a private amount | Restrict locations, commodity and note clauses before voice exposure. Unknown prose and contradictory or incomplete freight become `shipment_review_required`. Reviewers independently retested a spelled-out private amount in a location. The historical feed check found 42/50 then-open loads usable and eight requiring review. |
@@ -20,42 +22,34 @@ The first implementation was pinned as `4f6bd51`. It passed 507 service tests an
 | Open calls were labeled as lost demand | Only evidenced ended calls enter lost-demand counts. Ongoing calls and missing end evidence are separate. Historical call links require known native provenance. |
 | Module and nested-function complexity escaped a green test suite | `make check` now enforces 300-line modules, 50-line functions and Radon A/B complexity for every AST function and class. Gate regressions cover nested closures, methods and classes. |
 
-## Capacity evidence has a boundary
 
-The [pilot guide](proposal.md) retains both successful and failed measurements. Removing redundant initial verification reads improved one isolated fifteen-request authority burst from one eligible result to fifteen, using the actual configured Twin pacer. A separate unpaced test checks twelve concurrent journeys and duplicate rep approvals. Neither establishes simultaneous voice capacity.
+## Negotiation review
 
-The independent paced full-flow runs exposed negotiation timeouts and partial durable holds. Those failed measurements remain documented. The hold repair prevents unsafe submission and overstated conversion after a timeout. The later fresh-read batching repair completed both controlled twelve-call workloads at the unchanged provider pacing and deadline, including a bounded history/polling workload. Three actual V15 voice calls also overlapped. These are separate accepted experiments; none establishes a general production call rate. [Current results](readiness.md#concurrency-and-read-budget).
+Human calls exposed a fixed concession ladder that rewarded different inflated requests. The current service uses bounded reciprocal movement and persistent carrier/load memory. Extreme and moderate descending probes no longer force a climb toward the cap. Separate clients share the same budget, while each call still requires verification and obeys its global round limit.
 
-## Voice candidate evidence
+Independent review of `cc84d6b` found two quote-retraction defects during implementation: a lower cap observed during search was not persisted, and another call's old quote could override the retraction. Both were repaired with regressions. The final review found no remaining local blockers and independently passed 92 focused negotiation, memory and selling tests. [Exact scenarios and limits](negotiation-review.md) retain the result and the conservative cross-row write boundary.
 
-### Historical Version 9 acceptance limits
+## Validation
 
-The Version 9 native checkpoint run passed 71 of 73 cases, including all fourteen newly added cases. Two historical expectations conflict with the intended new interaction: asking two missing details together, and placing a spoken recap after the private close action. The report keeps their original grades. An earlier corrected-amount failure remains recorded alongside the final four successful reruns.
+The current service passed 581 tests with 97.5% business-rule branch coverage, strict typing, lint and size/complexity gates. The App passed 65 tests, lint, typecheck and production build under Node 22. `make review` opened the authenticated App; Confirm sent one request to a TCP simulator and displayed FAKE0001/PENDING. These local checks used no real booking inventory.
 
-A complete mocked replay still invented times when its load fixture omitted the authoritative display labels. This remains a model failure and the candidate remains unpublished. The actual service checks both timestamps before a found response and produces the display labels deterministically. An HTTP regression verifies every returned load has both labels and that missing timestamps cannot produce a found load. This reduces exposure to the observed bad fixture but does not establish that the voice model is hallucination-free. The full replay also ended through idle timeout despite the native tool's end-after-execution setting. At that review point, reliable audible recap and termination remained open. Later V15 actual audio closed those three diagnostic scenarios; the new owner human call remains a separate gate. The retained [Version 9 native evidence](../happyrobot/qa-proposal.json) retains the root hash, exact bindings, checkpoints and failed full replay.
+Historical capacity measurements exposed timeouts before fresh-read batching. Subsequent controlled twelve-call workloads completed twelve agreements at the unchanged SQL pacing and tool deadline. Those runs predate cross-call negotiation memory and are not a latency claim for the updated runtime. [Readiness](readiness.md#concurrency-and-read-budget) links successful and failed measurements.
 
-### Version 10 ending repair, evidence at commit 3a9b414
+## Voice evidence
 
-The [Version 10 prompt](../happyrobot/prompt-proposal-v10.md) and [tool bindings](../happyrobot/proposal-tool-bindings-v10.json) are the historical ending-repair candidate. At that review point, this separate unpublished fork explicitly ended the conversation after the caller-facing close message and its tool result. The automatic tool-ending toggle is off, with [retained UI state](../happyrobot/v10-ending-state.txt) and a [screenshot](../happyrobot/v10-explicit-ending.jpg).
+Version 15's original 71/74 text grades remain unchanged, including S5, E6 and TRM. Inspection of E6 confirmed that its caller-facing close message omitted thanks. That finding must not be dismissed as a test mismatch. Any changed definition or rerun is new evidence, with the original grade retained.
 
-The [two targeted full mocked replays](../happyrobot/qa-proposal-v10.json) both recapped the exact load, rate, pending rep status and goodbye, then invoked the built-in ending two seconds after close_call without another caller turn. They finished in 35 and 38 seconds. Both safely omitted unsupported timestamps in the unchanged incomplete fixture. One repeated the initial MC question, which remains visible in its transcript.
+Version 16 adds fixed AI disclosure and the reviewed voice corrections. Its repeated checks found a ceiling-probe tool call, omitted CST and vague amount readback. Those real defects block promotion until the corrected successor is retested and accepted in actual audio. Version 15's three overlapping diagnostic audio calls establish only those exact journeys. Earlier Version 9 through Version 13 results, time-display failures and ending repairs remain available in the existing evidence files. None is a substitute for acceptance of the final version.
 
-Each native audit graded five passed, one failed and one not applicable. The failed historical criterion requests date displays absent from that fixture. Its failed grade remains unchanged. The 71/73 checkpoint result belongs only to Version 9. At commit 3a9b414, Version 10 had two targeted mocked acceptance passes, no full-matrix result and no real audio acceptance. Its safe omissions do not erase the older time hallucination or prove model immunity. Before promotion, rerun the focused refusal and amount-correction cases, the full matrix, and a normal complete-display voice call with interruptions and real hangup verification.
+## Remaining release gates
 
-### Later readiness continuation
+- Verify the final graph, disclosure, prompt and service bindings; complete native checks and actual voice acceptance on that version.
+- Measure the revised service under representative concurrent calls, including the additional shared-memory writes.
+- Verify the populated App, native recording access and same-run reservation.
+- Keep the owner-selected demo email route and hosted sends disabled. Show Confirm locally and identify any historical sandbox receipt separately.
+- Publish the tested workflow to Production, read back the active version and verify the production entry point before recording.
+- Record the owner's genuine call and walkthrough, then package the reviewed main commit. The owner submits through the portal.
 
-The subsequent development-only test campaign supersedes that limited V10 checkpoint. Its full original matrix scored 71/73, with S5 and C6 failed. V11 scored 64/75 across its original and two observable-close criteria. V12's initial sweep scored 71/73 and its aligned sweep scored 72/73, retaining the V16 equipment-ambiguity failure. Version 13 then passed the aligned 73-case matrix and three repeated checks each for equipment ambiguity, relative amounts and negative readback. The [versioned evidence](../happyrobot/qa-proposal-v13-checkpoints.json) preserves every prior grade and eight assertion-boundary corrections. Version 13 live speech then exposed a premature search on a partial lane. Version 15 adds the lane gate and grades 71/74 in its own matrix, with three native failures retained and their boundary limitations explained in the readiness guide. The newer candidate is published only to development; production remains Version 8. Exact V15 actual audio then completed three overlapping journeys with generated diagnostic callers and real integrations, one reservation and two intentional declines, all ending through the agent. It does not change the failed native grades. The separate native App has since passed hosted source/login/media acceptance. Human acceptance and production pilot gates remain separately scoped in the [current readiness guide](readiness.md).
+## History
 
-## Completed isolated acceptance and remaining gates
-
-Completed: reviewed source and isolated Fly deployment, candidate native App Build 10 source/login/media acceptance, exact V15 three-call actual audio acceptance, and local full-App browser Confirm with one simulated TCP booking write. The local fixture now mirrors the actual platform `id` identity shape. Hosted checks did not consume a real TMS load. [Acceptance records and exact scope](readiness.md).
-
-Before a production pilot:
-
-- Keep a named rep roster, independently enrolled carrier contacts and a reviewed environment configuration. Enable real sends only for fresh eligible records under an explicit release decision; historical imports remain immutable. Any real sandbox receipt exercise must be identified as its own transaction.
-- Agree representative arrival timing and tool budgets, then measure customer voice and dashboard workloads against real provider quotas. Shared delivery admission, alert routing, retention, operational ownership and external TMS finalization remain pilot responsibilities.
-- Record the owner's new human call and narration, then package the exact approved source. The [five-minute cue sheet](proposal-demo.md) uses that same fresh run's reservation and media. No final owner recording or portal submission is claimed.
-
-### Historical baseline browser and sample review
-
-The independent browser review exercised the assigned rep's Confirm against the local TCP simulator, observed one PENDING receipt, and replayed a stale version without another send. It checked all five menus at 390, 768 and 1280 pixels without horizontal overflow. The actual 49-call inventory reconciled to 36 verified calls, 29 matched and 19 reservations, with 18 agreements from one MC and a $50 median movement above opening. These are development trials across versions, not a representative business outcome study.
+Version 8 and App Build 24 remain rollback references. Source `15ce2b6` is retained as `oldmain` and local tag `baseline-v8`. The dated 49-call sample contained 36 verified calls, 29 matches and 19 reservations, dominated by one repeated MC. That sample informed the report; it is not a fixed current denominator or representative market study.

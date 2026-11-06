@@ -1,70 +1,51 @@
 # Inbound Carrier Sales
 
-A voice agent for HappyRobot Logistics, a freight brokerage. Carriers call in, get verified, hear matching loads and negotiate a rate. A senior rep then confirms the booking from an operations dashboard, with no dispatcher involved in the first leg of the call.
+An AI carrier-sales desk for HappyRobot Logistics. It verifies callers, finds freight, negotiates within approved limits and records an agreement for a senior rep to review. The rep sees the originating call, shipment, prices and decision history in one workspace.
 
-**Review the candidate:** [Carrier Sales Candidate, Build 10](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview). It is a separate hosted App backed by the isolated proposal service and Twin staging. [The validated Version 15 agreement](https://carrier-sales-proposal-sg.happyrobot.dev/?view=reservations&load=LD01123&run=8eb82ad6-79b8-4c11-94ab-99bd1ce34c9b) opens the actual automated-caller audio, $2,100 agreement and pending-rep record. Booking sends are disabled. Voice Version 15 runs only in workflow Development; the existing production baseline is preserved.
-
-Start with the [readiness evidence and one-command setup](docs/readiness.md), [business and IT build description](docs/build-description.md) and [five-minute owner script](docs/proposal-demo.md). The accepted c923f27 source contains the native candidate's 91-file App snapshot. Subsequent component README updates intentionally change only documentation; executable App/service code, configuration and policies still match their accepted manifests. The evidence separates actual audio, text checkpoints, fixture pressure and a new human recording.
-
-**Preserved baseline.** The [original hosted reservations](https://carrier-sales-santiago.happyrobot.dev/) belong to the released baseline. The [filmed Werner agreement](https://carrier-sales-santiago.happyrobot.dev/?view=reservations&load=LD01088&run=ec839a6a-d47f-49a7-94d7-617c19049b7f) links its $975 opening, $1,000 agreement and recording. A different web call, [LD01080](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f), has the reference-bearing PENDING receipt from the actual sandbox. Luke approved keeping that acknowledgement separate from a final booking.
-
-[Workflow Version 8](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc) is the published voice baseline. Its [recording regression](docs/confirmation-fix.md) documents a real misheard-price defect. The proposal voice candidate and its separate test evidence are identified in the review guide.
+[Open Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview). Start with the [build description](docs/build-description.md), [release status and evidence](docs/readiness.md), and [five-minute recording script](docs/proposal-demo.md). This repository's `main` branch is the submission source.
 
 ## How it works
 
-```text
-Carrier --> Voice workflow --> Carrier Sales Service --> Legacy TMS, FMCSA, email
-                                     ^        |
-Senior rep --> Operations app -------+        +--> Twin (calls and bookings)
+1. The workflow opens with a fixed AI disclosure and asks for the MC number.
+2. The service checks FMCSA authority and an emailed verification code before releasing freight details.
+3. It matches the caller's equipment and lane against the legacy TMS and checks shipment terms.
+4. It negotiates with bounded reciprocal concessions. The same verified carrier and load share their price and round budget across calls.
+5. Agreement creates a reservation. A senior rep reviews the call and controls any TMS submission.
+
+The model handles conversation; the service controls verification, money and state changes. A repeated request cannot create a second booking send. PENDING remains an acknowledgement, and only an authoritative BOOKED receipt becomes confirmed.
+
+## What the desk shows
+
+Reservations brings agreements and their calls together. Overview shows qualification, matching and reservation conversion with supporting records. Calls provides the event timeline and native recording link. Bookings separates pending, confirmed and uncertain receipts. Demand shows where ended calls lacked suitable freight or never reached a search.
+
+Price movement compares agreement with opening, not profit. Historical calls remain visible with their provenance. [KPI definitions](docs/kpis.md) explain the denominators and limits.
+
+## Review locally
+
+With Docker Compose and Python 3.12 installed:
+
+```bash
+make review
 ```
 
-1. **Verify.** The agent takes the MC number. The service checks FMCSA, then emails a code that the carrier reads back.
-2. **Match.** The service searches the TMS for open loads on the carrier's lane and equipment.
-3. **Negotiate.** The service prices each offer from a private ceiling, with at most three counter rounds.
-4. **Reserve.** On agreement the load is reserved in Twin, and the agent speaks a mocked transfer to a senior rep.
-5. **Confirm.** The rep clicks Confirm in the operations app, which sends the booking to the TMS.
+This opens an authenticated local App with a reservation. Confirm sends once to a TCP simulator and shows its PENDING receipt. It uses no customer credentials or cloud booking. `make review-down` removes the local environment.
 
-Two rules shape the design: the model talks and the service decides, and only a rep can send a booking. [ARCHITECTURE.md](ARCHITECTURE.md) explains how it all fits together.
+The latest local checks passed 581 service tests, 65 App tests, strict types, lint and production build. Business-rule branch coverage is 97.5%. [Readiness](docs/readiness.md) separates those results from live integration, text evaluations and spoken-call evidence, and lists outstanding release checks.
 
-## Repository
+## Repository map
 
-| Path | Contents |
-|---|---|
-| [ARCHITECTURE.md](ARCHITECTURE.md) | How the system works. Start here. |
-| [Diagram collection](docs/diagrams/index.html) | Teaching atlas, caller journey and historical diagrams, with viewers, PDFs and SVGs |
-| [docs/decisions.md](docs/decisions.md) | Material decisions, reasons and tradeoffs; D-36 to D-42 cover the proposal changes |
-| [docs/build-description.md](docs/build-description.md), [docs/qa-package.md](docs/qa-package.md), [docs/qa-results.md](docs/qa-results.md) | Business/IT description, separate QA layers and actual results |
-| [docs/readiness.md](docs/readiness.md), [docs/proposal-demo.md](docs/proposal-demo.md), [docs/kpis.md](docs/kpis.md) | Current setup, acceptance scope, five-minute owner script and exact KPI definitions |
-| [docs/submission.md](docs/submission.md), [docs/walkthrough.md](docs/walkthrough.md) | Preserved baseline submission and earlier recording outline, with links to current replacements |
-| [docs/lessons-from-prototype.md](docs/lessons-from-prototype.md) | What the prototype proved and what carries over |
-| [docs/onboarding.md](docs/onboarding.md) | Access, setup steps and current platform state |
-| [docs/assignment.md](docs/assignment.md) | Summary of the assignment and platform |
-| [docs/questions.md](docs/questions.md) | Questions to Luke and his answers |
-| [docs/tms/](docs/tms/README.md), [docs/tms-contract.md](docs/tms-contract.md) | TMS reference and live evidence, including spent loads |
-| [docs/platform-checks.md](docs/platform-checks.md), [docs/test-carriers.md](docs/test-carriers.md), [docs/research.md](docs/research.md) | Supporting evidence |
-| [docs/audits/](docs/audits/) | The two independent code audits of the prototype |
-| [service/](service/README.md) | Current Python service map; accepted runtime hashes remain pinned in readiness |
-| [tools/](tools/check_branch_coverage.py) | Build checks: the branch coverage gate that `make check` runs |
-| [happyrobot/](happyrobot/README.md) | The voice prompt, its tools and the conversation evals |
-| [ops-app/](ops-app/README.md) | Current dashboard, permissions and settings; dated releases are separate evidence |
-
-## Review in one command
-
-With Docker Compose and Python 3.12 installed, run `make review`. It builds the source, waits for readiness and opens a disposable authenticated App with one reservation. Confirm writes once to a local TCP simulator. No customer credentials, real email or cloud booking are used. `make review-down` removes only that local review environment. [Cloud deployment and tested limits](docs/readiness.md) are separate.
+| Read | Purpose |
+| --- | --- |
+| [Architecture](ARCHITECTURE.md), [decisions](docs/decisions.md) | System boundaries and tradeoffs |
+| [Submission](docs/submission.md), [review](docs/proposal-review.md) | Reviewer handoff and independent findings |
+| [Onboarding](docs/onboarding.md), [TMS reference](docs/tms/README.md) | Setup and integration contract |
+| [Service](service/README.md), [App](ops-app/README.md), [voice](happyrobot/README.md) | Source and component maps |
+| [Negotiation results](docs/negotiation-review.md), [QA package](docs/qa-package.md) | Adversarial checks and retained evidence |
 
 ## Development
 
-Requires Python 3.12.
+Use Python 3.12, install `requirements-dev.txt`, then run `make hooks` and `make check`. The commit hook checks staged source. `.env.example` lists settings; credentials stay outside Git.
 
-```bash
-python3.12 -m venv .venv
-source .venv/bin/activate
-make install
-make hooks
-```
+## History
 
-```bash
-make check
-```
-
-`make check` runs lint, format, strict type checks, tests, a 90% overall coverage floor and a 90% branch coverage gate on the business rules, and it is what CI runs. `make hooks` makes git run it before every commit on exactly the staged files, so a failing commit is refused locally too. Secrets never enter this repository; `.env.example` lists the names.
+`oldmain` and the local `baseline-v8` tag retain commit `15ce2b6`. Version 8 and App Build 24 remain rollback references. Their evidence is retained; [readiness](docs/readiness.md) records the actual deployment state.

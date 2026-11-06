@@ -12,7 +12,9 @@ Matching reads the TMS, checks availability and validates shipment terms. The ca
 
 Prices are service decisions, not model guesses. The working cap stays below the private TMS maximum. The opening price and concessions are deterministic and auditable.
 
-A first reachable ask may earn a small concession. Subsequent movement requires the carrier to improve their best prior ask, and our movement is bounded by that improvement. Repetition, increased demands and distant asks do not automatically raise our offer. The verified carrier and load share their negotiation memory across calls and restarts. Three rounds is a limit, not a promise to reach the cap. [Exact policy and adversarial results](negotiation-review.md) explain the demo thresholds and business tradeoff.
+We move toward a carrier who moves toward us, in steps of at least $25 while room remains, never above our private limit. Every above-offer ask must be within 25% above the opening; after the first ask, the carrier must improve the carrier's best prior amount by at least $25. We move one third of the remaining gap toward their ask or our limit, rounded down to $25 with that minimum step. Less than $25 of remaining room stops at the limit. If the caller asks less than our next offer, we agree at their exact amount.
+
+Inflated asks beyond reach, rising demands and token changes earn no increase. The verified carrier and load share their negotiation memory across calls and restarts. Three rounds is a limit, not a promise to reach the cap. [Exact policy and adversarial results](negotiation-review.md) explain the thresholds and business tradeoff. This floor correction is locally tested and awaits review and approved service deployment; existing Version 19 voice evidence uses the prior rule.
 
 A caller may still seek the best available deal. The policy limits the cost of that behavior; it does not claim negotiations are impossible to probe or that these thresholds maximize commercial conversion.
 
@@ -43,7 +45,7 @@ Call and booking writes have their own durable histories. Concessions and change
 
 ## Evidence and limits
 
-Local validation passed **591 service tests**, **98.1% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
+Local validation passed **604 service tests**, **98.1% business-rule branch coverage**, and **65 App tests** plus lint, typecheck and production build. The disposable App completed one TCP simulator booking with receipt FAKE0001 and PENDING. Independent review reproduced defects, prompted repairs and checked the regressions.
 
 Historical Version 15 evidence includes three overlapping actual audio journeys and 71/74 native text checks. Those results belong to that exact version. Version 19 is live with the fixed AI disclosure. Its two raw text sweeps scored 70/74 and 73/74, and ten focused checks passed. A real amount-clarification early close remains documented alongside judge interpretation issues. Its complete diagnostic voice journey and actual deployment are tracked in [readiness](readiness.md).
 

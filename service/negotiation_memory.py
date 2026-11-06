@@ -11,7 +11,7 @@ from service.adapters.twin import Data, Twin
 from service.core.loads import same_shipment, shipment_terms
 from service.core.models import Load
 from service.core.money import parse_ask
-from service.core.negotiation import Action, Step, respond
+from service.core.negotiation import NEGOTIATION_POLICY_VERSION, Action, Step, respond
 from service.core.pricing import MAX_ROUNDS, Terms
 
 
@@ -83,6 +83,7 @@ async def decide(
                     "ask": amount,
                     "offer": step.rate,
                     "round": step.rounds_used,
+                    "negotiation_policy_version": NEGOTIATION_POLICY_VERSION,
                 }
             )
         data["rounds"] = step.rounds_used

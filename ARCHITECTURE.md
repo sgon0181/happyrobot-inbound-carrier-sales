@@ -4,14 +4,14 @@ This describes the submission source on `main`. The [readiness guide](docs/readi
 
 | | |
 |---|---|
-| **Version** | 4.0, proposal architecture reconciled 2026-11-05 |
+| **Version** | 4.1, submission architecture reconciled 2026-11-07 |
 | **Operating workspace** | Native App Build 10, submission service and populated Twin staging. Booking sends remain disabled. Readiness identifies the tested voice version and deployment. |
-| **Evidence** | 591 service tests and 65 App tests. Voice grades and audio results belong to their exact version; current results and retained failures are in [readiness](docs/readiness.md). |
-| **Preserved baseline** | `oldmain` at 15ce2b6, production voice Version 8, service release 17 and original App Build 24. The 49-call sample is dated historical evidence, not the current reporting boundary. |
-| **Decisions** | Material choices, reasons and tradeoffs are in [docs/decisions.md](docs/decisions.md), including D-36 through D-42 for the proposal. |
+| **Evidence** | 604 local service tests and 65 App tests. The local floor patch is not deployed. Voice grades and audio results belong to their exact version; current results and retained failures are in [readiness](docs/readiness.md). |
+| **Historical rollback** | `oldmain` at 15ce2b6, voice Version 8, service release 17 and original App Build 24. The 49-call sample is dated historical evidence, not the current reporting boundary. |
+| **Decisions** | Material choices, reasons and tradeoffs are in [docs/decisions.md](docs/decisions.md), including D-36 through D-44 for the submission. |
 | **Requirements** | The [assignment PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf), summarized in [docs/assignment.md](docs/assignment.md). |
 
-The four-part architecture, two Twin tables, deterministic pricing policy and rep-only TMS submission already existed on the baseline. The proposal strengthens consent, authorization, failure recovery, read capacity and the operations workspace. It does not replace the platform or introduce a new datastore. Reservations now opens all recorded agreements, with an Awaiting rep filter; Overview derives stage progress and ended-call exceptions from the complete bounded snapshot.
+The four-part architecture uses HappyRobot for conversation, a deterministic Python service for authorization, Twin for state and Apps for operations. Twin contains three tables: calls, bookings and carrier/load negotiations. The third table adds durable shared concession memory within the existing datastore. Reservations opens all recorded agreements with an Awaiting rep filter; Overview derives stage progress and ended-call exceptions from the complete bounded snapshot.
 
 ---
 
@@ -226,7 +226,7 @@ service/
 tools/               Build gates and isolated review/deployment launchers
 ```
 
-This map describes the current proposal source. Build tooling is outside the runtime. Prototype migration history remains in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
+This map describes the current submission source. Build tooling is outside the runtime. Prototype migration history remains in [lessons from the prototype](docs/lessons-from-prototype.md#where-the-prototypes-files-went).
 
 The dependency direction is one way: `api` calls `calls`, `selling`, `rep_actions` and `dashboard`, which call `core` and `adapters`. `selling` writes call rows through `calls`. `core` imports nothing from the others.
 
@@ -268,11 +268,11 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 
 Twin has no multi-table transactions, but one row can be updated atomically with a version check. State and its own event therefore share one row. Agreement and load reservation still cross call/booking rows and use ID-bearing accepting claims, booking-row voids and retry recovery; they are not a transaction ([D-23](docs/decisions.md)).
 
-Both tables have the same shape, created once in the Twin UI because the API cannot create tables:
+All three tables have the same shape, created once in the Twin UI because the API cannot create tables:
 
 | Column | Type | Meaning |
 |---|---|---|
-| `id` | text, primary key | `run_id` for `calls`, load ID for `bookings` |
+| `id` | text, primary key | `run_id` for `calls`, load ID for `bookings`, MC plus load ID for `negotiations` |
 | `version` | int | Rises by one on every write |
 | `data` | jsonb | The row's fields, shown below. Not `json`: the SQL casts values to `::jsonb`, as on the prototype |
 
@@ -337,7 +337,7 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 ---
 
-**Capture coverage (deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, introduced with Version 4, retained in the baseline and current candidate, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Call counts cover persisted service requests and delivered end reports, not every platform call. No start-to-offer timing is inferred from the end webhook's receipt time.
+**Capture coverage (deployed).** Each search event retains its normalized criteria and the public load details returned to the agent; each negotiation event retains the amount as heard, normalized ask, response and round. Code delivery records sent or failed without the expected code. These are service actions, not proof of words spoken or heard. The end webhook records end initiator and duration even if no tool ran, introduced with Version 4, retained in the baseline and current submission, and only when the workflow reaches the webhook and Twin accepts it. An abrupt close has no invented summary. Call counts cover persisted service requests and delivered end reports, not every platform call. No start-to-offer timing is inferred from the end webhook's receipt time.
 
 **Historical imports and media provenance (D-40).** Imported call and booking rows carry `read_only` metadata. Call transitions, rep actions, reservation acquisition, voiding and source-consent checks refuse to mutate or submit them. Even a released imported booking blocks reuse; normal released rows remain reusable. Fresh call creation can stamp configured workflow provenance, from which the App constructs recording links for valid run IDs. Request fields cannot supply a URL. Historical native inventory enriches older rows; a UUID alone earns no media link.
 
@@ -356,7 +356,7 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 **Search** normalizes lane and equipment, then requires explicit `OPEN`, a future pickup and no active reservation. `LOAD_QUERY` also returns `PENDING` loads, so returned matches are checked locally. Loads on the [blocked list](service/policy/blocked-loads-v1.json) are never offered. Results are ranked by pickup time, and at most three are offered, one at a time. Only validated locations, cargo, chronology and approved complete operating clauses reach the voice payload. Unrecognized text, contradictory requirements or incomplete shipment facts require review instead of a false claim of no freight. When nothing matches, the search is recorded on the call.
 
-**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. The formatter leaves missing times null, but validation prevents such a load from being returned as found. Every found load carries both display strings. The voice prompt reads them instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. Display formatting was deployed in release 17 before Version 6 publication and is retained in the current candidate; the proposal additionally validates shipment chronology and completeness before quoting.
+**Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. The formatter leaves missing times null, but validation prevents such a load from being returned as found. Every found load carries both display strings. The voice prompt reads them instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. Display formatting was deployed in release 17 before Version 6 publication and is retained in the submission, which also validates shipment chronology and completeness before quoting.
 
 **Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. Luke did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
 
@@ -368,13 +368,15 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 Both draws use an HMAC of the policy version, load ID and purpose under a server secret. The same load gives the same numbers on every call, so calling back does not redraw the price. The secret prevents exact recomputation, but the public policy band and observed offers still constrain possible ceilings. These percentages are demo choices the brokerage would own.
 
-**Reciprocal policy.** A first ask within 10% of the standing offer can earn at most 2% of opening, rounded down to $25. Later asks must improve on the lowest prior ask; our increase is bounded by half that improvement and the same 2% limit. Asks outside the reachable band, increases and token changes earn no increase. Acceptance at or below the standing offer uses the caller's own amount. A new above-offer ask consumes a round even when we hold. Exact repeats do not. Three is a budget, not a requirement to reach the cap.
+**Reciprocal policy (D-43).** `reciprocal-v2` considers asks no more than 25% above the opening, not the moving quote. After the first ask, the carrier must improve the lowest prior ask by at least $25. The next authorized offer is `min(cap, offer + max(25, floor((min(ask, cap) - offer) / 75) * 25))`: one third of the capped gap rounded down to $25, with a $25 floor or the remaining cap room if smaller. Reach, step share, minimum improvement and version are constants in `core/negotiation.py`. Distant, rising and token asks do not increase the offer. Acceptance at or below the standing or next offer uses the caller's exact amount, so the floor never overpays a small ask. A new above-offer ask consumes a round even when we hold; exact repeats do not. Three is a budget, not a requirement to reach the cap.
 
-**Cross-call memory.** A new `negotiations` Twin table uses the same id/version/data shape. Each row is keyed by normalized verified MC and load ID and contains the shipment fingerprint, standing quote, lowest ask, rounds and at most three concession-decision events. New calls must independently verify and search. They resume the quote and shared budget; changing voice version, restarting the service or waiting does not reset it. Material shipment changes allow a fresh shared budget, but never reset the call's global three-round limit. Posted-rate or ceiling changes alone do not reset the budget. Lower price limits durably retract the quote; later increases cannot resurrect it. No automatic time expiry is implemented, intentionally preventing wait-and-retry resets. Human repricing is a future explicit operation, not a caller capability.
+Each new call negotiation event and shared round-decision event records `negotiation_policy_version`. Pricing-v1 still owns opening and cap, and is not renamed or redrawn. Old events are neither relabeled nor backfilled, and existing shared quotes and budgets survive the policy change.
+
+**Cross-call memory (D-44).** The `negotiations` Twin table uses the same id/version/data shape. Each row is keyed by normalized verified MC and load ID and contains the shipment fingerprint, standing quote, lowest ask, rounds and at most three concession-decision events. New calls must independently verify and search. They resume the quote and shared budget; changing voice version, restarting the service or waiting does not reset it. Material shipment changes allow a fresh shared budget, but never reset the call's global three-round limit. Posted-rate or ceiling changes alone do not reset the budget. Lower price limits durably retract the quote; later increases cannot resurrect it. No automatic time expiry is implemented, intentionally preventing wait-and-retry resets. Human repricing is a future explicit operation, not a caller capability.
 
 **Write boundaries.** A fresh exact opening acceptance with no existing memory or spent rounds needs no memory write; it linearizes at the fresh absent-row read. A concurrent later decision is never overwritten. Concessions, lower prices and existing rows retain shared-memory CAS. That CAS spends the concession first, then call-row CAS rechecks verification, shipment consent and the global call budget before recording or reserving. A failed second write may consume a concession without the caller hearing it; retry or redial does not refund it. There is no multi-row transaction claim. Memory failure fails closed. Search and negotiation do fresh reads, not a process-local cache. Concurrent searches can return a conservative older quote; negotiation always uses shared memory and fresh price limits. Acceptance retains the existing reservation claim and recovery flow.
 
-The implementation and scenario results are described in [the negotiation review](docs/negotiation-review.md). The third table is provisioned in Twin staging and the reviewed service is deployed; [readiness](docs/readiness.md) records exact release evidence. Existing historical calls remain immutable and are not retroactively treated as negotiations under the new policy.
+The implementation and scenario results are described in [the negotiation review](docs/negotiation-review.md). The third table and original reciprocal service are deployed in Twin staging. This floor correction is local, pending Claude review, owner approval, service deployment and one fresh Version 19 voice check; [readiness](docs/readiness.md) separates those release states. Existing historical calls remain immutable and are not retroactively treated as negotiations under the new policy.
 
 **What this protects, and what it costs.** A fixed percentage could be inverted to find the ceiling; the keyed gap removes that formula. Some leakage is unavoidable, because the cap creates an accept/reject boundary that probing can narrow, so confidentiality is a tested property, not a guarantee. A carrier whose ask stays above the cap can be turned away even below the private ceiling. The App counts evidenced final-offer exhaustion, not an independently proven causal loss to the ceiling.
 
@@ -384,7 +386,7 @@ The implementation and scenario results are described in [the negotiation review
 
 **On the call.** When a carrier accepts, `negotiate` re-reads the load, then inserts the booking row. If that insert loses, the load has gone and the agent says so. Nothing has been sent, so a dropped call, a misheard yes or a failed write leaves at worst a reservation for the rep to review. A reservation does not expire, so it holds the load until a rep acts.
 
-**Shipment-bound consent (D-36).** Each quote stores its shipment facts, including dispatch ZIPs. Acceptance and rep submission compare the fresh TMS facts. Changed terms require a new pitch and acceptance. A stable shipment retains its spoken price through a repeated search or ask, unless the current cap requires a lower quote. A rising posted rate never silently raises a prior quote. A carrier's own earlier lower ask bounds later counters on those same terms. A changed shipment clears those per-load facts and retains the call-wide round budget.
+**Shipment-bound consent (D-36).** Each quote stores its shipment facts, including dispatch ZIPs. Acceptance and rep submission compare the fresh TMS facts. Changed terms require a new pitch and acceptance. A stable shipment retains its spoken price through a repeated search or ask, unless the current cap requires a lower quote. A rising posted rate never silently raises a prior quote. A carrier must improve their best prior ask before another concession on those same terms; acceptance at their exact amount prevents offering more than they requested. A changed shipment clears those per-load facts and retains the call-wide round budget.
 
 A booking row is a durable hold. Rep submission additionally requires the source call to have a matching finalized agreement and trusted-contact verification. A terminal webhook can recover a hold whose acceptance write was interrupted, but labels it as requiring carrier follow-up. That hold can be released, cannot be sent and is excluded from the conversion numerator. This is a safety repair, not evidence the caller heard a completed handoff.
 
@@ -542,7 +544,7 @@ The following slices describe the completed November 2 to 4 baseline, not unfini
 
 **Definition of done** is one real run showing: an active MC, an emailed code, at least one counter, a spoken mocked transfer, the agent ending the session, complete Twin rows, and a rep Confirm that returns a TMS reference.
 
-**Current delivery state.** Candidate source, isolated hosting, three automated-caller audio scenarios and the local browser Confirm are accepted within their documented scope. A new owner human call and final recording remain to be completed using the [current script](docs/proposal-demo.md). Production pilot acceptance is separate. The original same-day target is historical. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
+**Current delivery state.** Main is the submission source. App Build 10 and workflow Version 19 are live on the submission stack with guarded booking. Dated diagnostic audio and local browser Confirm evidence are accepted within their documented scope; the local concession-floor patch awaits review, approval and a fresh service/voice acceptance check. A new owner human call and final recording remain to be completed using the [current script](docs/proposal-demo.md). Production pilot acceptance is separate. The original same-day target is historical. There is no fallback to `prototype/e2e` ([D-33](docs/decisions.md)); it stays as reference only.
 
 ---
 

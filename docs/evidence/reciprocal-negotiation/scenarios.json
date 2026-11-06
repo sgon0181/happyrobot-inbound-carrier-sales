@@ -1,5 +1,7 @@
 {
-  "scope": "Offline deterministic fixture; opening 4600, working cap 5000. Not live calls.",
+  "scope": "Offline deterministic fixtures, not live calls. Six scenarios use opening 4600 and working cap 5000. Floor cases stop at agreement.",
+  "negotiation_policy_version": "reciprocal-v2",
+  "previous_source_commit": "26c17edfaa2c4824353de0a34f89c6cc8dce9098",
   "scenarios": {
     "extreme_descending": {
       "asks": [
@@ -26,8 +28,8 @@
       ],
       "offers": [
         4600,
-        4600,
-        4600
+        4725,
+        4800
       ],
       "actions": [
         "counter",
@@ -42,14 +44,14 @@
         4800
       ],
       "offers": [
-        4675,
         4725,
-        4775
+        4775,
+        4800
       ],
       "actions": [
         "counter",
         "counter",
-        "final_offer"
+        "accept"
       ]
     },
     "increasing_demands": {
@@ -59,9 +61,9 @@
         5200
       ],
       "offers": [
-        4675,
-        4675,
-        4675
+        4725,
+        4725,
+        4725
       ],
       "actions": [
         "counter",
@@ -76,9 +78,9 @@
         4998
       ],
       "offers": [
-        4675,
-        4675,
-        4675
+        4725,
+        4725,
+        4725
       ],
       "actions": [
         "counter",
@@ -94,8 +96,8 @@
       ],
       "offers": [
         4600,
-        4675,
-        4725
+        4725,
+        4775
       ],
       "actions": [
         "counter",
@@ -103,5 +105,191 @@
         "final_offer"
       ]
     }
-  }
+  },
+  "floor_regressions": [
+    {
+      "opening": 975,
+      "cap": 1150,
+      "asks": [
+        1050,
+        1025,
+        1000
+      ],
+      "before": [
+        {
+          "ask": 1050,
+          "action": "counter",
+          "rate": 975,
+          "round": 1
+        },
+        {
+          "ask": 1025,
+          "action": "counter",
+          "rate": 975,
+          "round": 2
+        },
+        {
+          "ask": 1000,
+          "action": "final_offer",
+          "rate": 975,
+          "round": 3
+        }
+      ],
+      "after": [
+        {
+          "ask": 1050,
+          "action": "counter",
+          "rate": 1000,
+          "round": 1
+        },
+        {
+          "ask": 1025,
+          "action": "accept",
+          "rate": 1025,
+          "round": 2
+        }
+      ]
+    },
+    {
+      "opening": 1125,
+      "cap": 1300,
+      "asks": [
+        1200,
+        1175,
+        1150
+      ],
+      "before": [
+        {
+          "ask": 1200,
+          "action": "counter",
+          "rate": 1125,
+          "round": 1
+        },
+        {
+          "ask": 1175,
+          "action": "counter",
+          "rate": 1125,
+          "round": 2
+        },
+        {
+          "ask": 1150,
+          "action": "final_offer",
+          "rate": 1125,
+          "round": 3
+        }
+      ],
+      "after": [
+        {
+          "ask": 1200,
+          "action": "counter",
+          "rate": 1150,
+          "round": 1
+        },
+        {
+          "ask": 1175,
+          "action": "accept",
+          "rate": 1175,
+          "round": 2
+        }
+      ]
+    },
+    {
+      "opening": 1900,
+      "cap": 2200,
+      "asks": [
+        2200,
+        2100,
+        2050
+      ],
+      "before": [
+        {
+          "ask": 2200,
+          "action": "counter",
+          "rate": 1900,
+          "round": 1
+        },
+        {
+          "ask": 2100,
+          "action": "counter",
+          "rate": 1900,
+          "round": 2
+        },
+        {
+          "ask": 2050,
+          "action": "final_offer",
+          "rate": 1925,
+          "round": 3
+        }
+      ],
+      "after": [
+        {
+          "ask": 2200,
+          "action": "counter",
+          "rate": 2000,
+          "round": 1
+        },
+        {
+          "ask": 2100,
+          "action": "counter",
+          "rate": 2025,
+          "round": 2
+        },
+        {
+          "ask": 2050,
+          "action": "accept",
+          "rate": 2050,
+          "round": 3
+        }
+      ]
+    },
+    {
+      "opening": 1900,
+      "cap": 2200,
+      "asks": [
+        2050,
+        2000,
+        1975
+      ],
+      "before": [
+        {
+          "ask": 2050,
+          "action": "counter",
+          "rate": 1925,
+          "round": 1
+        },
+        {
+          "ask": 2000,
+          "action": "counter",
+          "rate": 1950,
+          "round": 2
+        },
+        {
+          "ask": 1975,
+          "action": "final_offer",
+          "rate": 1950,
+          "round": 3
+        }
+      ],
+      "after": [
+        {
+          "ask": 2050,
+          "action": "counter",
+          "rate": 1950,
+          "round": 1
+        },
+        {
+          "ask": 2000,
+          "action": "counter",
+          "rate": 1975,
+          "round": 2
+        },
+        {
+          "ask": 1975,
+          "action": "accept",
+          "rate": 1975,
+          "round": 2
+        }
+      ]
+    }
+  ]
 }

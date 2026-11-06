@@ -31,7 +31,7 @@ Independent review of `cc84d6b` found two quote-retraction defects during implem
 
 ## Validation
 
-The current service passed 591 tests with 98.1% business-rule branch coverage, strict typing, lint and size/complexity gates. The App passed 65 tests, lint, typecheck and production build under Node 22. `make review` opened the authenticated App; Confirm sent one request to a TCP simulator and displayed FAKE0001/PENDING. These local checks used no real booking inventory.
+The local service passed 604 tests with 98.1% business-rule branch coverage, strict typing, lint and size/complexity gates. The App passed 65 tests, lint, typecheck and production build under Node 22. `make review` opened the authenticated App; Confirm sent one request to a TCP simulator and displayed FAKE0001/PENDING. These local checks used no real booking inventory. The concession-floor correction awaits Claude review and owner-approved service deployment; existing hosted voice evidence remains on the prior rule.
 
 Historical capacity measurements exposed timeouts before fresh-read batching. The new memory then regressed twelve-call opening-acceptance workloads. Review found a safe redundant-write optimization and added ten regressions. [Current before/after capacity evidence](reciprocal-capacity.md) shows all three workloads completing twelve agreements with no unfinished claims. The deadline and provider pacing are unchanged. The fixtures do not establish live peak or heavy negotiation capacity.
 

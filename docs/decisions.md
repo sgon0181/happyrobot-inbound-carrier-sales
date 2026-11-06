@@ -1,9 +1,6 @@
 # Decisions
 
-**Proposal checkout.** The [Friday pilot guide](proposal.md) identifies the branch changes, test evidence and deployment prerequisites. Hosted links and release descriptions below refer to the published baseline. The proposal voice candidate and App are separate from the published release.
-
-
-Material design decisions, why they were made and what they cost. The dated baseline choices remain below; D-36 through D-42 document the current proposal and link its accepted evidence. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result; this file explains the choices. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
+Material design decisions, why they were made and what they cost. The dated baseline choices remain below; D-36 through D-44 document the submission design. [ARCHITECTURE.md](../ARCHITECTURE.md) describes the result, and [readiness](readiness.md) distinguishes deployed evidence from local changes awaiting review. Numbers from the prototype are measured unless marked as estimates. Sources are the two audits in [audits/](audits/) and [lessons from the prototype](lessons-from-prototype.md).
 
 ## Decisions made on 2026-11-02
 
@@ -19,9 +16,9 @@ Replaces D-8. On November 5 Luke accepted the approach described in the November
 - **Cost:** a booking failure appears after the call, so the rep calls the carrier back. The TMS shows the load `OPEN` until Confirm, so Confirm must re-check it. D-8's reasoning that `PENDING` reads as the tentative stage no longer applies; `PENDING` is now simply what the TMS returned.
 - **Would change it:** a reply from Luke, or a rubric, requiring the send during the call.
 
-### D-23: Two tables, with each row holding its own events
+### D-23: State and its events share a versioned row
 
-Replaces the nine prototype tables.
+The original call and booking tables replaced nine prototype tables. D-44 adds durable carrier/load negotiations as a third Twin table, using the same row and event boundary.
 
 - **Why:** Twin has no multi-table transactions, but one row updates atomically with a version check. Anything spread across rows can stop halfway.
 - **Evidence:** three prototype failures came from this. Reservation spanned claims, a call freeze and a booking row. OTP consumption and call verification were separate writes. State saved first and its audit event afterwards, so an event could be lost. Of 70 statements per call, 13 were audit writes.
@@ -47,7 +44,7 @@ Replaces the nine prototype tables.
 
 ### D-26: Repeated requests are answered from stored state
 
-Replaces D-17. Each operation checks whether its effect already happened, so a repeat is safe without a fingerprint cache or a time window. The prototype's cache took about two-thirds of each call row. Platform retries were never proven to happen. The readiness proposal retains up to three concession-producing load/ask signatures with their shipment context, so an interleaved retry cannot consume another global round. A later safe standing quote remains binding, and accepting it takes priority over an older signature. Replays report the current global round and final-offer status, so an old request cannot reopen bargaining after the final quote. Changed shipment facts clear those per-load signatures, while the call-wide round limit remains.
+Replaces D-17. Each operation checks whether its effect already happened, so a repeat is safe without a fingerprint cache or a time window. The prototype's cache took about two-thirds of each call row. Platform retries were never proven to happen. The current submission retains up to three concession-producing load/ask signatures with their shipment context, so an interleaved retry cannot consume another global round. A later safe standing quote remains binding, and accepting it takes priority over an older signature. Replays report the current global round and final-offer status, so an old request cannot reopen bargaining after the final quote. Changed shipment facts clear those per-load signatures, while the call-wide round limit remains.
 
 ### D-27: No background jobs
 
@@ -109,11 +106,11 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **Version 7 follow-up:** owner call b4f55923 clarified a broken amount to a 3800 prefix, then added 25 after negotiate. The owner intended 3825. After an actual clarification request, read back the complete total and require an explicit yes before negotiate; a fragment/correction or changed load invalidates it. Clear initial amounts, direct acceptance, repeated asks and same-number service retries remain direct. Do not suggest a calculated example. Version 7 also pitches every supplied operating condition/fee without adding note fees to the service offer. No service, model or orchestration change.
 - **Evidence and cost:** 11 Version 6 timed traces have one close and one proactive hangup each, no subsequent caller turn, and stored end records; audio listening is not claimed. Version 7 passes 51 checkpoints twice; two fully mocked multi-turn traces preserve 3825 and notes but do not record final spoken closing. Ambiguous amounts add a confirmation turn. This cannot eliminate every STT segmentation race. See voice-tuning.md.
 - **Version 8 follow-up:** recorded Version 7 call b61fba6e submitted 110025 after an explicit No and later 1125 after renewed clarification without readback. Version 8 gives pending confirmation priority, treats No as non-confirmation and requires a fresh affirmative after a corrected total. An eight-case suite scored 16/24 on unchanged Version 7, exposing eight failed executions; final focused 24/24 and full 59-case suite twice 118/118 pass. Two mocked complete replays submitted only 1125 after readback and Yes. The owner reports a successful normal Version 8 call, without an independent transcript/audio review. See confirmation-fix.md.
-- **Limits:** Version 8 is live. No repeat of the superseded Version 7 stress-call script is required. Live speech retesting of the split-number edge case remains unverified. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. The Version 6 closing mechanism is released; the conditional amount-confirmation follow-up is now live.
+- **Historical limits:** Version 8 was live when this entry was written; Version 19 is now live, as recorded in [readiness](readiness.md). No repeat of the superseded Version 7 stress-call script is required. Live speech retesting of the split-number edge case remains unverified. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. The Version 6 closing mechanism is released; the conditional amount-confirmation follow-up is now live.
 
-## Proposal decisions consolidated on 2026-11-05
+## Submission decisions consolidated on 2026-11-05
 
-These extend the November baseline; the four-part architecture, two Twin tables and pricing-v1 percentages are unchanged. [Readiness](readiness.md) pins deployments, measurements and remaining pilot gates.
+These extend the November baseline. The four-part architecture and pricing-v1 opening/cap calculation remain; D-43 changes concessions, and D-44 adds the third Twin table for shared negotiation memory. [Readiness](readiness.md) pins deployments, measurements and remaining pilot gates.
 
 ### D-36: Consent belongs to a shipment, not just a load ID
 
@@ -193,7 +190,7 @@ The November 4 baseline report used a fixed, reconciled 49-call native inventory
 
 | ID | Question | State | If it fails |
 |---|---|---|---|
-| T-1 | Do Twin version checks and primary keys hold? | Proven on probes and real tables, and on the new `calls` table from Fly on 2026-11-03: insert, version-checked update, and a stale update refused. `id` is the primary key of both tables. | Small Postgres for coordination, justified under PDF p.4 |
+| T-1 | Do Twin version checks and primary keys hold? | Proven on probes and real tables, and on the new `calls` table from Fly on 2026-11-03: insert, version-checked update, and a stale update refused. `id` is the primary key of all three current tables; later negotiation-table provisioning and readback are recorded in readiness. | Small Postgres for coordination, justified under PDF p.4 |
 | T-2 | What do `PENDING`, currency and bounds mean? | Q8 answered on November 5 for the demonstrated handling. External finalization is unspecified. Currency and rate bounds remain open under Q3. [Clarifications](questions.md) | Show the actual status and disclose the assumption |
 | T-3 | Can the service deliver codes? | Proven: Gmail SMTP from Fly | |
 | T-4 | Does `run_id` arrive outside model arguments? | Proven on the prototype, and on the real workflow on 2026-11-03: the model's tool arguments held only the MC and code, and the Twin row is keyed by the run's ID. | |
@@ -205,10 +202,20 @@ The November 4 baseline report used a fixed, reconciled 49-call native inventory
 | T-10 | Does the platform retry tool calls? | Unknown. D-26 is safe either way. | |
 
 
-## Local proposal: bounded reciprocal negotiation and persistent memory
+## Decisions made on 2026-11-07
 
-Status: implemented locally, not deployed. Owner requested results before publication.
+### D-43: Reciprocal negotiation with a meaningful concession floor
 
-Human acceptance exposed a commercial weakness: different inflated asks advanced a fixed concession ladder. Replace that ladder with bounded reciprocal movement while preserving deterministic service authorization. Reachability is 10% above the standing offer; each concession is at most 2% of opening rounded down to $25; after the first ask it is also capped at half the carrier's improvement over their best prior ask. These are explicit demo policy choices, not inferred market rates.
+- **Why:** fixed round targets rewarded inflated anchors. The first reciprocal rule stopped that ladder but rounded a 2% allowance to zero for openings below $1,250; half of a $25 carrier improvement also rounded to zero. Valid deals stalled with a $25 gap despite available room.
+- **Choice:** `reciprocal-v2` moves toward a carrier who moves toward us. An ask must be within 25% above the opening. After the first ask, it must improve the best prior ask by at least $25. Move one third of the gap to the lower of ask and private cap, rounded down to $25, with a $25 minimum; stop at the cap if less room remains. Accept the caller's exact amount when it is at or below our standing or next offer. Keep pricing-v1 and its HMAC draws unchanged.
+- **Controls:** distant, rising and token asks hold. A new above-offer ask spends a round even when held; exact replays do not. Three rounds, final refusal and lower-cap retraction remain unchanged. Each new call negotiation event and shared decision event carries `negotiation_policy_version`; historical events keep their original fields and values.
+- **Tradeoff:** the floor and wider reach improve small-gap conversion but allow larger concessions than the original 2% rule. A descending ask inside the reachable band can earn money, even if it began at a distant anchor. These are explicit brokerage policy choices, not market estimates, optimal-strategy claims or immunity from probing. The cap and durable budget bound exposure. [Before/after examples and adversarial results](negotiation-review.md) show the cost.
+- **Release:** this floor correction is local and awaiting Claude review and owner approval. Current Version 19 speech evidence belongs to the previously deployed rule. No prompt or workflow change accompanies this patch.
 
-Use one version-checked Twin negotiation row per verified carrier/load. A new session, workflow version or service restart cannot create a fresh concession budget. No automatic expiry is added. A changed material shipment starts a new shared negotiation; price-only changes do not. Preserve the global three-round call limit and existing booking recovery. Shared writes precede call writes, deliberately choosing conservative budget consumption if the second write fails. Do not deploy until the table exists and staging tests pass. Historical negotiations are not backfilled or reinterpreted. See [review and results](negotiation-review.md).
+### D-44: A third Twin table holds durable carrier/load memory
+
+- **Why:** per-call limits alone let a caller redial, restart or switch voice versions to obtain another concession budget. The shared budget belongs to the verified MC and material shipment, not the session.
+- **Choice:** `negotiations` uses the same `id`, `version`, `data` shape as calls and bookings, keyed by normalized MC and load ID. It stores the standing offer, best ask, spent rounds, seen asks, shipment facts and decision events. It is already provisioned in Twin staging. Every new call still verifies and searches independently.
+- **No expiry:** waiting does not reset the budget. Price-only changes do not reset it either; lower limits durably retract the quote. A material shipment change begins a fresh shared negotiation while preserving the call-wide three-round limit. Explicit operator repricing and retention are future operations, not caller capabilities.
+- **Write boundary:** shared CAS precedes call CAS. A failed call write may leave a concession spent without it being heard; this prevents retries from refunding money. The unchanged opening-acceptance optimization skips a redundant write only after a fresh absent-row read with no spent rounds. There is no cross-table transaction. [Capacity evidence](reciprocal-capacity.md) records the measured cost and repair.
+- **Tradeoff:** this adds reads and writes and requires retention planning; it intentionally favors a durable budget over time-based flexibility. No old rows are reset, backfilled or reinterpreted. New events are versioned under D-43. Memory follows an MC, not a uniquely authenticated human dispatcher; demo inbox access does not establish real carrier identity.

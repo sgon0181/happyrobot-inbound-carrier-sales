@@ -11,9 +11,10 @@ from enum import Enum
 from service.core.money import parse_ask
 from service.core.pricing import MAX_ROUNDS, Terms
 
-REACH_BPS = 11000  # asks within 10% of the standing offer can be negotiated
-CONCESSION_BPS = 200  # at most 2% of opening per new round
-ROUNDING = 25
+NEGOTIATION_POLICY_VERSION = "reciprocal-v2"
+REACH_BPS = 12500  # fixed to opening, so concessions do not expand reach
+STEP_DIVISOR = 3  # move one third of the reachable gap, rounded down
+MIN_STEP = 25  # also the minimum carrier improvement and rounding unit
 
 
 class Action(Enum):
@@ -58,12 +59,12 @@ def respond(
 
 def concession(terms: Terms, offer: int, ask: int, best_ask: int | None) -> int:
     """Never reward distance, escalation, or a token change rounded up to money."""
-    if ask * 10000 > offer * REACH_BPS:
+    if ask * 10000 > terms.opening * REACH_BPS:
         return offer
-    budget = terms.opening * CONCESSION_BPS // 10000
-    if best_ask is not None:
-        budget = min(budget, max(0, best_ask - ask) // 2)
-    increase = budget // ROUNDING * ROUNDING
+    if best_ask is not None and best_ask - ask < MIN_STEP:
+        return offer
+    gap = min(ask, terms.cap) - offer
+    increase = max(MIN_STEP, gap // STEP_DIVISOR // MIN_STEP * MIN_STEP)
     return min(terms.cap, offer + increase)
 
 

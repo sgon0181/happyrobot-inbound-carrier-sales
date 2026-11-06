@@ -2,6 +2,8 @@
 
 `main` is the submission source. The operating workspace is [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview), served by `https://happyrobot-proposal-sg.fly.dev`. The populated Twin staging workspace is retained deliberately, including 74 recorded call rows and 19 booking rows at the 22:21 UTC release snapshot (November 6), with later calls appended. The App's hosting slot, workflow deployment and Twin environment are separate settings.
 
+The local `reciprocal-v2` concession-floor correction is pending Claude review and owner approval. It has not been deployed or exercised in a new voice call. Hosted evidence below remains tied to `9d051ba`; [the policy review](negotiation-review.md) contains the local before/after cases and fresh recording inventory.
+
 ## Current release state
 
 | Component | Verified state |
@@ -20,17 +22,20 @@ The code goes to a demo inbox, so it proves inbox access, not carrier identity; 
 
 | Layer | Result | Scope |
 | --- | --- | --- |
-| Current service | 591 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
+| Deployed service source | 591 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
+| Local floor correction | 604 tests; 98.1% business-rule branch coverage; 3,871 production Python lines; lint, types and shape gates pass | Local source only, awaiting Claude review and owner-approved deploy |
 | Current App | 65/65 tests; lint, typecheck and production build pass | UI and server-route behavior |
 | Local end to end | `make review` healthy; one TCP booking; FAKE0001/PENDING shown in the App | Disposable local simulator, not a hosted booking |
-| Reciprocal negotiation | Extreme and moderate ladders hold; bounded reciprocal movement, retries, reconnects and concurrent calls pass | [Executed scenarios and review](negotiation-review.md) |
+| Reciprocal negotiation | Local floor correction: extreme asks hold; improving asks inside reach earn bounded movement; retries, reconnects and concurrent-call budgets are retained | [Executed scenarios and review](negotiation-review.md) |
 | Historical Version 15 audio | Three actual diagnostic WebRTC calls overlapped for 176.78 seconds; one agreement and two intentional declines | Exact Version 15 integration, not Version 16 acceptance |
 | Historical Version 15 text | 71/74; S5, E6 and TRM failed and retained | Original grading definitions and source hash |
 | Final Version 19 text | Raw 70/74 and 73/74; focused 10/10 | Four judge interpretation issues and one genuine early-close limitation remain visible |
 | Final Version 19 voice | Full diagnostic journey on deployed `9d051ba`: LD01134 reserved at $3,725 after bounded negotiation | Generated caller, live FMCSA, email, TMS reads and Twin; no booking send |
 | Final owner recording | Pending | Genuine human call and same-run demo |
 
-The App checks ran under Node 22 in the repository's Docker image because the host Homebrew Node runtime had a missing library. Production build used `NODE_ENV=production`. A first run inheriting the review image's development value failed; the corrected production build passed. Local validation logs retain both outcomes.
+The floor-correction pass repeated all four App gates under Node 22.23.4 and exercised browser Confirm against a freshly built disposable stack: exactly one TCP send, FAKE0001/PENDING. All 30 runtime files matched the local source. This does not replace the required post-deployment Version 19 voice check. [Validation record](evidence/reciprocal-negotiation/floor-validation.json).
+
+The previous release App checks ran under Node 22 in the repository's Docker image because the host Homebrew Node runtime had a missing library. Production build used `NODE_ENV=production`. A first run inheriting the review image's development value failed; the corrected production build passed. Local validation logs retain both outcomes.
 
 ## Reproduce the application
 
@@ -68,7 +73,7 @@ Call data is evidence of recorded service decisions, not proof of every spoken w
 
 [Version 19 prompt](../happyrobot/prompt-v19.md) and its fixed initial message identify the AI before asking for an MC. All seven HTTP bindings point to the submission service. The complete native [checkpoint evidence](../happyrobot/qa-v19-checkpoints.json) records two raw sweeps, **70/74 and 73/74**, plus **10/10 focused consent and exit checks**. No run is pending. Numeric final counteroffers and missing-display fallback both pass twice. Four failed grades are documented judge interpretation issues; they remain failed in the raw evidence.
 
-One genuine limitation remains: after repeated amount clarification, a contradictory response such as "No, it is 110025 dollars" can end the call instead of asking again. It creates no unconfirmed booking, but can lose a valid caller opportunity. This is a known conversational reliability limit, not a green test or an enterprise readiness claim.
+One genuine limitation remains (R1): after repeated amount clarification, a contradictory response such as "No, it is 110025 dollars" can end the call instead of asking again. It creates no unconfirmed booking, but can lose a valid caller opportunity. This is a known conversational reliability limit, not a green test or an enterprise readiness claim.
 
 Version 15's original [71/74 grades](../happyrobot/qa-proposal-v15-checkpoints.json) remain preserved. E6 run `2a056bd2-b249-445b-80a0-10e417d4b482` lacked thanks inside `close_call._message` under its original criterion. The checkpoint did not prove the later voice hangup farewell. Versioned S5, E6, TRM and V4 criteria now distinguish the caller-facing close message from optional post-close text. Full speech is assessed separately. Later results do not rewrite Version 15's grades.
 

@@ -1,0 +1,90 @@
+{
+  "date": "2026-11-07",
+  "scope": "Local concession-floor correction on main, not deployed. No prompt or workflow change, new hosted voice run, cloud booking send or hosted Twin mutation.",
+  "base_commit": "26c17edfaa2c4824353de0a34f89c6cc8dce9098",
+  "negotiation_policy_version": "reciprocal-v2",
+  "production_python_physical_lines": 3871,
+  "make_check": {
+    "exit_code": 0,
+    "service_tests_passed": 604,
+    "business_rule_branches": {
+      "covered": 353,
+      "total": 360,
+      "percent": 98.1
+    },
+    "combined_coverage_percent_rounded": 99,
+    "stdout": "ruff check service tools\nAll checks passed!\nruff format --check service tools\n82 files already formatted\npython tools/check_service_shape.py\nProduction service meets the module, function and Radon complexity gates.\nmypy\nSuccess: no issues found in 81 source files\ncoverage run -m pytest -q\n........................................................................ [ 11%]\n........................................................................ [ 23%]\n........................................................................ [ 35%]\n........................................................................ [ 47%]\n........................................................................ [ 59%]\n........................................................................ [ 71%]\n........................................................................ [ 83%]\n........................................................................ [ 95%]\n............................                                             [100%]\n604 passed in 13.91s\ncoverage report\nName                               Stmts   Miss Branch BrPart  Cover   Missing\n------------------------------------------------------------------------------\nservice/__init__.py                    0      0      0      0   100%\nservice/adapters/__init__.py           0      0      0      0   100%\nservice/adapters/email.py             57      0     10      0   100%\nservice/adapters/fmcsa.py             49      0     12      0   100%\nservice/adapters/tms/__init__.py       0      0      0      0   100%\nservice/adapters/tms/client.py       135      0     38      0   100%\nservice/adapters/tms/mapping.py       33      0      6      0   100%\nservice/adapters/tms/protocol.py      87      0     40      0   100%\nservice/adapters/twin.py             155      3     44      3    97%   168, 202, 216\nservice/adapters/twin_reads.py        71      0     18      1    99%   93->92\nservice/api.py                       169      2     16      2    98%   88, 91\nservice/bookings.py                   52      0     14      0   100%\nservice/call_state.py                 26      0      6      0   100%\nservice/calls.py                     171      3     50      1    98%   174, 176, 290\nservice/config.py                    100      0     26      0   100%\nservice/core/__init__.py               0      0      0      0   100%\nservice/core/approved_freight.py      25      0      4      0   100%\nservice/core/carrier_policy.py        45      0     20      0   100%\nservice/core/codes.py                 62      0     16      0   100%\nservice/core/loads.py                 59      0     10      0   100%\nservice/core/models.py                26      0      0      0   100%\nservice/core/money.py                 13      0      4      0   100%\nservice/core/negotiation.py           49      0     18      0   100%\nservice/core/pricing.py               63      0     14      0   100%\nservice/dashboard.py                 111      0     26      0   100%\nservice/main.py                       35      0      0      0   100%\nservice/negotiation_memory.py         61      1     24      2    96%   33->25, 41\nservice/rep_actions.py               162      2     56      2    98%   103, 204\nservice/sale_decisions.py            130      1     54      1    99%   65\nservice/selling.py                   158      1     44      1    99%   231\n------------------------------------------------------------------------------\nTOTAL                               2104     13    570     13    99%\ncoverage json -q\npython tools/check_branch_coverage.py coverage.json\nBusiness-rule branch coverage: 353/360 = 98.1% (minimum 90%)\n"
+  },
+  "app": {
+    "source_unchanged": true,
+    "runtime": "v22.23.4",
+    "tests_passed": 65,
+    "package_lock_sha256": "104f0a731a42ab2b5bf1a2048cd1bbcbad628c75dcc4f512b264a8179d1ca24a",
+    "checks": {
+      "app_lint": {
+        "command": "npm run lint",
+        "exit_code": 0,
+        "duration_seconds": 3.181
+      },
+      "app_test": {
+        "command": "npm run test",
+        "exit_code": 0,
+        "duration_seconds": 1.781
+      },
+      "app_build": {
+        "command": "npm run build",
+        "exit_code": 0,
+        "duration_seconds": 6.166
+      },
+      "app_typecheck": {
+        "command": "npm run typecheck",
+        "exit_code": 0,
+        "duration_seconds": 1.857
+      }
+    }
+  },
+  "make_review": {
+    "exit_code": 0,
+    "counts_before": {
+      "tcp_booking_commands": 0,
+      "state": "RESERVED"
+    },
+    "counts_after": {
+      "tcp_booking_commands": 1,
+      "state": "ACK_PENDING"
+    },
+    "browser_observation": {
+      "url": "http://127.0.0.1:3080/?view=reservations&load=LD09001&run=3f2b8c1e-0d4a-4c1b-9a6e-2f1d5e7c9b10",
+      "status": 200,
+      "receipt_reference_visible": true,
+      "pending_label_visible": true,
+      "sent_pending_visible": true,
+      "browser_confirm_performed": true,
+      "dialog_confirmed_once": true,
+      "observed_booking_reference": "FAKE0001",
+      "observed_status": "Acknowledged, pending",
+      "observed_rep": "local-review-rep",
+      "load_id": "LD09001",
+      "agreed_rate": 1850,
+      "originating_run_id": "3f2b8c1e-0d4a-4c1b-9a6e-2f1d5e7c9b10"
+    },
+    "runtime_hashes_match_source": true,
+    "runtime_files_checked": 30,
+    "runtime_aggregate_sha256": "f9d170919657070e08fb7035d9e825ca9d027f73b71afcd848f27d1b3d76fa01",
+    "scope_limit": "Fixture seeds an accepted below-opening rate. Confirms booking integration, not a new live negotiation or voice acceptance."
+  },
+  "changed_runtime_sha256": {
+    "service/core/negotiation.py": "b95d1a4cba786e11cb843e806028cb8a608c85139c0606a70be93e2582a80fc6",
+    "service/negotiation_memory.py": "86d84a90ad03389dffad060f54ab66a864271a775e5ef7c44c83f751b56cb795",
+    "service/selling.py": "f52d782525961ea5978f9b2f21eca09dfdb21524972caf2a8337a4762d57d0e6"
+  },
+  "review": "Additional read-only Codex review found no runtime defect. Claude review and explicit owner approval remain required before deployment.",
+  "pending": "After review and approval, deploy service only and record one fresh Version 19 voice diagnostic with reachable concession and agreement. No such run is claimed by this record.",
+  "documentation": {
+    "relative_links_and_inbound_anchors": "pass",
+    "prohibited_dash_scan": "pass across all changed text files",
+    "git_diff_check": "pass",
+    "readme_words": 515,
+    "prospect_email_words": 196
+  }
+}

@@ -82,7 +82,7 @@ def test_material_change_replaces_existing_memory_through_cas() -> None:
 @pytest.mark.parametrize(
     ("other_ask", "other_action", "remembered"),
     [
-        ("2050", Action.COUNTER, 1925),
+        ("2050", Action.COUNTER, 1950),
         ("1850", Action.ACCEPT, 1850),
     ],
 )

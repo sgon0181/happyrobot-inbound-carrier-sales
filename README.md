@@ -32,7 +32,7 @@ make review
 
 This opens an authenticated local App with a reservation. Confirm sends once to a TCP simulator and shows its PENDING receipt. It uses no customer credentials or cloud booking. `make review-down` removes the local environment.
 
-The latest local checks passed 591 service tests, 65 App tests, strict types, lint and production build. Business-rule branch coverage is 98.1%. [Readiness](docs/readiness.md) separates those results from live integration, text evaluations and spoken-call evidence, and lists outstanding release checks.
+The latest local checks passed 604 service tests, 65 App tests, strict types, lint and production build. Business-rule branch coverage is 98.1%. [Readiness](docs/readiness.md) separates those results from live integration, text evaluations and spoken-call evidence, and lists outstanding release checks.
 
 ## Repository map
 

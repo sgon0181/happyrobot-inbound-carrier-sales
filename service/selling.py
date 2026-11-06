@@ -25,6 +25,7 @@ from service.core.loads import (
 )
 from service.core.models import Load, LoadSummary
 from service.core.money import parse_ask
+from service.core.negotiation import NEGOTIATION_POLICY_VERSION
 from service.core.pricing import PricingPolicy, Terms, price_load
 from service.sale_decisions import abandon, answer_counter, drop, refusal, remember_offer, settle
 
@@ -115,10 +116,10 @@ class Sales:
     ) -> Reply:
         """Answer one counter-offer. On agreement, reserve the load; nothing is sent (D-22).
 
-        Shared memory spends concessions first; call CAS enforces its global budget.
-        A failed call write cannot refund a shared concession.
+        Shared memory spends first; failed call writes cannot refund a concession.
         """
-        heard = {"load_id": load_id, "ask": parse_ask(ask), "heard": ask}  # on every event
+        heard = {"load_id": load_id, "ask": parse_ask(ask), "heard": ask}
+        heard["negotiation_policy_version"] = NEGOTIATION_POLICY_VERSION
 
         def log(decide: Decide) -> Awaitable[Reply]:
             return self.rows.step(run_id, "negotiate", decide, heard)

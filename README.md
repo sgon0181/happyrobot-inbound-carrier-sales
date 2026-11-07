@@ -1,6 +1,6 @@
 # Inbound Carrier Sales
 
-An AI voice agent for HappyRobot Logistics. It checks carrier authority, verifies an emailed code, finds freight and negotiates a rate. A senior rep reviews the resulting reservation before any booking is sent to the TMS.
+An AI voice agent for HappyRobot Logistics (simulated possible style client). It checks carrier authority, verifies an emailed code, finds freight and negotiates a rate. A senior rep reviews the resulting reservation before any booking is sent to the TMS.
 
 [Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk)
 

@@ -17,7 +17,7 @@ The Python 3.12 service makes every business decision: verification, pricing, ne
 | `bookings.py` | Reservation: one booking row per load | No TMS calls |
 | `rep_actions.py` | A rep's confirm, decline and reconcile | The only code that can reach `LOAD_BOOK` |
 | `dashboard.py` | Complete snapshot and legacy diagnostics | Read only; current Overview formulas live in the App |
-| `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes | Pure functions: no network, files, clock or environment |
+| `core/` | Pricing, negotiation, money, load selection, carrier policy, one-time codes, challenge-sandbox eligibility | Pure functions: no network, files, clock or environment |
 | `adapters/` | Twin, TMS, FMCSA, email | External transport and provider contracts |
 | `adapters/twin_reads.py` | Fresh point-read batching | Bounded waiters, detached batches, independent cancellation |
 | `policy/` | Versioned pricing policy and blocked loads | Data, loaded once at startup |

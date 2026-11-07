@@ -218,7 +218,7 @@ service/
   dashboard.py       Bounded snapshot and legacy diagnostic fields
   core/              Pure rules; no network, files or clock
     models.py  money.py  pricing.py  negotiation.py  loads.py
-    approved_freight.py  carrier_policy.py  codes.py
+    approved_freight.py  carrier_policy.py  codes.py  sandbox.py
   adapters/          External transport and provider contracts
     tms/              protocol.py  mapping.py  client.py
     twin.py  twin_reads.py  fmcsa.py  email.py

@@ -358,7 +358,7 @@ The legacy service demand diagnostic groups `no_match` outcomes by their latest 
 
 **Displayed times (D-34).** The public load view retains its original ISO timestamps and adds `pickup_time_display` and `delivery_time_display`. These are deterministic America/Chicago strings naming Central Time and CST or CDT, matching the App's display policy, including date changes and daylight saving. Startup resolves and injects the timezone; core formatting reads no files. The formatter leaves missing times null, but validation prevents such a load from being returned as found. Every found load carries both display strings. The voice prompt reads them instead of calculating a conversion. The TMS source timezone remains unconfirmed: the adapter still assumes UTC, so this display policy does not establish the source timezone. Display formatting was deployed in release 17 before Version 6 publication and is retained in the submission, which also validates shipment chronology and completeness before quoting.
 
-**Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. Luke did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
+**Rate assumption (D-10).** `MAX_BUY` from `LOAD_GET` is provisionally `max_rate`. The recruiter did not confirm this mapping or its currency. A load without a usable `MAX_BUY` goes to `pricing_review_required`: no offers, no reservation (D-11).
 
 **Pricing policy (D-4).** A versioned file, [`pricing-v1`](../../service/policy/pricing-v1.json), turns each load's posted rate and ceiling into three numbers, all rounded down to 25:
 
@@ -445,7 +445,7 @@ A later reservation on a freed load carries the earlier attempt's events forward
 | Process dies after `SUBMITTING` | The row stays `SUBMITTING`. After 60 seconds the app offers Reconcile, which moves it to `UNKNOWN`. |
 | Twin fails while saving the receipt | The save retries for about 10 seconds with the rep waiting. If it still fails, safe receipt identifiers, state and a digest are retained in the log and rep screen. Raw bytes stay off the browser and application log. A process crash can still lose unpersisted bytes. |
 
-**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](../tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. Luke accepted proceeding with this handling for the challenge on November 5. He supplied no way to finalize the external booking. [Q8 and limits](questions.md)
+**`PENDING`.** The handbook shows `BOOKED`, but all ten complete live receipts returned `PENDING`, including one sent deliberately above the ceiling and the first rep Confirm through this service, and no transition to BOOKED has been observed in the recorded checks. No documented action moves them on, and reads return no reference or owner ([evidence](../tms-contract.md)). So the app shows the actual TMS status, and `PENDING` is never called confirmed. The recruiter accepted proceeding with this handling for the challenge on November 5. He supplied no way to finalize the external booking. [Q8 and limits](questions.md)
 
 **Live sends are off by default.** `LIVE_BOOKING` must be set for Confirm to reach the TMS, because there is no supported cancellation/reset and sends have left lasting token-scoped state in observations. No permanent consumption or quota is established.
 
@@ -560,4 +560,4 @@ The following slices describe the completed November 2 to 4 baseline, not unfini
 
 ## 17. Open questions
 
-Unresolved checks are tracked in [docs/decisions.md](decision-log.md#open-checks). Luke accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.
+Unresolved checks are tracked in [docs/decisions.md](decision-log.md#open-checks). The recruiter accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.

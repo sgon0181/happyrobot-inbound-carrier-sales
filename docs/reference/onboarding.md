@@ -58,4 +58,4 @@ For rollback, restore the prior workflow Production version and prior service/Ap
 
 ## History
 
-Version 8 and Build 24 are the earlier demonstration. The prototype branch is historical reference only and is never merged. Luke accepted honest PENDING handling and a ZIP submission; see [questions](questions.md). The prior deployment and import manifests remain dated evidence in [readiness](release.md#history).
+Version 8 and Build 24 are the earlier demonstration. The prototype branch is historical reference only and is never merged. The recruiter accepted honest PENDING handling and a ZIP submission; see [questions](questions.md). The prior deployment and import manifests remain dated evidence in [readiness](release.md#history).

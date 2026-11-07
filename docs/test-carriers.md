@@ -1,6 +1,6 @@
 # FMCSA test-carrier ledger
 
-Status 2026-10-31 (Australia/Sydney): five public records were checked through a HappyRobot native HTTP node, as a QCMobile docket lookup. MC 138328 was also checked directly from a Fly.io `iad` machine, with the same result, and was used on the live test call. These are saved observations, so recheck them near the demo because public records can change. Luke supplied no test MCs.
+Status 2026-10-31 (Australia/Sydney): five public records were checked through a HappyRobot native HTTP node, as a QCMobile docket lookup. MC 138328 was also checked directly from a Fly.io `iad` machine, with the same result, and was used on the live test call. These are saved observations, so recheck them near the demo because public records can change. The recruiter supplied no test MCs.
 
 | Case | MC / DOT | Carrier | Checked (UTC) | Observed fields | Expected result |
 |---|---|---|---|---|---|

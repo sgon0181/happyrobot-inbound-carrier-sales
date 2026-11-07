@@ -50,7 +50,7 @@ secrets:
 deploy:
 	python3 tools/launch.py deploy
 
-# Source ZIP of the committed HEAD for the portal. .gitattributes leaves out study material.
+# Source ZIP of the committed HEAD for the portal; untracked files are never included.
 zip:
 	mkdir -p ../submission-release
 	git archive --format=zip --prefix=carrier-sales/ \

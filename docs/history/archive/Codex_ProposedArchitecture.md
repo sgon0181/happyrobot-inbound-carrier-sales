@@ -113,4 +113,4 @@ Deploy the backend as one Docker service with an authenticated HTTPS address. Ha
 4. Negotiation, then booking after clarifying its semantics.
 5. Complete Twin logging, Apps dashboard and standard/adversarial QA.
 
-**Still unresolved:** Luke's answers on OTP scope, hold versus booking, and rate semantics. Also confirm the source of the carrier's verification contact: sending a code to an arbitrary caller-supplied address proves access to that address, not its association with the carrier. These remain open decisions, not assumptions built into the architecture.
+**Still unresolved:** the recruiter's answers on OTP scope, hold versus booking, and rate semantics. Also confirm the source of the carrier's verification contact: sending a code to an arbitrary caller-supplied address proves access to that address, not its association with the carrier. These remain open decisions, not assumptions built into the architecture.

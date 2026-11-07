@@ -8,13 +8,13 @@ The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02, and later th
 
 ### D-22: `LOAD_BOOK` is sent at the rep's Confirm, not during the call
 
-Replaces D-8. On November 5 Luke accepted the approach described in the November 3 follow-up, including one submission at rep confirmation and a separate PENDING acknowledgement. No general sandbox finalization behavior was established. [Q8](questions.md)
+Replaces D-8. On November 5 the recruiter accepted the approach described in the November 3 follow-up, including one submission at rep confirmation and a separate PENDING acknowledgement. No general sandbox finalization behavior was established. [Q8](questions.md)
 
 - **Why:** the TMS has no cancel and no idempotency key. During a call, that send had to finish inside a 12 second request on a database allowing about 4 statements per second, while the carrier could hang up.
 - **Evidence:** a hang-up during booking made the load unavailable on the observed token, a Twin failure after a real send left no stored reference, and in the model two bookings starting together sent nothing. On LD01094 a load was spent before the caller clearly agreed. The send path took 21 statements, and the code protecting it accounted for much of the size.
-- **PDF fit:** the PDF reserves tentatively at agreement and has the senior rep confirm the booking. The handbook describes `LOAD_BOOK` as committing a booking. Luke left the timing to us.
+- **PDF fit:** the PDF reserves tentatively at agreement and has the senior rep confirm the booking. The handbook describes `LOAD_BOOK` as committing a booking. The recruiter left the timing to us.
 - **Cost:** a booking failure appears after the call, so the rep calls the carrier back. The TMS shows the load `OPEN` until Confirm, so Confirm must re-check it. D-8's reasoning that `PENDING` reads as the tentative stage no longer applies; `PENDING` is now simply what the TMS returned.
-- **Would change it:** a reply from Luke, or a rubric, requiring the send during the call.
+- **Would change it:** a reply from the recruiter, or a rubric, requiring the send during the call.
 
 ### D-23: State and its events share a versioned row
 

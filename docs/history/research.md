@@ -1,6 +1,6 @@
 # Research and design decisions
 
-I used Perplexity for deep research into US freight brokerage workflows and spoke with Gian Clerici about operational needs. Luke's [answers](../reference/questions.md) establish the challenge expectations; the research below explains my design choices.
+I used Perplexity for deep research into US freight brokerage workflows and spoke with Gian Clerici about operational needs. The recruiter's [answers](../reference/questions.md) establish the challenge expectations; the research below explains my design choices.
 
 ## Industry input: Gian Clerici
 
@@ -32,7 +32,7 @@ Carrier history and reasons for no agreement are included as a view in the opera
 
 [RXO](https://rxo.com/carriers/technology/mfa-instructions/) documents MFA for its platforms, not an OTP requirement for every inbound call. There is no evidence here of a universal per-call policy.
 
-**Decision:** Keep fresh OTP on every call as my POC assumption (D-9). Bind it to the call and MC, consume it once, and keep failure limits across resends. [NIST](https://pages.nist.gov/800-63-4/sp800-63b.html) informs these controls; it does not endorse email as an out-of-band authenticator. Luke-approved demo email proves inbox access, not carrier identity.
+**Decision:** Keep fresh OTP on every call as my POC assumption (D-9). Bind it to the call and MC, consume it once, and keep failure limits across resends. [NIST](https://pages.nist.gov/800-63-4/sp800-63b.html) informs these controls; it does not endorse email as an out-of-band authenticator. The recruiter-approved demo email proves inbox access, not carrier identity.
 
 ### 3. How should rates and ceilings work?
 

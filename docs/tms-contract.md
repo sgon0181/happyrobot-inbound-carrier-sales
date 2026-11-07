@@ -51,7 +51,7 @@ Without `--load-id`, the script runs a `LOAD_QUERY` for up to 3 dry-van summarie
 | TMS field | PDF field | Basis |
 |---|---|---|
 | `RATE` | `loadboard_rate` | Handbook: posted rate |
-| `MAX_BUY` | `max_rate` | Candidate only (D-10): present on every record read, not confirmed by Luke |
+| `MAX_BUY` | `max_rate` | Candidate only (D-10): present on every record read, not confirmed by the recruiter |
 
 The remaining fields are mapped when the TMS adapter is built.
 
@@ -213,4 +213,4 @@ The board refills: between the 2026-10-30 study and the 2026-10-31 tests, 8 load
 - **Pickup times:** which timezone `PICKUP_DT` uses.
 - **Pricing bands:** running `pricing-v1` offline over the 50 saved open loads with 200 random secrets sent none to pricing review. A median of 2 loads (at most 5) got a working cap at or below `RATE`, and a median of 1 (at most 3) had round targets collapse after $25 rounding. Those dollar-labelled policy values remain demo assumptions until money scale is confirmed.
 
-On November 5 Luke accepted the demonstrated handling in [Q8](reference/questions.md). He supplied no supported external finalization step or sandbox-wide status guarantee. He considered a few further demo bookings acceptable, without verifying an inventory quota. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.
+On November 5 the recruiter accepted the demonstrated handling in [Q8](reference/questions.md). He supplied no supported external finalization step or sandbox-wide status guarantee. He considered a few further demo bookings acceptable, without verifying an inventory quota. The first-layer tentative outcome is a documented interpretation; it does not prove `PENDING` reserves a load or that a local senior approval can finalize the external TMS.

@@ -66,3 +66,14 @@ def test_short_and_full_dates_near_result_words_are_allowed() -> None:
 def test_real_slash_scores_are_still_found() -> None:
     assert "70/74" in results_in("70/74 checks pass.")
     assert results_in("Focused evaluations scored 10/10.") == ["10/10"]
+
+
+def test_zero_scores_and_impossible_dates_are_not_exempt() -> None:
+    assert results_in("Focused evaluations scored 0/10.") == ["0/10"]
+    assert results_in("Test results: 0/74.") == ["0/74"]
+    assert results_in("Evaluations passed on 70/74.") == ["70/74"]
+
+
+def test_day_first_dates_remain_allowed() -> None:
+    assert results_in("Tests last ran on 31/12.") == []
+    assert results_in("Tests passed on 15/03/2026.") == []

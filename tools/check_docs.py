@@ -34,8 +34,8 @@ COVERAGE = re.compile(
     re.IGNORECASE,
 )
 # A ratio is a score only near result words. Full dates (11/07/2026) never match, and a short
-# slash date (on 11/07, 03/15) is recognized by its leading zero, a larger first number or a
-# date word before it. Real scores such as 70/74 or 10/10 are still reported.
+# slash date needs plausible day/month components and a leading zero, a larger first number
+# or a date word before it. Real scores such as 0/10, 70/74 or 10/10 are still reported.
 RATIO = re.compile(r"(?<![\d/])(\d+) ?(/|of|out of) ?(\d+)(?![\d/])", re.IGNORECASE)
 DATE_WORDS = ("on", "since", "until", "from", "by", "dated")
 RESULT_WORDS = re.compile(
@@ -71,6 +71,9 @@ def results_in(text: str) -> list[str]:
 def _short_date(match: re.Match[str], text: str) -> bool:
     first, separator, second = match.groups()
     if separator != "/":
+        return False
+    lower, upper = sorted((int(first), int(second)))
+    if not (1 <= lower <= 12 and upper <= 31):
         return False
     before = text[: match.start()].split()
     return (

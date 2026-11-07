@@ -14,7 +14,7 @@ A dated sample of 49 completed test calls (November 2 to 4) had 36 verified call
 
 | Layer | Result | What it shows |
 | --- | --- | --- |
-| Service | 613 tests pass; 98.1% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency and authentication, without network calls |
+| Service | 615 tests pass; 98.1% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency and authentication, without network calls |
 | App | 65 tests pass; lint, typecheck and production build pass | Views, rep permissions and server routes |
 | Local end to end | `make review`: Confirm sends exactly one booking to the TCP stand-in, shows receipt FAKE0001 as PENDING and refuses a stale repeat | The whole Confirm path, with no real TMS or carrier |
 | Burst load | Three twelve-call bursts of callers accepting the opening offer each finished 12 of 12 agreements with no stuck claims and no TMS sends, at Twin's four statements per second and the twelve-second voice deadline | This controlled workload only, not production peak capacity |

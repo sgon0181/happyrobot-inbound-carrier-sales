@@ -653,5 +653,5 @@ Call it enterprise quality only when all of these pass in CI on `main`.
 - The 95 evidence files were sampled, not read in full. The voice QA outputs were not re-judged.
 - Prompt quality, voice behaviour and adversarial resistance of the model. The PDF's QA requirement was checked only for the presence of artifacts.
 - Exploitability of the dependency advisories.
-- The Luke question on `PENDING` semantics stays open, so whether `ACK_PENDING` is the right final state for a demo is unresolved.
+- The question to the recruiter on `PENDING` semantics stays open, so whether `ACK_PENDING` is the right final state for a demo is unresolved.
 - `lab/harness-v24` was listed but not audited. It predates the prototype.

@@ -57,16 +57,16 @@ The legacy TMS is unreliable by design. The service retries reads within the voi
 
 ## Deployment
 
-The service is one Docker image. `make deploy` deploys it to Fly.io after one-time setup of the app and its secrets, then checks that it is healthy and can reach the TMS. Any container host would work. `make review` runs the whole system on a laptop with stand-ins for the TMS, email and sign-in, so IT can try Confirm without touching real systems.
+The service is one Docker image. `make deploy APP=<fly-app> APP_URL=<app-url>` deploys it to Fly.io after one-time setup of the app and its secrets, then checks that it is healthy and can reach the TMS. Any container host would work. `make review` runs the whole system on a laptop with stand-ins for the TMS, email and sign-in, so IT can try Confirm without touching real systems.
 
 ## Testing
 
-Automated tests cover the business rules, failure handling and permissions; the platform's evaluations test the prompt against scripted, edge-case and adversarial conversations; real web calls test the full path with live FMCSA, email and TMS reads. Results, including failures, are in [docs/results.md](results.md).
+Automated tests cover the business rules, failure handling and permissions; the platform's evaluations test the prompt against scripted, edge-case and adversarial conversations; real web calls test the full path with live FMCSA, email and TMS reads. The hosted App also confirmed the same recorded call against the challenge TMS, retained its actual PENDING receipt and rejected a repeated request. Results, including failures, are in [docs/results.md](results.md).
 
 ## What this demo does not yet do
 
 - The code goes to a demo inbox, so it proves inbox access, not carrier identity. A pilot would use enrolled carrier contacts.
-- Booking sends are off in the hosted App. Confirm is demonstrated locally and with an earlier sandbox receipt.
+- Live carrier booking is off. Hosted Confirm uses a temporary permission for one demo MC against the challenge sandbox, with rep sign-in, consent and shipment checks still required. The permission expires; dates and evidence are in `docs/reference/release.md`.
 - The sandbox TMS returns PENDING; how a booking becomes final is not defined in the sandbox.
 - Loads with unrecognized note text go to a rep instead of being quoted.
 - Load testing used controlled bursts and generated callers, not real peak traffic, accents or background noise.

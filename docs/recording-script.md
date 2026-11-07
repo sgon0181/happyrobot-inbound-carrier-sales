@@ -9,10 +9,10 @@ Record a genuine call on the final tested workflow, then follow that exact run i
 3. [Reservations](https://carrier-sales-proposal-sg.happyrobot.dev/?view=reservations), with the new run selected after the call.
 4. [Calls](https://carrier-sales-proposal-sg.happyrobot.dev/?view=calls) and that run's native recording.
 5. [Bookings](https://carrier-sales-proposal-sg.happyrobot.dev/?view=bookings).
-6. The disposable local App from `make review`, if demonstrating Confirm.
+6. The [current send window](reference/release.md#current-release-state), checked before recording. The same fresh reservation must be eligible for hosted sandbox Confirm.
 7. [Results](results.md), scrolled to the negotiation scenarios and voice tables.
 
-Hide private credentials, inbox contents and OTP digits. Do not expose private rate limits while screen sharing. Keep the date scope and provenance visible on metrics. Hosted booking sends remain off under the owner's selected email setup.
+Hide private credentials, inbox contents and OTP digits. Do not expose private rate limits while screen sharing. Keep the date scope and provenance visible on metrics. Live carrier booking remains off. Hosted Confirm is limited to the configured demo MC and temporary challenge-sandbox window. It expires at 02:00 AEDT on November 8. If recording later, obtain a new authorized window first.
 
 ## 0:00 to 0:20: business problem and responsibilities
 
@@ -20,7 +20,7 @@ Hide private credentials, inbox contents and OTP digits. Do not expose private r
 
 **SAY:**
 
-"Carrier desks need to qualify callers, find freight and negotiate while more calls arrive. This workspace brings those conversations and agreements together. HappyRobot handles speech; my service controls verification and prices. A senior rep controls the booking request. Let's follow one call."
+"Carrier desks need to qualify callers, find freight and negotiate while calls keep arriving. HappyRobot handles speech; my service controls verification and prices; a rep approves bookings. I'm playing the carrier, using a demo inbox and the challenge TMS."
 
 ## 0:20 to 2:50: genuine call
 
@@ -42,15 +42,13 @@ If no agreement occurred, show the actual exception and say: "This call did not 
 
 ## 3:20 to 3:45: demonstrate the booking boundary
 
-**SHOW:** Clearly label the disposable local App before clicking Confirm on its fixture reservation. Show its PENDING receipt. Alternatively, show the [historical LD01080 sandbox receipt](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) without representing it as the current call.
+**SHOW:** Stay on the same fresh reservation. Click Confirm once, accept the confirmation and show its actual receipt, load ID and call link. Do not switch to a fixture or previously submitted load. Keep credentials and private details off screen.
 
-**SAY:**
+**SAY, if PENDING:**
 
-"Hosted sends are off for this demonstration. Here, a separate local example shows the rep's Confirm action and a pending receipt. Only an authoritative booked response counts as confirmed. An uncertain send stays with the rep for investigation and is never blindly retried."
+"I am the authorized rep, approving this same agreement. The service rechecks the shipment and rate, then sends once. Here is the challenge TMS reference. Pending means acknowledged, not finally booked. If we send the request but lose the response, it remains unresolved for investigation, with no automatic retry."
 
-**If showing the historical receipt instead, SAY:**
-
-"Hosted sends are off for this demonstration. This earlier LD01080 sandbox booking shows a real TMS acknowledgement after rep approval. It is a separate transaction from today's call. Pending means acknowledged, not finally booked. Uncertain sends are investigated rather than blindly retried."
+**If UNKNOWN:** say, "The request's outcome is uncertain, so we stop here and investigate. This prevents a second booking." Do not click Confirm again or relabel it as success. If another refusal appears, describe that actual reason and retain the run; do not read the PENDING line.
 
 ## 3:45 to 4:10: make an operating decision
 
@@ -62,11 +60,11 @@ If no agreement occurred, show the actual exception and say: "This call did not 
 
 ## 4:10 to 4:40: show defensible negotiation and QA
 
-**SHOW:** [Results](results.md): the negotiation scenarios table, then the automated tests and voice tables. Do not show an earlier version's score as the current result.
+**SHOW:** [Results](results.md): the negotiation scenarios table, then [Version 20 audits](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/audits/zynb7wm66n9w). Keep the actual audit sample and non-applicable checks visible. Do not show an earlier version's score as the current result.
 
 **SAY:**
 
-"The agent moves toward a carrier who moves toward it, never above our private limit, and inflated or rising asks earn nothing. Calling back does not restart the negotiation. The tests cover repeated asks, concurrent calls, price changes and lost responses, and the voice evaluations and real calls are recorded separately, failures included."
+"The agent moves toward a carrier who moves toward it, never above our private limit, and inflated or rising asks earn nothing. Calling back does not restart the negotiation. Tests cover repeated asks, concurrent calls, changed shipments and lost responses. Native Northstars audit verification, pricing and closure. Text tests and real voice calls are separate evidence, and failures remain visible."
 
 ## 4:40 to 5:00: close with the rollout decision
 
@@ -78,4 +76,4 @@ If no agreement occurred, show the actual exception and say: "This call did not 
 
 ## Before recording
 
-Confirm the Production web call still opens Version 20 (see the [release guide](reference/release.md#current-release-state)). Use a fresh available load rather than a historical held one. Preserve unsuccessful runs as evidence. Keep the full call and submission source identifiable. The final video and portal upload are owner actions.
+Confirm the Production web call still opens Version 20 (see the [release guide](reference/release.md#current-release-state)). Use a fresh available load rather than a historical held or submitted one. LD01142 is already submitted and is acceptance evidence, not a reusable booking. The checked call used MC 138328, refrigerated equipment, Texas to Florida, one counter and acceptance of the returned offer; availability and the next quoted price may differ. Preserve unsuccessful runs as evidence. Keep the full call and submission source identifiable. The final video and portal upload are owner actions.

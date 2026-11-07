@@ -32,7 +32,7 @@ The TMS stays the source of truth for loads. Twin records what this system did. 
 3. **Negotiate.** `negotiate` answers each counter. Money decisions are made in the service; the voice model only relays them.
 4. **Reserve.** An agreement claims the load in one conditional write to its booking row, so only one call can hold a load.
 5. **Close.** `close_call` saves the outcome and notes. The workflow reports when the call ended.
-6. **Confirm.** A rep assigned in the App confirms the exact version of the reservation they reviewed. The service rechecks the shipment, the ceiling and the carrier's verification, then sends `LOAD_BOOK` once.
+6. **Confirm.** A rep assigned in the App confirms the exact version of the reservation they reviewed. The service rechecks the shipment, the ceiling and the carrier's verification, then sends `LOAD_BOOK` once. Live carrier booking requires enrolled contacts. A separate expiring permission admits only the configured demo MC to the challenge sandbox; see the [release guide](docs/reference/release.md#current-release-state).
 
 ## Rules the code enforces
 

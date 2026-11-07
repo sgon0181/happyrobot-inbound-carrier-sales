@@ -14,7 +14,7 @@ The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App
 
 Version 20 (`zynb7wm66n9w`, UUID `01a1b3cf-1025-7c0f-91b6-75f57ce017b4`) is live in workflow Production. Use [the Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [its exact editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w). Version 19 is retained as the immediate non-live workflow rollback. Development is empty. [Readiness](release.md#current-release-state) records acceptance, limitations and endpoints. Workflow Production, App hosting and Twin environment are separate controls.
 
-The owner retained the approved demo email route, synthetic record tags and disabled hosted sends. See [the single explanation of this boundary](release.md#current-release-state). Historical imported records remain immutable; do not relabel them to enable a send.
+The owner retained the approved demo email route, synthetic record tags and disabled live carrier booking, then authorized a temporary challenge-sandbox Confirm window for the demo MC. See [the single explanation of this boundary](release.md#current-release-state). Historical imported records remain immutable; do not relabel them to enable a send.
 
 ## Platform resources
 

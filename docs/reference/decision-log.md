@@ -106,7 +106,7 @@ The fallback for T-7 is now the design. The Apps gateway to Twin has been failin
 - **Version 7 follow-up:** owner call b4f55923 clarified a broken amount to a 3800 prefix, then added 25 after negotiate. The owner intended 3825. After an actual clarification request, read back the complete total and require an explicit yes before negotiate; a fragment/correction or changed load invalidates it. Clear initial amounts, direct acceptance, repeated asks and same-number service retries remain direct. Do not suggest a calculated example. Version 7 also pitches every supplied operating condition/fee without adding note fees to the service offer. No service, model or orchestration change.
 - **Evidence and cost:** 11 Version 6 timed traces have one close and one proactive hangup each, no subsequent caller turn, and stored end records; audio listening is not claimed. Version 7 passes 51 checkpoints twice; two fully mocked multi-turn traces preserve 3825 and notes but do not record final spoken closing. Ambiguous amounts add a confirmation turn. This cannot eliminate every STT segmentation race. See voice-tuning.md.
 - **Version 8 follow-up:** recorded Version 7 call b61fba6e submitted 110025 after an explicit No and later 1125 after renewed clarification without readback. Version 8 gives pending confirmation priority, treats No as non-confirmation and requires a fresh affirmative after a corrected total. An eight-case suite scored 16/24 on unchanged Version 7, exposing eight failed executions; final focused 24/24 and full 59-case suite twice 118/118 pass. Two mocked complete replays submitted only 1125 after readback and Yes. The owner reports a successful normal Version 8 call, without an independent transcript/audio review. See confirmation-fix.md.
-- **Historical limits:** Version 8 was live when this entry was written; Version 19 is now live, as recorded in [readiness](release.md). No repeat of the superseded Version 7 stress-call script is required. Live speech retesting of the split-number edge case remains unverified. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. The Version 6 closing mechanism is released; the conditional amount-confirmation follow-up is now live.
+- **Historical limits:** Version 8 was live when this entry was written; the current version is recorded in [readiness](release.md). No repeat of the superseded Version 7 stress-call script is required. Live speech retesting of the split-number edge case remains unverified. The current-contract S5 checkpoint reflects logging before the spoken handoff; the assignment's handoff is a spoken mock, not a real transfer. Prior tests and failures remain in the voice-tuning evidence. The Version 6 closing mechanism is released; the conditional amount-confirmation follow-up is now live.
 
 ## Submission decisions consolidated on 2026-11-05
 
@@ -154,6 +154,12 @@ These extend the November baseline. The four-part architecture and pricing-v1 op
 - **Choice:** `make review` starts the complete disposable App/service/identity/TCP fixture, with the observed native identity shape and real browser-confirm acceptance. `make deploy APP=... APP_URL=...` requires preconfigured resources, checks authenticated service and TMS readiness, and opens the named App. Native App/workflow publication remains a separate action.
 - **Tradeoff:** the local fixture proves the application path, not external carrier identity or TMS behavior. Cloud one-time setup and secrets are explicit prerequisites, not falsely claimed automation. [Commands and accepted checks](release.md#reproduce-the-application).
 
+## D-46: a bounded sandbox permission demonstrates the same-call Confirm path
+
+- **Why:** the owner requested a visible rep confirmation of the actual recorded call against the challenge TMS. Demo inbox access is not carrier identity, so enabling broad live mode would misrepresent the evidence.
+- **Choice:** keep `LIVE_BOOKING=false`; authorize only the configured demo MC, synthetic records, demo-inbox provenance and a short UTC window against the exact challenge endpoint with Twin staging and no contact roster. Both the source call and current reservation event must fall inside the window. Rep identity, matched agreement, fresh shipment and price checks, versioned claiming and one-shot sending remain mandatory. Expiry is checked again after the Twin claim and before the adapter call; already dispatched receipts are still saved.
+- **Tradeoff:** this proves the sandbox workflow, not a production carrier identity or a final booking. The permission expires and old records remain unsendable. The same Version 20 run reached a real PENDING receipt through hosted Confirm. [Current scope and rollback](release.md#current-release-state), [results](../results.md).
+
 ## Earlier decisions
 
 | ID | Decision | Status |
@@ -169,7 +175,7 @@ These extend the November baseline. The four-part architecture and pricing-v1 op
 | D-9 | OTP on every call | Active |
 | D-10 | `MAX_BUY` supplies `max_rate`, subject to validation | Active |
 | D-11 | No usable ceiling means pricing review | Active |
-| D-12 | Codes go to one configured demo inbox | Demo exception only; trusted roster required for sends under D-37 |
+| D-12 | Codes go to one configured demo inbox | Demo inbox only; trusted roster required for live carrier sends under D-37. Temporary challenge-sandbox exception: D-46 |
 | D-13 | Record turned-away demand | Active. Derived from call rows, with no table. |
 | D-14 | Carrier view in the operations app | Deferred to optional additions |
 | D-15 | Northstar is a handoff per verified call | Clarified: recorded reservations per call that ever passed its code; not proof of a spoken handoff |

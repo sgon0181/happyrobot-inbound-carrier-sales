@@ -16,6 +16,6 @@ The HappyRobot workflow that answers carrier calls. The workspace is the source 
 
 **Links:** [workflow editor, Version 20](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w) · [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc)
 
-Version 20 was promoted after Development audio acceptance and independent review, then checked through the Production endpoint. Version 19 remains available for rollback. The demo service and populated Twin staging database are deliberately shared across workflow environments. Hosted booking sends remain off.
+Version 20 was promoted after Development audio acceptance and independent review, then checked through the Production endpoint. Version 19 remains available for rollback. The demo service and populated Twin staging database are deliberately shared across workflow environments. Live carrier booking remains off. The hosted App has a separate temporary challenge-sandbox Confirm permission, recorded in the [release guide](../docs/reference/release.md#current-release-state).
 
 Scores and limitations are in [results](../docs/results.md). Text evaluations mock all external tools. Actual audio uses separate recorded evidence. Native audit grades are model judgments, with non-applicable criteria kept separate; Northstar prompt-span coverage is not a pass rate.

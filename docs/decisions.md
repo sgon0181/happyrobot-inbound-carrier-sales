@@ -42,7 +42,7 @@ The brief requires Twin. Our Twin SQL integration uses separate statements witho
 
 ## Why a code on every call, and why a demo inbox?
 
-The brief makes the code a hard requirement once authority passes. The recruiter asked for codes to go to the candidate's own email, so the code proves access to that inbox, not that the caller is the carrier. Real sends are blocked unless a carrier has an enrolled contact.
+The brief makes the code a hard requirement once authority passes. The recruiter asked for codes to go to the candidate's own email, so the code proves access to that inbox, not that the caller is the carrier. Live carrier sends are blocked unless a carrier has an enrolled contact. A separate, expiring permission demonstrates rep Confirm only against the challenge sandbox for the configured demo MC.
 
 **Cost:** before a pilot, the brokerage needs a trusted list of carrier contacts. [D-9 and D-12](reference/decision-log.md#earlier-decisions), [D-37](reference/decision-log.md#d-37-an-authenticated-viewer-is-not-automatically-a-rep-or-a-carrier)
 
@@ -60,6 +60,6 @@ TMS notes and place names are free text. Reading arbitrary text to a caller coul
 
 ## How do we know it works?
 
-By keeping different kinds of evidence separate: automated service and App tests, the platform's text evaluations of the prompt, real voice calls with generated callers, and a local end-to-end Confirm. A passing text evaluation is never counted as a passing call. Failures are kept, not overwritten. See [results](results.md).
+By keeping different kinds of evidence separate: automated service and App tests, the platform's text evaluations of the prompt, real voice calls with generated callers, a local end-to-end Confirm, and hosted sandbox confirmation of the same recorded call. A passing text evaluation is never counted as a passing call. Failures are kept, not overwritten. See [results](results.md).
 
 **Cost:** more evidence to maintain, and none of it replaces a supervised pilot with real carriers. [D-41](reference/decision-log.md#d-41-gate-voice-behavior-with-both-checkpoint-and-actual-audio-evidence)

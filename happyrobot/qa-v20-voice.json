@@ -2237,5 +2237,178 @@
     "The full text sweep and additional boundary checks include retained failures; audio passes do not overwrite them.",
     "The owner must record the walkthrough. No submission video or portal upload is claimed."
   ],
-  "sanitization": "Verification speech, code arguments and private contact/claim fields omitted. Private audio remains outside Git; hashes identify it. Long dash punctuation normalized."
+  "sanitization": "Verification speech, code arguments and private contact/claim fields omitted. Private audio remains outside Git; hashes identify it. Long dash punctuation normalized.",
+  "sandbox_acceptance": {
+    "scope": "Later rep-send acceptance, after the four audio calls. The original call transcripts, grades and pre-send snapshot above remain unchanged. One authorized hosted challenge-sandbox send for the same recorded reservation; live carrier booking stays off.",
+    "source_commit": "91ad2b7",
+    "app": {
+      "production_build": 11,
+      "native_import_commit": "39f6c01bb804bd64dcdeb20daf1bd980042054ee",
+      "source_files": 91,
+      "manifest_sha256": "ac7f3f3a99c204d032837bfd1b8530d116eefe7b038e7a8a434364962f1d56cf",
+      "tests_passed": 68,
+      "lint_errors": 0,
+      "existing_lint_warnings": 3,
+      "typecheck": "pass",
+      "production_build_check": "pass"
+    },
+    "service": {
+      "image": "registry.fly.io/happyrobot-proposal-sg:deployment-01M6T134E2K3B20V5KT63BW24W",
+      "digest": "sha256:e8e78bf1668bdf00697c6b7de60db56ad4abf8f0d6e6658d8c6d1eadcf5dd76b",
+      "hashes": {
+        "service/selling.py": "f52d782525961ea5978f9b2f21eca09dfdb21524972caf2a8337a4762d57d0e6",
+        "service/sale_decisions.py": "03b3c338cd2ec211b5837f6699cf9d6f942a0f93402f6839aea6414e6b5bec64",
+        "service/api.py": "4233d75145105ae6d354719b35d87968cd411cbbbe1b86a597e14b3ca1682431",
+        "service/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "service/calls.py": "d861dff7dea826a5c726cb9e8729cc4277aa4a66f198d6064cdc6b54fbed714e",
+        "service/call_state.py": "b19925f41b57780a434f11df7056c6c737e601579bc32305afa15b18c544336b",
+        "service/dashboard.py": "b69dab9c6115c69b734e24305d165c451d2cc6ac1b33fb6afd5e98c37b323817",
+        "service/negotiation_memory.py": "86d84a90ad03389dffad060f54ab66a864271a775e5ef7c44c83f751b56cb795",
+        "service/main.py": "3d526cccdaa775d6bdbcf1a235737268e9a65db229863c913e85178ab5867994",
+        "service/rep_actions.py": "f26767675064aac478057c3c9bf8e410990ec303edfff5bda3b48cec94a48638",
+        "service/bookings.py": "18188abde1174898431deb334b96eb83e7f9dafbbf3067b6f1c1f02a27e507df",
+        "service/config.py": "4d9032197f7d236d17e131fd015d55d8cde84681e9444df78761b88618befa1d",
+        "service/policy/blocked-loads-v1.json": "1189dbec196532dee93f4368fb3c1295da8ca5c891336a7fcbf1282a40c2c37c",
+        "service/policy/pricing-v1.json": "c17f2055dde316fd6f9249c2eb18947e04ee57ab3e62e15112f9e9f7de538e8d",
+        "service/core/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "service/core/negotiation.py": "b95d1a4cba786e11cb843e806028cb8a608c85139c0606a70be93e2582a80fc6",
+        "service/core/models.py": "4eccb1390f4b46934ebcff546d1fabfb27b80222840a0e1c36df7f0e3b307e87",
+        "service/core/approved_freight.py": "8cb614f45ac190375795895729b137e13d889ca717037a959d328e0e6373e675",
+        "service/core/pricing.py": "959745d250c385d247dc032180ec11634f0c855d2acfb871f3ecf22ca8f78da0",
+        "service/core/codes.py": "2679143dbdc78b314402f79633dc0536acdbc69a8abe0d00a9f11079306ce573",
+        "service/core/carrier_policy.py": "deb38db733ff06c1d3aebe80c2b70375c861e47fc66774894e56a9e6ff9b71ec",
+        "service/core/loads.py": "36507d291a9f88b515ea807733a3c00261470cc27b5cc8216b615aa405f25714",
+        "service/core/sandbox.py": "d2cb60e4183ddd3d656d9353d40ef361e8c216f63be42518d433d5f1270ed017",
+        "service/core/money.py": "7934e4e21955ed28d815670e439766f7b135a1ba150df2360ca6c400fa560329",
+        "service/adapters/twin_reads.py": "4c6dce07c0d9642736d4c3615fa614a9917618e740c43da9fe0ea9a653d5625a",
+        "service/adapters/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "service/adapters/email.py": "c7bc5e4548da5bb59f25a696df507560beb3c6a7d31c3a3a0a23b5b8de74c208",
+        "service/adapters/twin.py": "4cea7e38cb3418083ce797c026daa90f5a01e368d1981c03079bd1dc1ea26d73",
+        "service/adapters/fmcsa.py": "31847c2fe7711dfaf8d9c48635d212cb87170fe76c3eb53de1645dc7794fa5c8",
+        "service/adapters/tms/__init__.py": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "service/adapters/tms/mapping.py": "71cccdda49ffc6d308211ca8a4983dc2ce09fa2d935aba1faa2a0460f5836de7",
+        "service/adapters/tms/protocol.py": "41addda305d4ba059d8e45b5c8a7d1fac947fc7ddb6ef163ab2c0792066cea48",
+        "service/adapters/tms/client.py": "157022431f1f8b0cee585b7397a941a130bb340f2bb38ea7adbbe75b6dc764c4"
+      },
+      "settings": {
+        "tms_host": "tramway.proxy.rlwy.net",
+        "tms_port": 17159,
+        "cohort": "synthetic",
+        "twin_environment": "staging",
+        "live_booking": false,
+        "contacts_present": false,
+        "sandbox_mc": "138328",
+        "since": "2026-11-07T03:00:00+00:00",
+        "until": "2026-11-07T15:00:00+00:00"
+      },
+      "health": {
+        "status": "ok",
+        "tms": "reachable"
+      }
+    },
+    "hosted_confirm": {
+      "checked_at": "2026-11-07T03:43:00+00:00",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "load_id": "LD01142",
+      "mc": "138328",
+      "rate": 3400,
+      "version": 3,
+      "state": "ACK_PENDING",
+      "tms_status": "PENDING",
+      "reference": "2LCUJMMDOHY4I6UV",
+      "send": {
+        "step": "received",
+        "bytes": 97,
+        "error": null,
+        "sha256": "2530802c1fa421913b2e25b5e8ec6919fd2374318f7f4458e38f0794c6777a60"
+      },
+      "send_mode": "challenge_sandbox",
+      "events": [
+        {
+          "at": "2026-11-07T03:09:58.211785+00:00",
+          "action": "reserved",
+          "state": "RESERVED"
+        },
+        {
+          "at": "2026-11-07T03:40:43.731139+00:00",
+          "action": "confirm",
+          "state": "SUBMITTING",
+          "send_mode": "challenge_sandbox"
+        },
+        {
+          "at": "2026-11-07T03:40:43.916567+00:00",
+          "action": "sent",
+          "state": "ACK_PENDING",
+          "tms_status": "PENDING",
+          "reference": "2LCUJMMDOHY4I6UV"
+        }
+      ],
+      "repeat": {
+        "request_version": 1,
+        "response": {
+          "status": "stale"
+        },
+        "record_unchanged": true,
+        "confirm_events": 1,
+        "sent_events": 1
+      },
+      "data": {
+        "calls": 81,
+        "booking_rows": 21,
+        "states": {
+          "RESERVED": 16,
+          "ACK_PENDING": 2,
+          "RELEASED": 3
+        }
+      }
+    },
+    "local_confirm": {
+      "source_commit": "91ad2b7",
+      "before": {
+        "tcp_booking_commands": 0,
+        "state": "RESERVED"
+      },
+      "first": {
+        "status": "sent",
+        "state": "ACK_PENDING",
+        "reason": null,
+        "reference": "FAKE0001",
+        "tmsStatus": "PENDING",
+        "loadStatus": null,
+        "sendStep": null,
+        "sendError": null,
+        "sendBytes": null,
+        "sendSha256": null
+      },
+      "repeat": {
+        "status": "stale",
+        "state": null,
+        "reason": null,
+        "reference": null,
+        "tmsStatus": null,
+        "loadStatus": null,
+        "sendStep": null,
+        "sendError": null,
+        "sendBytes": null,
+        "sendSha256": null
+      },
+      "after": {
+        "tcp_booking_commands": 1,
+        "state": "ACK_PENDING"
+      },
+      "receipt_visible": true
+    },
+    "ui_observed": {
+      "all_voice_versions": true,
+      "recorded_calls": 80,
+      "verified_calls": 50,
+      "agreements_by_call": 27,
+      "awaiting_rep": 16,
+      "tms_acknowledged": 2,
+      "tms_confirmed": 0,
+      "released": 3,
+      "confirm_removed_after_receipt": true,
+      "reconcile_available": true
+    }
+  }
 }

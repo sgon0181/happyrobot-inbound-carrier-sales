@@ -1,6 +1,6 @@
 # Inbound Carrier Sales
 
-An AI voice agent for HappyRobot Logistics (simulated possible style client). It checks carrier authority, verifies an emailed code, finds freight and negotiates a rate. A senior rep reviews the resulting reservation before any booking is sent to the TMS.
+An AI voice agent for HappyRobot Logistics (a simulated brokerage). It checks carrier authority, verifies an emailed code, finds freight and negotiates a rate. A senior rep reviews the resulting reservation before any booking is sent to the TMS.
 
 [Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w)
 
@@ -49,7 +49,7 @@ NODE_ENV=production npm run build
 npm run typecheck
 ```
 
-Current results and the limits of each test layer are in [docs/results.md](docs/results.md).
+Results and test boundaries are in [docs/results.md](docs/results.md).
 
 ## External setup and deployment
 
@@ -69,7 +69,7 @@ The [challenge PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf) de
 ## Known limits
 
 - The demo inbox proves inbox access, not carrier identity. A pilot needs enrolled carrier contacts.
-- Hosted booking sends are off. Confirm is demonstrated locally and by the earlier LD01080 sandbox receipt. PENDING is acknowledged, not BOOKED; the sandbox provides no known finalization step.
+- Live carrier booking is off. A temporary, MC-scoped challenge-sandbox permission demonstrates hosted Confirm on the same call; [release details](docs/reference/release.md#current-release-state) give its expiry. PENDING is acknowledged, not BOOKED; no sandbox finalization step is known.
 - Unrecognized shipment text goes to a rep. The approved vocabulary needs operational ownership.
 - Misheard amounts within pricing limits can become reservations; repeated corrections can end a call. Rep review remains necessary.
 - Controlled load tests and repeated development callers do not establish production capacity, market conversion or broad voice reliability.

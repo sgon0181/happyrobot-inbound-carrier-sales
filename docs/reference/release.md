@@ -31,7 +31,8 @@ The code goes to a demo inbox, so it proves inbox access, not carrier identity; 
 | Historical Version 15 text | 71/74; S5, E6 and TRM failed and retained | Original grading definitions and source hash |
 | Final Version 19 text | Raw 70/74 and 73/74; focused 10/10 | Four judge interpretation issues and one genuine early-close limitation remain visible |
 | Version 19 voice before floor correction | Full diagnostic journey on deployed `9d051ba`: LD01134 reserved at $3,725 after bounded negotiation | Generated caller, live FMCSA, email, TMS reads and Twin; no booking send |
-| Final owner recording | Pending | Genuine human call and same-run demo |
+| Owner human calls | Run `6dc95ce1-f7e0-44a3-8394-8408b754527e` agreed LD01114 at $1,175 after a $1,150 counter; run `2e57f13a-6bae-49d9-ae28-845b08db596b` refused an inactive MC | [Sanitized service records](../evidence/reciprocal-negotiation/owner-calls-2026-11-07.json) |
+| Walkthrough video | Pending | Recorded by the owner from the recording script |
 
 The floor-correction pass repeated all four App gates under Node 22.23.4 and exercised browser Confirm against a freshly built disposable stack: exactly one TCP send, FAKE0001/PENDING. All 30 runtime files matched the local source. This does not replace the required post-deployment Version 19 voice check. [Validation record](../evidence/reciprocal-negotiation/floor-validation.json).
 
@@ -85,7 +86,7 @@ Version 19 was promoted after its fixed opening, prompt, seven bindings, native 
 
 The reviewer-facing links are the Production web call above, the exact Version 19 editor, `https://carrier-sales-proposal-sg.happyrobot.dev/` and `https://happyrobot-proposal-sg.fly.dev`. Authentication remains enabled. Production refers to the workflow deployment; the service deliberately retains Twin staging, synthetic call tags and the approved demo inbox. These settings preserve call history and do not establish carrier identity or authorize live sends.
 
-The owner records the final human call and video and handles portal submission. [The cue sheet](../recording-script.md) keeps a real call, its reservation and separate receipt evidence identifiable. No completed owner video or portal upload is claimed here.
+The owner records the walkthrough video and handles portal submission. [The cue sheet](../recording-script.md) keeps a real call, its reservation and separate receipt evidence identifiable. No completed owner video or portal upload is claimed here.
 
 ## Exact release and rollback
 

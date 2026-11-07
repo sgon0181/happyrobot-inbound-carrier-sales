@@ -1,2 +1,4 @@
 # Kept in the repository for the owner, left out of the submission ZIP (make zip).
+# The landing page mainly launches the atlas, and nothing in the ZIP links to it.
 docs/diagrams/teaching-atlas export-ignore
+docs/diagrams/index.html export-ignore

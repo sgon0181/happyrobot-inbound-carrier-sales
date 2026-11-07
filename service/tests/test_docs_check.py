@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from tools.check_docs import TOP_LEVEL, problems
+from tools.check_docs import TOP_LEVEL, problems, results_in
 
 
 def _tree(tmp_path: Path) -> Path:
@@ -40,3 +40,14 @@ def test_long_dashes_are_reported_except_verbatim_archive(tmp_path: Path) -> Non
     (root / "docs/history/archive/export.md").write_text("A \u2013 B\n", encoding="utf-8")
     expected = "docs/note.md: long dash character; use a comma, colon or parentheses"
     assert problems(root) == [expected]
+
+
+def test_formatted_counts_and_scores_are_found() -> None:
+    assert results_in("It passed **608** tests.") == ["608 tests"]
+    assert results_in("The sweep scored `70/74`.") == ["70/74"]
+    assert results_in("Coverage was 98.1% of business-rule branches.") == ["98.1% of business"]
+
+
+def test_dates_and_ordinary_ratios_are_not_results() -> None:
+    assert results_in("Recorded on 11/07/2026, pickup 11/07.") == []
+    assert results_in("8 of 50 open loads went to a rep in one check.") == []

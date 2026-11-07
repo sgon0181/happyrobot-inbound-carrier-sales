@@ -47,7 +47,7 @@ Two rules shape the design:
 - **Booking sends are off in the hosted App.** Confirm is shown with `make review` and an earlier sandbox receipt (LD01080).
 - **PENDING is not BOOKED.** The sandbox TMS acknowledges bookings as PENDING; the App shows that honestly and has no way to finalize them.
 - **Some loads go to a rep.** Load text that is not on an approved list is held for review instead of read to the caller (8 of 50 open loads in one check).
-- **Voice edge case.** If the agent mishears an amount and the carrier keeps correcting it, the agent can end the call instead of asking again. It never accepts the wrong amount.
+- **Voice edge case.** If the agent mishears an amount and the carrier keeps correcting it, the agent can end the call instead of asking again. In testing that ended without an agreement. More generally, the service checks an amount against the pricing rules, not against what the caller meant, so a misheard amount within the limits can still become a reservation; the rep reviews every one before anything is sent.
 - **Scale is not proven.** Tests ran controlled bursts of twelve calls and generated callers, not real peak traffic or a range of accents.
 
 ## Try it locally

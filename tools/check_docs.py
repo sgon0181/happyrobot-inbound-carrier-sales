@@ -24,11 +24,16 @@ TOP_LEVEL = (
     "ops-app/README.md",
     "happyrobot/README.md",
 )
-RESULTS = re.compile(
-    r"\b\d[\d,]* (?:service |App |automated )?tests?\b"
-    r"|\b\d+ ?(?:/|of) ?\d+ (?:checks|checkpoints|graded)\b"
-    r"|\b\d+/\d{2,3}\b"
-    r"|\b\d+(?:\.\d+)?% (?:of )?(?:business|branch|coverage|statement)",
+COUNT = re.compile(
+    r"\b\d[\d,]* (?:service |App |automated |platform )?(?:tests?|checks|checkpoints)\b",
+    re.IGNORECASE,
+)
+COVERAGE = re.compile(r"\b\d+(?:\.\d+)?% (?:of )?(?:business|branch|coverage|statement)", re.I)
+# A ratio counts as a score only near result words, and never inside a date such as 11/07/2026.
+RATIO = re.compile(r"(?<![\d/])\d+ ?(?:/|of|out of) ?\d+(?![\d/])", re.IGNORECASE)
+RESULT_WORDS = re.compile(
+    r"\b(?:pass(?:ed|es)?|fail(?:ed|s)?|scor(?:e|ed|es)|grades?|graded|sweeps?|checks|"
+    r"checkpoints?|evaluations?|tests?)\b",
     re.IGNORECASE,
 )
 LONG_DASHES = re.compile("[\u2013\u2014]")
@@ -45,12 +50,22 @@ def markdown_files(root: Path) -> list[str]:
     )
 
 
+def results_in(text: str) -> list[str]:
+    """Result-like phrases, ignoring markdown emphasis so **608** tests is still found."""
+    plain = re.sub(r"[*_`]", "", text)
+    found = [m.group(0) for pattern in (COUNT, COVERAGE) for m in pattern.finditer(plain)]
+    for match in RATIO.finditer(plain):
+        window = plain[max(0, match.start() - 60) : match.end() + 60]
+        if RESULT_WORDS.search(window):
+            found.append(match.group(0))
+    return found
+
+
 def problems(root: Path) -> list[str]:
     found = []
     for name in TOP_LEVEL:
-        text = (root / name).read_text(encoding="utf-8")
-        for match in RESULTS.finditer(text):
-            found.append(f"{name}: '{match.group(0)}' belongs in docs/results.md")
+        for phrase in results_in((root / name).read_text(encoding="utf-8")):
+            found.append(f"{name}: '{phrase}' belongs in docs/results.md")
     for name in markdown_files(root):
         if name.startswith(DASH_EXEMPT):
             continue

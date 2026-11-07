@@ -48,7 +48,7 @@ Tests check these whatever the model says.
 | INV-6 | One active reservation per load, one agreement per call. |
 | INV-7 | `LOAD_BOOK` only after a rep's Confirm, at most once, never resent. |
 | INV-8 | Every endpoint requires authentication, including health. |
-| INV-9 | Every state change and its audit event are saved in the same write. |
+| INV-9 | Every call and booking state change and its audit event are saved in the same write. (A shared negotiation quote lowered to a new cap is updated without a new event.) |
 | INV-10 | Each handled booking reply is kept as received, so the rep sees what the TMS actually said. A crash before it is saved can lose it. |
 
 The service cannot control what the model says. A misheard amount inside the limits can become a reservation, which is why a rep reviews every reservation before anything is sent.

@@ -20,7 +20,7 @@ All prices come from the service, never from the language model. The TMS ceiling
 
 ## Rep control
 
-An agreement reserves the load; it does not book it. The rep opens the reservation in the App and sees the carrier, the shipment, the opening and agreed rates, every price decision and a link to the call recording. Confirm rechecks that the shipment and ceiling have not changed, then sends the booking to the TMS once. The App shows the TMS reply as it is: PENDING is acknowledged, `BOOKED` is confirmed, and an unclear result is flagged for the rep and never resent.
+An agreement reserves the load; it does not book it. The rep opens the reservation in the App and sees the carrier, the shipment, the opening and agreed rates, every price decision and a link to the call recording. Confirm rechecks that the shipment has not changed and that the current ceiling still covers the agreed rate, then sends the booking to the TMS once. The App shows the TMS reply as it is: PENDING is acknowledged, `BOOKED` is confirmed, and an unclear result is flagged for the rep and never resent.
 
 ## What operations sees
 

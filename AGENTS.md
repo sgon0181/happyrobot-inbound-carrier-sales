@@ -23,7 +23,7 @@ The challenge brief is `docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf
 | TMS timeouts and malformed frames | `service/adapters/tms/`, `service/tests/test_protocol.py` |
 | Every endpoint authenticated | `service/api.py`, `service/tests/test_verify.py` |
 | Rep-only actions in the App | `ops-app/src/lib/rep-access.ts`, `ops-app/src/lib/auth.ts`, `ops-app/tests/` |
-| Live prompt and tools | `happyrobot/prompt-v19.md`, `happyrobot/tool-bindings-v19.json` |
+| Live prompt and tools | `happyrobot/prompt-v20.md`, `happyrobot/tool-bindings-v20.json` |
 | Deployed state and rollback | `docs/reference/release.md`, `docs/evidence/` |
 
 ## Commands

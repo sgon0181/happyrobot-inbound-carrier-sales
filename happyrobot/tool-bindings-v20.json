@@ -2,16 +2,16 @@
   "version": 20,
   "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
   "version_slug": "zynb7wm66n9w",
-  "status": "unpublished draft",
+  "status": "Published and live in Production",
   "source_version": 19,
   "editor_url": "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w",
-  "observed_at_utc": "2026-11-07T02:36:00Z",
-  "prompt_file": "happyrobot/prompt-v19.md",
-  "prompt_sha256": "8cd315df44a08b537da383621beb65feb01cae57f5484a6c530f1b8af566e54f",
-  "prompt_unchanged": true,
+  "observed_at_utc": "2026-11-07T03:14:00Z",
+  "prompt_file": "happyrobot/prompt-v20.md",
+  "prompt_sha256": "9206f020bf3e902b6116338917caa41f5b0b625844aa2afad2ae5595b70395a5",
+  "prompt_unchanged": false,
   "initial_message": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
   "initial_message_uninterruptible": true,
-  "opening_evidence": "Native editor toggle read back enabled. Interrupted audio remains untested.",
+  "opening_evidence": "Actual interrupted audio run6899c68f delivered the complete disclosure during caller overlap. See qa-v20-voice.json.",
   "variables": {
     "SERVICE_BASE_URL": {
       "production": "https://happyrobot-proposal-sg.fly.dev",
@@ -619,8 +619,13 @@
   "audits": {
     "enabled": true,
     "sampling_bps": 10000,
-    "scope": "workflow-wide; applies to future calls including current V19",
-    "v20_live_grades": "none; version unpublished",
+    "scope": "workflow-wide; Version 20 is current Production",
+    "v20_live_grades": {
+      "passed": 18,
+      "not_applicable": 18,
+      "failed": 0,
+      "evidence": "qa-v20-voice.json"
+    },
     "retention_days": null
   },
   "reference_check": {
@@ -629,9 +634,13 @@
     "mode": "fix_broken_vars dry_run, production variable resolution",
     "preview_note": "This platform check regenerates saved outputs and replaced the find_loads preview with invalid_request. The safe success fixture was restored afterward. Recheck the preview after future node tests; no runtime output lock was added."
   },
-  "production_version_unchanged": true,
+  "production_version_unchanged": false,
   "sending_policy": {
     "demo_inbox": true,
     "live_booking": false
-  }
+  },
+  "previous_draft_prompt_sha256": "8cd315df44a08b537da383621beb65feb01cae57f5484a6c530f1b8af566e54f",
+  "prompt_change": "Two warning-first passages resolve conflict with the standard pitch order.",
+  "release_evidence": "qa-v20-voice.json",
+  "previous_production_version": 19
 }

@@ -5,7 +5,7 @@ Record a genuine call on the final tested workflow, then follow that exact run i
 ## Prepare the tabs
 
 1. [Overview](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview).
-2. [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [Version 19 editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk), verified in the [release guide](reference/release.md#current-release-state).
+2. [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [Version 20 editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w), verified in the [release guide](reference/release.md#current-release-state).
 3. [Reservations](https://carrier-sales-proposal-sg.happyrobot.dev/?view=reservations), with the new run selected after the call.
 4. [Calls](https://carrier-sales-proposal-sg.happyrobot.dev/?view=calls) and that run's native recording.
 5. [Bookings](https://carrier-sales-proposal-sg.happyrobot.dev/?view=bookings).
@@ -78,4 +78,4 @@ If no agreement occurred, show the actual exception and say: "This call did not 
 
 ## Before recording
 
-Confirm the Production web call still opens Version 19 (see the [release guide](reference/release.md#current-release-state)). Use a fresh available load rather than a historical held one. Preserve unsuccessful runs as evidence. Keep the full call and submission source identifiable. The final video and portal upload are owner actions.
+Confirm the Production web call still opens Version 20 (see the [release guide](reference/release.md#current-release-state)). Use a fresh available load rather than a historical held one. Preserve unsuccessful runs as evidence. Keep the full call and submission source identifiable. The final video and portal upload are owner actions.

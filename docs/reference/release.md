@@ -12,21 +12,23 @@ The owner-approved `reciprocal-v2` concession-floor correction from `8ccbf0a` is
 | App | Build 10 at the workspace link above; 65 local tests, lint, typecheck and production build pass |
 | Service | Source `8ccbf0a` deployed to `happyrobot-proposal-sg`; authenticated health, TMS reachability and runtime hashes verified; 3,871 production Python lines |
 | Data | Twin staging; `calls`, `bookings` and the new `negotiations` table; provisioning of negotiation memory verified |
-| Voice | [Version 19](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk), ID `01a1b2ea-26c8-7131-8252-b334dcaab976`, slug `l6zo75s4s4vk` |
-| Workflow Production | Version 19 published and read back live; [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc); Version 8 retained unpublished for rollback |
+| Voice | [Version 20](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w), ID `01a1b3cf-1025-7c0f-91b6-75f57ce017b4`, slug `zynb7wm66n9w` |
+| Workflow Production | Version 20 published and checked by an actual Production call; [Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc); Version 19 retained non-live for immediate rollback |
 | Sending | `CALL_COHORT=synthetic`, `LIVE_BOOKING=false`; no hosted Confirm sends are enabled |
 
 The code goes to a demo inbox, so it proves inbox access, not carrier identity; a pilot would enroll real carrier contacts first. The owner explicitly retained this route and disabled hosted booking sends. Demonstrate Confirm in the disposable local App, and identify the earlier [LD01080 sandbox PENDING receipt](https://carrier-sales-santiago.happyrobot.dev/?view=bookings&load=LD01080&run=ddae86e8-c7b0-43b6-8dc1-eb902b45c33f) as a separate historical transaction.
 
 ## Evidence at a glance
 
-### Unpublished Version 20
+### Current Version 20
 
-[Version 20](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w) is an unpublished draft forked from the live Version 19. It protects the fixed opening from interruptions, aligns `find_loads` parameters with the existing lane gate, refreshes its safe success schema and Northstars, and uses `SERVICE_BASE_URL` in all seven HTTP nodes. Request bodies, authentication and the prompt are unchanged. Workflow-wide audit sampling is enabled for future calls, including current Production; this does not publish the draft. [Readback](../../happyrobot/tool-bindings-v20.json) and [results](../results.md#unpublished-integration-alignment-draft).
+[Version 20](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w) is live in Production after owner-approved Development acceptance and independent review. Its protected opening survived overlapping caller audio. A complete verified call retained the supplied lane, used service-approved prices, created a reservation and ended with the exact rate and pending-review status. A separate Production call confirmed routing, authority lookup, delivery to the demo inbox, closure and hangup; its code was not verified. [Readback](../../happyrobot/tool-bindings-v20.json), [audio and audits](../../happyrobot/qa-v20-voice.json), [results and retained failures](../results.md#version-20-release-acceptance).
 
-All three `SERVICE_BASE_URL` environment values deliberately retain the same existing service. Its populated Twin staging database, demo inbox and disabled booking sends remain in place. This is not environment isolation. The [bootstrap SQL](../../tools/twin-schema.sql) is only for a new workspace; the [schema checker](onboarding.md#reproduce-the-twin-tables) makes metadata reads only. Do not reset or reimport the existing database.
+The final prompt changes only two time-warning passages from Version 19. Request bodies, authentication and service runtime are unchanged. The optional delivery omission in the normal pitch is distinct from the remaining occasional omission of a supplied pickup time in an adversarial checkpoint. No invented time was observed in those checks.
 
-Before promotion, review the focused failures in results. After explicit owner approval to publish for testing, interrupt the opening, exercise missing lane details and explicit anywhere permission, complete a verified reservation without a booking send, then inspect native audits. Text grades cannot prove audio interruption handling or live URL-variable resolution. Keep Version 19 as the current Production version until this release is approved.
+All three `SERVICE_BASE_URL` environment values deliberately use the same demo service and populated Twin staging database. This is not backend isolation. Demo inbox and disabled hosted sends remain in place. The [bootstrap SQL](../../tools/twin-schema.sql) is for a new workspace; do not reset or reimport the submission database.
+
+To roll the workflow back, publish retained Version 19 (`01a1b2ea-26c8-7131-8252-b334dcaab976`) to Production, explicitly replacing Version 20. Verify the Production pointer and a short call afterward. This workflow rollback does not require a service or App deployment. Development has no live workflow; historical Version 15 remains in Staging.
 
 ### Previously recorded release evidence
 
@@ -44,7 +46,7 @@ Before promotion, review the focused failures in results. After explicit owner a
 | Owner human calls | Run `6dc95ce1-f7e0-44a3-8394-8408b754527e` agreed LD01114 at $1,175 after a $1,150 counter; run `2e57f13a-6bae-49d9-ae28-845b08db596b` refused an inactive MC | [Sanitized service records](../evidence/reciprocal-negotiation/owner-calls-2026-11-07.json) |
 | Walkthrough video | Pending | Recorded by the owner from the recording script |
 
-The floor-correction pass repeated all four App gates under Node 22.23.4 and exercised browser Confirm against a freshly built disposable stack: exactly one TCP send, FAKE0001/PENDING. All 30 runtime files matched the local source. This does not replace the required post-deployment Version 19 voice check. [Validation record](../evidence/reciprocal-negotiation/floor-validation.json).
+The floor-correction pass repeated all four App gates under Node 22.23.4 and exercised browser Confirm against a freshly built disposable stack: exactly one TCP send, FAKE0001/PENDING. All 30 runtime files matched the local source. The owner call and later Version 20 acceptance provide the separate live evidence. [Validation record](../evidence/reciprocal-negotiation/floor-validation.json).
 
 The previous release App checks ran under Node 22 in the repository's Docker image because the host Homebrew Node runtime had a missing library. Production build used `NODE_ENV=production`. A first run inheriting the review image's development value failed; the corrected production build passed. Local validation logs retain both outcomes.
 
@@ -80,7 +82,9 @@ Overview shows recorded stage progress and reservation conversion, with supporti
 
 Call data is evidence of recorded service decisions, not proof of every spoken word. The dated sample was dominated by repeated test carriers and cannot establish market conversion, missed-call reduction or financial return. [KPI definitions](kpis.md) specify each boundary.
 
-## Native conversation evidence
+<a id="native-conversation-evidence"></a>
+
+## Historical conversation evidence
 
 [Version 19 prompt](../../happyrobot/prompt-v19.md) and its fixed initial message identify the AI before asking for an MC. All seven HTTP bindings point to the submission service. The complete native [checkpoint evidence](../../happyrobot/qa-v19-checkpoints.json) records two raw sweeps, **70/74 and 73/74**, plus **10/10 focused consent and exit checks**. No run is pending. Numeric final counteroffers and missing-display fallback both pass twice. Four failed grades are documented judge interpretation issues; they remain failed in the raw evidence.
 
@@ -92,18 +96,18 @@ Version 16's actual voice run exposed an email sent despite a simultaneous reque
 
 ## Delivery and release boundary
 
-Version 19 was promoted after its fixed opening, prompt, seven bindings, native checks and complete diagnostic audio journey were verified against service `9d051ba`. Publication required first removing Version 19 from Development, then publishing it to Production while replacing Version 8. Native metadata and the editor both read back Version 19 live in Production. Development is now empty; Version 15 remains the historical Staging workflow. No service or App endpoint changed during promotion. Hosted sends remain off.
+Historically, Version 19 was promoted after its fixed opening, prompt, seven bindings, native checks and complete diagnostic audio journey were verified against service `9d051ba`. Publication required first removing Version 19 from Development, then publishing it to Production while replacing Version 8. Native metadata and the editor both read back Version 19 live in Production. At that earlier release, Development was emptied and Version 15 remained in Staging. No service or App endpoint changed during promotion. Hosted sends remain off.
 
-The reviewer-facing links are the Production web call above, the exact Version 19 editor, `https://carrier-sales-proposal-sg.happyrobot.dev/` and `https://happyrobot-proposal-sg.fly.dev`. Authentication remains enabled. Production refers to the workflow deployment; the service deliberately retains Twin staging, synthetic call tags and the approved demo inbox. These settings preserve call history and do not establish carrier identity or authorize live sends.
+The reviewer-facing links are the Production web call above, the exact Version 20 editor, `https://carrier-sales-proposal-sg.happyrobot.dev/` and `https://happyrobot-proposal-sg.fly.dev`. Authentication remains enabled. Production refers to the workflow deployment; the service deliberately retains Twin staging, synthetic call tags and the approved demo inbox. These settings preserve call history and do not establish carrier identity or authorize live sends.
 
 The owner records the walkthrough video and handles portal submission. [The cue sheet](../recording-script.md) keeps a real call, its reservation and separate receipt evidence identifiable. No completed owner video or portal upload is claimed here.
 
 ## Exact release and rollback
 
-The [release manifest](../evidence/release-2026-11-07/release.json), [runtime hashes](../evidence/release-2026-11-07/deployed-service.json), [App checks](../evidence/release-2026-11-07/app-validation.json) and [fresh local Confirm proof](../evidence/release-2026-11-07/local-review.json) identify this release. [Native bindings](../../happyrobot/tool-bindings-v19.json) retain all seven endpoints and the fixed opening without credentials.
+Current workflow configuration is recorded in [Version 20 bindings](../../happyrobot/tool-bindings-v20.json) and [audio acceptance](../../happyrobot/qa-v20-voice.json). The deployed service remains the reviewed floor correction in [its deployment record](../evidence/reciprocal-negotiation/service-deployment-2026-11-07.json). Use the immediate Version 19 rollback described above for a workflow-only regression.
 
-To roll back, publish retained Version 8 (`01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) to Production, explicitly replacing Version 19. The same web-call URL will then select Version 8. Use the old App at `https://carrier-sales-santiago.happyrobot.dev/` and its existing service, `https://happyrobot-carrier-sales-sg.fly.dev`, as a matched set after verifying their authenticated health. The original source is `oldmain` / `baseline-v8` at `15ce2b6`. Do not reset or delete the new Twin records, reinterpret PENDING as BOOKED, or replay uncertain sends. The current guarded service and App may remain available for investigation.
+The earlier [release manifest](../evidence/release-2026-11-07/release.json), [runtime hashes](../evidence/release-2026-11-07/deployed-service.json), [App checks](../evidence/release-2026-11-07/app-validation.json) and [local Confirm proof](../evidence/release-2026-11-07/local-review.json) are dated evidence, not a new Version 20 service deployment.
 
 ## History
 
-Version 8, App Build 24 and source `15ce2b6` are retained for rollback. Restore the old workflow Production version and old App/service links together if the new release fails. Do not delete new call records or send an uncertain booking again. Prior [service manifest](../evidence/readiness/deployed-service.json), [native App acceptance](../evidence/readiness/native-app-acceptance.json) and [historical import integrity](../evidence/readiness/historical-import-integrity.json) remain immutable dated evidence, not hashes of the updated runtime.
+The older full stack is source `oldmain` / local `baseline-v8` at `15ce2b6`, Version 8 (`01a1a4f6-79a3-7c40-8732-589b3adfdcfd`) and App Build 24. A deliberate full-stack rollback would restore that workflow with `https://carrier-sales-santiago.happyrobot.dev/` and `https://happyrobot-carrier-sales-sg.fly.dev` as a matched set after checking authenticated health. Do not delete new call records, reinterpret PENDING as BOOKED or replay an uncertain send. Prior [service manifest](../evidence/readiness/deployed-service.json), [native App acceptance](../evidence/readiness/native-app-acceptance.json) and [historical import integrity](../evidence/readiness/historical-import-integrity.json) remain immutable dated evidence.

@@ -2,7 +2,7 @@
 
 An AI voice agent for HappyRobot Logistics (simulated possible style client). It checks carrier authority, verifies an emailed code, finds freight and negotiates a rate. A senior rep reviews the resulting reservation before any booking is sent to the TMS.
 
-[Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk)
+[Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w)
 
 ## Run locally
 
@@ -25,7 +25,7 @@ Web call -> AI disclosure -> authority -> email code -> load search
 
 The model handles conversation; the service controls verification, prices and state. The expected code and rate ceiling stay inside the service. The caller's spoken code passes through the workflow for checking. The handoff is mocked, as the brief permits.
 
-Start at [happyrobot/tool-bindings-v19.json](happyrobot/tool-bindings-v19.json), then [service/api.py](service/api.py). [service/main.py](service/main.py) wires the adapters. `calls.py` handles verification; `selling.py` handles search and negotiation; `rep_actions.py` controls booking. The App enters through [ops-app/src/app/page.tsx](ops-app/src/app/page.tsx), reads service snapshots and forwards authorized rep actions. Twin is the only persistent application datastore.
+Start at [happyrobot/tool-bindings-v20.json](happyrobot/tool-bindings-v20.json), then [service/api.py](service/api.py). [service/main.py](service/main.py) wires the adapters. `calls.py` handles verification; `selling.py` handles search and negotiation; `rep_actions.py` controls booking. The App enters through [ops-app/src/app/page.tsx](ops-app/src/app/page.tsx), reads service snapshots and forwards authorized rep actions. Twin is the only persistent application datastore.
 
 ## Verify
 

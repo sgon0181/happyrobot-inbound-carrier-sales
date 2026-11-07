@@ -1,0 +1,2241 @@
+{
+  "version": 20,
+  "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+  "prompt_sha256": "9206f020bf3e902b6116338917caa41f5b0b625844aa2afad2ae5595b70395a5",
+  "observed_at_utc": "2026-11-07T03:14:00Z",
+  "scope": "Actual HappyRobot WebRTC audio with locally generated diagnostic caller speech, live FMCSA, real demo-inbox codes, sandbox TMS reads and persisted Twin records. No microphone capture, no booking sends. Development and Production deliberately use the same demo service.",
+  "production": "Version 20 promoted after Development acceptance; Version 19 retained as non-live rollback. Production run confirms V20 routing, authority lookup, email delivery, close and hangup. Its code was not verified.",
+  "opening_interruption": {
+    "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+    "agent_opening_start_ms": 327,
+    "agent_opening_end_ms": 5847,
+    "caller_start_ms": 880,
+    "caller_end_ms": 2760,
+    "complete_disclosure_delivered": true
+  },
+  "outcomes": {
+    "complete_reservation": {
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "load_id": "LD01142",
+      "opening": 3300,
+      "caller_ask": 3600,
+      "counter": 3400,
+      "accepted": 3400,
+      "state": "RESERVED"
+    },
+    "lane_and_review_gate": {
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "outcome": "shipment_review_required",
+      "note": "No-match recovery exercised first. Two mistaken code reads were rejected; the real inbox code then verified. No freight was disclosed before verification."
+    }
+  },
+  "snapshot": {
+    "calls": 81,
+    "bookings": 21,
+    "booking_states": {
+      "RESERVED": 17,
+      "ACK_PENDING": 1,
+      "RELEASED": 3
+    },
+    "live_booking": false
+  },
+  "native_audit_grades": {
+    "passed": 18,
+    "not_applicable": 18
+  },
+  "runs": [
+    {
+      "slot": "v20interrupt",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "native_output_id": "5c7ad201-34ff-410e-a866-f5abd68da9f5",
+      "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+      "environment": "development",
+      "duration_seconds": 59,
+      "status": "completed",
+      "call_end_initiator": "agent",
+      "caller_audio_received": true,
+      "transcript": [
+        {
+          "id": "01a1b3f1-65b7-77d1-b5f6-8d40f2f838c6",
+          "role": "assistant",
+          "content": "You're speaking with an AI",
+          "start": 327,
+          "end": 1407
+        },
+        {
+          "id": "e9e0a3f3-f147-4580-8713-90cd9e05aca2",
+          "role": "user",
+          "content": "Weight. Who am I speaking with?",
+          "start": 880,
+          "end": 2760
+        },
+        {
+          "id": "01a1b3f1-7700-7949-a168-fa5e51954c03",
+          "role": "assistant",
+          "content": "agent from HappyRobot Logistics. May I have your MC number?",
+          "start": 1407,
+          "end": 5847
+        },
+        {
+          "id": "01a1b3f1-8588-7953-8963-bf085ed87b1a",
+          "role": "assistant",
+          "content": "May I have your complete MC number?",
+          "start": 7647,
+          "end": 9567
+        },
+        {
+          "id": "01a1b3f1-a554-79a3-8609-5340185d14f9",
+          "role": "assistant",
+          "content": "May I have your complete MC number?",
+          "start": 15627,
+          "end": 17707
+        },
+        {
+          "id": "9da1f559-fa61-49e7-9c27-9d46265f898d",
+          "role": "user",
+          "content": "I do not need a load today. Thank you. Goodbye.",
+          "start": 49370,
+          "end": 52579
+        },
+        {
+          "id": "01a1b3f2-3adc-778d-9e58-8c101b8f4877",
+          "role": "assistant",
+          "content": "Understood. I won't search for a load today.",
+          "tool_calls": [
+            {
+              "id": "call_ee38255118a05e0c8c6e040f21275169",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Understood. I won't search for a load today.\",\"summary\":\"Caller declined load assistance and ended the call.\"}"
+              }
+            }
+          ],
+          "start": 53587,
+          "end": 55987
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_ee38255118a05e0c8c6e040f21275169",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1b3f2-489c-78b9-afc5-35d0e640d35b",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_d94a668ce019576ba8b3f75fae18d455",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 57587,
+          "end": 59507
+        }
+      ],
+      "tools_result": [
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dca-7185-94ff-52435dc3a20c",
+          "tool_name": "close_call"
+        }
+      ],
+      "audio_capture": {
+        "private_file": "v20interrupt.webm",
+        "sha256": "2553f6de505a9655152def65e9e36d610ef2dd2a7bb56cf2cdf747210ce770fd",
+        "bytes": 958137,
+        "remote_peak_rms": 0.2318804860248648
+      },
+      "harness_events": [
+        {
+          "at": "2026-11-07T02:58:22.140Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-07T02:58:22.401Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-07T02:58:22.788Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AMMaxM9Tf8otJR"
+          }
+        },
+        {
+          "at": "2026-11-07T02:58:23.612Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Wait, who am I speaking with?",
+            "duration": 3.859909297052154
+          }
+        },
+        {
+          "at": "2026-11-07T02:58:27.470Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Wait, who am I speaking with?"
+          }
+        },
+        {
+          "at": "2026-11-07T02:59:12.183Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "I do not need a load today. Thank you. Goodbye.",
+            "duration": 5.212063492063492
+          }
+        },
+        {
+          "at": "2026-11-07T02:59:17.393Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "I do not need a load today. Thank you. Goodbye."
+          }
+        },
+        {
+          "at": "2026-11-07T02:59:22.532Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.2318804860248648
+          }
+        },
+        {
+          "at": "2026-11-07T02:59:22.540Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 958137,
+            "remote_peak": 0.2318804860248648
+          }
+        }
+      ],
+      "service_record": {
+        "id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+        "version": 2,
+        "started_at": "2026-11-07T02:59:19.171994+00:00",
+        "closed_at": "2026-11-07T02:59:19.171994+00:00",
+        "mc": null,
+        "carrier_name": null,
+        "eligible": false,
+        "code_passed": false,
+        "search": null,
+        "agreement": null,
+        "summary": "Caller declined load assistance and ended the call.",
+        "outcome": "ended_without_agreement",
+        "ended_by": "agent",
+        "duration_seconds": 59,
+        "native_workflow": {
+          "workspace": "fdesantiagogonzalezalvarez",
+          "workflow_id": "6oaskq84xpfc"
+        },
+        "cohort": "synthetic",
+        "read_only": null,
+        "events": [
+          {
+            "at": "2026-11-07T02:59:19.171994+00:00",
+            "mc": null,
+            "seq": 1,
+            "action": "close",
+            "status": "closed"
+          },
+          {
+            "at": "2026-11-07T02:59:22.793100+00:00",
+            "mc": null,
+            "seq": 2,
+            "action": "call_ended",
+            "status": "ended",
+            "ended_by": "agent",
+            "duration_seconds": 59
+          }
+        ]
+      },
+      "checks": {
+        "one_close_call": true,
+        "one_hangup": true,
+        "agent_ended": true
+      }
+    },
+    {
+      "slot": "v20accept",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "native_output_id": "a2e9a819-d8aa-4948-b6cc-2bacf326ffb0",
+      "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+      "environment": "development",
+      "duration_seconds": 410,
+      "status": "completed",
+      "call_end_initiator": "agent",
+      "caller_audio_received": true,
+      "transcript": [
+        {
+          "id": "01a1b3f2-ff47-7337-8f98-e88eb20fc7ef",
+          "role": "assistant",
+          "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+          "start": 304,
+          "end": 5744
+        },
+        {
+          "id": "01a1b3f3-1e22-7558-98d9-f0d318210594",
+          "role": "assistant",
+          "content": "May I have your full MC number?",
+          "start": 11725,
+          "end": 13645
+        },
+        {
+          "id": "6408f1f4-e45b-456f-96d0-0365e8457429",
+          "role": "user",
+          "content": "My MC number is 138328.",
+          "start": 15340,
+          "end": 17900
+        },
+        {
+          "id": "01a1b3f3-3100-7de7-bdaf-7d476c0aa4a1",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_511611d684d65e6bbece65d03d38e8b5",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_511611d684d65e6bbece65d03d38e8b5",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1b3f3-4352-76ec-92a0-1f0d2c236a4a",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 20045,
+          "end": 23165
+        },
+        {
+          "id": "01a1b3f3-61cb-7509-9ba4-57a8532b4aa4",
+          "role": "assistant",
+          "content": "Is that the correct carrier name?",
+          "start": 29125,
+          "end": 30965
+        },
+        {
+          "id": "85ad7986-77cd-4f64-ab80-13f66ae6141d",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 41720,
+          "end": 43309
+        },
+        {
+          "id": "01a1b3f3-93f7-7c65-a7b8-0092ba80717c",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_a274f148c279525ebb71780654c3eae9",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_a274f148c279525ebb71780654c3eae9",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1b3f3-ad6b-718a-8931-38b8efa680de",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 46644,
+          "end": 50324
+        },
+        {
+          "id": "01a1b3f3-cdd6-75fc-9692-790ee63f8374",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 56305,
+          "end": 58625
+        },
+        {
+          "id": "01a1b3f4-da33-749b-9f60-f55f3113a65e",
+          "role": "assistant",
+          "content": "Please read me the six-digit code from the email.",
+          "start": 124685,
+          "end": 127325
+        },
+        {
+          "id": "7b4b352b-264e-4b4c-8631-f554d14e664a",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 132810,
+          "end": 137900
+        },
+        {
+          "id": "01a1b3f5-05ba-7b24-a692-abe41c8dfed1",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_fe252acc01565a74a1e5a078e866823c",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\":\"I need the six digits.\",\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"invalid_code\"}}]}",
+          "tool_call_id": "call_fe252acc01565a74a1e5a078e866823c",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1b3f5-188b-7197-8227-345b81b30f84",
+          "role": "assistant",
+          "content": "That code didn\u2019t match. Please read the six digits again.",
+          "start": 140004,
+          "end": 143284
+        },
+        {
+          "id": "01a1b3f5-37f2-7eb9-b08e-30e4364bd2f4",
+          "role": "assistant",
+          "content": "Please read the six-digit code again.",
+          "start": 149245,
+          "end": 151325
+        },
+        {
+          "id": "61fb2c51-f2c8-44a0-81bd-506d8f80819c",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 170960,
+          "end": 173450
+        },
+        {
+          "id": "01a1b3f5-9bb6-78ec-b935-e02a55c6f3a8",
+          "role": "assistant",
+          "content": "Please provide all six digits of the code.",
+          "start": 174384,
+          "end": 176864
+        },
+        {
+          "id": "01a1b3f5-baa6-776e-9481-dbaff1812ed6",
+          "role": "assistant",
+          "content": "I still need all six digits.",
+          "start": 182865,
+          "end": 184785
+        },
+        {
+          "id": "814bf1dd-62bf-41e1-b2cb-f36fb82369e6",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 223870,
+          "end": 229239
+        },
+        {
+          "id": "01a1b3f6-6aa7-7a29-9fdb-2546c7ab3676",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_2069a1f5074e5f3886ef0f634fedc2bf",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\":\"Checking that code.\",\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"invalid_code\"}}]}",
+          "tool_call_id": "call_2069a1f5074e5f3886ef0f634fedc2bf",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1b3f6-7ee6-78a7-b33c-1bc92ed604c8",
+          "role": "assistant",
+          "content": "That code didn\u2019t match. Please read the six digits again.",
+          "start": 231584,
+          "end": 235024
+        },
+        {
+          "id": "01a1b3f6-9e62-765d-a88f-5951a6217e55",
+          "role": "assistant",
+          "content": "Please read the six-digit code again.",
+          "start": 241004,
+          "end": 243084
+        },
+        {
+          "id": "89ffd724-0698-4c8f-a222-10cdf6621529",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 272500,
+          "end": 275700
+        },
+        {
+          "id": "01a1b3f7-286e-7e90-824e-43acdd5528d4",
+          "role": "assistant",
+          "content": "I need all six digits, please.",
+          "start": 276664,
+          "end": 278424
+        },
+        {
+          "id": "01a1b3f7-4902-7668-9bb4-2abddee9e054",
+          "role": "assistant",
+          "content": "Please provide the complete six-digit code.",
+          "start": 284444,
+          "end": 286764
+        },
+        {
+          "id": "ce404de1-e7fa-4dc6-95d9-51ae310c068e",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 325669,
+          "end": 330400
+        },
+        {
+          "id": "01a1b3f7-f602-76ce-bf3a-4462b687c69b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_0e1b7da35b4d5dd9a701b10e84bfe2cd",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\":\"Checking that code.\",\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_0e1b7da35b4d5dd9a701b10e84bfe2cd",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1b3f8-00fe-79e9-839b-8e4c82714432",
+          "role": "assistant",
+          "content": "What equipment do you need?",
+          "start": 332505,
+          "end": 333865
+        },
+        {
+          "id": "01a1b3f8-1fef-736d-8edb-22294230c909",
+          "role": "assistant",
+          "content": "What equipment are you looking for?",
+          "start": 339864,
+          "end": 341784
+        },
+        {
+          "id": "db3cbb35-124a-4f78-b7b1-b41f8bca4b20",
+          "role": "user",
+          "content": "Dry van.",
+          "start": 344520,
+          "end": 345160
+        },
+        {
+          "id": "01a1b3f8-3786-7651-aed9-beccfaef0143",
+          "role": "assistant",
+          "content": "What pickup state should I search?",
+          "start": 346144,
+          "end": 347824
+        },
+        {
+          "id": "01a1b3f8-573e-756a-a922-7af020b4f963",
+          "role": "assistant",
+          "content": "What pickup state should I search?",
+          "start": 353784,
+          "end": 355944
+        },
+        {
+          "id": "b448d824-52ee-46b5-967d-874117cc4662",
+          "role": "user",
+          "content": "Texas",
+          "start": 358780,
+          "end": 359340
+        },
+        {
+          "id": "01a1b3f8-6fc7-7591-a42b-74be7b797ed6",
+          "role": "assistant",
+          "content": "What delivery state should I search?",
+          "start": 360144,
+          "end": 362224
+        },
+        {
+          "id": "01a1b3f8-8eb7-758a-9500-0ef4e631acc4",
+          "role": "assistant",
+          "content": "What delivery state should I search?",
+          "start": 368224,
+          "end": 370144
+        },
+        {
+          "id": "9513d811-d259-4c38-aa39-fc263d203d00",
+          "role": "user",
+          "content": "Anywhere for delivery is fine.",
+          "start": 373119,
+          "end": 374739
+        },
+        {
+          "id": "01a1b3f8-a31d-79ec-a222-77af280ca57c",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_0fd7a761a0fa5693a1b8dc1fc1c936db",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching available loads.\",\"dest_state\":\"\",\"equipment\":\"dry van\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"status\":\"no_match\"}}]}",
+          "tool_call_id": "call_0fd7a761a0fa5693a1b8dc1fc1c936db",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1b3f8-b9c2-7691-82ef-d397c6a491a3",
+          "role": "assistant",
+          "content": "Nothing fits from Texas right now. Would you like me to check one other lane?",
+          "start": 377324,
+          "end": 381164
+        },
+        {
+          "id": "01a1b3f8-d98e-755f-9b98-6c0a0d4030bc",
+          "role": "assistant",
+          "content": "Would you like me to check one other lane?",
+          "start": 387144,
+          "end": 389304
+        },
+        {
+          "id": "1c5eb3b8-f13c-4242-9481-48c512ff8a8c",
+          "role": "user",
+          "content": "Yes. I am open to pickup and delivery anywhere for dry van.",
+          "start": 397009,
+          "end": 400699
+        },
+        {
+          "id": "01a1b3f9-07e6-7542-a5b6-50d8c7714c29",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_81a769326c5951479ef730a17ddd00a1",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching nationwide dry van.\",\"dest_state\":\"\",\"equipment\":\"dry van\",\"origin_state\":\"\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"status\":\"shipment_review_required\"}}]}",
+          "tool_call_id": "call_81a769326c5951479ef730a17ddd00a1",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1b3f9-1d5f-72c3-92ae-af3aaef7a410",
+          "role": "assistant",
+          "content": "A senior rep must review the shipment terms before I can quote.",
+          "tool_calls": [
+            {
+              "id": "call_ed3c109cb83253fcb62e2eadb036dde9",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"A senior rep must review the shipment terms before I can quote.\",\"summary\":\"Nationwide dry van search required senior review; no offer quoted.\"}"
+              }
+            }
+          ],
+          "start": 403224,
+          "end": 406664
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_ed3c109cb83253fcb62e2eadb036dde9",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1b3f9-2b46-7dde-afcf-eaa6862e342f",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_e3ce21411eb95680804ca401a38d6ddf",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 408144,
+          "end": 410224
+        }
+      ],
+      "tools_result": [
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e205-7fec-9fb5-1bce8f0968ad",
+          "tool_name": "verify_carrier"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e211-7709-8c15-6d395dfc0f0f",
+          "tool_name": "send_code"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e218-762c-8e5e-fa1ca6770e81",
+          "tool_name": "verify_code"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dbf-745e-8c55-eee6b8dd87b1",
+          "tool_name": "find_loads"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dca-7185-94ff-52435dc3a20c",
+          "tool_name": "close_call"
+        }
+      ],
+      "audio_capture": {
+        "private_file": "v20accept.webm",
+        "sha256": "5dc8bc369280bd0e1b9a96bc095074f08521bb8c90bf91294193b0967ee7221b",
+        "bytes": 6611215,
+        "remote_peak_rms": 0.2577458825907567
+      },
+      "harness_events": [
+        {
+          "at": "2026-11-07T03:00:02.605Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-07T03:00:02.888Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-07T03:00:03.316Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AMeRYiBM9DEL4d"
+          }
+        },
+        {
+          "at": "2026-11-07T03:00:18.517Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My MC number is one three eight three two eight.",
+            "duration": 4.639705215419501
+          }
+        },
+        {
+          "at": "2026-11-07T03:00:23.161Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My MC number is one three eight three two eight."
+          }
+        },
+        {
+          "at": "2026-11-07T03:00:44.859Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-07T03:00:48.597Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-07T03:02:16.124Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 6.981111111111111
+          }
+        },
+        {
+          "at": "2026-11-07T03:02:23.104Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:02:54.237Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 4.453945578231292
+          }
+        },
+        {
+          "at": "2026-11-07T03:02:58.694Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:03:47.154Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 5.321360544217687
+          }
+        },
+        {
+          "at": "2026-11-07T03:03:52.472Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:04:35.773Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 5.204784580498866
+          }
+        },
+        {
+          "at": "2026-11-07T03:04:40.979Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:05:28.985Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 6.679229024943311
+          }
+        },
+        {
+          "at": "2026-11-07T03:05:35.663Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:05:47.723Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Dry van.",
+            "duration": 2.6773696145124717
+          }
+        },
+        {
+          "at": "2026-11-07T03:05:50.401Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Dry van."
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:02.056Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Texas.",
+            "duration": 2.6151927437641724
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:04.671Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Texas."
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:16.300Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Anywhere for delivery is fine.",
+            "duration": 3.7381179138321996
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:20.037Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Anywhere for delivery is fine."
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:40.156Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, I am open to pickup and delivery anywhere for dry van.",
+            "duration": 5.766031746031746
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:45.927Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, I am open to pickup and delivery anywhere for dry van."
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:53.815Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.2577458825907567
+          }
+        },
+        {
+          "at": "2026-11-07T03:06:53.836Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 6611215,
+            "remote_peak": 0.2577458825907567
+          }
+        }
+      ],
+      "service_record": {
+        "id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+        "version": 11,
+        "started_at": "2026-11-07T03:00:22.162576+00:00",
+        "closed_at": "2026-11-07T03:06:50.308980+00:00",
+        "mc": "138328",
+        "carrier_name": "WERNER ENTERPRISES INC",
+        "eligible": true,
+        "code_passed": true,
+        "search": {
+          "equipment": "DRY_VAN",
+          "dest_state": null,
+          "origin_state": null
+        },
+        "agreement": null,
+        "summary": "Nationwide dry van search required senior review; no offer quoted.",
+        "outcome": "shipment_review_required",
+        "ended_by": "agent",
+        "duration_seconds": 410,
+        "native_workflow": {
+          "workspace": "fdesantiagogonzalezalvarez",
+          "workflow_id": "6oaskq84xpfc"
+        },
+        "cohort": "synthetic",
+        "read_only": null,
+        "events": [
+          {
+            "at": "2026-11-07T03:00:22.162576+00:00",
+            "mc": "138328",
+            "seq": 1,
+            "action": "verify_carrier",
+            "lookup": 1,
+            "status": "checking"
+          },
+          {
+            "at": "2026-11-07T03:00:22.460041+00:00",
+            "mc": "138328",
+            "seq": 2,
+            "action": "verify_carrier",
+            "status": "eligible",
+            "carrier_name": "WERNER ENTERPRISES INC"
+          },
+          {
+            "at": "2026-11-07T03:00:47.490441+00:00",
+            "mc": "138328",
+            "seq": 3,
+            "action": "send_code",
+            "status": "code_issued",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:00:48.820546+00:00",
+            "mc": "138328",
+            "seq": 4,
+            "action": "send_code",
+            "status": "sent",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:02:22.178478+00:00",
+            "mc": "138328",
+            "seq": 5,
+            "action": "verify_code",
+            "status": "invalid_code"
+          },
+          {
+            "at": "2026-11-07T03:03:53.577996+00:00",
+            "mc": "138328",
+            "seq": 6,
+            "action": "verify_code",
+            "status": "invalid_code"
+          },
+          {
+            "at": "2026-11-07T03:05:34.671436+00:00",
+            "mc": "138328",
+            "seq": 7,
+            "action": "verify_code",
+            "status": "verified"
+          },
+          {
+            "at": "2026-11-07T03:06:19.371869+00:00",
+            "mc": "138328",
+            "seq": 8,
+            "action": "find_loads",
+            "search": {
+              "equipment": "DRY_VAN",
+              "dest_state": null,
+              "origin_state": "TX"
+            },
+            "status": "no_match"
+          },
+          {
+            "at": "2026-11-07T03:06:45.282488+00:00",
+            "mc": "138328",
+            "seq": 9,
+            "action": "find_loads",
+            "search": {
+              "equipment": "DRY_VAN",
+              "dest_state": null,
+              "origin_state": null
+            },
+            "status": "shipment_review_required"
+          },
+          {
+            "at": "2026-11-07T03:06:50.308980+00:00",
+            "mc": "138328",
+            "seq": 10,
+            "action": "close",
+            "status": "closed"
+          },
+          {
+            "at": "2026-11-07T03:06:53.952388+00:00",
+            "mc": "138328",
+            "seq": 11,
+            "action": "call_ended",
+            "status": "ended",
+            "ended_by": "agent",
+            "duration_seconds": 410
+          }
+        ]
+      },
+      "checks": {
+        "one_close_call": true,
+        "one_hangup": true,
+        "agent_ended": true
+      }
+    },
+    {
+      "slot": "v20reserve",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "native_output_id": "c294d2da-8b9d-486b-83a3-d44760e21f9e",
+      "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+      "environment": "development",
+      "duration_seconds": 141,
+      "status": "completed",
+      "call_end_initiator": "agent",
+      "caller_audio_received": true,
+      "transcript": [
+        {
+          "id": "01a1b3fa-26df-7dd7-8c56-43063cc1e94f",
+          "role": "assistant",
+          "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+          "start": 313,
+          "end": 5193
+        },
+        {
+          "id": "9e4b1916-914f-430a-a453-2c9fff129710",
+          "role": "user",
+          "content": "My MC number is 138328. I need a reefer from Texas to Florida.",
+          "start": 9700,
+          "end": 14619
+        },
+        {
+          "id": "01a1b3fa-4e04-7cbe-a930-3172c3259e63",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_cc847d763b31516a80c75e95a090a79b",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_cc847d763b31516a80c75e95a090a79b",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1b3fa-5fd4-770e-8526-9b20d09a118d",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 16813,
+          "end": 19773
+        },
+        {
+          "id": "01a1b3fa-84f0-700f-a098-d57478bad633",
+          "role": "assistant",
+          "content": "Is Werner Enterprises Inc. the correct carrier name?",
+          "start": 25752,
+          "end": 29272
+        },
+        {
+          "id": "8a9437cb-cc39-47bb-b81c-d42352f8ec0a",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 31419,
+          "end": 33039
+        },
+        {
+          "id": "01a1b3fa-9945-7046-83fd-c25a12c6303b",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_HUHAINda7CZrVF7rb6izaI5R",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_HUHAINda7CZrVF7rb6izaI5R",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1b3fa-b498-734d-bf55-ba1897e195b8",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 37233,
+          "end": 41473
+        },
+        {
+          "id": "01a1b3fa-d3ec-7015-9af6-b3fd5553c1ec",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 47493,
+          "end": 49493
+        },
+        {
+          "id": "22e62d3c-41fc-4702-a357-39b5e119484f",
+          "role": "user",
+          "content": "[verification speech omitted]",
+          "start": 61649,
+          "end": 66249
+        },
+        {
+          "id": "01a1b3fb-185d-7873-ac56-5bf16489e563",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_c92a34ce994552cc90def3ba93c73f0a",
+              "function": {
+                "name": "verify_code",
+                "arguments": "{\"_message\":\"Verifying that code.\",\"code\":\"[redacted]\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_code\",\"output\":{\"status\":\"verified\"}}]}",
+          "tool_call_id": "call_c92a34ce994552cc90def3ba93c73f0a",
+          "name": "verify_code"
+        },
+        {
+          "id": "01a1b3fb-1d4b-7782-878e-5e3e4eed4f7d",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_2eaa6e92e9495a3b86d992c750a3a271",
+              "function": {
+                "name": "find_loads",
+                "arguments": "{\"_message\":\"Searching reefer loads.\",\"dest_state\":\"FL\",\"equipment\":\"reefer\",\"origin_state\":\"TX\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service find_loads\",\"output\":{\"loads\":[{\"commodity_type\":\"Frozen Goods\",\"delivery_datetime\":\"2026-11-11T10:35:00+00:00\",\"delivery_time_display\":\"November 11 at 4:35 AM Central (CST)\",\"destination\":\"Miami, FL\",\"dimensions\":\"540 x 96 x 108 in\",\"equipment_type\":\"REEFER\",\"load_id\":\"LD01142\",\"miles\":1148,\"notes\":\"\",\"num_of_pieces\":12,\"offer\":3300,\"origin\":\"San Antonio, TX\",\"pickup_datetime\":\"2026-11-09T23:35:00+00:00\",\"pickup_time_display\":\"November 9 at 5:35 PM Central (CST)\",\"weight\":40846}],\"status\":\"found\"}}]}",
+          "tool_call_id": "call_2eaa6e92e9495a3b86d992c750a3a271",
+          "name": "find_loads"
+        },
+        {
+          "id": "01a1b3fb-5df7-7ca8-8add-4149f00558aa",
+          "role": "assistant",
+          "content": "San Antonio, Texas to Miami, Florida. We can offer $3,300 for a reefer carrying frozen goods, 40,846 pounds. Pickup is November 9 at 5:35 PM Central, CST. Does that work?",
+          "start": 70593,
+          "end": 84833
+        },
+        {
+          "id": "01a1b3fb-7fcb-7be9-965c-b0b7c3011f7c",
+          "role": "assistant",
+          "content": "Does $3,300 work for you?",
+          "start": 90853,
+          "end": 93493
+        },
+        {
+          "id": "258c76c1-bc9d-403c-9d36-0e489b4a5f8a",
+          "role": "user",
+          "content": "Can you do 3600 dollars?",
+          "start": 97049,
+          "end": 99449
+        },
+        {
+          "id": "01a1b3fb-9971-7149-a648-7d354540b99d",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_ba236766d7a85b88967b43c034ea0e2b",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Submitting your rate.\",\"load_id\":\"LD01142\",\"rate\":\"3600\",\"after_final_offer\":\"false\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"offer\":3400,\"round\":1,\"status\":\"counter\"}}]}",
+          "tool_call_id": "call_ba236766d7a85b88967b43c034ea0e2b",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1b3fb-b17b-7d94-9151-8d83f1db2e62",
+          "role": "assistant",
+          "content": "I can offer $3,400. Does that work?",
+          "start": 102613,
+          "end": 106213
+        },
+        {
+          "id": "01a1b3fb-d4b7-7eca-84d3-1137f412ffde",
+          "role": "assistant",
+          "content": "Would $3,400 work for you?",
+          "start": 112273,
+          "end": 115233
+        },
+        {
+          "id": "664cb52c-4509-4d58-86e0-65973713d7c1",
+          "role": "user",
+          "content": "Yes. I will take that load for 3400 dollars.",
+          "start": 119569,
+          "end": 123129
+        },
+        {
+          "id": "01a1b3fb-f603-72a7-b77c-606a11c6bcb5",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_ed708b87398c559480220f645dc2d12e",
+              "function": {
+                "name": "negotiate",
+                "arguments": "{\"_message\":\"Confirming the agreed rate.\",\"load_id\":\"LD01142\",\"rate\":\"3400\",\"after_final_offer\":\"false\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service negotiate\",\"output\":{\"load_id\":\"LD01142\",\"rate\":3400,\"status\":\"agreed\"}}]}",
+          "tool_call_id": "call_ed708b87398c559480220f645dc2d12e",
+          "name": "negotiate"
+        },
+        {
+          "id": "01a1b3fc-2b84-711d-a315-84bc768de175",
+          "role": "assistant",
+          "content": "We agreed on $3,400 for LD01142. I've saved the agreement for our senior rep to review. The booking is not confirmed yet.",
+          "tool_calls": [
+            {
+              "id": "call_b55b79b097a1563cadc41b89cbbe41d5",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"We agreed on $3,400 for LD01142. I've saved the agreement for our senior rep to review. The booking is not confirmed yet.\",\"summary\":\"LD01142 agreed at $3,400; senior rep confirmation is pending.\"}"
+              }
+            }
+          ],
+          "start": 127293,
+          "end": 137453
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_b55b79b097a1563cadc41b89cbbe41d5",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1b3fc-39e3-7ac7-8af3-647bbe3bec69",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_4c82015ffbba5036a845e4d7a24aa92d",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 139132,
+          "end": 141132
+        }
+      ],
+      "tools_result": [
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e205-7fec-9fb5-1bce8f0968ad",
+          "tool_name": "verify_carrier"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e211-7709-8c15-6d395dfc0f0f",
+          "tool_name": "send_code"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e218-762c-8e5e-fa1ca6770e81",
+          "tool_name": "verify_code"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dbf-745e-8c55-eee6b8dd87b1",
+          "tool_name": "find_loads"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dc7-70c9-8f57-1052a2c0351b",
+          "tool_name": "negotiate"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dca-7185-94ff-52435dc3a20c",
+          "tool_name": "close_call"
+        }
+      ],
+      "audio_capture": {
+        "private_file": "v20reserve.webm",
+        "sha256": "94311616793ff32d0adcdb5ad982b5c9e17077376e0f0ad92dbaa68ca35d0c0f",
+        "bytes": 2274217,
+        "remote_peak_rms": 0.2846267362800031
+      },
+      "harness_events": [
+        {
+          "at": "2026-11-07T03:07:52.262Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-07T03:07:52.515Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-07T03:07:52.767Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AM9W5doDJXfPfk"
+          }
+        },
+        {
+          "at": "2026-11-07T03:08:02.434Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My MC number is one three eight three two eight. I need a reefer from Texas to F",
+            "duration": 6.996530612244898
+          }
+        },
+        {
+          "at": "2026-11-07T03:08:09.432Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My MC number is one three eight three two eight. I need a reefer from Texas to F"
+          }
+        },
+        {
+          "at": "2026-11-07T03:08:24.075Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-07T03:08:27.811Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-07T03:08:54.428Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "[staged verification code]",
+            "duration": 6.737278911564625
+          }
+        },
+        {
+          "at": "2026-11-07T03:09:01.167Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "[staged verification code]"
+          }
+        },
+        {
+          "at": "2026-11-07T03:09:29.770Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Can you do three thousand six hundred dollars?",
+            "duration": 4.484240362811791
+          }
+        },
+        {
+          "at": "2026-11-07T03:09:34.256Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Can you do three thousand six hundred dollars?"
+          }
+        },
+        {
+          "at": "2026-11-07T03:09:52.238Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, I will take that load for three thousand four hundred dollars.",
+            "duration": 5.731201814058957
+          }
+        },
+        {
+          "at": "2026-11-07T03:09:57.970Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, I will take that load for three thousand four hundred dollars."
+          }
+        },
+        {
+          "at": "2026-11-07T03:10:14.135Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.2846267362800031
+          }
+        },
+        {
+          "at": "2026-11-07T03:10:14.148Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 2274217,
+            "remote_peak": 0.2846267362800031
+          }
+        }
+      ],
+      "service_record": {
+        "id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+        "version": 11,
+        "started_at": "2026-11-07T03:08:08.345059+00:00",
+        "closed_at": "2026-11-07T03:10:10.624040+00:00",
+        "mc": "138328",
+        "carrier_name": "WERNER ENTERPRISES INC",
+        "eligible": true,
+        "code_passed": true,
+        "search": {
+          "equipment": "REEFER",
+          "dest_state": "FL",
+          "origin_state": "TX"
+        },
+        "agreement": {
+          "mc": "138328",
+          "rate": 3400,
+          "load_id": "LD01142"
+        },
+        "summary": "LD01142 agreed at $3,400; senior rep confirmation is pending.",
+        "outcome": "agreed_pending_rep",
+        "ended_by": "agent",
+        "duration_seconds": 141,
+        "native_workflow": {
+          "workspace": "fdesantiagogonzalezalvarez",
+          "workflow_id": "6oaskq84xpfc"
+        },
+        "cohort": "synthetic",
+        "read_only": null,
+        "events": [
+          {
+            "at": "2026-11-07T03:08:08.345059+00:00",
+            "mc": "138328",
+            "seq": 1,
+            "action": "verify_carrier",
+            "lookup": 1,
+            "status": "checking"
+          },
+          {
+            "at": "2026-11-07T03:08:08.592174+00:00",
+            "mc": "138328",
+            "seq": 2,
+            "action": "verify_carrier",
+            "status": "eligible",
+            "carrier_name": "WERNER ENTERPRISES INC"
+          },
+          {
+            "at": "2026-11-07T03:08:27.669945+00:00",
+            "mc": "138328",
+            "seq": 3,
+            "action": "send_code",
+            "status": "code_issued",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:08:28.787092+00:00",
+            "mc": "138328",
+            "seq": 4,
+            "action": "send_code",
+            "status": "sent",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:09:00.168532+00:00",
+            "mc": "138328",
+            "seq": 5,
+            "action": "verify_code",
+            "status": "verified"
+          },
+          {
+            "at": "2026-11-07T03:09:01.940385+00:00",
+            "mc": "138328",
+            "seq": 6,
+            "loads": [
+              {
+                "miles": 1148,
+                "notes": "",
+                "offer": 3300,
+                "origin": "San Antonio, TX",
+                "weight": 40846,
+                "load_id": "LD01142",
+                "dimensions": "540 x 96 x 108 in",
+                "destination": "Miami, FL",
+                "num_of_pieces": 12,
+                "commodity_type": "Frozen Goods",
+                "equipment_type": "REEFER",
+                "pickup_datetime": "2026-11-09T23:35:00+00:00",
+                "delivery_datetime": "2026-11-11T10:35:00+00:00",
+                "pickup_time_display": "November 9 at 5:35 PM Central (CST)",
+                "delivery_time_display": "November 11 at 4:35 AM Central (CST)"
+              }
+            ],
+            "action": "find_loads",
+            "search": {
+              "equipment": "REEFER",
+              "dest_state": "FL",
+              "origin_state": "TX"
+            },
+            "status": "found"
+          },
+          {
+            "at": "2026-11-07T03:09:34.020720+00:00",
+            "mc": "138328",
+            "ask": 3600,
+            "seq": 7,
+            "heard": "3600",
+            "offer": 3400,
+            "round": 1,
+            "action": "negotiate",
+            "status": "counter",
+            "load_id": "LD01142",
+            "negotiation_policy_version": "reciprocal-v2"
+          },
+          {
+            "at": "2026-11-07T03:09:57.704631+00:00",
+            "mc": "138328",
+            "ask": 3400,
+            "seq": 8,
+            "rate": 3400,
+            "heard": "3400",
+            "action": "negotiate",
+            "status": "accepting",
+            "load_id": "LD01142",
+            "negotiation_policy_version": "reciprocal-v2"
+          },
+          {
+            "at": "2026-11-07T03:09:58.718581+00:00",
+            "mc": "138328",
+            "ask": 3400,
+            "seq": 9,
+            "rate": 3400,
+            "heard": "3400",
+            "action": "negotiate",
+            "status": "agreed",
+            "load_id": "LD01142",
+            "negotiation_policy_version": "reciprocal-v2"
+          },
+          {
+            "at": "2026-11-07T03:10:10.624040+00:00",
+            "mc": "138328",
+            "seq": 10,
+            "action": "close",
+            "status": "closed"
+          },
+          {
+            "at": "2026-11-07T03:10:14.345185+00:00",
+            "mc": "138328",
+            "seq": 11,
+            "action": "call_ended",
+            "status": "ended",
+            "ended_by": "agent",
+            "duration_seconds": 141
+          }
+        ]
+      },
+      "checks": {
+        "one_close_call": true,
+        "one_hangup": true,
+        "agent_ended": true
+      }
+    },
+    {
+      "slot": "v20production",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "native_output_id": "9cdc2dd9-ea16-4718-aaa9-f32963fbd00c",
+      "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+      "environment": "production",
+      "duration_seconds": 97,
+      "status": "completed",
+      "call_end_initiator": "agent",
+      "caller_audio_received": true,
+      "transcript": [
+        {
+          "id": "01a1b3fd-8d8e-7b60-b684-b4ed483ff7ce",
+          "role": "assistant",
+          "content": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+          "start": 316,
+          "end": 5676
+        },
+        {
+          "id": "01a1b3fd-ab3e-711c-95a8-e6d600350309",
+          "role": "assistant",
+          "content": "May I have your full MC number?",
+          "start": 11597,
+          "end": 13277
+        },
+        {
+          "id": "7debe08b-ae45-4164-9595-f59121f3dfe8",
+          "role": "user",
+          "content": "My MC number is 138328.",
+          "start": 20040,
+          "end": 22600
+        },
+        {
+          "id": "01a1b3fd-d1eb-7cae-8154-8a38d1ea8c26",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_d04cf31445685f339dd1594230ed8456",
+              "function": {
+                "name": "verify_carrier",
+                "arguments": "{\"_message\":\"Checking that now.\",\"mc\":\"138328\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service verify_carrier\",\"output\":{\"carrier_name\":\"WERNER ENTERPRISES INC\",\"status\":\"eligible\"}}]}",
+          "tool_call_id": "call_d04cf31445685f339dd1594230ed8456",
+          "name": "verify_carrier"
+        },
+        {
+          "id": "01a1b3fd-e9fa-70b0-bbc9-753d6a6c8112",
+          "role": "assistant",
+          "content": "I have you as Werner Enterprises Inc. Is that right?",
+          "start": 26376,
+          "end": 29336
+        },
+        {
+          "id": "01a1b3fe-075a-7410-8cb7-391a4d8f4786",
+          "role": "assistant",
+          "content": "Is that the correct carrier name?",
+          "start": 35336,
+          "end": 36856
+        },
+        {
+          "id": "253c9e76-0c4b-4468-aca2-4ad5ef85b905",
+          "role": "user",
+          "content": "Yes. Werner is correct.",
+          "start": 69009,
+          "end": 70610
+        },
+        {
+          "id": "01a1b3fe-8dae-7bdd-aebc-23afa67350f9",
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "id": "call_63607e8328a45464b238118f0ff92f47",
+              "function": {
+                "name": "send_code",
+                "arguments": "{\"_message\":\"Sending the verification code.\"}"
+              }
+            }
+          ]
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service send_code\",\"output\":{\"status\":\"sent\"}}]}",
+          "tool_call_id": "call_63607e8328a45464b238118f0ff92f47",
+          "name": "send_code"
+        },
+        {
+          "id": "01a1b3fe-a6e2-704c-90c0-be1f64a32add",
+          "role": "assistant",
+          "content": "I just emailed a six-digit code. What code did you receive?",
+          "start": 73856,
+          "end": 77696
+        },
+        {
+          "id": "01a1b3fe-c7b2-74ec-9059-2384dbfd5e93",
+          "role": "assistant",
+          "content": "What six-digit code did you receive?",
+          "start": 83697,
+          "end": 86097
+        },
+        {
+          "id": "96761cfc-27f3-41ff-9bfa-27489f093960",
+          "role": "user",
+          "content": "I need to go now. Please end the call. Goodbye.",
+          "start": 88990,
+          "end": 92050
+        },
+        {
+          "id": "01a1b3fe-e7a6-75ce-a108-b60621ead39d",
+          "role": "assistant",
+          "content": "Understood. I'll end the call now.",
+          "tool_calls": [
+            {
+              "id": "call_027a12cd154f5f72b979ca50874a4964",
+              "function": {
+                "name": "close_call",
+                "arguments": "{\"_message\":\"Understood. I'll end the call now.\",\"summary\":\"Caller requested to end the call before completing verification; no load discussed.\"}"
+              }
+            }
+          ],
+          "start": 92836,
+          "end": 94276
+        },
+        {
+          "id": null,
+          "role": "tool",
+          "content": "{\"steps\":[{\"node\":\"Service close_call\",\"output\":{\"status\":\"closed\"}}]}",
+          "tool_call_id": "call_027a12cd154f5f72b979ca50874a4964",
+          "name": "close_call"
+        },
+        {
+          "id": "01a1b3fe-f461-7ef8-8353-4e6cfaeaf43c",
+          "role": "assistant",
+          "content": "Thank you for calling. Goodbye.",
+          "tool_calls": [
+            {
+              "id": "call_3da2b12b9093544f930c6e21c61ff190",
+              "function": {
+                "name": "_hangup",
+                "arguments": "{\"_message\":\"Thank you for calling. Goodbye.\"}"
+              }
+            }
+          ],
+          "start": 95697,
+          "end": 97537
+        }
+      ],
+      "tools_result": [
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e205-7fec-9fb5-1bce8f0968ad",
+          "tool_name": "verify_carrier"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19dc0-e211-7709-8c15-6d395dfc0f0f",
+          "tool_name": "send_code"
+        },
+        {
+          "status": "SUCCESS",
+          "tool_id": "01a19f02-2dca-7185-94ff-52435dc3a20c",
+          "tool_name": "close_call"
+        }
+      ],
+      "audio_capture": {
+        "private_file": "v20production.webm",
+        "sha256": "2a7df22b81155d45848b79bf22634d95bcbec9d28b8ba5764af274792df00695",
+        "bytes": 1571204,
+        "remote_peak_rms": 0.3304085894682161
+      },
+      "harness_events": [
+        {
+          "at": "2026-11-07T03:11:34.629Z",
+          "type": "connected",
+          "data": {}
+        },
+        {
+          "at": "2026-11-07T03:11:34.882Z",
+          "type": "caller-track-published",
+          "data": {
+            "source": "generated audio; microphone not accessed"
+          }
+        },
+        {
+          "at": "2026-11-07T03:11:35.174Z",
+          "type": "remote-audio-track",
+          "data": {
+            "participant": "assistant",
+            "track": "TR_AMXfrXr934tM64"
+          }
+        },
+        {
+          "at": "2026-11-07T03:11:55.118Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "My MC number is one three eight three two eight.",
+            "duration": 4.639705215419501
+          }
+        },
+        {
+          "at": "2026-11-07T03:11:59.757Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "My MC number is one three eight three two eight."
+          }
+        },
+        {
+          "at": "2026-11-07T03:12:44.056Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "Yes, Werner is correct.",
+            "duration": 3.7342857142857144
+          }
+        },
+        {
+          "at": "2026-11-07T03:12:47.793Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "Yes, Werner is correct."
+          }
+        },
+        {
+          "at": "2026-11-07T03:13:04.182Z",
+          "type": "caller-audio-start",
+          "data": {
+            "label": "I need to go now. Please end the call. Goodbye.",
+            "duration": 5.049727891156462
+          }
+        },
+        {
+          "at": "2026-11-07T03:13:09.232Z",
+          "type": "caller-audio-end",
+          "data": {
+            "label": "I need to go now. Please end the call. Goodbye."
+          }
+        },
+        {
+          "at": "2026-11-07T03:13:12.955Z",
+          "type": "disconnected",
+          "data": {
+            "reason": 5,
+            "remote_peak": 0.3304085894682161
+          }
+        },
+        {
+          "at": "2026-11-07T03:13:12.965Z",
+          "type": "recording-saved",
+          "data": {
+            "bytes": 1571204,
+            "remote_peak": 0.3304085894682161
+          }
+        }
+      ],
+      "service_record": {
+        "id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+        "version": 6,
+        "started_at": "2026-11-07T03:11:58.692420+00:00",
+        "closed_at": "2026-11-07T03:13:09.709771+00:00",
+        "mc": "138328",
+        "carrier_name": "WERNER ENTERPRISES INC",
+        "eligible": true,
+        "code_passed": false,
+        "search": null,
+        "agreement": null,
+        "summary": "Caller requested to end the call before completing verification; no load discussed.",
+        "outcome": "ended_without_agreement",
+        "ended_by": "agent",
+        "duration_seconds": 97,
+        "native_workflow": {
+          "workspace": "fdesantiagogonzalezalvarez",
+          "workflow_id": "6oaskq84xpfc"
+        },
+        "cohort": "synthetic",
+        "read_only": null,
+        "events": [
+          {
+            "at": "2026-11-07T03:11:58.692420+00:00",
+            "mc": "138328",
+            "seq": 1,
+            "action": "verify_carrier",
+            "lookup": 1,
+            "status": "checking"
+          },
+          {
+            "at": "2026-11-07T03:12:00.604470+00:00",
+            "mc": "138328",
+            "seq": 2,
+            "action": "verify_carrier",
+            "status": "eligible",
+            "carrier_name": "WERNER ENTERPRISES INC"
+          },
+          {
+            "at": "2026-11-07T03:12:46.779633+00:00",
+            "mc": "138328",
+            "seq": 3,
+            "action": "send_code",
+            "status": "code_issued",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:12:47.807650+00:00",
+            "mc": "138328",
+            "seq": 4,
+            "action": "send_code",
+            "status": "sent",
+            "send_number": 1
+          },
+          {
+            "at": "2026-11-07T03:13:09.709771+00:00",
+            "mc": "138328",
+            "seq": 5,
+            "action": "close",
+            "status": "closed"
+          },
+          {
+            "at": "2026-11-07T03:13:13.123971+00:00",
+            "mc": "138328",
+            "seq": 6,
+            "action": "call_ended",
+            "status": "ended",
+            "ended_by": "agent",
+            "duration_seconds": 97
+          }
+        ]
+      },
+      "checks": {
+        "one_close_call": true,
+        "one_hangup": true,
+        "agent_ended": true
+      }
+    }
+  ],
+  "audits": [
+    {
+      "id": "f0faf9fd-7d91-5530-90c8-af11c6c4cefa",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Authority and code verification before freight",
+      "grade": "passed",
+      "correction_reason": "The eligible carrier was confirmed, a code was sent and verified, and only afterward did the assistant invoke find_loads."
+    },
+    {
+      "id": "e7adf662-c9db-50b0-b608-f95ca8490de6",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Caller hears exact reservation and pending review",
+      "grade": "not_applicable",
+      "correction_reason": "No load agreement or approved rate was reached, so there was no reservation recap to provide."
+    },
+    {
+      "id": "d5a97ed6-909d-5894-a13f-bebf8d7bd76a",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Authorized offers and supplied display times",
+      "grade": "not_applicable",
+      "correction_reason": "No load offer, rate, or pickup/delivery time was disclosed."
+    },
+    {
+      "id": "ad65c216-d0f5-5cc1-a221-12f7faffcaa2",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Close once and end in the available channel",
+      "grade": "passed",
+      "correction_reason": "The assistant called close_call once with a factual outcome and then ended the voice call with a farewell."
+    },
+    {
+      "id": "99731dd1-7431-5cbb-9b7e-6a8bda755285",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Service approval before agreement",
+      "grade": "not_applicable",
+      "correction_reason": "No offer was accepted or negotiated in this interaction."
+    },
+    {
+      "id": "3307b3f5-a6e6-5388-ac69-323445cfba6f",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Known lane or explicit unrestricted permission before search",
+      "grade": "passed",
+      "correction_reason": "The assistant confirmed equipment and requested both geographic fields, honoring the caller\u2019s explicit anywhere permissions before each load search."
+    },
+    {
+      "id": "1d79b1be-2a05-5e83-ad52-a670334b55bd",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Fixed AI disclosure before carrier verification",
+      "grade": "passed",
+      "correction_reason": "The assistant disclosed that it was an AI agent from HappyRobot Logistics before requesting the MC number."
+    },
+    {
+      "id": "1a0435e9-f8e4-5e84-bfec-8018e87679cb",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Driver safety and conversational continuity",
+      "grade": "not_applicable",
+      "correction_reason": "The caller never stated that they were driving."
+    },
+    {
+      "id": "18a804a7-d03d-5232-a247-1cff4181b17a",
+      "run_id": "e1349c1a-3d6c-4ede-83cd-67b81b0ba94d",
+      "northstar_name": "Confirm ambiguous amounts before spending a round",
+      "grade": "not_applicable",
+      "correction_reason": "No ambiguous amount or negotiation occurred."
+    },
+    {
+      "id": "f15a20d9-0865-50db-b91b-5651ac44368d",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Known lane or explicit unrestricted permission before search",
+      "grade": "not_applicable",
+      "correction_reason": "No load search was attempted because the caller said they did not need a load."
+    },
+    {
+      "id": "ee1a3d16-2dad-5d39-9825-f28dbde16e3d",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Authority and code verification before freight",
+      "grade": "passed",
+      "correction_reason": "No load search or freight disclosure occurred, so the required verification-before-freight ordering was not violated."
+    },
+    {
+      "id": "e6eeacff-0179-50cd-bbbf-edbcecd2cbc1",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Close once and end in the available channel",
+      "grade": "passed",
+      "correction_reason": "The assistant called close_call once with a truthful summary and then ended the voice call with a farewell."
+    },
+    {
+      "id": "d6c3ec2e-489a-56cc-acf0-88f219dc41bb",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Caller hears exact reservation and pending review",
+      "grade": "not_applicable",
+      "correction_reason": "No load status or agreement was reached."
+    },
+    {
+      "id": "b6d3b1f7-b096-5fc9-854f-648f60b535f8",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Authorized offers and supplied display times",
+      "grade": "not_applicable",
+      "correction_reason": "No offer, rate, or schedule was discussed."
+    },
+    {
+      "id": "a93734a3-751f-5d62-85b1-3586a2df4a16",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Service approval before agreement",
+      "grade": "not_applicable",
+      "correction_reason": "The caller did not accept an offer or discuss a rate agreement."
+    },
+    {
+      "id": "51271419-d8b2-5e3a-b6e1-963bd313e376",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Fixed AI disclosure before carrier verification",
+      "grade": "passed",
+      "correction_reason": "The assistant disclosed that it was an AI and identified itself as being from HappyRobot Logistics before requesting the MC number."
+    },
+    {
+      "id": "2b54323a-8ff1-5665-a6f9-7096bcfd1285",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Confirm ambiguous amounts before spending a round",
+      "grade": "not_applicable",
+      "correction_reason": "No ambiguous amount or negotiation occurred."
+    },
+    {
+      "id": "011ca32c-ae98-53da-a069-1a6eb66646a5",
+      "run_id": "6899c68f-4130-4582-bda4-482c4ca3208b",
+      "northstar_name": "Driver safety and conversational continuity",
+      "grade": "not_applicable",
+      "correction_reason": "The caller did not indicate that they were driving."
+    },
+    {
+      "id": "bf127eda-bd01-5302-9d84-66ce90a0dfa6",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Confirm ambiguous amounts before spending a round",
+      "grade": "passed",
+      "correction_reason": "The caller made a clear complete $3,600 offer, so the assistant appropriately submitted it without requiring clarification."
+    },
+    {
+      "id": "ac5ad028-6d73-541f-a596-d8bff2b261c1",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Caller hears exact reservation and pending review",
+      "grade": "passed",
+      "correction_reason": "The caller-facing close message stated load LD01142, the $3,400 rate, and that senior review was pending and the booking was not confirmed."
+    },
+    {
+      "id": "829f0f0e-5241-5a75-b2fe-b0a0dfd4c6ee",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Driver safety and conversational continuity",
+      "grade": "not_applicable",
+      "correction_reason": "The caller did not indicate that they were driving."
+    },
+    {
+      "id": "7c8d8e12-aace-57ef-b05f-0e73e7eadc2a",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Authorized offers and supplied display times",
+      "grade": "passed",
+      "correction_reason": "The assistant quoted the service-approved offer and used the supplied Central/CST pickup display time without exposing internal pricing or converting raw timestamps."
+    },
+    {
+      "id": "60d2b8e2-c9a9-5c31-96f4-73174f04a9c3",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Close once and end in the available channel",
+      "grade": "passed",
+      "correction_reason": "The assistant closed once with a factual summary and then gave a farewell through the hangup message."
+    },
+    {
+      "id": "3fb99695-6595-5777-ade1-056e05dd0ecb",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Known lane or explicit unrestricted permission before search",
+      "grade": "passed",
+      "correction_reason": "The caller supplied reefer equipment and Texas-to-Florida geography, and the search used those states after verification."
+    },
+    {
+      "id": "3d808dda-1d76-5d8f-994b-fc977fa1283f",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Authority and code verification before freight",
+      "grade": "passed",
+      "correction_reason": "The carrier was verified eligible, the returned name was confirmed, the code was sent and verified, and only then was freight searched."
+    },
+    {
+      "id": "37902af7-8cec-5448-ab5b-c1e2aa02165b",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Fixed AI disclosure before carrier verification",
+      "grade": "passed",
+      "correction_reason": "The assistant disclosed that it was an AI agent from HappyRobot Logistics before requesting the MC number."
+    },
+    {
+      "id": "3201093b-4db2-5709-b29b-2d2852755c6f",
+      "run_id": "64404ab5-c89a-4a96-bc65-b27d23e1804a",
+      "northstar_name": "Service approval before agreement",
+      "grade": "passed",
+      "correction_reason": "The assistant obtained the caller's acceptance, called negotiate, received status agreed, and accurately described the agreement as pending review rather than booked."
+    },
+    {
+      "id": "f1a30da8-e420-5c7e-bedc-8ea149a7ee87",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Known lane or explicit unrestricted permission before search",
+      "grade": "not_applicable",
+      "correction_reason": "No find_loads search occurred before the caller ended the call."
+    },
+    {
+      "id": "da75717e-edd8-5fd6-835c-0959ea588bbc",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Service approval before agreement",
+      "grade": "not_applicable",
+      "correction_reason": "No offer was accepted and no rate agreement was described."
+    },
+    {
+      "id": "d5eef8de-bb09-5e55-958a-5cfcfa6e6545",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Fixed AI disclosure before carrier verification",
+      "grade": "passed",
+      "correction_reason": "The opening identifies the caller as speaking with an AI agent from HappyRobot Logistics before requesting the MC number."
+    },
+    {
+      "id": "83c16b88-f055-5747-af6c-d6dee3da0a9c",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Caller hears exact reservation and pending review",
+      "grade": "not_applicable",
+      "correction_reason": "No load agreement or status was reached."
+    },
+    {
+      "id": "6545ed35-662c-5b0c-9389-626976960afd",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Driver safety and conversational continuity",
+      "grade": "not_applicable",
+      "correction_reason": "The caller did not state that they were driving."
+    },
+    {
+      "id": "5d442534-9793-5b20-a5ae-97cc27e1952b",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Authority and code verification before freight",
+      "grade": "passed",
+      "correction_reason": "Although carrier eligibility, name confirmation, and code sending occurred, no verify_code result, freight search, or load disclosure occurred before the call ended."
+    },
+    {
+      "id": "4f4349e3-36a0-5c83-8f45-660c5cbceafa",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Confirm ambiguous amounts before spending a round",
+      "grade": "not_applicable",
+      "correction_reason": "No amount, counteroffer, or negotiation occurred."
+    },
+    {
+      "id": "3fa623bb-dd90-5c89-8749-5c3e55c2a5d1",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Close once and end in the available channel",
+      "grade": "passed",
+      "correction_reason": "The assistant called close_call once with a truthful summary, then provided a farewell via hangup without reopening the conversation."
+    },
+    {
+      "id": "231968fe-bb04-5bf5-80e3-4b62010eeb82",
+      "run_id": "0c49fd1c-74b5-48d6-b07b-b40107608d89",
+      "northstar_name": "Authorized offers and supplied display times",
+      "grade": "not_applicable",
+      "correction_reason": "No load offer, rate, or timing information was discussed."
+    }
+  ],
+  "limitations": [
+    "Generated callers are diagnostic evidence, not human voice or accent/noise acceptance. Operator pauses inflate durations and are not an AHT benchmark.",
+    "The first journey needed clearer generated code speech. Two groups of three digits verified successfully; the subsequent complete journey verified on its first tool attempt. Recognition remains a pilot concern.",
+    "Malformed or missing display fields were exercised in mocked text checks, not injected into the live TMS. The deployed service requires valid shipment timestamps.",
+    "The full text sweep and additional boundary checks include retained failures; audio passes do not overwrite them.",
+    "The owner must record the walkthrough. No submission video or portal upload is claimed."
+  ],
+  "sanitization": "Verification speech, code arguments and private contact/claim fields omitted. Private audio remains outside Git; hashes identify it. Long dash punctuation normalized."
+}

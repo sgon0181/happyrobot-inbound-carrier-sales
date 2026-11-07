@@ -10,9 +10,9 @@ A clone includes source and sanitized evidence. It does not include browser sess
 
 ## Current state
 
-The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` bigint and `data` JSONB. The last release snapshot contained 74 call rows and 19 booking rows; this is a dated count, not a fixed dashboard population.
+The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` bigint and `data` JSONB. The dated population and state counts are in [results](../results.md#version-20-release-acceptance); the dashboard reads current records.
 
-Version 19 (`l6zo75s4s4vk`, UUID `01a1b2ea-26c8-7131-8252-b334dcaab976`) is live in workflow Production. Use [the Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [its exact editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk). Version 8 is retained unpublished for rollback. Development is empty. [Readiness](release.md#current-release-state) records acceptance, limitations and endpoints. Workflow Production, App hosting and Twin environment are separate controls.
+Version 20 (`zynb7wm66n9w`, UUID `01a1b3cf-1025-7c0f-91b6-75f57ce017b4`) is live in workflow Production. Use [the Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [its exact editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w). Version 19 is retained as the immediate non-live workflow rollback. Development is empty. [Readiness](release.md#current-release-state) records acceptance, limitations and endpoints. Workflow Production, App hosting and Twin environment are separate controls.
 
 The owner retained the approved demo email route, synthetic record tags and disabled hosted sends. See [the single explanation of this boundary](release.md#current-release-state). Historical imported records remain immutable; do not relabel them to enable a send.
 
@@ -26,7 +26,7 @@ The owner retained the approved demo email route, synthetic record tags and disa
 | App | [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/) |
 | Service | Fly app `happyrobot-proposal-sg`, region `iad` |
 | Data | Twin staging: `calls`, `bookings`, `negotiations` |
-| Rollback | `oldmain` and local `baseline-v8` tag at `15ce2b6`; Version 8 and App Build 24 |
+| Rollback | Immediate workflow rollback: Version 19. Historical source baseline: `oldmain` and local `baseline-v8` at `15ce2b6`, Version 8 and App Build 24 |
 
 Do not edit a published workflow version or guess an editor URL. Read the exact version and URL from the native platform before making changes. Preserve original evidence files and record later results separately.
 

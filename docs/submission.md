@@ -6,7 +6,7 @@ The five deliverables the brief asks for, and where each one is.
 | --- | --- |
 | 1. Summary email to the prospect | [Below](#prospect-email) |
 | 2. Build description for IT and business review | [build-description.md](build-description.md), exported as a PDF with the submission |
-| 3. Code repository | Source ZIP of `main`, uploaded through the portal (the recruiter accepted this). A private GitHub link is available if preferred. |
+| 3. Code repository | [Private GitHub repository, main branch](https://github.com/sgon0181/happyrobot-inbound-carrier-sales/tree/main). Invite the assigned reviewer when the recruiter supplies their GitHub account. |
 | 4. HappyRobot workflow link | [Workflow, live Version 19](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk) and its [web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) |
 | 5. Walkthrough video, about five minutes | Recorded by the owner from the [recording script](recording-script.md); link added at submission |
 
@@ -37,10 +37,11 @@ Santiago
 ## Before submitting
 
 1. Record the human call and walkthrough on the live workflow, following the [recording script](recording-script.md).
-2. Build the source ZIP from the final committed `main` with `make zip`. It writes `../submission-release/carrier-sales-<commit>.zip` and does nothing else.
+2. Submit the private GitHub repository link above. Check that `main` contains the reviewed commit and its GitHub Actions checks pass. Invite the assigned reviewer when their account is supplied.
 3. Export the build description PDF from the same commit. This uses pandoc and Google Chrome; links to repository files become plain text, and web links stay clickable:
 
    ```bash
+   mkdir -p ../submission-release
    sha=$(git rev-parse --short HEAD)
    git show HEAD:docs/build-description.md \
      | sed -E 's/\[([^]]+)\]\([^)h][^)]*\)/\1/g' \
@@ -50,4 +51,4 @@ Santiago
      --print-to-pdf="../submission-release/carrier-sales-build-description-$sha.pdf" /tmp/build-description.html
    ```
 
-4. Upload the ZIP, PDF and video link through the portal. The walkthrough video is pending until the owner records it. Keep the service running until the review is done.
+4. Submit the GitHub link, PDF and video link through the portal. The walkthrough video is pending until the owner records it. Keep the service running until the review is done.

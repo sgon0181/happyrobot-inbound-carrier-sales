@@ -20,7 +20,7 @@ Senior rep --> Operations App (HappyRobot Apps) <------------+--> Twin (calls, b
 
 Two rules shape the design:
 
-- **The model talks; the service decides.** The voice model can only ask for actions. The service checks every one against its own records. The model never sees the rate ceiling or the code.
+- **The model talks; the service decides.** The voice model can only ask for actions. The service checks every one against its own records. The model never sees the rate ceiling or the expected code; it only passes on the code the caller reads aloud.
 - **Only a rep can send a booking.** The TMS has no cancel, so nothing irreversible happens on the call.
 
 ## Requirements and where they are met
@@ -33,7 +33,7 @@ Two rules shape the design:
 | Never exceed or reveal `max_rate` | The ceiling never leaves the service; offers stay under a working cap below it | [Decisions](docs/decisions.md#how-do-we-protect-the-rate-ceiling) |
 | At most three counters, then close without transfer | Counted by the service across every load on the call | [Negotiation](docs/decisions.md#how-does-negotiation-work) |
 | Tentative reservation, rep confirms, mocked handoff | Agreement creates a reservation; Confirm in the App sends the booking | [Decisions](docs/decisions.md#why-does-a-rep-send-the-booking-instead-of-the-agent) |
-| Log MC, load, rate, outcome and notes in Twin | Every state change and its event are saved in one write | [Architecture](ARCHITECTURE.md#data) |
+| Log MC, load, rate, outcome and notes in Twin | Every call and booking change and its event are saved in one write | [Architecture](ARCHITECTURE.md#data) |
 | Operations UI in HappyRobot Apps | Reservations, Overview, Bookings, Calls and Demand views | [KPI definitions](docs/reference/kpis.md) |
 | Survive TMS timeouts and malformed replies | Timeouts and bad frames become "unavailable" or "unknown"; a booking is never resent | [Architecture](ARCHITECTURE.md#failure-handling) |
 | Authentication on every endpoint | Service keys on every route, including health; App sign-in through HappyRobot | [Architecture](ARCHITECTURE.md#security) |

@@ -1,6 +1,8 @@
 # Carrier Sales: build description
 
-For the brokerage's business and IT review.
+For the brokerage's business and IT review. Documents named here are in the source repository.
+
+**Try it:** operations App https://carrier-sales-proposal-sg.happyrobot.dev/ · web call https://platform.happyrobot.ai/deployments/6oaskq84xpfc
 
 ## The problem
 
@@ -16,7 +18,7 @@ Inbound carrier calls have grown faster than the dispatch team. Calls are missed
 
 ## Commercial control
 
-All prices come from the service, never from the language model. The TMS ceiling stays inside the service; offers stay under a working cap a few percent below it. We move toward a carrier who moves toward us, in steps of at least $25, and inflated or rising asks earn nothing. The same carrier calling back about the same load continues the same negotiation instead of starting over. [How negotiation works](decisions.md#how-does-negotiation-work).
+All prices come from the service, never from the language model. The TMS ceiling stays inside the service; offers stay under a working cap a few percent below it. We move toward a carrier who moves toward us, in steps of at least $25, and inflated or rising asks earn nothing. The same carrier calling back about the same load continues the same negotiation instead of starting over. How negotiation works: [docs/decisions.md](decisions.md#how-does-negotiation-work).
 
 ## Rep control
 
@@ -32,7 +34,7 @@ An agreement reserves the load; it does not book it. The rep opens the reservati
 | Calls | Every call with its timeline, outcome, notes and recording |
 | Demand | Lanes and equipment carriers asked for that we could not fill |
 
-[KPI definitions and current results](results.md).
+KPI definitions and current results: [docs/results.md](results.md).
 
 ## How it is built
 
@@ -40,10 +42,10 @@ An agreement reserves the load; it does not book it. The rep opens the reservati
 | --- | --- | --- |
 | Voice workflow | HappyRobot web call and inbound voice agent | Conversation, AI disclosure, six tools that call the service, end-of-call report |
 | Carrier Sales service | Python 3.12, FastAPI, Docker on Fly.io | Verification, email, pricing, negotiation, TMS connection over TCP, reservations, rep actions |
-| Data | HappyRobot Twin | Calls, bookings and negotiations, each change saved with its audit event |
+| Data | HappyRobot Twin | Calls, bookings and negotiations. Each call and booking change is saved with its audit event; a shared negotiation quote lowered to a new cap is updated without one |
 | Operations App | HappyRobot Apps (Next.js) | Signed-in desk for operations and reps |
 
-The legacy TMS is unreliable by design. The service retries reads within the voice deadline, reports an outage honestly instead of guessing, refuses malformed replies and never resends a booking whose outcome is unclear. [Architecture](../ARCHITECTURE.md).
+The legacy TMS is unreliable by design. The service retries reads within the voice deadline, reports an outage honestly instead of guessing, refuses malformed replies and never resends a booking whose outcome is unclear. Architecture: [ARCHITECTURE.md](../ARCHITECTURE.md).
 
 ## Security
 
@@ -59,7 +61,7 @@ The service is one Docker image. `make deploy` deploys it to Fly.io after one-ti
 
 ## Testing
 
-Automated tests cover the business rules, failure handling and permissions; the platform's evaluations test the prompt against scripted, edge-case and adversarial conversations; real web calls test the full path with live FMCSA, email and TMS reads. Results, including failures, are in [results](results.md).
+Automated tests cover the business rules, failure handling and permissions; the platform's evaluations test the prompt against scripted, edge-case and adversarial conversations; real web calls test the full path with live FMCSA, email and TMS reads. Results, including failures, are in [docs/results.md](results.md).
 
 ## What this demo does not yet do
 

@@ -74,7 +74,7 @@ Twin is the only datastore, as the brief requires. It has no multi-table transac
 
 - Separate agent and operations keys, compared in constant time, each opening only its own endpoints. No public API docs.
 - Only reps listed by their HappyRobot identity can Confirm or Decline; a viewer can only look.
-- The model never receives the ceiling, the code, contact details or raw TMS replies.
+- The model never receives the ceiling, the expected code, contact details or raw TMS replies. It only passes on the code the caller speaks, and the service checks it.
 - Secrets live in Fly and HappyRobot secret stores; `.env.example` lists names only.
 
 ## Code layout

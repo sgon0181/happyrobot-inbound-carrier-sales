@@ -10,7 +10,7 @@ The TMS has no cancel and no way to make a repeated request safe. Booking during
 
 ## Why does a separate service make the decisions, not the model?
 
-A language model can be talked into things. Prices, the ceiling, the code and the round count live in a small Python service the model cannot see inside. The model asks for an action; the service checks its own records and the TMS, then answers. That also makes the rules testable without a phone call.
+A language model can be talked into things. Prices, the ceiling, the expected code and the round count live in a small Python service the model cannot see inside. The model asks for an action; the service checks its own records and the TMS, then answers. That also makes the rules testable without a phone call.
 
 **Cost:** one more component to deploy and keep running. [D-1](reference/decision-log.md#earlier-decisions)
 

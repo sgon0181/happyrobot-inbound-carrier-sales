@@ -51,3 +51,18 @@ def test_formatted_counts_and_scores_are_found() -> None:
 def test_dates_and_ordinary_ratios_are_not_results() -> None:
     assert results_in("Recorded on 11/07/2026, pickup 11/07.") == []
     assert results_in("8 of 50 open loads went to a rep in one check.") == []
+
+
+def test_coverage_stated_before_the_number_is_found() -> None:
+    assert results_in("Coverage: 98.1%.") == ["Coverage: 98.1%"]
+
+
+def test_short_and_full_dates_near_result_words_are_allowed() -> None:
+    assert results_in("Tests last ran on 11/07.") == []
+    assert results_in("Tests last ran 03/15 and passed.") == []
+    assert results_in("The suite passed on 11/07/2026.") == []
+
+
+def test_real_slash_scores_are_still_found() -> None:
+    assert "70/74" in results_in("70/74 checks pass.")
+    assert results_in("Focused evaluations scored 10/10.") == ["10/10"]

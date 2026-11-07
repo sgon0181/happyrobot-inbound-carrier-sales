@@ -28,9 +28,16 @@ COUNT = re.compile(
     r"\b\d[\d,]* (?:service |App |automated |platform )?(?:tests?|checks|checkpoints)\b",
     re.IGNORECASE,
 )
-COVERAGE = re.compile(r"\b\d+(?:\.\d+)?% (?:of )?(?:business|branch|coverage|statement)", re.I)
-# A ratio counts as a score only near result words, and never inside a date such as 11/07/2026.
-RATIO = re.compile(r"(?<![\d/])\d+ ?(?:/|of|out of) ?\d+(?![\d/])", re.IGNORECASE)
+COVERAGE = re.compile(
+    r"\b\d+(?:\.\d+)?% (?:of )?(?:business|branch|coverage|statement)"
+    r"|\bcoverage\b\W{1,3}\d+(?:\.\d+)?%",
+    re.IGNORECASE,
+)
+# A ratio is a score only near result words. Full dates (11/07/2026) never match, and a short
+# slash date (on 11/07, 03/15) is recognized by its leading zero, a larger first number or a
+# date word before it. Real scores such as 70/74 or 10/10 are still reported.
+RATIO = re.compile(r"(?<![\d/])(\d+) ?(/|of|out of) ?(\d+)(?![\d/])", re.IGNORECASE)
+DATE_WORDS = ("on", "since", "until", "from", "by", "dated")
 RESULT_WORDS = re.compile(
     r"\b(?:pass(?:ed|es)?|fail(?:ed|s)?|scor(?:e|ed|es)|grades?|graded|sweeps?|checks|"
     r"checkpoints?|evaluations?|tests?)\b",
@@ -56,9 +63,22 @@ def results_in(text: str) -> list[str]:
     found = [m.group(0) for pattern in (COUNT, COVERAGE) for m in pattern.finditer(plain)]
     for match in RATIO.finditer(plain):
         window = plain[max(0, match.start() - 60) : match.end() + 60]
-        if RESULT_WORDS.search(window):
+        if RESULT_WORDS.search(window) and not _short_date(match, plain):
             found.append(match.group(0))
     return found
+
+
+def _short_date(match: re.Match[str], text: str) -> bool:
+    first, separator, second = match.groups()
+    if separator != "/":
+        return False
+    before = text[: match.start()].split()
+    return (
+        first.startswith("0")
+        or second.startswith("0")
+        or int(first) > int(second)
+        or bool(before and before[-1].lower() in DATE_WORDS)
+    )
 
 
 def problems(root: Path) -> list[str]:

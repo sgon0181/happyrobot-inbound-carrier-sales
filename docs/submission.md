@@ -20,7 +20,7 @@ We built a working carrier sales desk around the problems you described: missed 
 
 A carrier can call at any time. The AI agent identifies itself, checks the carrier's FMCSA authority, verifies an emailed code, finds a matching load and negotiates within your pricing limits. Every agreement becomes a reservation that a senior rep reviews, with the call, shipment and price history in one place, before a booking is sent to your TMS.
 
-Your operations team sees how many verified calls end in a reservation and where the others stop: failed verification, no suitable freight or no agreement on price. Each number opens the calls behind it.
+Your operations team sees how many verified calls end in a reservation and where the others stop: failed verification, no suitable freight or no agreement on price. Funnel stages and exception groups open supporting calls.
 
 The build is tested against scripted, edge-case and adversarial conversations, and its pricing limits, verification and failure handling have automated tests. For this demonstration the code goes to a test inbox; a rollout would use your enrolled carrier contacts and named reps.
 
@@ -37,5 +37,17 @@ Santiago
 ## Before submitting
 
 1. Record the human call and walkthrough on the live workflow, following the [recording script](recording-script.md).
-2. Rebuild the ZIP and the build description PDF from the final `main` commit (`make zip`).
-3. Upload the ZIP, PDF and video link through the portal. Keep the service running until the review is done.
+2. Build the source ZIP from the final committed `main` with `make zip`. It writes `../submission-release/carrier-sales-<commit>.zip` and does nothing else.
+3. Export the build description PDF from the same commit. This uses pandoc and Google Chrome; links to repository files become plain text, and web links stay clickable:
+
+   ```bash
+   sha=$(git rev-parse --short HEAD)
+   git show HEAD:docs/build-description.md \
+     | sed -E 's/\[([^]]+)\]\([^)h][^)]*\)/\1/g' \
+     | pandoc --from gfm --to html5 --standalone \
+         --metadata pagetitle="Carrier Sales: build description" -o /tmp/build-description.html
+   "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --headless --no-pdf-header-footer \
+     --print-to-pdf="../submission-release/carrier-sales-build-description-$sha.pdf" /tmp/build-description.html
+   ```
+
+4. Upload the ZIP, PDF and video link through the portal. The walkthrough video is pending until the owner records it. Keep the service running until the review is done.

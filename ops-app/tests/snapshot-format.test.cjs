@@ -41,3 +41,13 @@ test('unknown or malformed send mode stays unknown rather than enabling Confirm'
   assert.equal(projectSnapshot({ ...base, live_booking: false }).liveBooking, false);
   assert.equal(projectSnapshot({ ...base, live_booking: true }).liveBooking, true);
 });
+
+
+test('sandbox metadata fails closed without an explicit disabled live mode and canonical MC', () => {
+  const base = { status:'ok', calls:[], bookings:[] };
+  for (const raw of [
+    {sandbox_booking_mc:'138328'}, {live_booking:true,sandbox_booking_mc:'138328'},
+    {live_booking:false,sandbox_booking_mc:'0138328'}, {live_booking:false,sandbox_booking_mc:138328},
+  ]) assert.equal(projectSnapshot({...base,...raw}).sandboxBookingMc, null);
+  assert.equal(projectSnapshot({...base,live_booking:false,sandbox_booking_mc:'138328'}).sandboxBookingMc, '138328');
+});

@@ -1,6 +1,6 @@
 # Operations app
 
-Live App: [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/) (HappyRobot Apps Build 10). The [release guide](../docs/reference/release.md) records its deployment and rollback.
+Live App: [Carrier Sales](https://carrier-sales-proposal-sg.happyrobot.dev/). The [release guide](../docs/reference/release.md) records its deployment and rollback.
 
 For deployment, configure server-only OPS_APP_ORIGIN, OPS_SERVICE_URL, OPS_API_KEY, and OPS_REP_SUBJECTS in the App environment. The service URL has no implicit fallback.
 
@@ -28,7 +28,7 @@ Each action posts the booking version the rep saw ([D-31](../docs/reference/deci
 | `src/lib/ops-service.ts`, `src/app/page.tsx`, `src/components/rep-actions.tsx`, `src/app/api/bookings/[loadId]/[action]/route.ts` | Written for this service's snapshot and rep actions |
 | `src/lib/env.ts` | Template, plus `OPS_API_KEY` and `OPS_SERVICE_URL` |
 | `package.json`, `package-lock.json` | Template, with `next` raised to 16.4.4 and `shadcn`, a build-time CSS import, moved to dev dependencies, so `npm audit --omit=dev` finds nothing |
-| Sign-in, middleware, layout and UI components | Based on the HappyRobot Apps template, with canonical-origin and rep-authorization hardening in this proposal |
+| Sign-in, middleware, layout and UI components | Based on the HappyRobot Apps template, with canonical-origin and rep-authorization hardening in this App |
 
 ## Settings
 

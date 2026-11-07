@@ -36,6 +36,9 @@ DEPLOY_KEYS = frozenset(
         "OTP_CONTACTS_JSON",
         "CALL_COHORT",
         "LIVE_BOOKING",
+        "SANDBOX_BOOKING_MC",
+        "SANDBOX_BOOKING_SINCE",
+        "SANDBOX_BOOKING_UNTIL",
     ]
 )
 

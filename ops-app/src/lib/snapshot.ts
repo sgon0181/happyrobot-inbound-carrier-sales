@@ -15,6 +15,7 @@ export type RepAction = "confirm" | "decline" | "reconcile";
 export type Booking = {
   readOnly: boolean;
   trustedContact: boolean;
+  sandboxEligible: boolean;
   agreementNeedsReview: boolean;
   carrierName: string | null;
   load: RepLoad | null;
@@ -87,6 +88,7 @@ export type Lane = {
 
 export type Snapshot = {
   liveBooking: boolean | null;
+  sandboxBookingMc: string | null;
   generatedAt: string | null;
   kpis: Kpis;
   turnedAway: Lane[];
@@ -122,6 +124,7 @@ function projectBooking(raw: unknown): Booking[] {
       agreementNeedsReview: b.agreement_needs_review === true,
       readOnly: b.read_only === true,
       trustedContact: b.otp_route === "trusted_contact",
+      sandboxEligible: b.sandbox_eligible === true,
       version,
       carrierName: str(b.carrier_name, 120),
       load: projectRepLoad(b.load),
@@ -218,6 +221,8 @@ export function projectSnapshot(body: unknown): Snapshot | null {
     return null;
   return {
     liveBooking: typeof b.live_booking === "boolean" ? b.live_booking : null,
+    sandboxBookingMc: b.live_booking === false && typeof b.sandbox_booking_mc === "string"
+      && /^[1-9][0-9]{0,7}$/.test(b.sandbox_booking_mc) ? b.sandbox_booking_mc : null,
     generatedAt: str(b.generated_at, 40),
     kpis: projectKpis(b.kpis),
     turnedAway: list(b.turned_away).map((raw) => {

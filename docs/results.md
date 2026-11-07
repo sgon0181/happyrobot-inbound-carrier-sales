@@ -14,8 +14,8 @@ A dated sample of 49 completed test calls (November 2 to 4) had 36 verified call
 
 | Layer | Result | What it shows |
 | --- | --- | --- |
-| Service and repository tooling | 625 tests pass; 98.1% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency, authentication and read-only schema validation, without network calls |
-| App | 65 tests pass; lint, typecheck and production build pass | Views, rep permissions and server routes |
+| Service and repository tooling | 666 tests pass; 98.2% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency, authentication and read-only schema validation, without network calls. Sandbox cases cover environment restrictions, expiry, old records, mismatched calls and one-shot sends |
+| App | 68 tests pass; lint, typecheck and production build pass | Views, rep permissions, temporary sandbox eligibility and server routes |
 | Local end to end | `make review`: Confirm sends exactly one booking to the TCP stand-in, shows receipt FAKE0001 as PENDING and refuses a stale repeat | The whole Confirm path, with no real TMS or carrier |
 | Burst load | Three twelve-call bursts of callers accepting the opening offer each finished 12 of 12 agreements with no stuck claims and no TMS sends, with the adapter paced at four statements per second and the twelve-second voice deadline | This controlled workload only, not production peak capacity |
 
@@ -53,7 +53,7 @@ Current evidence: [Version 20 text evaluations](../happyrobot/qa-v20-checkpoints
 
 ## Version 20 release acceptance
 
-Version 20 is live in Production. It protects the opening, aligns search parameters with the lane gate, uses a successful safe result schema and a shared service URL variable, and enables nine Northstars. The final prompt changes two passages so a missing display-time warning comes before the pitch. [Configuration readback](../happyrobot/tool-bindings-v20.json) identifies the exact prompt hash. Workflow audit sampling is enabled at 100%; prompt-span coverage is not a pass rate.
+Version 20 is live in Production. It protects the opening, aligns search parameters with the lane gate, uses a shared service URL variable, and enables nine Northstars. The final prompt changes two passages so a missing display-time warning comes before the pitch. [Configuration readback](../happyrobot/tool-bindings-v20.json) identifies the exact prompt hash. Workflow audit sampling is enabled at 100%; prompt-span coverage is not a pass rate. A safe success fixture was saved during drafting, but the later hydrated editor preview displayed `invalid_request` again, for an unconfirmed reason. The actual complete voice run received found loads successfully; the editor preview is not claimed as runtime evidence.
 
 The original draft sweeps and failures remain in the checkpoint file. The final sweep's intermittent remembered-lane and final-refusal failures are not erased by passing follow-ups. A separate missing-delivery case correctly warned the caller but omitted the supplied pickup time once. Repeated amount corrections can still cause an early close. These conversational limits do not authorize a booking, bypass verification or permit a price above the service cap.
 

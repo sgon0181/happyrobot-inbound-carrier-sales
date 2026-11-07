@@ -51,3 +51,17 @@ test('imported historical reservations expose evidence without mutation controls
   assert.match(html,/Historical import. View only/);
   assert.doesNotMatch(html,/<button[^>]*>(Confirm|Decline|Reconcile)/);
 });
+
+
+test('sandbox Confirm is limited to the configured demo carrier and labeled honestly', () => {
+  const demo = { ...booking, mc:'138328', cohort:'synthetic', sandboxEligible:true };
+  const props = { booking:demo, canManage:true, live:false, sandboxMc:'138328', now:0 };
+  const html = render(ReservationReview, props);
+  assert.match(html, /Challenge sandbox sends/);
+  assert.match(html, /does not prove carrier identity/);
+  assert.match(html, /Live booking remains off/);
+  assert.doesNotMatch(html.match(/<button([^>]*)>Confirm<\/button>/)[1], /\sdisabled(?:=|\s|$)/);
+  for (const change of [{mc:'132354'}, {cohort:'real'}, {sandboxEligible:false}, {agreementNeedsReview:true}]) {
+    assert.match(render(ReservationReview, {...props, booking:{...demo,...change}}), /disabled=""[^>]*>Confirm/);
+  }
+});

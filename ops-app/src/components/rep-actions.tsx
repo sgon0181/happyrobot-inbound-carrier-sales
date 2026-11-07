@@ -15,6 +15,9 @@ function bookingResult(r: ActionReply): { ok: boolean; text: string } {
   const reference = ` Reference ${r.reference ?? "not recorded"}.`;
   switch (r.state) {
     case "FAILED":
+      if (r.reason === "sandbox_authorization_inactive") return {
+        ok: false, text: "No booking request was sent. The sandbox authorization window ended before dispatch.",
+      };
       return {
         ok: false,
         text: r.reason === "not_sent"
@@ -60,6 +63,10 @@ function describe(r: ActionReply): { ok: boolean; text: string } {
       return { ok: false, text: "No finalized matching agreement. Contact the carrier before making a fresh reservation." };
     case "record_read_only":
       return { ok: false, text: "Historical or unclassified reservation. No booking request was sent." };
+    case "sandbox_authorization_inactive":
+      return { ok: false, text: "The sandbox authorization window is not active. Nothing was sent." };
+    case "sandbox_record_not_authorized":
+      return { ok: false, text: "This call or reservation is outside the authorized sandbox window. Nothing was sent." };
     case "live_booking_off":
       return { ok: false, text: "Live booking is off, so nothing was sent to the TMS." };
     case "tms_unavailable":

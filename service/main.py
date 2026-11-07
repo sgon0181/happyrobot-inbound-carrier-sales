@@ -29,12 +29,6 @@ logging.getLogger("httpx").setLevel(logging.WARNING)
 def build(settings: Settings) -> FastAPI:
     twin = _twin(settings)
     fmcsa = Fmcsa(FmcsaSettings(api_key=settings.fmcsa_api_key))
-    email = EmailSettings(
-        user=settings.email_user,
-        credential=settings.email_credential,
-        inbox=settings.demo_inbox,
-        contacts=settings.contacts,
-    )
     tms = TmsClient(
         TmsSettings(host=settings.tms_host, port=settings.tms_port, token=settings.tms_token)
     )
@@ -42,7 +36,7 @@ def build(settings: Settings) -> FastAPI:
     calls = Calls(
         rows=rows,
         fmcsa=fmcsa,
-        mailer=CodeMailer(email),
+        mailer=_mailer(settings),
         code_secret=settings.otp_hash_secret,
         trusted_contacts=settings.contacts is not None,
     )
@@ -65,9 +59,13 @@ def build(settings: Settings) -> FastAPI:
     return create_app(
         calls=calls,
         sales=sales,
-        dashboard=Dashboard(twin, live_booking=settings.live_booking),
+        dashboard=Dashboard(twin, live_booking=settings.live_booking, sandbox=settings.sandbox),
         desk=RepActions(
-            twin=twin, tms=tms, live=settings.live_booking, blocked=settings.blocked_loads
+            twin=twin,
+            tms=tms,
+            live=settings.live_booking,
+            blocked=settings.blocked_loads,
+            sandbox=settings.sandbox,
         ),
         tms=tms,
         agent_key=settings.agent_api_key,
@@ -86,5 +84,16 @@ def _twin(settings: Settings) -> Twin:
             api_key=settings.twin_api_key,
             org_id=settings.twin_org_id,
             environment=settings.twin_environment,
+        )
+    )
+
+
+def _mailer(settings: Settings) -> CodeMailer:
+    return CodeMailer(
+        EmailSettings(
+            user=settings.email_user,
+            credential=settings.email_credential,
+            inbox=settings.demo_inbox,
+            contacts=settings.contacts,
         )
     )

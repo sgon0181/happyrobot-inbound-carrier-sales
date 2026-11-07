@@ -14,6 +14,7 @@ from datetime import UTC, datetime, timedelta
 from service.adapters.twin import Data, Row, Twin
 from service.bookings import agreement_recorded
 from service.calls import Reply
+from service.core.sandbox import SandboxScope
 
 CACHE = timedelta(seconds=5)
 IDLE = timedelta(minutes=30)  # a call quiet this long ended without closing
@@ -27,7 +28,7 @@ CALL_FIELDS = (
 )  # never the code hash
 BOOKING_FIELDS = (
     *("state", "call_id", "mc", "rate", "cohort", "rep", "reference", "tms_status"),
-    *("send", "reason", "load", "otp_route", "read_only"),
+    *("send", "reason", "load", "otp_route", "read_only", "send_mode"),
 )
 
 
@@ -37,9 +38,11 @@ class Dashboard:
         twin: Twin,
         *,
         live_booking: bool,
+        sandbox: SandboxScope | None = None,
         now: Callable[[], datetime] = lambda: datetime.now(UTC),
     ) -> None:
         self.twin, self.now, self.live_booking = twin, now, live_booking
+        self.sandbox = sandbox
         self._cached: tuple[datetime, Reply] | None = None
         self._refreshing = asyncio.Lock()
         self._generation = 0  # rises on every forget, so a refresh begun before it is not kept
@@ -59,9 +62,21 @@ class Dashboard:
             calls = await self.twin.get_all("calls")
             bookings = await self.twin.get_all("bookings")
             snapshot = build_snapshot(calls, bookings, now, live_booking=self.live_booking)
+            self._sandbox_snapshot(snapshot, calls, bookings, now)
             if generation == self._generation:  # no rep action landed while it was read
                 self._cached = (self.now() + CACHE, snapshot)
             return snapshot
+
+    def _sandbox_snapshot(
+        self, snapshot: Reply, calls: dict[str, Row], bookings: dict[str, Row], now: datetime
+    ) -> None:
+        scope = self.sandbox
+        snapshot["sandbox_booking_mc"] = scope.mc if scope and scope.active(now) else None
+        snapshot["sandbox_booking_until"] = scope.until.isoformat() if scope else None
+        for shown in snapshot["bookings"]:
+            row = bookings[shown["load_id"]].data
+            call = calls.get(row.get("call_id", ""))
+            shown["sandbox_eligible"] = bool(scope and call and scope.permits(call.data, row, now))
 
     def forget(self) -> None:
         """Drop the cached snapshot, so a rep sees their own action at once."""

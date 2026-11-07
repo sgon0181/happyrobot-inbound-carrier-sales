@@ -24,6 +24,7 @@ from service.calls import Reply
 from service.core.approved_freight import safe_to_quote
 from service.core.loads import is_offerable, same_shipment
 from service.core.models import Load
+from service.core.sandbox import SandboxScope
 
 STALE_SEND = timedelta(seconds=60)  # a SUBMITTING row this old lost the request sending it
 NOTHING_CREATED = frozenset({"INVALID_RATE", "UNKNOWN_LOAD", "NOT_FOUND"})
@@ -60,25 +61,27 @@ class RepActions:
         live: bool,
         blocked: frozenset[str],
         now: Callable[[], datetime] = lambda: datetime.now(UTC),
+        sandbox: SandboxScope | None = None,
         save_attempts: int = 5,
         save_pause: float = 2.0,
     ) -> None:
         self.twin, self.tms, self.live, self.blocked, self.now = twin, tms, live, blocked, now
+        self.sandbox = sandbox
+        self.send_mode = "live" if live else "challenge_sandbox" if sandbox else "off"
         self.save_attempts, self.save_pause = save_attempts, save_pause
         self._sending: set[asyncio.Task[Reply]] = set()
 
     async def confirm(self, load_id: str, version: int, rep: str) -> Reply:
         """Recheck the load, win the write to SUBMITTING, send once and save the reply."""
-        if not self.live:
+        if self.send_mode == "off":
             return {"status": "live_booking_off"}  # each send spends a load for good
         row = await self._current(load_id, version, "RESERVED")
         if not isinstance(row, Row):
             return row
-        if row.data.get("cohort") != "real" or row.data.get("otp_route") != "trusted_contact":
-            return {"status": "record_read_only"}
         call = await self.twin.get("calls", row.data["call_id"])
-        if not self._has_consent(call, row.data, load_id):
-            return {"status": "agreement_incomplete"}
+        reason = self._authorization(call, row.data, load_id)
+        if reason:
+            return {"status": reason}
         try:
             load = await self.tms.get(load_id)
         except TmsUnavailable:
@@ -88,8 +91,19 @@ class RepActions:
             failed = {"state": "FAILED", "reason": reason, "rep": rep}
             written = await self._write(load_id, row, "recheck_failed", failed)
             return {"status": "failed", "reason": reason} if written else STALE
+        return await self._submit(load_id, row, rep)
+
+    async def _submit(self, load_id: str, row: Row, rep: str) -> Reply:
+        if self.sandbox and not self.sandbox.active(self.now()):
+            return {"status": "sandbox_authorization_inactive"}
         send_id, now = uuid.uuid4().hex, self.now().isoformat()
-        intent = {"state": "SUBMITTING", "rep": rep, "send_id": send_id, "submitted_at": now}
+        intent = {
+            "state": "SUBMITTING",
+            "rep": rep,
+            "send_id": send_id,
+            "submitted_at": now,
+            "send_mode": self.send_mode,
+        }
         if not await self._write(load_id, row, "confirm", intent):
             return STALE  # another click or rep won, so this one sends nothing
         task = asyncio.ensure_future(self._send(load_id, row.data, send_id))
@@ -97,15 +111,30 @@ class RepActions:
         task.add_done_callback(self._sending.discard)
         return await asyncio.shield(task)
 
-    @staticmethod
-    def _has_consent(row: Row | None, booking: Data, load_id: str) -> bool:
+    def _source_allowed(self, data: Data) -> bool:
+        if self.live:
+            return data.get("cohort") == "real" and data.get("otp_route") == "trusted_contact"
+        return self.sandbox is not None and self.sandbox.source(data)
+
+    def _authorization(self, call: Row | None, booking: Data, load_id: str) -> str | None:
+        if self.sandbox and not self.sandbox.active(self.now()):
+            return "sandbox_authorization_inactive"
+        if not self._source_allowed(booking):
+            return "record_read_only"
+        if not self._has_consent(call, booking, load_id):
+            return "agreement_incomplete"
+        if self.sandbox and call and not self.sandbox.permits(call.data, booking, self.now()):
+            return "sandbox_record_not_authorized"
+        return None
+
+    def _has_consent(self, row: Row | None, booking: Data, load_id: str) -> bool:
         if row is None:
             return False
         call = row.data
         return (
             not call.get("read_only")
             and bool(call.get("eligible") and call.get("verified_at"))
-            and call.get("otp_route") == "trusted_contact"
+            and self._source_allowed(call)
             and agreement_recorded(call, booking, load_id)
         )
 
@@ -163,7 +192,10 @@ class RepActions:
 
     async def _send(self, load_id: str, booking: Data, send_id: str) -> Reply:
         try:
-            sent = await self.tms.book(load_id, booking["mc"], booking["rate"])
+            if self.sandbox and not self.sandbox.active(self.now()):
+                sent = Sent("authorize", "SandboxAuthorizationInactive", b"", None)
+            else:
+                sent = await self.tms.book(load_id, booking["mc"], booking["rate"])
         except InvalidRequest:
             sent = Sent("build", "InvalidRequest", b"", None)
         receipt = classify(sent, load_id)
@@ -209,6 +241,8 @@ def recheck(load: Load | None, booking: Data, now: datetime, blocked: frozenset[
 
 def classify(sent: Sent, load_id: str) -> Receipt:
     """Section 10. FAILED only if the TMS refused or no byte left; anything unclear is UNKNOWN."""
+    if sent.step == "authorize":
+        return Receipt("FAILED", reason="sandbox_authorization_inactive")
     if sent.step in ("build", "connect"):
         return Receipt("FAILED", reason="not_sent")
     if sent.reply is None:

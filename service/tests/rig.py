@@ -3,7 +3,7 @@
 import asyncio
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
 
@@ -21,6 +21,7 @@ from service.calls import CallRows, Calls
 from service.config import POLICY_DIR
 from service.core.models import Load, LoadSummary
 from service.core.pricing import PricingPolicy
+from service.core.sandbox import SandboxScope
 from service.dashboard import Dashboard
 from service.rep_actions import RepActions
 from service.selling import Sales
@@ -169,15 +170,22 @@ def rig(
     deadline: float = 12.0,
     tms: Reachable | None = None,
     live_booking: bool = True,
+    sandbox_mc: str | None = None,
+    cohort: str = "real",
+    trusted_contacts: bool = True,
     native_workflow: dict[str, str] | None = None,
 ) -> Rig:
     found = [ACTIVE] if carriers is None else carriers
     fake = FakeFmcsa(found, status=fmcsa_status, delay=fmcsa_delay)
     twin, mailer, clock, board = FakeTwin(), FakeMailer(fail=mail_fails), Clock(), FakeBoard()
-    rows = CallRows(twin=twin.twin(), cohort="real", now=clock, native_workflow=native_workflow)
+    rows = CallRows(twin=twin.twin(), cohort=cohort, now=clock, native_workflow=native_workflow)
     fmcsa = Fmcsa(FmcsaSettings(api_key="k"), httpx.MockTransport(fake.reply))
     calls = Calls(
-        rows=rows, fmcsa=fmcsa, mailer=mailer, code_secret=b"s" * 24, trusted_contacts=True
+        rows=rows,
+        fmcsa=fmcsa,
+        mailer=mailer,
+        code_secret=b"s" * 24,
+        trusted_contacts=trusted_contacts,
     )
     sales = Sales(
         rows=rows,
@@ -188,11 +196,13 @@ def rig(
         blocked=BLOCKED,
         display_timezone=ZoneInfo("America/Chicago"),
     )
-    dashboard = Dashboard(rows.twin, live_booking=live_booking, now=clock)
+    scope = SandboxScope(sandbox_mc, START, START + timedelta(hours=12)) if sandbox_mc else None
+    dashboard = Dashboard(rows.twin, live_booking=live_booking, sandbox=scope, now=clock)
     desk = RepActions(
         twin=rows.twin,
         tms=board,
         live=live_booking,
+        sandbox=scope,
         blocked=BLOCKED,
         now=clock,
         save_pause=0.0,

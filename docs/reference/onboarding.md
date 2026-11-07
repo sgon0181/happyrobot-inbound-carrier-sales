@@ -73,3 +73,9 @@ For rollback, restore the prior workflow Production version and prior service/Ap
 ## History
 
 Version 8 and Build 24 are the earlier demonstration. The prototype branch is historical reference only and is never merged. The recruiter accepted honest PENDING handling and a ZIP submission; see [questions](questions.md). The prior deployment and import manifests remain dated evidence in [readiness](release.md#history).
+
+## Temporary challenge sandbox Confirm
+
+The hosted send mode is recorded in [the release guide](release.md). To prepare a narrowly authorized demo, keep `LIVE_BOOKING=false` and configure `SANDBOX_BOOKING_MC`, `SANDBOX_BOOKING_SINCE` and `SANDBOX_BOOKING_UNTIL` in the service secret store. The timestamps must be UTC and the window may be at most 48 hours. Use the shortest practical recording window. This deliberately permits any otherwise eligible call for that MC inside the window, not only one run.
+
+Startup also requires the assignment's exact TMS endpoint (`tramway.proxy.rlwy.net:17159`), Twin staging, synthetic calls and no contact roster. An endpoint change requires a reviewed policy change. Code verification still runs against the demo inbox. The source call and its current reservation event must both fall inside the window; recent edits do not authorize old holds. Rep sign-in, completed consent, shipment and ceiling rechecks, and one-shot submission remain mandatory. Remove the three settings or let the window expire to disable new sandbox sends. Receipt saving and reconciliation continue after expiry. No stored record should be changed to make it eligible.

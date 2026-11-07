@@ -119,3 +119,31 @@ test('disabled Confirm cannot send, while Decline stays available', async () => 
     delete global.window; delete global.fetch;
   }
 });
+
+
+test('sandbox authorization failures explain no-send without blaming carrier consent', async () => {
+  const messages = [];
+  const overrides = { 'next/navigation': { useRouter: () => ({ refresh() {} }) },
+    sonner: { toast: { success: (text) => messages.push(text), error: (text) => messages.push(text) } },
+    '@/components/ui/button': { Button: button }, '@/components/ui/spinner': ui };
+  const { RepActions } = loadTs('src/components/rep-actions.tsx', overrides);
+  global.window = { confirm: () => true };
+  let tree;
+  try {
+    await act(async () => { tree = Renderer.create(React.createElement(RepActions, {
+      loadId:'LD09001',version:1,actions:['confirm'],confirmText:'Fixture',
+    })); });
+    for (const reply of [
+      {status:'sandbox_authorization_inactive'}, {status:'sandbox_record_not_authorized'},
+      {status:'sent',state:'FAILED',reason:'sandbox_authorization_inactive'},
+    ]) {
+      global.fetch = async () => ({ok:true,json:async () => reply});
+      await act(async () => { await tree.root.findByType('button').props.onClick(); });
+      assert.match(messages.at(-1), /[Nn]othing was sent|No booking request was sent/);
+      assert.doesNotMatch(messages.at(-1), /[Cc]ontact the carrier|incomplete|TMS refused/);
+    }
+  } finally {
+    if (tree) await act(async () => tree.unmount());
+    delete global.window; delete global.fetch;
+  }
+});

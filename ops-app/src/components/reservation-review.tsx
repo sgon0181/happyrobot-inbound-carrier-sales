@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Facts, SheetSection } from "@/components/detail-sheet";
 import { EventList } from "@/components/ops-events";
+import { SendMode } from "@/components/send-mode";
 import { BookingActions } from "@/components/rep-queue";
 import { StateBadge } from "@/components/state-badge";
 import { fmtCount, fmtTime, fmtUsd, label, na, nextAction, submissionStatus } from "@/lib/format";
@@ -10,8 +11,8 @@ import { viewHref } from "@/lib/views";
 const box = "rounded-xl border bg-card p-5";
 const labels = "text-xs font-medium text-muted-foreground";
 
-export function ReservationReview({ booking: b, call: c, now, live, canManage }: {
-  booking?: Booking; call?: Call; canManage: boolean; now: number; live: boolean | null;
+export function ReservationReview({ booking: b, call: c, now, live, canManage, sandboxMc = null }: {
+  booking?: Booking; call?: Call; canManage: boolean; now: number; live: boolean | null; sandboxMc?: string | null;
 }) {
   const load = b?.load;
   const loadId = b?.loadId ?? c?.bookingLoadId;
@@ -24,6 +25,7 @@ export function ReservationReview({ booking: b, call: c, now, live, canManage }:
   const queue = b && state !== "RESERVED" && state !== "RELEASED" ? "bookings" : "reservations";
   return <section className="space-y-4">
     <Link href={viewHref(queue)} className="text-sm underline">Back to {queue === "reservations" ? "reservations" : "bookings"}</Link>
+    <SendMode liveBooking={live} sandboxMc={sandboxMc} />
     <div className={box}>
       <div className="flex flex-wrap items-center justify-between gap-2">
         <h2 className="text-2xl font-semibold"> {queue === "bookings" ? "Booking review" : "Reservation review"} · {loadId}</h2><StateBadge state={state} />
@@ -41,7 +43,7 @@ export function ReservationReview({ booking: b, call: c, now, live, canManage }:
       {gap !== null && !b?.agreementNeedsReview && <p className="mb-2 text-sm">{gap === 0 ? "Agreed at the opening offer." : `Agreed ${fmtUsd(Math.abs(gap))} ${gap < 0 ? "below" : "above"} the opening offer.`}</p>}
       <p className="text-sm">{b?.agreementNeedsReview ? "A load hold was created, but the originating call has no finished agreement. Check with the carrier before creating a fresh reservation." : b ? nextAction(state) : "Historical agreement. Current load ownership has changed."}</p>
       {b && !canManage && <p className="mt-2 text-sm text-muted-foreground">View only. A designated senior rep can act on this reservation.</p>}
-      {b && canManage && <div className="mt-2"><BookingActions booking={b} liveBooking={live} now={now} /></div>}
+      {b && canManage && <div className="mt-2"><BookingActions booking={b} liveBooking={live} sandboxMc={sandboxMc} now={now} /></div>}
     </div>
     {b && <div className={box}><SheetSection title="Booking and shipment">
       <Facts items={[["TMS status", submissionStatus(b.state, b.reason, b.tmsStatus)], ["Reference", na(b.reference)],

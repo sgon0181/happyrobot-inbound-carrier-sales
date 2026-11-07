@@ -67,7 +67,7 @@ export default async function HomePage({ searchParams }: { searchParams?: Params
 function Review({ filters, bookings, calls, now, snapshot, canManage }: Props) {
   const b = bookings.find(b => b.loadId === filters.load && (!filters.run || filters.run === b.callId));
   const c = calls.find(c => c.id === (b?.callId ?? filters.run) && c.bookingLoadId === filters.load);
-  return <ReservationReview canManage={canManage} booking={b} call={c} now={now} live={snapshot.liveBooking} />;
+  return <ReservationReview canManage={canManage} booking={b} call={c} now={now} live={snapshot.liveBooking} sandboxMc={snapshot.sandboxBookingMc} />;
 }
 
 function BookingList({ view, bookings, calls, filters, now, snapshot }: Props) {
@@ -90,7 +90,7 @@ function BookingList({ view, bookings, calls, filters, now, snapshot }: Props) {
     {history ? <CallLog title="All reservations" calls={historyRows} /> : <RepQueue title={pending ? "Awaiting rep review" : "Booking and release history"}
       description={pending ? "Open the originating call and check the agreed rate. Latest calls appear first." : "Inspect the TMS response, reference and submission history."}
       rows={filtered} callById={byRun} now={now} liveBooking={snapshot.liveBooking} empty="No records match these filters." />}
-    <SendMode liveBooking={snapshot.liveBooking} />
+    <SendMode liveBooking={snapshot.liveBooking} sandboxMc={snapshot.sandboxBookingMc} />
   </>;
 }
 

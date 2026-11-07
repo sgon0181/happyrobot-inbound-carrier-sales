@@ -118,3 +118,39 @@ def test_native_integration_provenance_requires_both_safe_identifiers() -> None:
     ]:
         with pytest.raises(SettingsError, match="HAPPYROBOT_WORKSPACE_SLUG"):
             load_settings(configured | overrides)
+
+
+def test_challenge_confirm_requires_an_explicit_sandbox_boundary() -> None:
+    from service.config import CHALLENGE_TMS
+
+    sandbox = ENV | {
+        "TMS_HOST": CHALLENGE_TMS[0],
+        "TMS_PORT": str(CHALLENGE_TMS[1]),
+        "CALL_COHORT": "synthetic",
+        "TWIN_ENVIRONMENT": "staging",
+        "SANDBOX_BOOKING_MC": "138328",
+        "SANDBOX_BOOKING_SINCE": "2026-11-07T00:00:00+00:00",
+        "SANDBOX_BOOKING_UNTIL": "2026-11-07T12:00:00+00:00",
+    }
+    settings = load_settings(sandbox)
+    assert settings.sandbox and settings.sandbox.mc == "138328" and not settings.live_booking
+    assert load_settings(ENV).sandbox is None
+    for override in [
+        {"SANDBOX_BOOKING_MC": ""},
+        {"SANDBOX_BOOKING_SINCE": ""},
+        {"SANDBOX_BOOKING_UNTIL": "2026-11-10T00:00:00+00:00"},
+        {"SANDBOX_BOOKING_UNTIL": "2026-11-07T00:00:00+00:00"},
+        {"SANDBOX_BOOKING_SINCE": "2026-11-07T00:00:00"},
+        {"SANDBOX_BOOKING_SINCE": "2026-11-07T00:00:00+01:00"},
+        {"SANDBOX_BOOKING_SINCE": "invalid"},
+        {"TMS_HOST": "customer.example.test"},
+        {"TMS_PORT": "9000"},
+        {"CALL_COHORT": "real"},
+        {"TWIN_ENVIRONMENT": "production"},
+        {"OTP_CONTACTS_JSON": "{}"},
+        {"LIVE_BOOKING": "true"},
+        {"SANDBOX_BOOKING_MC": "0138328"},
+        {"SANDBOX_BOOKING_MC": "138328,132354"},
+    ]:
+        with pytest.raises(SettingsError, match="SANDBOX_BOOKING_MC"):
+            load_settings(sandbox | override)

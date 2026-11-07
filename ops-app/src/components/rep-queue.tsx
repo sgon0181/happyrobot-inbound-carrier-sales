@@ -147,23 +147,27 @@ export function BookingActions({
   booking: b,
   now,
   liveBooking,
+  sandboxMc = null,
   short = false,
 }: {
   booking: Booking;
   now: number;
   liveBooking: boolean | null;
   short?: boolean;
+  sandboxMc?: string | null;
 }) {
   if (b.readOnly) return <p className="text-xs text-muted-foreground">Historical import. View only.</p>;
   const actions = allowedActions(b, now);
   if (!actions.length) return <p className="text-xs text-muted-foreground">No action</p>;
+  const sandbox = liveBooking === false && sandboxMc !== null;
+  const permitted = sandbox && b.mc === sandboxMc && b.cohort === "synthetic" && b.sandboxEligible;
   return (
     <RepActions
       loadId={b.loadId}
       version={b.version}
       actions={actions}
-      confirmDisabledReason={b.agreementNeedsReview ? "Acceptance incomplete. Check the call and contact the carrier. This hold can be released." : (b.cohort !== "real" || !b.trustedContact) && liveBooking === true ? "This reservation needs a fresh verification through a trusted carrier contact before submission." : confirmReason(liveBooking, short)}
-      confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the TMS? There is no supported cancellation.`}
+      confirmDisabledReason={b.agreementNeedsReview ? "Acceptance incomplete. Check the call and contact the carrier. This hold can be released." : (b.cohort !== "real" || !b.trustedContact) && liveBooking === true ? "This reservation needs a fresh verification through a trusted carrier contact before submission." : sandbox ? (permitted ? null : "This reservation is outside the authorized sandbox call window or carrier. Live booking remains off.") : confirmReason(liveBooking, short)}
+      confirmText={`Send ${b.loadId}, MC ${na(b.mc)}, at ${fmtUsd(b.rate)} once to the ${sandbox ? "challenge sandbox TMS" : "TMS"}? There is no supported cancellation.`}
     />
   );
 }

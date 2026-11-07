@@ -12,10 +12,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 from service.core.pricing import PricingPolicy
+from service.core.sandbox import SandboxScope, read_scope
 
 POLICY_DIR = Path(__file__).parent / "policy"
 MIN_SECRET = 24
 COHORTS = frozenset({"real", "synthetic"})
+# The assignment sandbox only. A different endpoint needs a deliberate policy review.
+CHALLENGE_TMS = ("tramway.proxy.rlwy.net", 17159)
 
 
 class SettingsError(ValueError):
@@ -44,6 +47,7 @@ class Settings:
     live_booking: bool  # each LOAD_BOOK spends a load for good, so this stays off until slice 4
     pricing: PricingPolicy
     blocked_loads: frozenset[str]
+    sandbox: SandboxScope | None = None  # explicit demo-only exception, never live sends
 
 
 def load_settings(env: Mapping[str, str] | None = None) -> Settings:
@@ -69,6 +73,7 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         demo_inbox=read.email("DEMO_OTP_EMAIL"),
         cohort=read.choice("CALL_COHORT", COHORTS, default="real"),
         live_booking=read.choice("LIVE_BOOKING", {"true", "false"}, default="false") == "true",
+        sandbox=read.sandbox(),
         pricing=PricingPolicy.from_json((POLICY_DIR / "pricing-v1.json").read_text()),
         blocked_loads=blocked_loads((POLICY_DIR / "blocked-loads-v1.json").read_text()),
     )
@@ -78,9 +83,25 @@ def load_settings(env: Mapping[str, str] | None = None) -> Settings:
         read.problems.append(
             "LIVE_BOOKING needs explicit real CALL_COHORT and nonempty OTP_CONTACTS_JSON"
         )
+    _sandbox_boundary(settings, read.problems)
     if read.problems:
         raise SettingsError("Invalid settings: " + "; ".join(read.problems))
     return settings
+
+
+def _sandbox_boundary(settings: Settings, problems: list[str]) -> None:
+    if settings.sandbox and (
+        not re.fullmatch(r"[1-9][0-9]{0,7}", settings.sandbox.mc)
+        or (settings.tms_host, settings.tms_port) != CHALLENGE_TMS
+        or settings.cohort != "synthetic"
+        or settings.twin_environment != "staging"
+        or settings.contacts is not None
+        or settings.live_booking
+    ):
+        problems.append(
+            "SANDBOX_BOOKING_MC needs a canonical MC, the challenge TMS endpoint, "
+            "synthetic calls, Twin staging, no contact roster and LIVE_BOOKING=false"
+        )
 
 
 def blocked_loads(text: str) -> frozenset[str]:
@@ -145,6 +166,18 @@ class _Reader:
             pass
         self.problems.append("OTP_CONTACTS_JSON must map canonical MC numbers to single addresses")
         return None
+
+    def sandbox(self) -> SandboxScope | None:
+        try:
+            return read_scope(
+                *(
+                    self.env.get(f"SANDBOX_BOOKING_{key}", "").strip()
+                    for key in ("MC", "SINCE", "UNTIL")
+                )
+            )
+        except ValueError:
+            self.problems.append("SANDBOX_BOOKING_MC/SINCE/UNTIL need a valid UTC window")
+            return None
 
     def port(self, name: str) -> int:
         value = self.text(name)

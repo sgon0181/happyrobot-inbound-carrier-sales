@@ -193,7 +193,7 @@ Tests must prove these regardless of what the model does.
 | Operations UI in Apps (p.4) | [§11](#11-operations-app) | Demo |
 | Graceful TMS timeouts and malformed responses (p.3) | [§6](#6-the-service), [§10](#10-reservation-and-confirm) | Fault-injection tests over real TCP |
 | Authentication on all endpoints (p.5) | INV-8 | API tests: every route rejects a missing or wrong key |
-| KPIs, scripted, edge and adversarial tests (p.4) | [§14](#14-quality) | `docs/qa-results.md`, written during the build |
+| KPIs, scripted, edge and adversarial tests (p.4) | [§14](#14-quality) | [results](../results.md) |
 | Docker, single-command cloud deploy (p.4) | [§16](#16-deployment) | `make deploy APP=... APP_URL=...` after explicit setup |
 | Web call only, no phone number (p.5) | Voice workflow | Browser demo |
 
@@ -212,6 +212,7 @@ service/
   call_state.py      Call-row transitions, claims and terminal recovery
   selling.py         Search, negotiation and closing orchestration
   sale_decisions.py  Atomic call-row negotiation decisions
+  negotiation_memory.py  Shared carrier/load negotiation memory (D-44)
   bookings.py        One reservation row per load and consent checks
   rep_actions.py     Rep confirm, decline and reconcile; LOAD_BOOK
   dashboard.py       Bounded snapshot and legacy diagnostic fields
@@ -256,7 +257,7 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 | What the TMS does | What the adapter does |
 |---|---|
 | Responds normally, padded, in any order | Parses by key, trims padding, ignores unknown fields. |
-| Times out, closes slowly or sends a partial frame | Reads: up to 2 retries with jitter, then `tms_unavailable`. |
+| Times out, closes slowly or sends a partial frame | Reads: up to 3 attempts (2 retries) with jitter inside the 6 second budget, then `tms_unavailable`. |
 | Sends a malformed frame or an oversized line or reply | Treated as a failed read. Never crashes, never guesses. |
 | Returns `ERR\|CODE:...` | Mapped to a typed error. |
 
@@ -521,7 +522,7 @@ Built from the HappyRobot Apps Next.js template and mirrored under `ops-app/`. I
 | Complexity | Radon rank B or better, with no exceptions |
 | Lint and format | `ruff check` and `ruff format --check` clean |
 | Types | `mypy --strict` clean |
-| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `selling.py`, `sale_decisions.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
+| Coverage | At least 90% branch coverage on `core/`, `calls.py`, `call_state.py`, `selling.py`, `sale_decisions.py`, `negotiation_memory.py`, `bookings.py`, `rep_actions.py` and `dashboard.py` |
 | Layering | `core/` imports only the standard library and `core/` |
 | Environment | Only `config.py` reads it |
 | Capacity | Keep the measured fixture and actual-voice workloads separate; agree representative arrival and latency targets before a supervised production pilot |
@@ -554,10 +555,10 @@ The following slices describe the completed November 2 to 4 baseline, not unfini
 - **Cloud deploy:** after explicit resource and secret setup, `make deploy APP=<fly-app> APP_URL=<app-url>` deploys the service, checks authenticated health and TMS reachability, then opens the named App. There is no default target. It does not provision or publish native App/workflow resources.
 - **Local review:** `make review` builds the local App, service, identity and TCP fixtures and opens a usable reservation; `make review-down` removes that disposable environment. No real business writes or customer secrets are used. See [reproduction and accepted checks](release.md#reproduce-the-application).
 - **Hosting:** a machine that stays up during the demo. Fly's trial stopped machines after about 5 minutes.
-- **Setup steps** are in [docs/onboarding.md](onboarding.md).
+- **Setup steps** are in [docs/reference/onboarding.md](onboarding.md).
 
 ---
 
 ## 17. Open questions
 
-Unresolved checks are tracked in [docs/decisions.md](decision-log.md#open-checks). The recruiter accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See docs/qa-package.md for capture and acceptance limits.
+Unresolved checks are tracked in [the decision log](decision-log.md#open-checks). The recruiter accepted the PENDING handling in Q8. External finalization remains unspecified. Currency and bounds remain assumptions under Q3. A native post-call AI summary (T-8) is optional, not a dependency of the structured-activity design. See [results](../results.md) for capture and acceptance limits.

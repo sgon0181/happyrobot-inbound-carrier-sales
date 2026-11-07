@@ -49,7 +49,7 @@ Tests check these whatever the model says.
 | INV-7 | `LOAD_BOOK` only after a rep's Confirm, at most once, never resent. |
 | INV-8 | Every endpoint requires authentication, including health. |
 | INV-9 | Every call and booking state change and its audit event are saved in the same write. (A shared negotiation quote lowered to a new cap is updated without a new event.) |
-| INV-10 | Each handled booking reply is kept as received, so the rep sees what the TMS actually said. A crash before it is saved can lose it. |
+| INV-10 | Each handled booking reply is kept as received, with its step, error type and hash, and the rep sees the actual TMS status. A crash before it is saved can lose it. |
 
 The service cannot control what the model says. A misheard amount inside the limits can become a reservation, which is why a rep reviews every reservation before anything is sent.
 
@@ -65,7 +65,7 @@ Twin is the only datastore, as the brief requires. The SQL interface used here i
 
 ## Failure handling
 
-- **TMS.** Reads retry within the twelve-second voice deadline, then report "temporarily unavailable". A booking that times out is recorded as `UNKNOWN` and never resent, because a timeout does not say whether it landed. Malformed frames are refused, not guessed.
+- **TMS.** Reads retry within a six-second budget, inside the twelve-second voice deadline, then report "temporarily unavailable". A booking that times out is recorded as `UNKNOWN` and never resent, because a timeout does not say whether it landed. Malformed frames are refused, not guessed.
 - **FMCSA.** An outage is "unavailable", never "inactive carrier".
 - **Twin.** All statements share a conservative four-per-second pacer, chosen after rate-limit observations on this integration. This is our operating budget, not a universal Twin limit. A conflicting write rereads and decides again.
 - **Repeats.** A repeated tool call is answered from stored state, so retries cannot buy an extra round or a second reservation.

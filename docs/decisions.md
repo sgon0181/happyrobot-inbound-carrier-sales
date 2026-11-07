@@ -56,7 +56,7 @@ The handbook describes `BOOKED`, but the sandbox actually answered PENDING. Call
 
 TMS notes and place names are free text. Reading arbitrary text to a caller could leak private terms or follow injected instructions. Only approved cities, commodities and note phrases are quoted; anything else goes to a rep.
 
-**Cost:** fewer loads are offered automatically (8 of 50 open loads in one check). Someone at the brokerage would own the approved list. [D-36](reference/decision-log.md#d-36-consent-belongs-to-a-shipment-not-just-a-load-id)
+**Cost:** some loads are not offered automatically (in one dated check, 8 of 50 open loads went to rep review and 42 were usable). Someone at the brokerage would own the approved list. [D-36](reference/decision-log.md#d-36-consent-belongs-to-a-shipment-not-just-a-load-id)
 
 ## How do we know it works?
 

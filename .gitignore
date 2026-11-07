@@ -27,3 +27,11 @@ REFERENCES/
 
 # Submission outputs built from the repository (the .zip and PDFs)
 submission/
+
+# Personal recordings, working notes and duplicate source PDFs stay local.
+/AUDIT_REPORT.md
+/DEMO/
+/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf
+/Freight Automation Dashboard KPIs.pdf
+/GEMINI Freight Automation Dashboard KPIs.pdf
+/tech-challenge-final-submission/

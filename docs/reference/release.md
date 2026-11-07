@@ -20,6 +20,16 @@ The code goes to a demo inbox, so it proves inbox access, not carrier identity; 
 
 ## Evidence at a glance
 
+### Unpublished Version 20
+
+[Version 20](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w) is an unpublished draft forked from the live Version 19. It protects the fixed opening from interruptions, aligns `find_loads` parameters with the existing lane gate, refreshes its safe success schema and Northstars, and uses `SERVICE_BASE_URL` in all seven HTTP nodes. Request bodies, authentication and the prompt are unchanged. Workflow-wide audit sampling is enabled for future calls, including current Production; this does not publish the draft. [Readback](../../happyrobot/tool-bindings-v20.json) and [results](../results.md#unpublished-integration-alignment-draft).
+
+All three `SERVICE_BASE_URL` environment values deliberately retain the same existing service. Its populated Twin staging database, demo inbox and disabled booking sends remain in place. This is not environment isolation. The [bootstrap SQL](../../tools/twin-schema.sql) is only for a new workspace; the [schema checker](onboarding.md#reproduce-the-twin-tables) makes metadata reads only. Do not reset or reimport the existing database.
+
+Before promotion, review the focused failures in results. After explicit owner approval to publish for testing, interrupt the opening, exercise missing lane details and explicit anywhere permission, complete a verified reservation without a booking send, then inspect native audits. Text grades cannot prove audio interruption handling or live URL-variable resolution. Keep Version 19 as the current Production version until this release is approved.
+
+### Previously recorded release evidence
+
 | Layer | Result | Scope |
 | --- | --- | --- |
 | Deployed service source | 604 tests; 98.1% business-rule branch coverage; lint, strict types and size/complexity gates pass | Offline rules, contracts, persistence and adversarial behavior |
@@ -58,7 +68,7 @@ Do not use an unqualified Fly deployment: the historical `fly.toml` app name poi
 
 ## Concurrency and read budget
 
-Fresh keyed reads batch at their scheduled Twin SQL slot. Writes retain version checks, the service keeps the provider's four-statements-per-second pacing, and voice tools retain their twelve-second deadline. Historical controlled twelve-call tests completed twelve agreements without unfinished claims after the batching repair. Original failures are retained alongside [simultaneous](../evidence/readiness/capacity-after-simultaneous.json), [staggered](../evidence/readiness/capacity-after-staggered.json) and [history/polling](../evidence/readiness/capacity-maintained-history.json) results.
+Fresh keyed reads batch at their scheduled Twin SQL slot. Writes retain version checks, the service keeps its chosen four-statements-per-second pacing, and voice tools retain their twelve-second deadline. This is the integration's pacing budget, not a general Twin service limit. Historical controlled twelve-call tests completed twelve agreements without unfinished claims after the batching repair. Original failures are retained alongside [simultaneous](../evidence/readiness/capacity-after-simultaneous.json), [staggered](../evidence/readiness/capacity-after-staggered.json) and [history/polling](../evidence/readiness/capacity-maintained-history.json) results.
 
 The new reciprocal memory initially regressed all three controlled twelve-call workloads. A narrow fix avoids a redundant memory write only when a fresh read finds no prior state and the caller accepts the unchanged opening with no rounds spent. Existing memory, lower prices and all concessions retain their writes and CAS. All three reruns completed twelve agreements with zero unfinished claims and zero TMS sends, at unchanged SQL pacing and tool deadline. [Before/after results and limits](capacity.md) retain the failures and the concurrency boundary. These offline opening-acceptance fixtures do not establish peak production capacity or heavy negotiation throughput.
 

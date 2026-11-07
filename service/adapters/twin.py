@@ -1,8 +1,8 @@
 """Twin rows over HappyRobot's SQL API, with a version check on every write (D-23).
 
-Twin runs one statement per request and has no multi-table transactions, but one
-UPDATE ... WHERE version = n is atomic. So everything that changes together lives in
-one row, and every write is compare-and-set. Statements are paced to about 4 a second.
+This integration sends one statement per request, without cross-table transactions.
+UPDATE ... WHERE version = n is atomic. State and its events share one row, with
+compare-and-set writes. Our observed-rate-limit budget is about 4 statements a second.
 """
 
 import asyncio

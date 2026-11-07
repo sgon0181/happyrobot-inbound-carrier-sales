@@ -36,7 +36,7 @@ This replaced a fixed ladder of three automatic increases, which rewarded inflat
 
 ## Why Twin only, and why rows with version checks?
 
-The brief requires Twin. Twin cannot update two tables in one transaction, so each row carries its own state and history, and every write checks the row has not changed since it was read. Two calls cannot hold the same load, and a change to a call or booking is never saved without its audit event.
+The brief requires Twin. Our Twin SQL integration uses separate statements without a cross-table transaction. Each row carries its own state and history, and every write checks the row has not changed since it was read. Two calls cannot hold the same load, and a change to a call or booking is never saved without its audit event.
 
 **Cost:** where one action touches two rows (a call and its reservation), recovery is explicit code rather than a transaction. [D-23](reference/decision-log.md#d-23-state-and-its-events-share-a-versioned-row), [D-24](reference/decision-log.md#d-24-a-reservation-is-one-booking-row-keyed-by-load-id)
 

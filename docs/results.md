@@ -14,10 +14,10 @@ A dated sample of 49 completed test calls (November 2 to 4) had 36 verified call
 
 | Layer | Result | What it shows |
 | --- | --- | --- |
-| Service | 615 tests pass; 98.1% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency and authentication, without network calls |
+| Service and repository tooling | 625 tests pass; 98.1% branch coverage of business rules; strict types, lint and complexity gates pass | Pricing, negotiation, verification, reservations, TMS faults, retries, concurrency, authentication and read-only schema validation, without network calls |
 | App | 65 tests pass; lint, typecheck and production build pass | Views, rep permissions and server routes |
 | Local end to end | `make review`: Confirm sends exactly one booking to the TCP stand-in, shows receipt FAKE0001 as PENDING and refuses a stale repeat | The whole Confirm path, with no real TMS or carrier |
-| Burst load | Three twelve-call bursts of callers accepting the opening offer each finished 12 of 12 agreements with no stuck claims and no TMS sends, at Twin's four statements per second and the twelve-second voice deadline | This controlled workload only, not production peak capacity |
+| Burst load | Three twelve-call bursts of callers accepting the opening offer each finished 12 of 12 agreements with no stuck claims and no TMS sends, with the adapter paced at four statements per second and the twelve-second voice deadline | This controlled workload only, not production peak capacity |
 
 Evidence: [service tests](../service/tests/), [floor validation](evidence/reciprocal-negotiation/floor-validation.json), [local Confirm](evidence/release-2026-11-07/local-review.json), [burst results](evidence/reciprocal-negotiation/capacity.json).
 
@@ -46,3 +46,13 @@ Opening $4,600, working cap $5,000, run against the deployed rule. [All scenario
 | Walkthrough recording | Pending | Recorded for the video |
 
 Evidence: [text evaluations](../happyrobot/qa-v19-checkpoints.json), [voice runs](../happyrobot/qa-v19-voice.json). Earlier versions' scores and failures are kept in [history](history/README.md); they describe those versions only.
+
+## Unpublished integration-alignment draft
+
+Version 20 retains the Version 19 prompt and current service. The [configuration readback](../happyrobot/tool-bindings-v20.json) records protected initial speech, consistent lane parameters, a successful safe result schema, the shared service URL variable and nine enabled Northstars. Workflow-wide audit sampling is enabled at 100% for future calls. There are no live Version 20 audit grades yet; the Northstars screen's 0% prompt-span coverage is not a pass rate.
+
+Two focused, fully mocked text sweeps passed **13/14 and 12/14**, including **12/12** executions of the six new lane cases. The two S3 failures grade the voice spelling of CST and optional delivery detail against an older criterion. After review, only that grading criterion was revised to match the unchanged prompt; both follow-up executions passed (2/2). Original failures remain recorded. A separate missing-display adversarial case passed once and failed once: it omitted the rep-verification warning without inventing a time. The [raw results and inspected replies](../happyrobot/qa-v20-checkpoints.json) preserve all failures. Opening interruption, actual endpoint resolution during a voice call and the resulting native audits remain acceptance checks after publication approval.
+
+On November 7, authenticated service and Twin reads found **77 call rows and 20 current booking rows**. The live App shows **76 recorded calls across all voice versions**, excluding a non-platform run ID, and **26 historical agreements**. Reused loads explain why historical agreements exceed current booking rows. The current states are **16 RESERVED, 1 ACK_PENDING and 3 RELEASED**. Latest agreement: LD01114 at $1,175, run `6dc95ce1-f7e0-44a3-8394-8408b754527e`. No import, fabricated calls or status changes were needed; hosted booking sends remain off.
+
+The bootstrap SQL was executed twice in disposable PostgreSQL 16, preserving an existing row. Primary-key rejection, version-checked updates and stale-write rejection passed. The read-only schema checker passed against both that database's metadata and the existing Twin staging schema. No hosted DDL ran.

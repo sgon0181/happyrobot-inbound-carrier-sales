@@ -2,7 +2,7 @@
 
 Read only. Outcomes are computed when read, never stored twice (architecture section 7),
 and KPIs count real calls only (D-21). The snapshot is cached for 5 seconds, because
-Twin allows about 4 statements a second and every open dashboard polls it.
+our Twin adapter is paced at about 4 statements a second and dashboards poll it.
 """
 
 import asyncio

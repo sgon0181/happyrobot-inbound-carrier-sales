@@ -96,7 +96,7 @@ Each was OPEN, future, unheld, outside protected inventory, safe to quote and wi
 
 ## Deployment boundary
 
-The `negotiations` table must exist in the selected Twin environment before deployment. It uses `id` text primary key, `version` integer and `data` JSONB, like existing tables. The table is allowlisted by the adapter and was provisioned and read back in Twin staging. The disposable local reviewer fixture already supports it. Do not add it to the call or booking population in the App.
+The `negotiations` table must exist in the selected Twin environment before deployment. It uses `id` text primary key, `version` bigint and `data` JSONB, like existing tables. The table is allowlisted by the adapter and was provisioned and read back in Twin staging. The disposable local reviewer fixture already supports it. Do not add it to the call or booking population in the App.
 
 There is intentionally no automatic expiry. Material shipment changes replace the active shared negotiation; per-call audit events retain the previous history. No historical call rows are rewritten or backfilled. The new policy applies prospectively. Memory is keyed by verified MC, not a uniquely authenticated human dispatcher; the existing demo inbox is still not production carrier identity.
 

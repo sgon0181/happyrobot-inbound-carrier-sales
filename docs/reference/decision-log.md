@@ -10,7 +10,7 @@ The owner approved D-22 to D-25, D-29, D-31 and D-32 on 2026-11-02, and later th
 
 Replaces D-8. On November 5 the recruiter accepted the approach described in the November 3 follow-up, including one submission at rep confirmation and a separate PENDING acknowledgement. No general sandbox finalization behavior was established. [Q8](questions.md)
 
-- **Why:** the TMS has no cancel and no idempotency key. During a call, that send had to finish inside a 12 second request on a database allowing about 4 statements per second, while the carrier could hang up.
+- **Why:** the TMS has no cancel and no idempotency key. During a call, that send had to finish inside a 12 second request on our Twin adapter paced at about 4 statements per second after observed rate limits, while the carrier could hang up.
 - **Evidence:** a hang-up during booking made the load unavailable on the observed token, a Twin failure after a real send left no stored reference, and in the model two bookings starting together sent nothing. On LD01094 a load was spent before the caller clearly agreed. The send path took 21 statements, and the code protecting it accounted for much of the size.
 - **PDF fit:** the PDF reserves tentatively at agreement and has the senior rep confirm the booking. The handbook describes `LOAD_BOOK` as committing a booking. The recruiter left the timing to us.
 - **Cost:** a booking failure appears after the call, so the rep calls the carrier back. The TMS shows the load `OPEN` until Confirm, so Confirm must re-check it. D-8's reasoning that `PENDING` reads as the tentative stage no longer applies; `PENDING` is now simply what the TMS returned.
@@ -20,7 +20,7 @@ Replaces D-8. On November 5 the recruiter accepted the approach described in the
 
 The original call and booking tables replaced nine prototype tables. D-44 adds durable carrier/load negotiations as a third Twin table, using the same row and event boundary.
 
-- **Why:** Twin has no multi-table transactions, but one row updates atomically with a version check. Anything spread across rows can stop halfway.
+- **Why:** Our Twin SQL integration uses separate statements without a cross-table transaction; one row updates atomically with a version check. Anything spread across rows can stop halfway.
 - **Evidence:** three prototype failures came from this. Reservation spanned claims, a call freeze and a booking row. OTP consumption and call verification were separate writes. State saved first and its audit event afterwards, so an event could be lost. Of 70 statements per call, 13 were audit writes.
 - **Book:** *Designing Data-Intensive Applications*: fields updated together can live in one document, which removes the need for multi-object transactions (p.287); conditional writes with a version number (p.302).
 - **Cost:** events live in JSON instead of their own table. Rows are larger, and grow with repeated activity. No event-count maximum is proven; row size and retention need pilot measurements.
@@ -126,7 +126,7 @@ These extend the November baseline. The four-part architecture and pricing-v1 op
 
 ### D-38: Share fresh point reads, never cache mutable decision state
 
-- **Why:** repeated row reads exhausted Twin's four-statements-per-second budget during full call bursts, despite passing ordinary tests. Raising the voice deadline or bypassing pacing would hide the bottleneck.
+- **Why:** repeated row reads exhausted the adapter's four-statements-per-second budget, chosen after rate-limit observations during full call bursts, despite passing ordinary tests. Raising the voice deadline or bypassing pacing would hide the bottleneck.
 - **Choice:** batch keys waiting for the same paced SQL slot, detach before dispatch, isolate each waiter's result and cancellation, and force later reads and CAS conflicts through a fresh query. Bound admission to 256 waiters and each query to 128 keys. Writes remain independent version checks.
 - **Tradeoff:** a small asynchronous coordinator adds cancellation and freshness obligations. Its explicit race tests and [paired full-flow profiles](release.md#concurrency-and-read-budget) justify the complexity; no production call-rate guarantee follows.
 

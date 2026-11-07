@@ -1,6 +1,6 @@
 # Negotiation memory capacity repair
 
-The new shared-memory write exposed a regression in the existing controlled twelve-call workload. All callers accepted their opening offers. The first reciprocal implementation inserted one negotiation row per acceptance before recording the call claim, reservation and final call agreement. At four SQL statements per second, those extra writes pushed requests past the unchanged twelve-second voice deadline.
+The new shared-memory write exposed a regression in the existing controlled twelve-call workload. All callers accepted their opening offers. The first reciprocal implementation inserted one negotiation row per acceptance before recording the call claim, reservation and final call agreement. At the adapter's chosen four SQL statements per second, those extra writes pushed requests past the unchanged twelve-second voice deadline.
 
 The harness stops at its first error without a final webhook. Its failures therefore retain unfinished claims rather than hiding them through cleanup or a later retry. No TMS booking command is issued in this workload. Existing Confirm guards refuse unfinished agreements.
 

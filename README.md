@@ -53,7 +53,7 @@ Current results and the limits of each test layer are in [docs/results.md](docs/
 
 ## External setup and deployment
 
-Hosted operation requires TMS credentials, an FMCSA key, HappyRobot organization/API access, SMTP configuration, service keys and pricing/OTP secrets. Provision Twin's `calls`, `bookings` and `negotiations` tables, the native workflow and App, and App sign-in/rep settings first. See [.env.example](.env.example), [onboarding](docs/reference/onboarding.md) and [release instructions](docs/reference/release.md).
+Hosted operation requires TMS credentials, an FMCSA key, HappyRobot organization/API access, SMTP configuration, service keys and pricing/OTP secrets. Provision Twin with [bootstrap SQL](tools/twin-schema.sql), then configure the native workflow, App and rep sign-in. Verify the selected schema with `python -m tools.check_twin_schema --environment staging`. See [.env.example](.env.example), [onboarding](docs/reference/onboarding.md) and [release instructions](docs/reference/release.md).
 
 With an authenticated Fly CLI, an existing Fly app and configured secrets, `make deploy APP=<fly-app> APP_URL=<native-app-url>` deploys the service and checks authenticated health/TMS reachability. It does not publish the native App or workflow. Always specify the target; `fly.toml` names the rollback service.
 

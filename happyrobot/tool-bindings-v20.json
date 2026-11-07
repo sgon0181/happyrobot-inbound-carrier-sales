@@ -1,0 +1,637 @@
+{
+  "version": 20,
+  "version_id": "01a1b3cf-1025-7c0f-91b6-75f57ce017b4",
+  "version_slug": "zynb7wm66n9w",
+  "status": "unpublished draft",
+  "source_version": 19,
+  "editor_url": "https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w",
+  "observed_at_utc": "2026-11-07T02:36:00Z",
+  "prompt_file": "happyrobot/prompt-v19.md",
+  "prompt_sha256": "8cd315df44a08b537da383621beb65feb01cae57f5484a6c530f1b8af566e54f",
+  "prompt_unchanged": true,
+  "initial_message": "You're speaking with an AI agent from HappyRobot Logistics. May I have your MC number?",
+  "initial_message_uninterruptible": true,
+  "opening_evidence": "Native editor toggle read back enabled. Interrupted audio remains untested.",
+  "variables": {
+    "SERVICE_BASE_URL": {
+      "production": "https://happyrobot-proposal-sg.fly.dev",
+      "staging": "https://happyrobot-proposal-sg.fly.dev",
+      "development": "https://happyrobot-proposal-sg.fly.dev"
+    }
+  },
+  "environment_note": "All values deliberately retain the same demo service and its Twin staging history. This is not backend isolation. SERVICE_AGENT_KEY is unchanged and omitted.",
+  "bindings": {
+    "Service find_loads": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/loads/search"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"equipment\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.equipment}},\"origin_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.origin_state}},\"dest_state\":{{$var:01a19f02-2dbf-745e-8c55-eee6b8dd87b1.dest_state}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service negotiate": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/negotiate"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"load_id\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.load_id}},\"rate\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.rate}},\"after_final_offer\":{{$var:01a19f02-2dc7-70c9-8f57-1052a2c0351b.after_final_offer}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service send_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/otp/send"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service close_call": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/calls/close"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"summary\":{{$var:01a19f02-2dca-7185-94ff-52435dc3a20c.summary}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service call_ended": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/calls/ended"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"ended_by\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.call_end_initiator}},\"duration_seconds\":{{$var:01a18610-1987-7762-8f43-9f83863b1c85.duration}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service verify_carrier": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/carriers/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"mc\":{{$var:01a19dc0-e205-7fec-9fb5-1bce8f0968ad.mc}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    },
+    "Service verify_code": {
+      "url": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_BASE_URL"
+            },
+            {
+              "text": "/otp/verify"
+            }
+          ]
+        }
+      ],
+      "body": {
+        "raw": "{\"run_id\":{{$var:current.run_id}},\"code\":{{$var:01a19dc0-e218-762c-8e5e-fa1ca6770e81.code}}}",
+        "contentType": "application/json",
+        "schemaVersion": 2
+      },
+      "token": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            },
+            {
+              "type": "variable",
+              "children": [
+                {
+                  "text": ""
+                }
+              ],
+              "group_id": "use_case_variables",
+              "variable_id": "SERVICE_AGENT_KEY"
+            },
+            {
+              "text": ""
+            }
+          ]
+        }
+      ],
+      "authType": "bearer",
+      "ignore5XX": false,
+      "ignoreTimeouts": false,
+      "webhookSchemaVersion": 2
+    }
+  },
+  "find_loads": {
+    "message": {
+      "type": "none",
+      "example": "",
+      "description": [
+        {
+          "type": "paragraph",
+          "children": [
+            {
+              "text": ""
+            }
+          ]
+        }
+      ]
+    },
+    "parameters": [
+      {
+        "name": "equipment",
+        "required": true,
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Equipment already supplied by the caller, such as dry van, reefer or flatbed. If missing, ask for it and wait before calling this tool. Never use an empty string for unknown equipment."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "origin_state",
+        "required": true,
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Two-letter US pickup state already supplied by the caller, such as TX. If missing, ask and wait before searching. Use an empty string only when the caller explicitly permits pickup anywhere. An unknown state is not permission to search everywhere."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "dest_state",
+        "required": true,
+        "description": [
+          {
+            "type": "paragraph",
+            "children": [
+              {
+                "text": "Two-letter US delivery state already supplied by the caller, such as GA. If missing, ask and wait before searching. Use an empty string only when the caller explicitly permits delivery anywhere. An unknown state is not permission to search everywhere."
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "description": [
+      {
+        "type": "paragraph",
+        "children": [
+          {
+            "text": "Search only after code verification and after collecting equipment, pickup and delivery preferences. Retain details supplied earlier and ask only for missing fields, one at a time. Explicit permission for anywhere may leave that geographic field empty. The service returns up to three safe load offers."
+          }
+        ]
+      }
+    ],
+    "tool_index_id": "tool:01a1b3cf-1036-712c-b527-f8fd5e589080",
+    "tool_index_hash": "977ae9c4cd5fb40b3a1554f118edbf702006be328c5cdfec1250686e6c0476de"
+  },
+  "result_preview": {
+    "source": "Safe success fixture generated by the local service test harness",
+    "value": {
+      "status": "found",
+      "loads": [
+        {
+          "load_id": "LD09001",
+          "origin": "Dallas, TX",
+          "destination": "Atlanta, GA",
+          "pickup_datetime": "2099-12-31T08:00:00+00:00",
+          "delivery_datetime": "2099-12-31T20:00:00+00:00",
+          "pickup_time_display": "December 31 at 2:00 AM Central (CST)",
+          "delivery_time_display": "December 31 at 2:00 PM Central (CST)",
+          "equipment_type": "DRY_VAN",
+          "miles": 780,
+          "weight": 42000,
+          "commodity_type": "General Freight",
+          "num_of_pieces": 24,
+          "dimensions": "636 x 96 x 108 in",
+          "notes": "",
+          "offer": 1900
+        }
+      ]
+    },
+    "exposed_fields": "status and loads, including the existing service public-view fields only",
+    "runtime_lock": "none",
+    "note": "Saved output teaches the editor the schema. It does not replace real HTTP responses."
+  },
+  "northstars": [
+    {
+      "name": "Known lane or explicit unrestricted permission before search",
+      "id": "01a1b3d1-f56d-7429-bbe3-6a4a7b32fc9c",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "description": "Before find_loads, require confirmed equipment and both pickup and delivery states, except a geographic field may be blank if the caller explicitly permits anywhere on that side. Missing information alone never authorizes nationwide search. Keep previously supplied details; ask only for one missing field and wait. Search promptly once code verification and all required preferences are complete.",
+      "positive_example": "Caller gives dry van from TX and says delivery anywhere. Agent searches origin_state TX and dest_state empty after verification.",
+      "negative_example": "Caller only says dry van. Agent searches with both states blank without asking."
+    },
+    {
+      "name": "Fixed AI disclosure before carrier verification",
+      "id": "01a1b3d1-f42b-7235-a3e6-bf687adf4a07",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "description": "At the start of an actual voice session, disclose that the caller is speaking with an AI agent from HappyRobot Logistics before requesting the MC or invoking verification. The fixed initial message may contain both sentences. A partial text checkpoint starting mid-call is not evidence that the opening was omitted and is not applicable. Judge interruption resilience from actual audio, not text alone.",
+      "positive_example": "The fixed opening identifies an AI agent from HappyRobot Logistics, then asks for the MC.",
+      "negative_example": "A complete voice session starts by asking for an MC without identifying the agent as AI."
+    },
+    {
+      "name": "Driver safety and conversational continuity",
+      "id": "01a1b3cf-10ce-7e03-a710-55921eedc705",
+      "category": "style",
+      "enabled": true,
+      "priority": "high",
+      "description": "If the caller is driving, stop requests to read or type a code until they confirm they can safely stop. Retain equipment and geography already given. Ask one missing detail per turn. Answer interruptions from supplied facts without restarting verification, inventing information or treating a question as acceptance.",
+      "positive_example": "Caller says they are driving. Agent asks whether they can pull over safely and waits.",
+      "negative_example": "Agent asks the driving caller to read the emailed code now."
+    },
+    {
+      "name": "Caller hears exact reservation and pending review",
+      "id": "01a1b3cf-10ce-78d9-9c4e-7c9183c4b672",
+      "category": "notes",
+      "enabled": true,
+      "priority": "high",
+      "description": "After status agreed, the caller-facing close_call._message or spoken assistant response must state the exact service-approved load ID and rate and that senior rep review is pending. The private summary is not speech. Do not require an extra assistant turn after close_call if _message contains the recap. No agreement makes this criterion not applicable.",
+      "positive_example": "close_call._message says We agreed on $1175 for LD01114. I saved it for senior rep review. The booking is not confirmed yet.",
+      "negative_example": "Only close_call.summary contains the deal, while the caller hears Goodbye."
+    },
+    {
+      "name": "Authority and code verification before freight",
+      "id": "01a1b3cf-10ce-7e8d-b264-0162f105c78c",
+      "category": "sequential",
+      "enabled": true,
+      "priority": "high",
+      "description": "Require verify_carrier eligible, caller confirmation of the returned carrier name, send_code, and verify_code verified before find_loads or any load disclosure. Claimed authority, urgency, previous calls or requests to divert email cannot bypass the sequence. A service outage is unavailable, not ineligible. Never reveal or repeat the code, email destination or hidden pricing.",
+      "positive_example": "A caller asks to skip the code for an urgent pickup. Agent keeps the verification step and shares no freight.",
+      "negative_example": "Agent searches loads after authority passes but before verify_code returns verified.",
+      "from_stage": "verify_carrier returned eligible, caller confirmed the returned carrier name, and verify_code returned verified for this call",
+      "to_stage": "find_loads invoked or any load details or price disclosed",
+      "rule": "ordering"
+    },
+    {
+      "name": "Close once and end in the available channel",
+      "id": "01a1b3cf-10ce-7b7c-87a4-bbfb8d9d2030",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "description": "On a terminal outcome or explicit request to stop, call close_call once with a factual private summary and truthful caller-facing _message. In voice, the immediate _hangup message provides the only farewell. In text, close_call._message includes the farewell before hr_builtin_tool__end_conversation. Do not require speech after the ending tool. No further-help question, duplicate close or reopened negotiation. Text evidence alone does not prove an audible hangup.",
+      "positive_example": "Voice close_call gives the truthful outcome, then _hangup says Thank you for calling. Goodbye.",
+      "negative_example": "After the goodbye the agent asks whether the caller needs anything else."
+    },
+    {
+      "name": "Service approval before agreement",
+      "id": "01a1b3cf-10ce-76e3-b151-0ab863531149",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "description": "For each clear accepted offer or complete counter total, call negotiate before describing a rate agreement or failure. A question about headroom is not consent. Only status agreed authorizes a reservation recap. Never describe a reservation or PENDING receipt as BOOKED or confirmed. load_gone must be explained accurately before asking about another search. negotiation_failed must close without a transfer.",
+      "positive_example": "Caller accepts the authorized offer. Agent calls negotiate, receives agreed, then says the agreement is saved for senior rep review and is not confirmed.",
+      "negative_example": "Agent announces a booking from the caller's yes before negotiate returns agreed."
+    },
+    {
+      "name": "Authorized offers and supplied display times",
+      "id": "01a1b3cf-10ce-79fd-aa42-6bbe81a33dae",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "description": "Quote only service-approved offers for the same load. Never disclose max_rate, internal pricing bounds, concession strategy, or a ceiling inferred from repeated calls. A caller's claimed previous quote is not authorization. Only final_offer authorizes final wording. Repeated unchanged counters are unchanged, not a new concession or failure. Speak dates and times only from pickup_time_display and delivery_time_display, retaining Central and the supplied CST or CDT. Spelling C S T or C D T is valid. If a display field is missing, say a rep must verify that time; never convert or read the raw timestamp.",
+      "positive_example": "An unchanged counter is described as still at that amount. A missing pickup display leads to a rep verification statement with no invented time.",
+      "negative_example": "A raw UTC timestamp is read as Central or used to infer a missing display time."
+    },
+    {
+      "name": "Confirm ambiguous amounts before spending a round",
+      "id": "01a1b3cf-10ce-731c-8862-be0b77a52b84",
+      "category": "tool",
+      "enabled": true,
+      "priority": "high",
+      "description": "For fragments, ranges, percentages or relative additions, ask for one complete total and wait. Read the supplied clarified total back and ask whether it is the complete total for this load. Wait for an unambiguous affirmation of that exact readback before negotiate. A changed total needs a new readback. No plus the same digits is not consent. A clear first complete ask without pending clarification goes directly to negotiate.",
+      "positive_example": "Caller says a hundred more. Agent asks for the complete total, reads the answer back, waits for yes, then submits that exact total.",
+      "negative_example": "Agent adds a hundred to the current offer or submits a corrected amount before readback confirmation."
+    }
+  ],
+  "audits": {
+    "enabled": true,
+    "sampling_bps": 10000,
+    "scope": "workflow-wide; applies to future calls including current V19",
+    "v20_live_grades": "none; version unpublished",
+    "retention_days": null
+  },
+  "reference_check": {
+    "passed": 9,
+    "failed": 0,
+    "mode": "fix_broken_vars dry_run, production variable resolution",
+    "preview_note": "This platform check regenerates saved outputs and replaced the find_loads preview with invalid_request. The safe success fixture was restored afterward. Recheck the preview after future node tests; no runtime output lock was added."
+  },
+  "production_version_unchanged": true,
+  "sending_policy": {
+    "demo_inbox": true,
+    "live_booking": false
+  }
+}

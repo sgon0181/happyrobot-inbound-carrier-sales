@@ -55,7 +55,7 @@ The service cannot control what the model says. A misheard amount inside the lim
 
 ## Data
 
-Twin is the only datastore, as the brief requires. It has no multi-table transactions, so each row holds its own state and events and every write checks the row's version.
+Twin is the only datastore, as the brief requires. The SQL interface used here is called one statement at a time, without a cross-table transaction. Each row therefore holds its own state and events, and every write checks the row's version.
 
 | Table | One row per | Holds |
 | --- | --- | --- |
@@ -67,7 +67,7 @@ Twin is the only datastore, as the brief requires. It has no multi-table transac
 
 - **TMS.** Reads retry within the twelve-second voice deadline, then report "temporarily unavailable". A booking that times out is recorded as `UNKNOWN` and never resent, because a timeout does not say whether it landed. Malformed frames are refused, not guessed.
 - **FMCSA.** An outage is "unavailable", never "inactive carrier".
-- **Twin.** All statements share one pacer at the provider's four per second. A conflicting write rereads and decides again.
+- **Twin.** All statements share a conservative four-per-second pacer, chosen after rate-limit observations on this integration. This is our operating budget, not a universal Twin limit. A conflicting write rereads and decides again.
 - **Repeats.** A repeated tool call is answered from stored state, so retries cannot buy an extra round or a second reservation.
 
 ## Security

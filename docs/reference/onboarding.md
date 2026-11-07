@@ -10,7 +10,7 @@ A clone includes source and sanitized evidence. It does not include browser sess
 
 ## Current state
 
-The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` integer and `data` JSONB. The last release snapshot contained 74 call rows and 19 booking rows; this is a dated count, not a fixed dashboard population.
+The service at `https://happyrobot-proposal-sg.fly.dev` serves the populated App. Twin staging retains the recorded history and fresh calls. Its `calls`, `bookings` and `negotiations` tables use `id` text primary key, `version` bigint and `data` JSONB. The last release snapshot contained 74 call rows and 19 booking rows; this is a dated count, not a fixed dashboard population.
 
 Version 19 (`l6zo75s4s4vk`, UUID `01a1b2ea-26c8-7131-8252-b334dcaab976`) is live in workflow Production. Use [the Production web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) and [its exact editor](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/l6zo75s4s4vk). Version 8 is retained unpublished for rollback. Development is empty. [Readiness](release.md#current-release-state) records acceptance, limitations and endpoints. Workflow Production, App hosting and Twin environment are separate controls.
 
@@ -49,6 +49,20 @@ For source checks, create a Python 3.12 virtual environment, install `requiremen
 | Fly | Always select `happyrobot-proposal-sg` explicitly for this release. The old `fly.toml` default is a rollback resource. |
 
 `.env.example` lists settings. Only `service/config.py` reads runtime configuration. Never print secret values, put them in URLs or copy them into prompts or evidence. App keys must never use a `NEXT_PUBLIC` name. Native user identity is verified by the platform before rep authorization.
+
+## Reproduce the Twin tables
+
+The checked-in [bootstrap SQL](../../tools/twin-schema.sql) matches the observed table shape. In a **new** Twin workspace, select the intended environment in the SQL console and execute each statement separately. `IF NOT EXISTS` preserves existing tables and data; it does not repair an incompatible table. Do not run a reset, drop, truncate or historical import on the populated submission database.
+
+With the organization key and ID in the ignored `.env` or environment, run this read-only check from the repository root:
+
+```bash
+python -m tools.check_twin_schema --environment staging
+```
+
+Choose `production` explicitly for a separately provisioned production database. The environment header selects the active schema; the check uses `current_schema()` so it does not accidentally inspect `public` when the service uses `staging`. It verifies column types, the single-column primary keys and compatibility of any extra columns, without reading call contents. Version and data columns match the existing nullable schema; service writes supply both. It does not assert data integrity or migrate anything.
+
+The SQL gateway behavior observed for this integration and our four-statements-per-second pacing budget are not claims about every Twin interface. See [HappyRobot's SQL guidance](https://docs.happyrobot.ai/twin/sql-console-and-capacity) and [App/database setup guidance](https://docs.happyrobot.ai/twin/using-in-apps). No workflow run-dump table replaces the in-call application writes.
 
 ## Deployment and rollback
 

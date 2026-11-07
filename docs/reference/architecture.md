@@ -266,14 +266,14 @@ The dependency direction is one way: `api` calls `calls`, `selling`, `rep_action
 
 ## 7. Data: call, booking and negotiation records
 
-Twin has no multi-table transactions, but one row can be updated atomically with a version check. State and its own event therefore share one row. Agreement and load reservation still cross call/booking rows and use ID-bearing accepting claims, booking-row voids and retry recovery; they are not a transaction ([D-23](decision-log.md)).
+This integration uses one SQL statement per request and does not use cross-table transactions. A row updates atomically with a version check. State and its own event therefore share one row. Agreement and load reservation still cross call/booking rows and use ID-bearing accepting claims, booking-row voids and retry recovery; they are not a transaction ([D-23](decision-log.md)).
 
-All three tables have the same shape, created once in the Twin UI because the API cannot create tables:
+All three tables use the same shape. The checked-in [bootstrap SQL](../../tools/twin-schema.sql) is run once in the selected Twin environment; see [setup and the read-only schema check](onboarding.md#reproduce-the-twin-tables). DDL support depends on the interface and permissions; the application adapter performs no schema changes.
 
 | Column | Type | Meaning |
 |---|---|---|
 | `id` | text, primary key | `run_id` for `calls`, load ID for `bookings`, MC plus load ID for `negotiations` |
-| `version` | int | Rises by one on every write |
+| `version` | bigint | Rises by one on every write |
 | `data` | jsonb | The row's fields, shown below. Not `json`: the SQL casts values to `::jsonb`, as on the prototype |
 
 **`calls`, one row per call.** The abbreviated example shows current state fields; imported rows also carry `read_only` and `imported_from`. Values are illustrative, not a recorded call.

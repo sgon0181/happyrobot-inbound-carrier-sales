@@ -4,6 +4,8 @@ An AI voice agent for HappyRobot Logistics (a simulated brokerage). It checks ca
 
 [Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w)
 
+[Watch the walkthrough video](https://youtu.be/2CEQBlY4iys): a working carrier call, the operations dashboard, and quality checks.
+
 ## Run locally
 
 Prerequisites: Python 3.12, Make, a running Docker engine with Compose v2, free ports `3080` and `3081`, and internet access for the initial image/package downloads. No cloud credentials or host Node installation are needed.

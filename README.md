@@ -4,6 +4,8 @@ An AI voice agent for HappyRobot Logistics (a simulated brokerage). It checks ca
 
 [Operations App](https://carrier-sales-proposal-sg.happyrobot.dev/?view=overview) · [Web call](https://platform.happyrobot.ai/deployments/6oaskq84xpfc) · [Workflow](https://platform.happyrobot.ai/fdesantiagogonzalezalvarez/workflows/6oaskq84xpfc/editor/zynb7wm66n9w)
 
+[Challenge instructions (PDF)](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf): the original brief and requirements for reviewers.
+
 [Watch the walkthrough video](https://youtu.be/2CEQBlY4iys): a working carrier call, the operations dashboard, and quality checks.
 
 ## Run locally
@@ -66,7 +68,7 @@ With an authenticated Fly CLI, an existing Fly app and configured secrets, `make
 3. [docs/results.md](docs/results.md): North Star definitions, standard/edge/adversarial tests and evidence.
 4. [docs/build-description.md](docs/build-description.md): business and IT overview.
 
-The [challenge PDF](docs/FDE_Technical_Challenge_-_Inbound_Carrier_Sales.pdf) defines the requirements; [docs/reference/assignment.md](docs/reference/assignment.md) summarizes them. [docs/tms/README.md](docs/tms/README.md) covers the TCP protocol. AI contributors should read [AGENTS.md](AGENTS.md). Dated material in `docs/history/` and `happyrobot/history/` is not current release guidance.
+[docs/reference/assignment.md](docs/reference/assignment.md) summarizes the challenge requirements. [docs/tms/README.md](docs/tms/README.md) covers the TCP protocol. AI contributors should read [AGENTS.md](AGENTS.md). Dated material in `docs/history/` and `happyrobot/history/` is not current release guidance.
 
 ## Known limits
 
